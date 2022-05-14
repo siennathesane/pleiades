@@ -3,6 +3,7 @@ package fsm
 import (
 	"encoding/binary"
 	"io"
+	"os"
 	"path/filepath"
 	"strconv"
 
@@ -23,17 +24,21 @@ func NewBBoltStateMachine(clusterId uint64, nodeId uint64, basePath string, opti
 	return &BBoltStateMachine{ClusterId: clusterId, NodeId: nodeId, BasePath: basePath, Options: options}
 }
 
+func (b *BBoltStateMachine) dbPath() string {
+	return filepath.Join(b.BasePath, strconv.FormatUint(b.ClusterId, 10), strconv.FormatUint(b.NodeId, 10))
+}
+
 // Open opens the bbolt backend.
 // todo (sienna): leverage stopc at some point on bbolt.Open
 func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 	var err error
-	b.db, err = bbolt.Open(filepath.Join(b.BasePath, strconv.FormatUint(b.ClusterId, 10), strconv.FormatUint(b.NodeId, 10)), 0600, b.Options)
+	b.db, err = bbolt.Open(b.dbPath(), 0600, b.Options)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
 
 	var val uint64
-	err = b.db.View(func(tx *bbolt.Tx) error {
+	err = b.db.Update(func(tx *bbolt.Tx) error {
 		// todo (sienna): implement db stats on open
 		//tx.Stats()
 
@@ -47,7 +52,7 @@ func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 		return nil
 	})
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	return val, nil
@@ -79,7 +84,38 @@ func (b *BBoltStateMachine) SaveSnapshot(ctx interface{}, writer io.Writer, done
 }
 
 func (b BBoltStateMachine) RecoverFromSnapshot(reader io.Reader, i <-chan struct{}) error {
+	fn := func(r io.Reader) error {
+		target, err := os.Create(b.dbPath())
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(target, reader)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 
+	// verify the existing database is closed
+	err := b.db.Close()
+	if err != nil {
+		return err
+	}
+
+	_, err = os.Stat(b.dbPath())
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fn(reader)
+		}
+		return err
+	}
+
+	err = os.Remove(b.dbPath())
+	if err != nil {
+		return err
+	}
+
+	return fn(reader)
 }
 
 func (b *BBoltStateMachine) Close() error {

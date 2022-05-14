@@ -1,12 +1,10 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"path/filepath"
 
-	"github.com/lni/dragonboat/v3"
-	"github.com/lni/dragonboat/v3/config"
+	"go.uber.org/fx"
+	"wraith/conf"
 )
 
 const (
@@ -15,22 +13,39 @@ const (
 
 func main() {
 	fmt.Println("hello from boulder.")
-	nodeId := flag.Int("node-id", 1, "node id")
 
-	conf := config.Config{
-		NodeID:             uint64(*nodeId),
-		ClusterID:          defaultClusterId,
-		ElectionRTT:        10,
-		HeartbeatRTT:       1,
-		CheckQuorum:        true,
-		SnapshotEntries:    100,
-		CompactionOverhead: 5}
-	dataDir := filepath.Join("example-data", "hello-world", fmt.Sprintln("node-%d", *nodeId))
+	app := fx.New(conf.ProvideConsulClient(), conf.ProvideEnvironmentConfig(), conf.ProvideLogger())
+	app.Run()
 
-	nodeConfig := config.NodeHostConfig{WALDir: dataDir, NodeHostDir: dataDir, RTTMillisecond: 200, RaftAddress: "localhost:6000"}
-
-	host, err := dragonboat.NewNodeHost(nodeConfig)
-	if err != nil {
-		panic(err)
-	}
+	//consulClient, err := api.NewClient(api.DefaultConfig())
+	//if err != nil {
+	//	panic(fmt.Errorf("cannot reach consul: %s", err))
+	//}
+	//
+	//env, err := conf.NewEnvironmentConfig(consulClient)
+	//if err != nil {
+	//	panic(fmt.Errorf("cannot load environment config: %s", err))
+	//}
+	//
+	//logger := conf.NewLogger(env.Environment)
+	//
+	//dirManager := services.NewDirectoryManager(env, logger.LoggerFactory("directory-manager"), consulClient)
+	//localClusterDirectory, err := dirManager.NewDirectory(services.WriteAheadLogDirectory, 1)
+	//if err != nil {
+	//	logger.Errorf("can't create wal directory: %s", err)
+	//	panic(err)
+	//}
+	//
+	//nodeConfig := config.NodeHostConfig{WALDir: dataDir, NodeHostDir: dataDir, RTTMillisecond: 200, RaftAddress: "localhost:6000"}
+	//
+	//logger.Infof("configuring local raft node")
+	//conf, err := conf.NewRaftConfig(consulClient, logger.LoggerFactory("configuration"))
+	//if err != nil {
+	//	logger.Panicf("error fetching raft configuration: %s", err)
+	//}
+	//
+	//host, err := dragonboat.NewNodeHost(nodeConfig)
+	//if err != nil {
+	//	panic(err)
+	//}
 }
