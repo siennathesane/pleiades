@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/consul/api"
 	"github.com/lni/dragonboat/v3/logger"
 	"go.etcd.io/bbolt"
-	"wraith/conf"
+	"r3t.io/pleiades/pkg/conf"
 )
 
 const (

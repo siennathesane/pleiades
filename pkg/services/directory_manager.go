@@ -9,7 +9,7 @@ import (
 	"github.com/lni/dragonboat/v3/logger"
 	"go.etcd.io/bbolt"
 	"go.uber.org/fx"
-	"wraith/conf"
+	conf2 "r3t.io/pleiades/pkg/conf"
 )
 
 const (
@@ -18,19 +18,19 @@ const (
 )
 
 func ProvideDirectoryManager() fx.Option {
-	return fx.Provide(NewDirectoryManager, conf.NewConsulClient)
+	return fx.Provide(NewDirectoryManager, conf2.NewConsulClient)
 }
 
 // DirectoryManager is how the host manages directory layouts.
 type DirectoryManager struct {
-	env    *conf.EnvironmentConfig
+	env    *conf2.EnvironmentConfig
 	logger logger.ILogger
 	client *api.Client
 	db     *bbolt.DB
 	done   <-chan struct{}
 }
 
-func NewDirectoryManager(env *conf.EnvironmentConfig, logger logger.ILogger, client *api.Client) *DirectoryManager {
+func NewDirectoryManager(env *conf2.EnvironmentConfig, logger logger.ILogger, client *api.Client) *DirectoryManager {
 	return &DirectoryManager{env: env, logger: logger, client: client, done: make(<-chan struct{}, 1)}
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"go.uber.org/fx"
-	"wraith/conf"
+	conf2 "r3t.io/pleiades/pkg/conf"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 func main() {
 	fmt.Println("hello from boulder.")
 
-	app := fx.New(conf.ProvideConsulClient(), conf.ProvideEnvironmentConfig(), conf.ProvideLogger())
+	app := fx.New(conf2.ProvideConsulClient(), conf2.ProvideEnvironmentConfig(), conf2.ProvideLogger())
 	app.Run()
 
 	//consulClient, err := api.NewClient(api.DefaultConfig())
