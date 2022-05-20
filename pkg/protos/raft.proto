@@ -1,0 +1,59 @@
+syntax = "proto3";
+option go_package = "r3t.io/pleiades/pkg/protos";
+import "google/protobuf/timestamp.proto";
+
+message RaftConfig {
+  uint64 NodeId = 1;
+  uint64 ClusterId = 2;
+  bool CheckQuorum = 3;
+  uint64 ElectionRoundTripTime = 4;
+  uint64 HeartbeatRoundTripTime = 5;
+  uint64 SnapshotEntries = 6;
+  uint64 CompactionOverhead = 7;
+  bool OrderedConfigChange = 8;
+  uint64 MaxInMemLogSize = 9;
+  uint64 SnapshotCompressionType = 10;
+  uint64 EntryCompressionType = 11;
+  bool DisableAutoCompactions = 12;
+  bool IsObserver = 13;
+  bool IsWitness = 14;
+  bool Quiesce = 15;
+}
+
+message NewRaftConfigRequest {
+  bool Enable = 1;
+  string Name = 2;
+  RaftConfig Config = 3;
+}
+
+message InvalidRaftConfig {
+  string Error = 1;
+  string Name = 2;
+}
+
+message ValidRaftConfig {
+  google.protobuf.Timestamp DateApplied = 1;
+  string Name = 2;
+  int32 ActiveRaftConfigs = 3;
+}
+
+message RaftConfigResponse {
+  oneof Status {
+    ValidRaftConfig Valid = 1;
+    InvalidRaftConfig Invalid = 2;
+  }
+}
+
+message GetRaftConfigRequest {
+  string Name = 1;
+}
+
+message GetRaftConfigResponse {
+  RaftConfig Configuration = 1;
+}
+
+message ListRaftConfigs {}
+
+message ListRaftConfigsResponse {
+  map<string, RaftConfig> AvailableConfigs = 1;
+}
