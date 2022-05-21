@@ -3,7 +3,7 @@ package servers
 import (
 	"context"
 
-	"r3t.io/pleiades/pkg/protos"
+	"r3t.io/pleiades/pkg/types"
 )
 
 var _ RaftConfigServiceServer = RaftConfigServer{}
@@ -12,17 +12,17 @@ type RaftConfigServer struct {
 	UnimplementedRaftConfigServiceServer
 }
 
-func (r RaftConfigServer) AddConfiguration(ctx context.Context, request *protos.NewRaftConfigRequest) (*protos.RaftConfigResponse, error) {
+func (r RaftConfigServer) AddConfiguration(ctx context.Context, request *types.NewRaftConfigRequest) (*types.RaftConfigResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r RaftConfigServer) GetConfiguration(ctx context.Context, request *protos.GetRaftConfigRequest) (*protos.GetRaftConfigResponse, error) {
+func (r RaftConfigServer) GetConfiguration(ctx context.Context, request *types.GetRaftConfigRequest) (*types.GetRaftConfigResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r RaftConfigServer) ListConfigurations(ctx context.Context, configs *protos.ListRaftConfigs) (*protos.ListRaftConfigsResponse, error) {
+func (r RaftConfigServer) ListConfigurations(ctx context.Context, configs *types.ListRaftConfigs) (*types.ListRaftConfigsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -1,0 +1,7 @@
+syntax = "proto3";
+option go_package = "r3t.io/pleiades/pkg/servers";
+import "config.proto";
+
+service ConfigService {
+  rpc GetConfig(ConfigRequest) returns (ConfigResponse) {};
+}

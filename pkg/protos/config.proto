@@ -1,0 +1,29 @@
+syntax = "proto3";
+option go_package = "r3t.io/pleiades/pkg/types";
+import "raft.proto";
+
+message ConfigResponseAll {
+  repeated ListRaftConfigsResponse Rafts = 1;
+}
+
+message ConfigResponse {
+  oneof Type {
+    ConfigResponseAll All = 1;
+    RaftConfigResponse Raft = 2;
+  }
+}
+
+message ConfigRequest {
+  enum Type {
+    ALL = 0;
+    RAFT = 1;
+  }
+  Type What = 1;
+
+  enum Specificity {
+    ONE = 0;
+    EVERYTHING = 1;
+  }
+  Specificity Amount = 2;
+  optional string Name = 3;
+}

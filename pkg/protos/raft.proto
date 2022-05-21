@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "r3t.io/pleiades/pkg/protos";
+option go_package = "r3t.io/pleiades/pkg/types";
 import "google/protobuf/timestamp.proto";
 
 message RaftConfig {
@@ -26,22 +26,21 @@ message NewRaftConfigRequest {
   RaftConfig Config = 3;
 }
 
-message InvalidRaftConfig {
+message InvalidRaftConfigResponse {
   string Error = 1;
   string Name = 2;
 }
 
-message ValidRaftConfig {
+message ValidRaftConfigResponse {
   google.protobuf.Timestamp DateApplied = 1;
   string Name = 2;
   int32 ActiveRaftConfigs = 3;
 }
 
 message RaftConfigResponse {
-  oneof Status {
-    ValidRaftConfig Valid = 1;
-    InvalidRaftConfig Invalid = 2;
-  }
+  bool Valid = 1;
+  string Name = 2;
+  RaftConfig Config = 3;
 }
 
 message GetRaftConfigRequest {

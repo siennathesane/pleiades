@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	"github.com/hashicorp/consul/api"
-	"github.com/lni/dragonboat/v3/logger"
+	dlog "github.com/lni/dragonboat/v3/logger"
 	"go.etcd.io/bbolt"
 	"r3t.io/pleiades/pkg/conf"
 )
@@ -25,7 +25,7 @@ const (
 // StoreManager is used for managing various types persistently
 type StoreManager struct {
 	env         *conf.EnvironmentConfig
-	logger      logger.ILogger
+	logger      dlog.ILogger
 	client      *api.Client
 	db          *bbolt.DB
 	initialized bool
@@ -34,7 +34,7 @@ type StoreManager struct {
 }
 
 func NewStoreManager(env *conf.EnvironmentConfig,
-	logger logger.ILogger,
+	logger dlog.ILogger,
 	client *api.Client) *StoreManager {
 	return &StoreManager{
 		env:         env,
@@ -98,6 +98,33 @@ func (p *StoreManager) Get(key string, t reflect.Type) ([]byte, error) {
 	})
 
 	return target, err
+}
+
+func (p *StoreManager) GetAll(t reflect.Type) (map[string][]byte, error) {
+	name := cleanTypeName(t.String())
+	_, ok := p.typeMap[name]
+	if !ok {
+		return nil, errors.New("there are no types stored")
+	}
+
+	targets := make(map[string][]byte)
+	err := p.db.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket([]byte(name))
+		if b == nil {
+			return fmt.Errorf("cannot find %s bucket", name)
+		}
+
+		return b.ForEach(func(k, v []byte) error {
+			key := fmt.Sprintf("%s", k)
+			targets[key] = v
+			return nil
+		})
+	})
+	if err != nil {
+		p.logger.Errorf("cannot get all keys in the bucket: %w", err)
+	}
+
+	return targets, err
 }
 
 func (p *StoreManager) Flush() error {

@@ -11,7 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	protos "r3t.io/pleiades/pkg/protos"
+	types "r3t.io/pleiades/pkg/types"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RaftConfigServiceClient interface {
-	AddConfiguration(ctx context.Context, in *protos.NewRaftConfigRequest, opts ...grpc.CallOption) (*protos.RaftConfigResponse, error)
-	GetConfiguration(ctx context.Context, in *protos.GetRaftConfigRequest, opts ...grpc.CallOption) (*protos.GetRaftConfigResponse, error)
-	ListConfigurations(ctx context.Context, in *protos.ListRaftConfigs, opts ...grpc.CallOption) (*protos.ListRaftConfigsResponse, error)
+	AddConfiguration(ctx context.Context, in *types.NewRaftConfigRequest, opts ...grpc.CallOption) (*types.RaftConfigResponse, error)
+	GetConfiguration(ctx context.Context, in *types.GetRaftConfigRequest, opts ...grpc.CallOption) (*types.GetRaftConfigResponse, error)
+	ListConfigurations(ctx context.Context, in *types.ListRaftConfigs, opts ...grpc.CallOption) (*types.ListRaftConfigsResponse, error)
 }
 
 type raftConfigServiceClient struct {
@@ -36,8 +36,8 @@ func NewRaftConfigServiceClient(cc grpc.ClientConnInterface) RaftConfigServiceCl
 	return &raftConfigServiceClient{cc}
 }
 
-func (c *raftConfigServiceClient) AddConfiguration(ctx context.Context, in *protos.NewRaftConfigRequest, opts ...grpc.CallOption) (*protos.RaftConfigResponse, error) {
-	out := new(protos.RaftConfigResponse)
+func (c *raftConfigServiceClient) AddConfiguration(ctx context.Context, in *types.NewRaftConfigRequest, opts ...grpc.CallOption) (*types.RaftConfigResponse, error) {
+	out := new(types.RaftConfigResponse)
 	err := c.cc.Invoke(ctx, "/RaftConfigService/AddConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,8 @@ func (c *raftConfigServiceClient) AddConfiguration(ctx context.Context, in *prot
 	return out, nil
 }
 
-func (c *raftConfigServiceClient) GetConfiguration(ctx context.Context, in *protos.GetRaftConfigRequest, opts ...grpc.CallOption) (*protos.GetRaftConfigResponse, error) {
-	out := new(protos.GetRaftConfigResponse)
+func (c *raftConfigServiceClient) GetConfiguration(ctx context.Context, in *types.GetRaftConfigRequest, opts ...grpc.CallOption) (*types.GetRaftConfigResponse, error) {
+	out := new(types.GetRaftConfigResponse)
 	err := c.cc.Invoke(ctx, "/RaftConfigService/GetConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -54,8 +54,8 @@ func (c *raftConfigServiceClient) GetConfiguration(ctx context.Context, in *prot
 	return out, nil
 }
 
-func (c *raftConfigServiceClient) ListConfigurations(ctx context.Context, in *protos.ListRaftConfigs, opts ...grpc.CallOption) (*protos.ListRaftConfigsResponse, error) {
-	out := new(protos.ListRaftConfigsResponse)
+func (c *raftConfigServiceClient) ListConfigurations(ctx context.Context, in *types.ListRaftConfigs, opts ...grpc.CallOption) (*types.ListRaftConfigsResponse, error) {
+	out := new(types.ListRaftConfigsResponse)
 	err := c.cc.Invoke(ctx, "/RaftConfigService/ListConfigurations", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -67,9 +67,9 @@ func (c *raftConfigServiceClient) ListConfigurations(ctx context.Context, in *pr
 // All implementations must embed UnimplementedRaftConfigServiceServer
 // for forward compatibility
 type RaftConfigServiceServer interface {
-	AddConfiguration(context.Context, *protos.NewRaftConfigRequest) (*protos.RaftConfigResponse, error)
-	GetConfiguration(context.Context, *protos.GetRaftConfigRequest) (*protos.GetRaftConfigResponse, error)
-	ListConfigurations(context.Context, *protos.ListRaftConfigs) (*protos.ListRaftConfigsResponse, error)
+	AddConfiguration(context.Context, *types.NewRaftConfigRequest) (*types.RaftConfigResponse, error)
+	GetConfiguration(context.Context, *types.GetRaftConfigRequest) (*types.GetRaftConfigResponse, error)
+	ListConfigurations(context.Context, *types.ListRaftConfigs) (*types.ListRaftConfigsResponse, error)
 	mustEmbedUnimplementedRaftConfigServiceServer()
 }
 
@@ -77,13 +77,13 @@ type RaftConfigServiceServer interface {
 type UnimplementedRaftConfigServiceServer struct {
 }
 
-func (UnimplementedRaftConfigServiceServer) AddConfiguration(context.Context, *protos.NewRaftConfigRequest) (*protos.RaftConfigResponse, error) {
+func (UnimplementedRaftConfigServiceServer) AddConfiguration(context.Context, *types.NewRaftConfigRequest) (*types.RaftConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddConfiguration not implemented")
 }
-func (UnimplementedRaftConfigServiceServer) GetConfiguration(context.Context, *protos.GetRaftConfigRequest) (*protos.GetRaftConfigResponse, error) {
+func (UnimplementedRaftConfigServiceServer) GetConfiguration(context.Context, *types.GetRaftConfigRequest) (*types.GetRaftConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConfiguration not implemented")
 }
-func (UnimplementedRaftConfigServiceServer) ListConfigurations(context.Context, *protos.ListRaftConfigs) (*protos.ListRaftConfigsResponse, error) {
+func (UnimplementedRaftConfigServiceServer) ListConfigurations(context.Context, *types.ListRaftConfigs) (*types.ListRaftConfigsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListConfigurations not implemented")
 }
 func (UnimplementedRaftConfigServiceServer) mustEmbedUnimplementedRaftConfigServiceServer() {}
@@ -100,7 +100,7 @@ func RegisterRaftConfigServiceServer(s grpc.ServiceRegistrar, srv RaftConfigServ
 }
 
 func _RaftConfigService_AddConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protos.NewRaftConfigRequest)
+	in := new(types.NewRaftConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -112,13 +112,13 @@ func _RaftConfigService_AddConfiguration_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/RaftConfigService/AddConfiguration",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaftConfigServiceServer).AddConfiguration(ctx, req.(*protos.NewRaftConfigRequest))
+		return srv.(RaftConfigServiceServer).AddConfiguration(ctx, req.(*types.NewRaftConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaftConfigService_GetConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protos.GetRaftConfigRequest)
+	in := new(types.GetRaftConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -130,13 +130,13 @@ func _RaftConfigService_GetConfiguration_Handler(srv interface{}, ctx context.Co
 		FullMethod: "/RaftConfigService/GetConfiguration",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaftConfigServiceServer).GetConfiguration(ctx, req.(*protos.GetRaftConfigRequest))
+		return srv.(RaftConfigServiceServer).GetConfiguration(ctx, req.(*types.GetRaftConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _RaftConfigService_ListConfigurations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(protos.ListRaftConfigs)
+	in := new(types.ListRaftConfigs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func _RaftConfigService_ListConfigurations_Handler(srv interface{}, ctx context.
 		FullMethod: "/RaftConfigService/ListConfigurations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaftConfigServiceServer).ListConfigurations(ctx, req.(*protos.ListRaftConfigs))
+		return srv.(RaftConfigServiceServer).ListConfigurations(ctx, req.(*types.ListRaftConfigs))
 	}
 	return interceptor(ctx, in, info, handler)
 }
