@@ -19,6 +19,7 @@ import (
 	"google.golang.org/grpc/test/bufconn"
 	"r3t.io/pleiades/pkg/conf"
 	"r3t.io/pleiades/pkg/services"
+	"r3t.io/pleiades/pkg/types"
 )
 
 type ConfigServerTests struct {
@@ -84,4 +85,43 @@ func (c *ConfigServerTests) TestNewConfigServer() {
 			t.Error(err)
 		}
 	}(conn, c.T())
+}
+
+func (c *ConfigServerTests) TestConfigServerGetConfig() {
+	c.bufferListener = bufconn.Listen(c.bufSize)
+	s := grpc.NewServer()
+
+	configServer := NewConfigServer(c.store, &c.logger)
+	require.NotNil(c.T(), configServer, "the config server must not be nil")
+
+	RegisterConfigServiceServer(s, configServer)
+	go func() {
+		if err := s.Serve(c.bufferListener); err != nil {
+			c.T().Fatalf("server exited with error: %v", err)
+		}
+	}()
+
+	ctx := context.Background()
+	conn, err := grpc.DialContext(ctx,
+		"bufnet",
+		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+			return c.bufferListener.Dial()
+		}),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	require.Nil(c.T(), err, "there must be no error on the bufnet dialer")
+	defer func(conn *grpc.ClientConn, t *testing.T) {
+		err := conn.Close()
+		if err != nil {
+			t.Error(err)
+		}
+	}(conn, c.T())
+
+	client := NewConfigServiceClient(conn)
+	require.NotNil(c.T(), client, "the config server client must not be nil")
+
+	testRequest := &types.ConfigRequest{
+		types.ConfigResponse{Type: }
+	}
+	resp, err := client.GetConfig(ctx,)
 }

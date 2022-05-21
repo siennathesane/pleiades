@@ -9,7 +9,8 @@ message ConfigResponseAll {
 message ConfigResponse {
   oneof Type {
     ConfigResponseAll All = 1;
-    RaftConfigResponse Raft = 2;
+    ListRaftConfigsResponse AllRaftConfigs = 2;
+    GetRaftConfigResponse RaftConfig = 3;
   }
 }
 

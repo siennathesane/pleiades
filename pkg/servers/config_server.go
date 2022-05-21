@@ -53,11 +53,9 @@ func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error)
 	}
 
 	t := &types.ConfigResponse{
-		Type: &types.ConfigResponse_Raft{
-			Raft: &types.RaftConfigResponse{
-				Config: &config,
-				Name:   *name,
-				Valid:  true,
+		Type: &types.ConfigResponse_RaftConfig{
+			RaftConfig: &types.GetRaftConfigResponse{
+				Configuration: &config,
 			},
 		},
 	}
@@ -66,6 +64,25 @@ func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error)
 }
 
 func (c ConfigServer) getAllRaftConfigs() (*types.ConfigResponse, error) {
+	resp, err := c.manager.GetAll(reflect.TypeOf(&types.RaftConfig{}))
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	var configs map[string]*types.RaftConfig
+	for k, _ := range resp {
+		var val *types.RaftConfig
+		if err := json.Unmarshal(resp[k], &val); err != nil {
+			return nil, err
+		}
+		configs[k] = val
+	}
+
+	return &types.ConfigResponse{
+		Type: &types.ConfigResponse_AllRaftConfigs{
+			AllRaftConfigs: &types.ListRaftConfigsResponse{
+				AvailableConfigs: configs,
+			},
+		},
+	}, nil
 }

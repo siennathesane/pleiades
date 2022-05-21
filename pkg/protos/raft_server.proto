@@ -3,7 +3,7 @@ option go_package = "r3t.io/pleiades/pkg/servers";
 import "raft.proto";
 
 service RaftConfigService {
-  rpc AddConfiguration(NewRaftConfigRequest) returns (RaftConfigResponse) {}
+  rpc AddConfiguration(NewRaftConfigRequest) returns (NewRaftConfigResponse) {}
   rpc GetConfiguration(GetRaftConfigRequest) returns (GetRaftConfigResponse) {}
-  rpc ListConfigurations(ListRaftConfigs) returns (ListRaftConfigsResponse) {}
+  rpc ListConfigurations(ListRaftConfigsRequest) returns (ListRaftConfigsResponse) {}
 }
