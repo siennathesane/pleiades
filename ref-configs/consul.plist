@@ -15,7 +15,7 @@
 		<string>-datacenter</string>
 		<string>dc1</string>
 		<string>-data-dir</string>
-		<string>/tmp/wraith</string>
+		<string>/tmp/pleiades</string>
 		<string>-bind</string>
 		<string>127.0.0.1</string>
 	</array>
