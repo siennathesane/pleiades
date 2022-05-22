@@ -6,3 +6,9 @@ type IServiceManager interface {
 	Stop(retry bool) error
 	Restart(retry bool) error
 }
+
+type IStore[T any] interface {
+	Get(key string) (*T, error)
+	GetAll() (map[string]*T, error)
+	Put(key string, payload *T) error
+}
