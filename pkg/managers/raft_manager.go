@@ -17,7 +17,7 @@ type RaftManager[T types.RaftConfig] struct {
 	store  *services.StoreManager
 }
 
-func NewRaftManager(logger dlog.ILogger, store *services.StoreManager) *RaftManager[types.RaftConfig] {
+func NewRaftManager(store *services.StoreManager, logger dlog.ILogger) *RaftManager[types.RaftConfig] {
 	return &RaftManager[types.RaftConfig]{logger: logger, store: store}
 }
 

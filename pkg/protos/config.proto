@@ -26,5 +26,5 @@ message ConfigRequest {
     EVERYTHING = 1;
   }
   Specificity Amount = 2;
-  optional string Name = 3;
+  optional string Key = 3;
 }

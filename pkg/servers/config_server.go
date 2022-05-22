@@ -2,11 +2,10 @@ package servers
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"reflect"
 
 	dlog "github.com/lni/dragonboat/v3/logger"
+	"r3t.io/pleiades/pkg/managers"
 	"r3t.io/pleiades/pkg/services"
 	"r3t.io/pleiades/pkg/types"
 )
@@ -15,12 +14,16 @@ var _ ConfigServiceServer = ConfigServer{}
 
 type ConfigServer struct {
 	UnimplementedConfigServiceServer
-	manager *services.StoreManager
-	logger  *dlog.ILogger
+	manager     *services.StoreManager
+	logger      dlog.ILogger
+	raftManager *managers.RaftManager[types.RaftConfig]
 }
 
-func NewConfigServer(manager *services.StoreManager, logger *dlog.ILogger) *ConfigServer {
-	return &ConfigServer{manager: manager, logger: logger}
+func NewConfigServer(manager *services.StoreManager, logger dlog.ILogger) *ConfigServer {
+	return &ConfigServer{
+		manager:     manager,
+		logger:      logger,
+		raftManager: managers.NewRaftManager(manager, logger)}
 }
 
 func (c ConfigServer) GetConfig(ctx context.Context, config *types.ConfigRequest) (*types.ConfigResponse, error) {
@@ -29,7 +32,7 @@ func (c ConfigServer) GetConfig(ctx context.Context, config *types.ConfigRequest
 	case types.ConfigRequest_RAFT:
 		switch config.Amount {
 		case types.ConfigRequest_ONE:
-			return c.getRaftConfig(config.Name)
+			return c.getRaftConfig(config.Key)
 		case types.ConfigRequest_EVERYTHING:
 			return c.getAllRaftConfigs()
 		}
@@ -42,20 +45,15 @@ func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error)
 		return nil, errors.New("cannot request a named record without a key")
 	}
 
-	val, err := c.manager.Get(*name, reflect.TypeOf(&types.RaftConfig{}))
+	val, err := c.raftManager.Get(*name)
 	if err != nil {
-		return nil, err
-	}
-
-	var config types.RaftConfig
-	if err := json.Unmarshal(val, &config); err != nil {
 		return nil, err
 	}
 
 	t := &types.ConfigResponse{
 		Type: &types.ConfigResponse_RaftConfig{
 			RaftConfig: &types.GetRaftConfigResponse{
-				Configuration: &config,
+				Configuration: val,
 			},
 		},
 	}
@@ -64,24 +62,16 @@ func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error)
 }
 
 func (c ConfigServer) getAllRaftConfigs() (*types.ConfigResponse, error) {
-	resp, err := c.manager.GetAll(reflect.TypeOf(&types.RaftConfig{}))
+
+	all, err := c.raftManager.GetAll()
 	if err != nil {
 		return nil, err
-	}
-
-	var configs map[string]*types.RaftConfig
-	for k, _ := range resp {
-		var val *types.RaftConfig
-		if err := json.Unmarshal(resp[k], &val); err != nil {
-			return nil, err
-		}
-		configs[k] = val
 	}
 
 	return &types.ConfigResponse{
 		Type: &types.ConfigResponse_AllRaftConfigs{
 			AllRaftConfigs: &types.ListRaftConfigsResponse{
-				AvailableConfigs: configs,
+				AvailableConfigs: all,
 			},
 		},
 	}, nil
