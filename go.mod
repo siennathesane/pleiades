@@ -8,9 +8,11 @@ require (
 	github.com/hashicorp/consul/api v1.12.0
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/magefile/mage v1.13.0
+	github.com/nats-io/nats-server/v2 v2.8.2
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.1
 	go.etcd.io/bbolt v1.3.6
+	go.etcd.io/etcd/api/v3 v3.5.4
 	go.uber.org/fx v1.17.1
 	google.golang.org/api v0.46.0
 	google.golang.org/grpc v1.46.2
@@ -22,6 +24,7 @@ require (
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
@@ -50,13 +53,11 @@ require (
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/nats-io/jsm.go v0.0.31 // indirect
 	github.com/nats-io/jwt/v2 v2.2.1-0.20220330180145-442af02fd36a // indirect
-	github.com/nats-io/nats-server/v2 v2.8.2 // indirect
 	github.com/nats-io/nats.go v1.14.1-0.20220412004736-c75dfd54b52c // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.1.1 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.4 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/dig v1.14.0 // indirect

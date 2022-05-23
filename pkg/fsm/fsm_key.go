@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	RootKeyFormat     string = "wrn:partition:service:region:account-id:resource-type/resource-id"
+	RootWrnFormat     string = "wrn:partition:service:region:account-id:resource-type/resource-id"
 	PartitionIndex    int    = 1
 	ServiceIndex      int    = 2
 	RegionIndex       int    = 3
