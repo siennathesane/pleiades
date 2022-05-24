@@ -13,7 +13,7 @@ import (
 
 	"github.com/lni/dragonboat/v3/statemachine"
 	"go.etcd.io/bbolt"
-	"go.etcd.io/etcd/api/v3/mvccpb"
+	"r3t.io/pleiades/pkg/pb"
 )
 
 type op int
@@ -119,8 +119,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		}
 
 		for idx := range entries {
-			kvp := mvccpb.KeyValue{}
-			if err := kvp.Unmarshal(entries[idx].Cmd); err != nil {
+			kvp := pb.KeyValue{}
+			if err := kvp.UnmarshalVT(entries[idx].Cmd); err != nil {
 				return err
 			}
 
@@ -184,7 +184,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 }
 
 // prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errors
-func prepBucket(kvp mvccpb.KeyValue) (string, []string, error) {
+func prepBucket(kvp pb.KeyValue) (string, []string, error) {
 	// verify we're not trying to create an empty bucket and skip the first item
 	bucketHierarchy := strings.Split(string(kvp.Key[:]), "/")[1:]
 	bucketHierarchyLen := len(bucketHierarchy)
@@ -232,11 +232,11 @@ func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, ope
 }
 
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
-	payload := mvccpb.KeyValue{}
+	payload := pb.KeyValue{}
 
 	b.mu.Lock()
 	err := b.db.Update(func(tx *bbolt.Tx) error {
-		if err := payload.Unmarshal(i.([]byte)); err != nil {
+		if err := payload.UnmarshalVT(i.([]byte)); err != nil {
 			return err
 		}
 
@@ -265,7 +265,7 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 			return nil
 		}
 
-		if err := payload.Unmarshal(target); err != nil {
+		if err := payload.UnmarshalVT(target); err != nil {
 			return err
 		}
 

@@ -13,12 +13,12 @@ require (
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.1
 	go.etcd.io/bbolt v1.3.6
-	go.etcd.io/etcd/api/v3 v3.5.4
 	go.uber.org/atomic v1.9.0
 	go.uber.org/fx v1.17.1
 	google.golang.org/api v0.46.0
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0
+	storj.io/drpc v0.0.30
 )
 
 require (
@@ -83,6 +83,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	storj.io/drpc v0.0.30 // indirect
 )

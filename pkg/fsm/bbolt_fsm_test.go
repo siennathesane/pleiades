@@ -15,9 +15,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
-	"go.etcd.io/etcd/api/v3/mvccpb"
 	"go.uber.org/fx/fxtest"
 	"r3t.io/pleiades/pkg/conf"
+	"r3t.io/pleiades/pkg/pb"
 )
 
 type TestBBoltFsm struct {
@@ -204,7 +204,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []mvccpb.KeyValue{
+	testKvps := []pb.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -233,7 +233,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[0].Marshal()
+		val, err := testKvps[0].MarshalVT()
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -303,7 +303,7 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []mvccpb.KeyValue{
+	testKvps := []pb.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -332,7 +332,7 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].Marshal()
+		val, err := testKvps[idx].MarshalVT()
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -385,8 +385,8 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		return nil
 	}))
 
-	finalKvp := mvccpb.KeyValue{}
-	if err := finalKvp.Unmarshal(target); err != nil {
+	finalKvp := pb.KeyValue{}
+	if err := finalKvp.UnmarshalVT(target); err != nil {
 		bfsm.T().Error(err)
 	}
 
@@ -421,7 +421,7 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []mvccpb.KeyValue{
+	testKvps := []pb.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -450,7 +450,7 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].Marshal()
+		val, err := testKvps[idx].MarshalVT()
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -474,9 +474,9 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 	val, err := fsm.Lookup(testUpdates[len(testUpdates)-1].Cmd)
 	require.NoError(bfsm.T(), err, "there must not be an error when calling lookup")
 
-	var casted mvccpb.KeyValue
+	var casted pb.KeyValue
 	require.NotPanics(bfsm.T(), func() {
-		casted = val.(mvccpb.KeyValue)
+		casted = val.(pb.KeyValue)
 	}, "casting the lookup value must not panic")
 	require.Equal(bfsm.T(), testKvps[len(testUpdates)-1], casted, "the found value must be identical")
 }
@@ -509,7 +509,7 @@ func (bfsm *TestBBoltFsm) TestSync() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []mvccpb.KeyValue{
+	testKvps := []pb.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -538,7 +538,7 @@ func (bfsm *TestBBoltFsm) TestSync() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].Marshal()
+		val, err := testKvps[idx].MarshalVT()
 		if err != nil {
 			bfsm.T().Error(err)
 		}

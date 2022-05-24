@@ -6,7 +6,6 @@ package servers
 
 import (
 	"context"
-	"encoding/json"
 	"net"
 	"reflect"
 	"testing"
@@ -21,8 +20,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/test/bufconn"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/services"
-	"r3t.io/pleiades/pkg/types"
+	"r3t.io/pleiades/pkg/pb"
+	"r3t.io/pleiades/pkg/servers/services"
 )
 
 type ConfigServerTests struct {
@@ -68,7 +67,7 @@ func (c *ConfigServerTests) TestNewConfigServer() {
 	configServer := NewConfigServer(c.store, c.logger)
 	require.NotNil(c.T(), configServer, "the config server must not be nil")
 
-	RegisterConfigServiceServer(s, configServer)
+	pb.RegisterConfigServiceServer(s, configServer)
 	go func() {
 		if err := s.Serve(c.bufferListener); err != nil {
 			c.T().Fatalf("server exited with error: %v", err)
@@ -99,7 +98,7 @@ func (c *ConfigServerTests) TestConfigServerRaftConfigs() {
 	configServer := NewConfigServer(c.store, c.logger)
 	require.NotNil(c.T(), configServer, "the config server must not be nil")
 
-	RegisterConfigServiceServer(s, configServer)
+	pb.RegisterConfigServiceServer(s, configServer)
 	go func() {
 		if err := s.Serve(c.bufferListener); err != nil {
 			c.T().Fatalf("server exited with error: %v", err)
@@ -122,25 +121,25 @@ func (c *ConfigServerTests) TestConfigServerRaftConfigs() {
 		}
 	}(conn, c.T())
 
-	client := NewConfigServiceClient(conn)
+	client := pb.NewConfigServiceClient(conn)
 	require.NotNil(c.T(), client, "the config server client must not be nil")
 
-	requestOne := &types.ConfigRequest{What: types.ConfigRequest_RAFT, Amount: types.ConfigRequest_ONE}
+	requestOne := &pb.ConfigRequest{What: pb.ConfigRequest_RAFT, Amount: pb.ConfigRequest_ONE}
 	respOne, err := client.GetConfig(ctx, requestOne)
 	assert.NotNil(c.T(), err, "there should be an error when requesting a specific record without specifying a record key")
 	assert.Nil(c.T(), respOne, "the response should be nil because there is an error")
 
-	testStruct := &types.RaftConfig{ClusterId: 123}
-	payload, err := json.Marshal(testStruct)
+	testStruct := &pb.RaftConfig{ClusterId: 123}
+	payload, err := testStruct.MarshalVT()
 	require.Nil(c.T(), err, "there shouldn't be an error serializing the test record")
 
-	err = c.store.Put("request-one-test", payload, reflect.TypeOf(&types.RaftConfig{}))
+	err = c.store.Put("request-one-test", payload, reflect.TypeOf(&pb.RaftConfig{}))
 	require.Nil(c.T(), err, "there shouldn't be an error storing a record for the test")
 
 	storageKey := "request-one-test"
-	requestTwo := &types.ConfigRequest{
-		What:   types.ConfigRequest_RAFT,
-		Amount: types.ConfigRequest_ONE,
+	requestTwo := &pb.ConfigRequest{
+		What:   pb.ConfigRequest_RAFT,
+		Amount: pb.ConfigRequest_ONE,
 		Key:    &storageKey,
 	}
 
@@ -148,7 +147,7 @@ func (c *ConfigServerTests) TestConfigServerRaftConfigs() {
 	require.Nil(c.T(), err, "fetching a named record mustn't throw an error")
 	require.NotNil(c.T(), respTwo, "the named record mustn't be nil")
 	switch r := respTwo.Type.(type) {
-	case *types.ConfigResponse_RaftConfig:
+	case *pb.ConfigResponse_RaftConfig:
 		assert.Equal(c.T(), testStruct, r.RaftConfig.Configuration, "the fetched raft config should be equal")
 	}
 }

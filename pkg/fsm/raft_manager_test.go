@@ -1,4 +1,4 @@
-package managers
+package fsm
 
 import (
 	"os"
@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/services"
-	"r3t.io/pleiades/pkg/types"
+	"r3t.io/pleiades/pkg/pb"
+	"r3t.io/pleiades/pkg/servers/services"
 )
 
 type RaftManagerTests struct {
@@ -57,22 +57,22 @@ func (rmt *RaftManagerTests) TestNewRaftManager() {
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPut() {
-	var manager *RaftManager[types.RaftConfig]
+	var manager *RaftManager[pb.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	err := manager.Put("test", &types.RaftConfig{ClusterId: 123})
+	err := manager.Put("test", &pb.RaftConfig{ClusterId: 123})
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
-	var manager *RaftManager[types.RaftConfig]
+	var manager *RaftManager[pb.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	testStruct := &types.RaftConfig{ClusterId: 123}
+	testStruct := &pb.RaftConfig{ClusterId: 123}
 	err := manager.Put("test", testStruct)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 
@@ -97,23 +97,23 @@ func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerGetAll() {
-	var manager *RaftManager[types.RaftConfig]
+	var manager *RaftManager[pb.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	testStructOne := &types.RaftConfig{ClusterId: 123}
+	testStructOne := &pb.RaftConfig{ClusterId: 123}
 	err := manager.Put("test", testStructOne)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 
-	testStructTwo := &types.RaftConfig{ClusterId: 456}
+	testStructTwo := &pb.RaftConfig{ClusterId: 456}
 	err = manager.Put("another-test", testStructTwo)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a second raft config")
 
 	all, err := manager.GetAll()
 	require.Nil(rmt.T(), err, "there must be no error when fetching all the stored raft configs")
 
-	tests := map[string]*types.RaftConfig{
+	tests := map[string]*pb.RaftConfig{
 		"test":         testStructOne,
 		"another-test": testStructTwo,
 	}

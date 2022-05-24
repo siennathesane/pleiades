@@ -10,7 +10,7 @@ import (
 	"go.uber.org/fx/fxtest"
 	"google.golang.org/grpc/test/bufconn"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/services"
+	"r3t.io/pleiades/pkg/servers/services"
 )
 
 type RaftConfigServerTests struct {
