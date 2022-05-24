@@ -16,7 +16,7 @@ import (
 
 type RaftManagerTests struct {
 	suite.Suite
-	logger    *conf.MockLogger
+	logger    conf.MockLogger
 	store     *services.StoreManager
 	lifecycle *fxtest.Lifecycle
 	client    *api.Client
@@ -28,7 +28,7 @@ func TestRaftManager(t *testing.T) {
 }
 
 func (rmt *RaftManagerTests) SetupSuite() {
-	rmt.logger = &conf.MockLogger{}
+	rmt.logger = conf.MockLogger{}
 
 	var err error
 	rmt.lifecycle = fxtest.NewLifecycle(rmt.T())
@@ -52,14 +52,14 @@ func (rmt *RaftManagerTests) BeforeTest(suiteName, testName string) {
 
 func (rmt *RaftManagerTests) TestNewRaftManager() {
 	require.NotPanics(rmt.T(), func() {
-		NewRaftManager(rmt.logger, rmt.store)
+		NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPut() {
 	var manager *RaftManager[types.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.logger, rmt.store)
+		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	err := manager.Put("test", &types.RaftConfig{ClusterId: 123})
@@ -69,7 +69,7 @@ func (rmt *RaftManagerTests) TestRaftManagerPut() {
 func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 	var manager *RaftManager[types.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.logger, rmt.store)
+		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	testStruct := &types.RaftConfig{ClusterId: 123}
@@ -99,7 +99,7 @@ func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 func (rmt *RaftManagerTests) TestRaftManagerGetAll() {
 	var manager *RaftManager[types.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.logger, rmt.store)
+		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	testStructOne := &types.RaftConfig{ClusterId: 123}

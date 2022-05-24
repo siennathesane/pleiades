@@ -374,13 +374,14 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		// rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-2"
 		bucketHierarchy := strings.Split(rootPrn.ToFsmRootPath("test-bucket")+"/"+"test-key-2", "/")[1:]
 		parentBucketName := bucketHierarchy[0]
-		childBucketNames := bucketHierarchy[1 :]
+		childBucketNames := bucketHierarchy[1:]
 		parentBucket := tx.Bucket([]byte(parentBucketName))
 		resChan := make(chan []byte, 1)
-		if err := keyOp(parentBucket, childBucketNames, make([]byte, 0), get, resChan); err != nil {
+		if err := keyOp(parentBucket, childBucketNames, make([]byte, 0), get, &resChan); err != nil {
 			return err
 		}
 		target = <-resChan
+		close(resChan)
 		return nil
 	}))
 
@@ -390,4 +391,176 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 	}
 
 	require.Equal(bfsm.T(), testKvps[len(testKvps)-1], finalKvp, "the serialized result must match the initial value")
+}
+
+func (bfsm *TestBBoltFsm) TestLookup() {
+	testOpts := &bbolt.Options{
+		Timeout:         0,
+		NoGrowSync:      false,
+		NoFreelistSync:  false,
+		FreelistType:    bbolt.FreelistMapType,
+		ReadOnly:        false,
+		InitialMmapSize: 0,
+		PageSize:        0,
+		NoSync:          false,
+		OpenFile:        nil,
+		Mlock:           false,
+	}
+
+	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	index, err := fsm.Open(make(<-chan struct{}))
+	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
+	require.Equal(bfsm.T(), uint64(0), index, "the index must equal as there are no records")
+
+	rootPrn := &PleiadesResourceName{
+		Partition:    GlobalPartition,
+		Service:      Pleiades,
+		Region:       GlobalRegion,
+		AccountId:    testAccountKey,
+		ResourceType: Bucket,
+		ResourceId:   "test-bucket",
+	}
+
+	testKvps := []mvccpb.KeyValue{
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-0"),
+			Lease:          0,
+		},
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-1"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-1"),
+			Lease:          0,
+		},
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-2"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-2"),
+			Lease:          0,
+		},
+	}
+
+	testUpdates := make([]statemachine.Entry, 0)
+	for idx := range testKvps {
+		val, err := testKvps[idx].Marshal()
+		if err != nil {
+			bfsm.T().Error(err)
+		}
+		testUpdates = append(testUpdates, statemachine.Entry{
+			Index:  uint64(idx),
+			Cmd:    val,
+			Result: statemachine.Result{},
+		})
+	}
+
+	var endingIndex []statemachine.Entry
+	require.NotPanics(bfsm.T(), func() {
+		endingIndex, err = fsm.Update(testUpdates)
+	})
+	require.NoError(bfsm.T(), err, "there must not be an error delivering updates")
+	require.Equal(bfsm.T(),
+		testUpdates[len(testUpdates)-1].Index,
+		endingIndex[len(endingIndex)-1].Index,
+		fmt.Sprintf("the ending index must be %d", testUpdates[len(testUpdates)-1].Index))
+
+	val, err := fsm.Lookup(testUpdates[len(testUpdates)-1].Cmd)
+	require.NoError(bfsm.T(), err, "there must not be an error when calling lookup")
+
+	var casted mvccpb.KeyValue
+	require.NotPanics(bfsm.T(), func() {
+		casted = val.(mvccpb.KeyValue)
+	}, "casting the lookup value must not panic")
+	require.Equal(bfsm.T(), testKvps[len(testUpdates)-1], casted, "the found value must be identical")
+}
+
+func (bfsm *TestBBoltFsm) TestSync() {
+	testOpts := &bbolt.Options{
+		Timeout:         0,
+		NoGrowSync:      false,
+		NoFreelistSync:  false,
+		FreelistType:    bbolt.FreelistMapType,
+		ReadOnly:        false,
+		InitialMmapSize: 0,
+		PageSize:        0,
+		NoSync:          false,
+		OpenFile:        nil,
+		Mlock:           false,
+	}
+
+	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	index, err := fsm.Open(make(<-chan struct{}))
+	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
+	require.Equal(bfsm.T(), uint64(0), index, "the index must equal as there are no records")
+
+	rootPrn := &PleiadesResourceName{
+		Partition:    GlobalPartition,
+		Service:      Pleiades,
+		Region:       GlobalRegion,
+		AccountId:    testAccountKey,
+		ResourceType: Bucket,
+		ResourceId:   "test-bucket",
+	}
+
+	testKvps := []mvccpb.KeyValue{
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-0"),
+			Lease:          0,
+		},
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-1"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-1"),
+			Lease:          0,
+		},
+		{
+			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-2"),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        1,
+			Value:          []byte("test-value-2"),
+			Lease:          0,
+		},
+	}
+
+	testUpdates := make([]statemachine.Entry, 0)
+	for idx := range testKvps {
+		val, err := testKvps[idx].Marshal()
+		if err != nil {
+			bfsm.T().Error(err)
+		}
+		testUpdates = append(testUpdates, statemachine.Entry{
+			Index:  uint64(idx),
+			Cmd:    val,
+			Result: statemachine.Result{},
+		})
+	}
+
+	var endingIndex []statemachine.Entry
+	require.NotPanics(bfsm.T(), func() {
+		endingIndex, err = fsm.Update(testUpdates)
+	})
+	require.NoError(bfsm.T(), err, "there must not be an error delivering updates")
+	require.Equal(bfsm.T(),
+		testUpdates[len(testUpdates)-1].Index,
+		endingIndex[len(endingIndex)-1].Index,
+		fmt.Sprintf("the ending index must be %d", testUpdates[len(testUpdates)-1].Index))
+
+	require.NotPanics(bfsm.T(), func() {
+		err = fsm.Sync()
+	})
+	require.NoError(bfsm.T(), err, "there must not be an error when syncing bbolt to disk")
 }

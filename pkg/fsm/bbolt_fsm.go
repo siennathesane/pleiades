@@ -119,34 +119,23 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		}
 
 		for idx := range entries {
-			kvp := &mvccpb.KeyValue{}
+			kvp := mvccpb.KeyValue{}
 			if err := kvp.Unmarshal(entries[idx].Cmd); err != nil {
 				return err
 			}
 
-			// verify we're not trying to create an empty bucket and skip the first item
-			bucketHierarchy := strings.Split(string(kvp.Key[:]), "/")[1:]
-			bucketHierarchyLen := len(bucketHierarchy)
-			if bucketHierarchy[bucketHierarchyLen-1] == "" {
-				return errors.New("cannot create empty bucket")
+			parentBucketName, childBucketNames, err := prepBucket(kvp)
+			if err != nil {
+				return err
 			}
-
-			if bucketHierarchyLen < fsmRootKeyCount {
-				return errors.New("the fsm root key count is not correct")
-			}
-
-			if bucketHierarchyLen+3 > maxKeyDepth {
-				return fmt.Errorf("the nested key cannot be more than %d levels deep", maxKeyDepth)
-			}
-
-			parentBucketName := bucketHierarchy[0]
-			childBucketNames := bucketHierarchy[1:]
 
 			parentBucket, err := tx.CreateBucketIfNotExists([]byte(parentBucketName))
 			if err != nil {
 				return err
 			}
-			if err := keyOp(parentBucket, childBucketNames, entries[idx].Cmd, put, make(chan []byte)); err != nil {
+
+			retVal := make(chan []byte)
+			if err := keyOp(parentBucket, childBucketNames, entries[idx].Cmd, put, &retVal); err != nil {
 				return err
 			}
 
@@ -194,17 +183,35 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	return entries, err
 }
 
+// prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errors
+func prepBucket(kvp mvccpb.KeyValue) (string, []string, error) {
+	// verify we're not trying to create an empty bucket and skip the first item
+	bucketHierarchy := strings.Split(string(kvp.Key[:]), "/")[1:]
+	bucketHierarchyLen := len(bucketHierarchy)
+	if bucketHierarchy[bucketHierarchyLen-1] == "" {
+		return "", []string{}, errors.New("cannot create empty bucket")
+	}
+
+	if bucketHierarchyLen < fsmRootKeyCount {
+		return "", []string{},errors.New("the fsm root key count is not correct")
+	}
+
+	if bucketHierarchyLen+3 > maxKeyDepth {
+		return "", []string{}, fmt.Errorf("the nested key cannot be more than %d levels deep", maxKeyDepth)
+	}
+
+	return bucketHierarchy[0], bucketHierarchy[1:], nil
+}
+
 // keyOp recursively creates buckets until it can put or get the key
-func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, operation op, retVal chan []byte) error {
+func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, operation op, retVal *chan []byte) error {
 	// the last value in the bucketHierarchy is 1, it's the key, which makes the parent bucket the desired bucket
 	if len(bucketHierarchy) == 1 {
 		switch operation {
 		case get:
 			targetVal := parentBucket.Get([]byte(bucketHierarchy[0]))
-			if targetVal == nil {
-				return errors.New("payload not found")
-			}
-			retVal <- targetVal
+			*retVal <- targetVal
+			//sent = true
 			return nil
 		case put:
 			return parentBucket.Put([]byte(bucketHierarchy[0]), val)
@@ -212,6 +219,7 @@ func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, ope
 		return nil
 	}
 
+	// there's more hierarchy, keep expanding.
 	if len(bucketHierarchy) >= 2 {
 		childBucket, err := parentBucket.CreateBucketIfNotExists([]byte(bucketHierarchy[0]))
 		if err != nil {
@@ -224,20 +232,42 @@ func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, ope
 }
 
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
-	var payload interface{}
+	payload := mvccpb.KeyValue{}
 
 	b.mu.Lock()
 	err := b.db.Update(func(tx *bbolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(monotonicLogBucket))
+		if err := payload.Unmarshal(i.([]byte)); err != nil {
+			return err
+		}
+
+		if string(payload.Key) == "" {
+			return errors.New("cannot find an empty key")
+		}
+
+		parentBucketName, childBucketNames, err := prepBucket(payload)
 		if err != nil {
 			return err
 		}
 
-		val := b.Get(i.([]byte))
-		if err != nil {
+		bucket := tx.Bucket([]byte(parentBucketName))
+		if bucket == nil {
+			return errors.New(fmt.Sprintf("the root bucket %s does not exist", parentBucketName))
+		}
+
+		retVal := make(chan []byte, 1)
+		if err := keyOp(bucket, childBucketNames, make([]byte,0), get, &retVal); err != nil {
 			return err
 		}
-		payload = val
+
+		// if it's empty, that's okay, we just don't want a serialized value
+		target := <- retVal
+		if target == nil {
+			return nil
+		}
+
+		if err := payload.Unmarshal(target); err != nil {
+			return err
+		}
 
 		return nil
 	})
@@ -315,6 +345,7 @@ func (b *BBoltStateMachine) Close() error {
 
 	err := b.db.Close()
 	if err != nil {
+		b.mu.Unlock()
 		return err
 	}
 
