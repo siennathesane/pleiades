@@ -2,7 +2,6 @@ package fsm
 
 import (
 	"encoding/binary"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -17,10 +16,11 @@ import (
 	"go.etcd.io/etcd/api/v3/mvccpb"
 )
 
+type op int
+
 const (
-	monotonicLogBucket string = "monotonic-log"
-	monotonicLogKey    string = "last-index-applied"
-	maxKeyDepth        int    = 25
+	get op = 1
+	put op = 2
 )
 
 var _ statemachine.IOnDiskStateMachine = &BBoltStateMachine{}
@@ -112,11 +112,15 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 		// prep the last known good applied commit
 		lastAppliedVal := monotonicBucket.Get([]byte(monotonicLogKey))
-		lastApplied = binary.LittleEndian.Uint64(lastAppliedVal)
+		if lastAppliedVal == nil {
+			lastApplied = uint64(0)
+		} else {
+			lastApplied = binary.LittleEndian.Uint64(lastAppliedVal)
+		}
 
 		for idx := range entries {
-			var kvp *mvccpb.KeyValue
-			if err := json.Unmarshal(entries[idx].Cmd, &kvp); err != nil {
+			kvp := &mvccpb.KeyValue{}
+			if err := kvp.Unmarshal(entries[idx].Cmd); err != nil {
 				return err
 			}
 
@@ -127,8 +131,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				return errors.New("cannot create empty bucket")
 			}
 
-			if bucketHierarchyLen < 3 {
-				return errors.New("there must be an account bucket and bucket name")
+			if bucketHierarchyLen < fsmRootKeyCount {
+				return errors.New("the fsm root key count is not correct")
 			}
 
 			if bucketHierarchyLen+3 > maxKeyDepth {
@@ -136,13 +140,13 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 
 			parentBucketName := bucketHierarchy[0]
-			childBucketNames := bucketHierarchy[1 : len(bucketHierarchy)-1]
+			childBucketNames := bucketHierarchy[1:]
 
 			parentBucket, err := tx.CreateBucketIfNotExists([]byte(parentBucketName))
 			if err != nil {
 				return err
 			}
-			if err := putKey(parentBucket, childBucketNames, kvp.Value); err != nil {
+			if err := keyOp(parentBucket, childBucketNames, entries[idx].Cmd, put, make(chan []byte)); err != nil {
 				return err
 			}
 
@@ -157,7 +161,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			applied = append(applied, entries[idx])
 		}
 
-		return tx.Commit()
+		return nil
 	})
 	b.mu.Unlock()
 
@@ -166,9 +170,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	}
 
 	err = b.db.View(func(tx *bbolt.Tx) error {
-		monotonicBucket, err := tx.CreateBucketIfNotExists([]byte(monotonicLogBucket))
-		if err != nil {
-			return err
+		monotonicBucket := tx.Bucket([]byte(monotonicLogBucket))
+		if monotonicBucket == nil {
+			return fmt.Errorf("the %s bucket does not exist, no writes applied", monotonicLogBucket)
 		}
 
 		// prep the last known good applied commit
@@ -190,25 +194,30 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	return entries, err
 }
 
-// putKey recursively creates buckets until it can put the key
-func putKey(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte) error {
-	if len(bucketHierarchy) < 2 {
-		return errors.New("cannot set a key in a bucket if it's not set properly")
-	}
-	if len(bucketHierarchy) == 2 {
-		childBucket, err := parentBucket.CreateBucketIfNotExists([]byte(bucketHierarchy[0]))
-		if err != nil {
-			return err
+// keyOp recursively creates buckets until it can put or get the key
+func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, operation op, retVal chan []byte) error {
+	// the last value in the bucketHierarchy is 1, it's the key, which makes the parent bucket the desired bucket
+	if len(bucketHierarchy) == 1 {
+		switch operation {
+		case get:
+			targetVal := parentBucket.Get([]byte(bucketHierarchy[0]))
+			if targetVal == nil {
+				return errors.New("payload not found")
+			}
+			retVal <- targetVal
+			return nil
+		case put:
+			return parentBucket.Put([]byte(bucketHierarchy[0]), val)
 		}
-		return childBucket.Put([]byte(bucketHierarchy[1]), val)
+		return nil
 	}
 
-	if len(bucketHierarchy) > 2 {
+	if len(bucketHierarchy) >= 2 {
 		childBucket, err := parentBucket.CreateBucketIfNotExists([]byte(bucketHierarchy[0]))
 		if err != nil {
 			return err
 		}
-		return putKey(childBucket, bucketHierarchy[1:], val)
+		return keyOp(childBucket, bucketHierarchy[1:], val, operation, retVal)
 	}
 
 	return nil
