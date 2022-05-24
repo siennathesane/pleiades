@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "r3t.io/pleiades/pkg/servers";
+option go_package = "r3t.io/pleiades/pkg/pb";
 import "config.proto";
 
 service ConfigService {

@@ -9,10 +9,12 @@ require (
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/magefile/mage v1.13.0
 	github.com/nats-io/nats-server/v2 v2.8.2
+	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.1
 	go.etcd.io/bbolt v1.3.6
 	go.etcd.io/etcd/api/v3 v3.5.4
+	go.uber.org/atomic v1.9.0
 	go.uber.org/fx v1.17.1
 	google.golang.org/api v0.46.0
 	google.golang.org/grpc v1.46.2
@@ -22,6 +24,11 @@ require (
 require (
 	cloud.google.com/go v0.81.0 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
+	github.com/cockroachdb/errors v1.7.5 // indirect
+	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
+	github.com/cockroachdb/pebble v0.0.0-20210331181633-27fc006b8bfb // indirect
+	github.com/cockroachdb/redact v1.0.6 // indirect
+	github.com/cockroachdb/sentry-go v0.6.1-cockroachdb.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -51,15 +58,15 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
-	github.com/nats-io/jsm.go v0.0.31 // indirect
 	github.com/nats-io/jwt/v2 v2.2.1-0.20220330180145-442af02fd36a // indirect
 	github.com/nats-io/nats.go v1.14.1-0.20220412004736-c75dfd54b52c // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.1.1 // indirect
+	github.com/zeebo/errs v1.2.2 // indirect
 	go.opencensus.io v0.23.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/dig v1.14.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
@@ -77,4 +84,5 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	storj.io/drpc v0.0.30 // indirect
 )

@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RaftConfigServiceClient interface {
-	AddConfiguration(ctx context.Context, in *types.NewRaftConfigRequest, opts ...grpc.CallOption) (*types.NewRaftConfigResponse, error)
+	PutConfiguration(ctx context.Context, in *types.PutRaftConfigRequest, opts ...grpc.CallOption) (*types.NewRaftConfigResponse, error)
 	GetConfiguration(ctx context.Context, in *types.GetRaftConfigRequest, opts ...grpc.CallOption) (*types.GetRaftConfigResponse, error)
 	ListConfigurations(ctx context.Context, in *types.ListRaftConfigsRequest, opts ...grpc.CallOption) (*types.ListRaftConfigsResponse, error)
 }
@@ -36,9 +36,9 @@ func NewRaftConfigServiceClient(cc grpc.ClientConnInterface) RaftConfigServiceCl
 	return &raftConfigServiceClient{cc}
 }
 
-func (c *raftConfigServiceClient) AddConfiguration(ctx context.Context, in *types.NewRaftConfigRequest, opts ...grpc.CallOption) (*types.NewRaftConfigResponse, error) {
+func (c *raftConfigServiceClient) PutConfiguration(ctx context.Context, in *types.PutRaftConfigRequest, opts ...grpc.CallOption) (*types.NewRaftConfigResponse, error) {
 	out := new(types.NewRaftConfigResponse)
-	err := c.cc.Invoke(ctx, "/RaftConfigService/AddConfiguration", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/RaftConfigService/PutConfiguration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *raftConfigServiceClient) ListConfigurations(ctx context.Context, in *ty
 // All implementations must embed UnimplementedRaftConfigServiceServer
 // for forward compatibility
 type RaftConfigServiceServer interface {
-	AddConfiguration(context.Context, *types.NewRaftConfigRequest) (*types.NewRaftConfigResponse, error)
+	PutConfiguration(context.Context, *types.PutRaftConfigRequest) (*types.NewRaftConfigResponse, error)
 	GetConfiguration(context.Context, *types.GetRaftConfigRequest) (*types.GetRaftConfigResponse, error)
 	ListConfigurations(context.Context, *types.ListRaftConfigsRequest) (*types.ListRaftConfigsResponse, error)
 	mustEmbedUnimplementedRaftConfigServiceServer()
@@ -77,8 +77,8 @@ type RaftConfigServiceServer interface {
 type UnimplementedRaftConfigServiceServer struct {
 }
 
-func (UnimplementedRaftConfigServiceServer) AddConfiguration(context.Context, *types.NewRaftConfigRequest) (*types.NewRaftConfigResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddConfiguration not implemented")
+func (UnimplementedRaftConfigServiceServer) PutConfiguration(context.Context, *types.PutRaftConfigRequest) (*types.NewRaftConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutConfiguration not implemented")
 }
 func (UnimplementedRaftConfigServiceServer) GetConfiguration(context.Context, *types.GetRaftConfigRequest) (*types.GetRaftConfigResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConfiguration not implemented")
@@ -99,20 +99,20 @@ func RegisterRaftConfigServiceServer(s grpc.ServiceRegistrar, srv RaftConfigServ
 	s.RegisterService(&RaftConfigService_ServiceDesc, srv)
 }
 
-func _RaftConfigService_AddConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(types.NewRaftConfigRequest)
+func _RaftConfigService_PutConfiguration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(types.PutRaftConfigRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RaftConfigServiceServer).AddConfiguration(ctx, in)
+		return srv.(RaftConfigServiceServer).PutConfiguration(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/RaftConfigService/AddConfiguration",
+		FullMethod: "/RaftConfigService/PutConfiguration",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaftConfigServiceServer).AddConfiguration(ctx, req.(*types.NewRaftConfigRequest))
+		return srv.(RaftConfigServiceServer).PutConfiguration(ctx, req.(*types.PutRaftConfigRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -161,8 +161,8 @@ var RaftConfigService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RaftConfigServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddConfiguration",
-			Handler:    _RaftConfigService_AddConfiguration_Handler,
+			MethodName: "PutConfiguration",
+			Handler:    _RaftConfigService_PutConfiguration_Handler,
 		},
 		{
 			MethodName: "GetConfiguration",

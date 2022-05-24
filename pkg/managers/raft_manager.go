@@ -12,29 +12,31 @@ import (
 
 var _ services.IStore[types.RaftConfig] = &RaftManager[types.RaftConfig]{}
 
-type RaftManager[T types.RaftConfig] struct {
+type RaftManager struct {
 	logger dlog.ILogger
 	store  *services.StoreManager
 }
 
-func NewRaftManager(store *services.StoreManager, logger dlog.ILogger) *RaftManager[types.RaftConfig] {
-	return &RaftManager[types.RaftConfig]{logger: logger, store: store}
+func NewRaftManager(store *services.StoreManager, logger dlog.ILogger) *RaftManager {
+	return &RaftManager{logger: logger, store: store}
 }
 
-func (rm *RaftManager[T]) Get(key string) (*types.RaftConfig, error) {
+func (rm *RaftManager) Get(key string) (*types.RaftConfig, error) {
 	payload, err := rm.store.Get(key, reflect.TypeOf(&types.RaftConfig{}))
+
 	if err != nil {
 		rm.logger.Errorf(fmt.Errorf("error fetching %s from raft store: %w", key, err).Error())
 		return &types.RaftConfig{}, err
 	}
-	var config *types.RaftConfig
-	if err := json.Unmarshal(payload, &config); err != nil {
+
+	config := &types.RaftConfig{}
+	if err := config.Unmarshal(payload); err != nil {
 		return &types.RaftConfig{}, err
 	}
 	return config, nil
 }
 
-func (rm *RaftManager[T]) GetAll() (map[string]*types.RaftConfig, error) {
+func (rm *RaftManager) GetAll() (map[string]*types.RaftConfig, error) {
 	respMap, err := rm.store.GetAll(reflect.TypeOf(&types.RaftConfig{}))
 	if err != nil {
 		return nil, err
@@ -52,7 +54,7 @@ func (rm *RaftManager[T]) GetAll() (map[string]*types.RaftConfig, error) {
 	return configs, nil
 }
 
-func (rm *RaftManager[T]) Put(key string, payload *T) error {
+func (rm *RaftManager) Put(key string, payload *types.RaftConfig) error {
 	encoded, err := json.Marshal(payload)
 	if err != nil {
 		return err

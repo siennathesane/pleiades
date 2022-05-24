@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "r3t.io/pleiades/pkg/types";
+option go_package = "r3t.io/pleiades/pkg/pb";
 
 message RaftConfig {
   uint64 NodeId = 1;
@@ -17,9 +17,16 @@ message RaftConfig {
   bool IsObserver = 13;
   bool IsWitness = 14;
   bool Quiesce = 15;
+  IsConfigType Type = 16;
 }
 
-message NewRaftConfigRequest {
+enum IsConfigType {
+  System = 0;
+  Exchange = 1;
+  CustomerFsm = 100;
+}
+
+message PutRaftConfigRequest {
   bool Enable = 1;
   string Name = 2;
   RaftConfig Config = 3;

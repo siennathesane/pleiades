@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "r3t.io/pleiades/pkg/types";
+option go_package = "r3t.io/pleiades/pkg/pb";
 import "raft.proto";
 
 message ConfigResponseAll {

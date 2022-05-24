@@ -10,7 +10,7 @@ import (
 	"r3t.io/pleiades/pkg/types"
 )
 
-var _ ConfigServiceServer = ConfigServer{}
+var _ ConfigServiceServer = &ConfigServer{}
 
 type ConfigServer struct {
 	UnimplementedConfigServiceServer
@@ -26,7 +26,7 @@ func NewConfigServer(manager *services.StoreManager, logger dlog.ILogger) *Confi
 		raftManager: managers.NewRaftManager(manager, logger)}
 }
 
-func (c ConfigServer) GetConfig(ctx context.Context, config *types.ConfigRequest) (*types.ConfigResponse, error) {
+func (c *ConfigServer) GetConfig(ctx context.Context, config *types.ConfigRequest) (*types.ConfigResponse, error) {
 	switch config.What {
 	case types.ConfigRequest_ALL:
 	case types.ConfigRequest_RAFT:
@@ -40,7 +40,7 @@ func (c ConfigServer) GetConfig(ctx context.Context, config *types.ConfigRequest
 	return nil, errors.New("cannot determine which type of config to return")
 }
 
-func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error) {
+func (c *ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error) {
 	if name == nil {
 		return nil, errors.New("cannot request a named record without a key")
 	}
@@ -61,7 +61,7 @@ func (c ConfigServer) getRaftConfig(name *string) (*types.ConfigResponse, error)
 	return t, nil
 }
 
-func (c ConfigServer) getAllRaftConfigs() (*types.ConfigResponse, error) {
+func (c *ConfigServer) getAllRaftConfigs() (*types.ConfigResponse, error) {
 
 	all, err := c.raftManager.GetAll()
 	if err != nil {
