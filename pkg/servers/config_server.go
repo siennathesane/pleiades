@@ -4,27 +4,29 @@ import (
 	"context"
 	"errors"
 
-	dlog "github.com/lni/dragonboat/v3/logger"
+	"github.com/rs/zerolog"
 	"r3t.io/pleiades/pkg/fsm"
 	"r3t.io/pleiades/pkg/pb"
 	"r3t.io/pleiades/pkg/servers/services"
 )
 
-type ConfigServer struct {
-	pb.UnimplementedConfigServiceServer
+var _ pb.DRPCConfigServiceServer = (*ConfigServiceServer)(nil)
+
+type ConfigServiceServer struct {
+	pb.DRPCConfigServiceUnimplementedServer
 	manager     *services.StoreManager
-	logger      dlog.ILogger
+	logger      zerolog.Logger
 	raftManager *fsm.RaftManager[pb.RaftConfig]
 }
 
-func NewConfigServer(manager *services.StoreManager, logger dlog.ILogger) ConfigServer {
-	return ConfigServer{
+func NewConfigServiceServer(manager *services.StoreManager, logger zerolog.Logger) *ConfigServiceServer {
+	return &ConfigServiceServer{
 		manager:     manager,
 		logger:      logger,
 		raftManager: fsm.NewRaftManager(manager, logger)}
 }
 
-func (c ConfigServer) GetConfig(ctx context.Context, config *pb.ConfigRequest) (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) GetConfig(ctx context.Context, config *pb.ConfigRequest) (*pb.ConfigResponse, error) {
 	switch config.What {
 	case pb.ConfigRequest_ALL:
 	case pb.ConfigRequest_RAFT:
@@ -38,7 +40,7 @@ func (c ConfigServer) GetConfig(ctx context.Context, config *pb.ConfigRequest) (
 	return nil, errors.New("cannot determine which type of config to return")
 }
 
-func (c ConfigServer) getRaftConfig(name *string) (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) getRaftConfig(name *string) (*pb.ConfigResponse, error) {
 	if name == nil {
 		return nil, errors.New("cannot request a named record without a key")
 	}
@@ -59,7 +61,7 @@ func (c ConfigServer) getRaftConfig(name *string) (*pb.ConfigResponse, error) {
 	return t, nil
 }
 
-func (c ConfigServer) getAllRaftConfigs() (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) getAllRaftConfigs() (*pb.ConfigResponse, error) {
 
 	all, err := c.raftManager.GetAll()
 	if err != nil {
@@ -74,5 +76,3 @@ func (c ConfigServer) getAllRaftConfigs() (*pb.ConfigResponse, error) {
 		},
 	}, nil
 }
-
-func (c ConfigServer) mustEmbedUnimplementedConfigServiceServer() {}

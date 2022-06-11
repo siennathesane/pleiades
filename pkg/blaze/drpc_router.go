@@ -9,17 +9,15 @@ import (
 )
 
 var (
-	_           DrpcLayer = (*DrpcRouter)(nil)
-	streamType            = reflect.TypeOf((*drpc.Stream)(nil)).Elem()
-	messageType           = reflect.TypeOf((*drpc.Message)(nil)).Elem()
+	_           drpc.Mux     = (*Router)(nil)
+	_           drpc.Handler = (*Router)(nil)
+	streamType               = reflect.TypeOf((*drpc.Stream)(nil)).Elem()
+	messageType              = reflect.TypeOf((*drpc.Message)(nil)).Elem()
 )
 
-type DrpcLayer interface {
+type Router struct {
 	drpc.Mux
 	drpc.Handler
-}
-
-type DrpcRouter struct {
 	targets map[string]RpcMuxDataModel
 }
 
@@ -33,14 +31,14 @@ type RpcMuxDataModel struct {
 	Unitary  bool
 }
 
-func NewDrpcRouter() (*DrpcRouter, error) {
-	mux := &DrpcRouter{}
+func NewRouter() *Router {
+	mux := &Router{}
 	mux.targets = make(map[string]RpcMuxDataModel)
 
-	return mux, nil
+	return mux
 }
 
-func (d *DrpcRouter) Register(srv interface{}, desc drpc.Description) error {
+func (d *Router) Register(srv interface{}, desc drpc.Description) error {
 	n := desc.NumMethods()
 	for i := 0; i < n; i++ {
 		rpc, enc, receiver, method, ok := desc.Method(i)
@@ -54,7 +52,7 @@ func (d *DrpcRouter) Register(srv interface{}, desc drpc.Description) error {
 	return nil
 }
 
-func (d *DrpcRouter) registerOne(srv interface{}, rpc string, enc drpc.Encoding, receiver drpc.Receiver, method interface{}) error {
+func (d *Router) registerOne(srv interface{}, rpc string, enc drpc.Encoding, receiver drpc.Receiver, method interface{}) error {
 	data := RpcMuxDataModel{Server: srv, Encoding: enc, Receiver: receiver, Name: rpc}
 
 	switch mt := reflect.TypeOf(method); {
@@ -88,11 +86,11 @@ func (d *DrpcRouter) registerOne(srv interface{}, rpc string, enc drpc.Encoding,
 	return nil
 }
 
-func (d *DrpcRouter) HandleRPC(stream drpc.Stream, rpc string) (err error) {
+func (d *Router) HandleRPC(stream drpc.Stream, rpc string) (err error) {
 
 	data, ok := d.targets[rpc]
 	if !ok {
-		return fmt.Errorf("error finding rpc implementer %s", rpc)
+		return fmt.Errorf("error finding implementer for %s", rpc)
 	}
 
 	in := interface{}(stream)

@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	"github.com/hashicorp/consul/api"
-	dlog "github.com/lni/dragonboat/v3/logger"
+	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
 	"r3t.io/pleiades/pkg/conf"
 )
@@ -25,7 +25,7 @@ const (
 // StoreManager is used for managing various types persistently
 type StoreManager struct {
 	env         *conf.EnvironmentConfig
-	logger      dlog.ILogger
+	logger      zerolog.Logger
 	client      *api.Client
 	db          *bbolt.DB
 	initialized bool
@@ -34,7 +34,7 @@ type StoreManager struct {
 }
 
 func NewStoreManager(env *conf.EnvironmentConfig,
-	logger dlog.ILogger,
+	logger zerolog.Logger,
 	client *api.Client) *StoreManager {
 	return &StoreManager{
 		env:         env,
@@ -70,7 +70,7 @@ func (p *StoreManager) Put(key string, target []byte, t reflect.Type) error {
 		return b.Put([]byte(key), target)
 	})
 	if err != nil {
-		p.logger.Errorf("can't update port manager database: %s", err)
+		p.logger.Err(err).Msg("can't update port manager database")
 		return err
 	}
 
@@ -121,7 +121,7 @@ func (p *StoreManager) GetAll(t reflect.Type) (map[string][]byte, error) {
 		})
 	})
 	if err != nil {
-		p.logger.Errorf("cannot get all keys in the bucket: %w", err)
+		p.logger.Err(err).Msg("cannot get all keys in the bucket")
 	}
 
 	return targets, err
@@ -142,7 +142,7 @@ func (p *StoreManager) Flush() error {
 		}
 		return b.Put([]byte(typeMapKey), payload)
 	}); err != nil {
-		p.logger.Errorf("can't serialize the type map: %w", err)
+		p.logger.Err(err).Msg("can't serialize the type map")
 		return err
 	}
 	return nil
@@ -168,7 +168,7 @@ func (p *StoreManager) Stop(retry bool) error {
 	}
 
 	if err := p.db.Close(); err != nil {
-		p.logger.Errorf("can't close port manager database: %w", err)
+		p.logger.Err(err).Msg("can't close port manager database")
 		return err
 	}
 	return nil
@@ -182,7 +182,7 @@ func (p *StoreManager) init() error {
 
 	p.db, err = bbolt.Open(dbPath, 0600, &bbolt.Options{})
 	if err != nil {
-		p.logger.Errorf("error opening database")
+		p.logger.Err(err).Msg("error opening database")
 		return err
 	}
 

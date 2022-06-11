@@ -7,36 +7,35 @@ import (
 
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
-	"storj.io/drpc"
 	"storj.io/drpc/drpcmanager"
 )
 
-type ConnectionManager struct {
+type Server struct {
 	listener quic.Listener
-	handler  drpc.Handler
+	router   *Router
 	manager  *drpcmanager.Manager
 	logger   zerolog.Logger
-	closed bool
+	closed   bool
 }
 
-func NewConnectionServer(listener quic.Listener, handler drpc.Handler, logger zerolog.Logger) *ConnectionManager {
-	return &ConnectionManager{listener: listener, handler: handler, logger: logger}
+func NewServer(listener quic.Listener, router *Router, logger zerolog.Logger) *Server {
+	return &Server{listener: listener, router: router, logger: logger}
 }
 
-func (s *ConnectionManager) Start(ctx context.Context) error {
+func (s *Server) Start(ctx context.Context) error {
 	rootContext := context.WithValue(ctx, "component", "stream-manager")
 	s.logger.Info().Msg("starting listener")
 	go s.handleConn(rootContext)
 	return nil
 }
 
-func (s *ConnectionManager) Stop(ctx context.Context) error {
+func (s *Server) Stop(ctx context.Context) error {
 	s.logger.Info().Msg("shutting down listener")
 	s.closed = false
 	return s.listener.Close()
 }
 
-func (s *ConnectionManager) handleConn(ctx context.Context) {
+func (s *Server) handleConn(ctx context.Context) {
 	for {
 		if s.closed {
 			return
@@ -60,7 +59,7 @@ func (s *ConnectionManager) handleConn(ctx context.Context) {
 	}
 }
 
-func (s *ConnectionManager) handleStreams(conn quic.Connection, ctx context.Context) {
+func (s *Server) handleStreams(conn quic.Connection, ctx context.Context) {
 	for {
 		stream, err := conn.AcceptStream(ctx)
 		if err != nil {
@@ -77,23 +76,40 @@ func (s *ConnectionManager) handleStreams(conn quic.Connection, ctx context.Cont
 				continue
 			}
 		}
+
 		downstreamLogger := s.logger.
 			With().
-			Str("stream-id", fmt.Sprintf("%d", uint64(stream.StreamID()))).
 			Str("remote-addr", conn.RemoteAddr().String()).
+			Str("stream-id", fmt.Sprintf("%d", uint64(stream.StreamID()))).
 			Logger()
-
-		mPlexStream := NewMultiplexedStream(stream, s.handler, downstreamLogger)
 		handlerCtx := context.WithValue(ctx, "stream-id", stream.StreamID())
-		go func() {
-			mPlexStream.Handle(handlerCtx)
-		}()
 
-		select {
-		case <- ctx.Done():
+		go s.serveOne(stream, downstreamLogger, handlerCtx)
+	}
+}
+
+func (s *Server) serveOne(stream quic.Stream, inheritedLogger zerolog.Logger, ctx context.Context) {
+	streamManager := drpcmanager.New(stream)
+
+	for {
+		dServerStream, rpc, err := streamManager.NewServerStream(ctx)
+		if err != nil {
+			// todo (sienna): figure out a better way to handle manager closures
+			if strings.Contains(err.Error(), "manager closed") {
+				if streamErr := stream.Close(); streamErr != nil {
+					inheritedLogger.Trace().Err(err).Msg("cannot close stream")
+				}
+				return
+			}
+			inheritedLogger.Err(err).Msg("new server stream cannot be created")
 			return
-		default:
-			continue
+		}
+
+		err = s.router.HandleRPC(dServerStream, rpc)
+		if err != nil {
+			sendErr := dServerStream.SendError(err)
+			inheritedLogger.Debug().Err(sendErr).Msg("failure to send error to client")
+
 		}
 	}
 }

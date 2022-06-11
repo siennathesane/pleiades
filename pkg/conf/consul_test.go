@@ -1,6 +1,8 @@
 package conf
 
 import (
+	"net/url"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,7 +12,13 @@ import (
 
 func TestNewConsulClient(t *testing.T) {
 	// verify consul is available
-	assert.Nil(t, portChecker("localhost", "8500"), "verify consul is available. make sure it's running on your local machine and with the proper configs")
+	consulHost := os.Getenv("CONSUL_HTTP_ADDR")
+	require.NotEmpty(t, consulHost, "$CONSUL_HTTP_ADDR must be set")
+
+	urls, err := url.Parse(consulHost)
+	require.NoError(t, err, "there must not be an error when parsing $CONSUL_HTTP_ADDR")
+
+	assert.NoError(t, portChecker(urls.Host, "443"), "verify consul is available")
 
 	client, err := NewConsulClient(fxtest.NewLifecycle(t))
 	if err != nil {

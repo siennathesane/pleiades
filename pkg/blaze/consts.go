@@ -1,5 +1,6 @@
 package blaze
 
 const (
-	testAddr string = "localhost:8080"
+	testServerAddr string = "localhost:8080"
+	testConsulTlsKey string = "testdata/tls/localhost"
 )

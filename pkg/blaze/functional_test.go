@@ -25,7 +25,7 @@ type FunctionalTests struct {
 	listener   quic.Listener
 	tls        *tls.Config
 	logger     zerolog.Logger
-	mux        DrpcLayer
+	mux        *Router
 	client     *testdata.CookieMonsterClient
 	config *quic.Config
 }
@@ -60,9 +60,8 @@ func (ft *FunctionalTests) BeforeTest(suiteName, testName string) {
 	ft.Require().NoError(err, "there must not be an error when starting the listener")
 
 	ft.Require().NotPanics(func() {
-		ft.mux, err = NewDrpcRouter()
+		ft.mux = NewRouter()
 	}, "there must not be a panic when building a new muxer")
-	ft.Require().NoError(err, "there must not be an error when creating a new muxer")
 	ft.Require().NotNil(ft.mux, "the muxer must not be nil")
 
 	testServer := &testdata.TestCookieMonsterServer{}
@@ -80,9 +79,9 @@ func (ft *FunctionalTests) AfterTest(suiteName, testName string) {
 }
 
 func (ft *FunctionalTests) TestMultiplexedStream() {
-	var testStreamServer *ConnectionManager
+	var testStreamServer *Server
 	ft.Require().NotPanics(func() {
-		testStreamServer = NewConnectionServer(ft.listener, ft.mux, ft.logger)
+		testStreamServer = NewServer(ft.listener, ft.mux, ft.logger)
 	}, "there must not be an error when creating the new stream server")
 	ft.Require().NotNil(testStreamServer, "the stream server must not be nil")
 
@@ -95,13 +94,13 @@ func (ft *FunctionalTests) TestMultiplexedStream() {
 
 	ft.Require().NoError(err, "there must not be an error when starting the stream server")
 
-	dialConn, err := quic.DialAddr(testAddr, ft.tls, ft.config)
+	dialConn, err := quic.DialAddr(testServerAddr, ft.tls, ft.config)
 	ft.Require().NoError(err, "there must not be an error when dialing the test server")
 
 	stream, err := dialConn.OpenStream()
 	ft.Require().NoError(err, "there must not be an error when creating a new stream")
 
-	clientStream := NewMultiplexedStream(stream, ft.mux, ft.logger)
+	clientStream := NewConnectionStream(stream, ft.mux, ft.logger)
 	ft.Require().NotNil(clientStream, "the client stream must not be null")
 
 	client := testdata.NewDRPCCookieMonsterClient(clientStream)

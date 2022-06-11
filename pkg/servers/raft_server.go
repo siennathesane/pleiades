@@ -30,7 +30,7 @@ func init() {
 }
 
 type RaftConfigServer struct {
-	pb.UnimplementedRaftConfigServiceServer
+	pb.DRPCRaftConfigServiceUnimplementedServer
 	manager *fsm.RaftManager[pb.RaftConfig]
 	logger  dlog.ILogger
 

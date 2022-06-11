@@ -21,7 +21,7 @@ type StreamServerTests struct {
 	caCertPool *x509.CertPool
 	keyPair    tls.Certificate
 	listener   quic.Listener
-	mux        DrpcLayer
+	mux        *Router
 	client     *testdata.CookieMonsterClient
 }
 
@@ -47,7 +47,7 @@ func (smt *StreamServerTests) BeforeTest(suiteName, testName string) {
 	smt.Require().NoError(err, "there must not be an error when starting the listener")
 
 	smt.Require().NotPanics(func() {
-		smt.mux, err = NewDrpcRouter()
+		smt.mux = NewRouter()
 	}, "there must not be a panic when building a new muxer")
 	smt.Require().NoError(err, "there must not be an error when creating a new muxer")
 	smt.Require().NotNil(smt.mux, "the muxer must not be nil")
@@ -71,9 +71,9 @@ func (smt *StreamServerTests) TestNewStreamManager() {
 	testWriter := zerolog.NewTestWriter(smt.T())
 	testLogger := zerolog.New(testWriter)
 
-	var testStreamServer *ConnectionManager
+	var testStreamServer *Server
 	smt.Require().NotPanics(func() {
-		testStreamServer = NewConnectionServer(smt.listener, smt.mux, testLogger)
+		testStreamServer = NewServer(smt.listener, smt.mux, testLogger)
 	}, "there must not be an error when creating the new stream server")
 	smt.Require().NotNil(testStreamServer, "the stream server must not be nil")
 

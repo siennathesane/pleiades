@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/consul/api"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -12,11 +13,12 @@ import (
 	"r3t.io/pleiades/pkg/conf"
 	"r3t.io/pleiades/pkg/pb"
 	"r3t.io/pleiades/pkg/servers/services"
+	"r3t.io/pleiades/pkg/utils"
 )
 
 type RaftManagerTests struct {
 	suite.Suite
-	logger    conf.MockLogger
+	logger    zerolog.Logger
 	store     *services.StoreManager
 	lifecycle *fxtest.Lifecycle
 	client    *api.Client
@@ -28,7 +30,7 @@ func TestRaftManager(t *testing.T) {
 }
 
 func (rmt *RaftManagerTests) SetupSuite() {
-	rmt.logger = conf.MockLogger{}
+	rmt.logger = utils.NewTestLogger(rmt.T())
 
 	var err error
 	rmt.lifecycle = fxtest.NewLifecycle(rmt.T())

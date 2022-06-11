@@ -6,23 +6,25 @@ package servers
 
 import (
 	"context"
-	"net"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/consul/api"
-	dlog "github.com/lni/dragonboat/v3/logger"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/test/bufconn"
+	"r3t.io/pleiades/pkg/blaze"
 	"r3t.io/pleiades/pkg/conf"
 	"r3t.io/pleiades/pkg/pb"
 	"r3t.io/pleiades/pkg/servers/services"
+	"r3t.io/pleiades/pkg/utils"
 )
+
+func TestConfigServerSuite(t *testing.T) {
+	suite.Run(t, new(ConfigServerTests))
+}
 
 type ConfigServerTests struct {
 	suite.Suite
@@ -32,122 +34,114 @@ type ConfigServerTests struct {
 	lifecycle      *fxtest.Lifecycle
 	client         *api.Client
 	store          *services.StoreManager
-	logger         dlog.ILogger
+	logger         zerolog.Logger
+	mux            *blaze.Router
 }
 
-func TestConfigServerSuite(t *testing.T) {
-	suite.Run(t, new(ConfigServerTests))
-}
-
-func (c *ConfigServerTests) SetupSuite() {
-	c.logger = &conf.MockLogger{}
+func (cst *ConfigServerTests) SetupSuite() {
+	cst.logger = utils.NewTestLogger(cst.T())
 
 	var err error
-	c.lifecycle = fxtest.NewLifecycle(c.T())
-	c.client, err = conf.NewConsulClient(c.lifecycle)
-	require.Nil(c.T(), err, "failed to connect to consul")
-	require.NotNil(c.T(), c.client, "the consul client can't be empty")
+	cst.lifecycle = fxtest.NewLifecycle(cst.T())
+	cst.client, err = conf.NewConsulClient(cst.lifecycle)
+	cst.Require().NoError(err, "failed to connect to consul")
+	cst.Require().NotNil(cst.client, "the consul client can't be empty")
 
-	c.env, err = conf.NewEnvironmentConfig(c.client)
-	require.Nil(c.T(), err, "the environment config is needed")
-	require.NotNil(c.T(), c.env, "the environment config must be rendered")
+	cst.env, err = conf.NewEnvironmentConfig(cst.client)
+	cst.Require().NoError(err, "the environment config is needed")
+	cst.Require().NotNil(cst.env, "the environment config must be rendered")
 
-	c.store = services.NewStoreManager(c.env, c.logger, c.client)
-	require.NotNil(c.T(), c.store, "the store manager cannot be nil")
-	err = c.store.Start(false)
-	require.Nil(c.T(), err, "there must not be an error starting the store")
+	cst.store = services.NewStoreManager(cst.env, cst.logger, cst.client)
+	cst.Require().NotNil(cst.store, "the store manager cannot be nil")
 
-	c.bufSize = 1024 * 1024 // set the local buffer
+	err = cst.store.Start(false)
+	cst.Require().NoError(err, "there must not be an error starting the store")
+
+	cst.Require().NotPanics(func() {
+		cst.mux = blaze.NewRouter()
+	}, "there must not be a panic when building a new muxer")
+	cst.Require().NoError(err, "there must not be an error when creating a new muxer")
+	cst.Require().NotNil(cst.mux, "the muxer must not be nil")
 }
 
-func (c *ConfigServerTests) TestNewConfigServer() {
-	c.bufferListener = bufconn.Listen(c.bufSize)
-	s := grpc.NewServer()
+func (cst *ConfigServerTests) TestNewConfigServer() {
 
-	configServer := NewConfigServer(c.store, c.logger)
-	require.NotNil(c.T(), configServer, "the config server must not be nil")
+	configServer := NewConfigServiceServer(cst.store, cst.logger)
+	cst.Require().NotNil(configServer, "the config server must not be nil")
 
-	pb.RegisterConfigServiceServer(s, configServer)
-	go func() {
-		if err := s.Serve(c.bufferListener); err != nil {
-			c.T().Fatalf("server exited with error: %v", err)
-		}
-	}()
-
-	ctx := context.Background()
-	conn, err := grpc.DialContext(ctx,
-		"bufnet",
-		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
-			return c.bufferListener.Dial()
-		}),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
-	require.Nil(c.T(), err, "there must be no error on the bufnet dialer")
-	defer func(conn *grpc.ClientConn, t *testing.T) {
-		err := conn.Close()
-		if err != nil {
-			t.Error(err)
-		}
-	}(conn, c.T())
+	err := pb.DRPCRegisterConfigService(cst.mux, configServer)
+	cst.Require().NoError(err, "there must not be an error when registering the the config service")
 }
 
-func (c *ConfigServerTests) TestConfigServerRaftConfigs() {
-	c.bufferListener = bufconn.Listen(c.bufSize)
-	s := grpc.NewServer()
+func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
+	// build the testkit
+	testKit := blaze.NewTestKit(cst.T())
 
-	configServer := NewConfigServer(c.store, c.logger)
-	require.NotNil(c.T(), configServer, "the config server must not be nil")
+	// build the config service impl
+	configServer := NewConfigServiceServer(cst.store, cst.logger)
+	cst.Require().NotNil(configServer, "the config server must not be nil")
 
-	pb.RegisterConfigServiceServer(s, configServer)
-	go func() {
-		if err := s.Serve(c.bufferListener); err != nil {
-			c.T().Fatalf("server exited with error: %v", err)
-		}
-	}()
+	// register it
+	err := pb.DRPCRegisterConfigService(cst.mux, configServer)
+	cst.Require().NoError(err, "there must not be an error when registering the the config service")
 
-	ctx := context.Background()
-	conn, err := grpc.DialContext(ctx,
-		"bufnet",
-		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
-			return c.bufferListener.Dial()
-		}),
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	)
-	require.Nil(c.T(), err, "there must be no error on the bufnet dialer")
-	defer func(conn *grpc.ClientConn, t *testing.T) {
-		err := conn.Close()
-		if err != nil {
-			t.Error(err)
-		}
-	}(conn, c.T())
+	// generate the test server
+	testKit.NewServer(&blaze.TestKitServerArgs{AutoStart: true, Muxer: cst.mux})
 
-	client := pb.NewConfigServiceClient(conn)
-	require.NotNil(c.T(), client, "the config server client must not be nil")
+	// generate a new connection stream
+	configServiceTransportStream := testKit.NewConnectionStream()
+	configServiceStream := blaze.NewConnectionStream(configServiceTransportStream, cst.mux, cst.logger)
 
-	requestOne := &pb.ConfigRequest{What: pb.ConfigRequest_RAFT, Amount: pb.ConfigRequest_ONE}
+	// build a client
+	client := pb.NewDRPCConfigServiceClient(configServiceStream)
+	cst.Require().NotNil(client, "the config server client must not be nil")
+
+	// top level context
+	ctx, _ := context.WithTimeout(context.Background(), 300*time.Second)
+
+	// build a new request which fetches nothing
+	requestOne := &pb.ConfigRequest{
+		What:   pb.ConfigRequest_RAFT,
+		Amount: pb.ConfigRequest_ONE,
+	}
 	respOne, err := client.GetConfig(ctx, requestOne)
-	assert.NotNil(c.T(), err, "there should be an error when requesting a specific record without specifying a record key")
-	assert.Nil(c.T(), respOne, "the response should be nil because there is an error")
 
+	// verify nothing is there
+	cst.Assert().Error(err, "there should be an error when requesting a specific record without specifying a record key")
+	cst.Assert().Nil(respOne, "the response should be nil because there is an error")
+
+	// build and marshal a generic config
 	testStruct := &pb.RaftConfig{ClusterId: 123}
 	payload, err := testStruct.MarshalVT()
-	require.Nil(c.T(), err, "there shouldn't be an error serializing the test record")
+	cst.Require().NoError(err, "there must not be an error serializing the test record")
 
-	err = c.store.Put("request-one-test", payload, reflect.TypeOf(&pb.RaftConfig{}))
-	require.Nil(c.T(), err, "there shouldn't be an error storing a record for the test")
+	// manually store the test config in the underlying store
+	testStorageKey := "request-one-test"
+	err = cst.store.Put(testStorageKey, payload, reflect.TypeOf(&pb.RaftConfig{}))
+	cst.Require().NoError(err, "there must not be an error storing a record for the test")
 
-	storageKey := "request-one-test"
+	// build the request to get the storage key we just manually stored
 	requestTwo := &pb.ConfigRequest{
 		What:   pb.ConfigRequest_RAFT,
 		Amount: pb.ConfigRequest_ONE,
-		Key:    &storageKey,
+		Key:    &testStorageKey,
 	}
 
+	// fetch the storage key
 	respTwo, err := client.GetConfig(ctx, requestTwo)
-	require.Nil(c.T(), err, "fetching a named record mustn't throw an error")
-	require.NotNil(c.T(), respTwo, "the named record mustn't be nil")
+	cst.Require().NoError(err, "fetching a named record must not throw an error")
+	cst.Require().NotNil(respTwo, "the named record mustn't be nil")
+
+	// verify it's the proper type
 	switch r := respTwo.Type.(type) {
 	case *pb.ConfigResponse_RaftConfig:
-		assert.Equal(c.T(), testStruct, r.RaftConfig.Configuration, "the fetched raft config should be equal")
+		cst.Require().Equal(testStruct, r.RaftConfig.Configuration, "the fetched raft config should be equal")
 	}
+
+	// close the connection
+	err = client.DRPCConn().Close()
+	cst.Require().NoError(err, "there must not be an error when closing the client")
+
+	// close the underlying listener
+	testKit.CloseListener()
 }

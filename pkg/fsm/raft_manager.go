@@ -1,10 +1,9 @@
 package fsm
 
 import (
-	"fmt"
 	"reflect"
 
-	dlog "github.com/lni/dragonboat/v3/logger"
+	"github.com/rs/zerolog"
 	"r3t.io/pleiades/pkg/pb"
 	"r3t.io/pleiades/pkg/servers/services"
 )
@@ -12,11 +11,11 @@ import (
 var _ services.IStore[pb.RaftConfig] = &RaftManager[pb.RaftConfig]{}
 
 type RaftManager[T pb.RaftConfig] struct {
-	logger dlog.ILogger
+	logger zerolog.Logger
 	store  *services.StoreManager
 }
 
-func NewRaftManager(store *services.StoreManager, logger dlog.ILogger) *RaftManager[pb.RaftConfig] {
+func NewRaftManager(store *services.StoreManager, logger zerolog.Logger) *RaftManager[pb.RaftConfig] {
 	return &RaftManager[pb.RaftConfig]{logger: logger, store: store}
 }
 
@@ -24,7 +23,7 @@ func (rm *RaftManager[T]) Get(key string) (*pb.RaftConfig, error) {
 	payload, err := rm.store.Get(key, reflect.TypeOf(&pb.RaftConfig{}))
 
 	if err != nil {
-		rm.logger.Errorf(fmt.Errorf("error fetching %s from raft store: %w", key, err).Error())
+		rm.logger.Err(err).Str("key", key).Msg("error fetching key from raft store")
 		return &pb.RaftConfig{}, err
 	}
 

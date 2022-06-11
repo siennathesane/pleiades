@@ -13,7 +13,7 @@ import (
 	"storj.io/drpc/drpcwire"
 )
 
-type MultiplexedStream struct {
+type ConnectionStream struct {
 	stream    quic.Stream
 	writer    *drpcwire.Writer
 	handler   drpc.Handler
@@ -23,10 +23,10 @@ type MultiplexedStream struct {
 	mu sync.RWMutex
 }
 
-func NewMultiplexedStream(stream quic.Stream, handler drpc.Handler, logger zerolog.Logger) *MultiplexedStream {
+func NewConnectionStream(stream quic.Stream, handler drpc.Handler, logger zerolog.Logger) *ConnectionStream {
 	writer := drpcwire.NewWriter(stream, 0)
 	manager := drpcmanager.New(stream)
-	return &MultiplexedStream{
+	return &ConnectionStream{
 		stream: stream,
 		manager: manager,
 		writer: writer,
@@ -35,19 +35,22 @@ func NewMultiplexedStream(stream quic.Stream, handler drpc.Handler, logger zerol
 		writeBuff: make([]byte, 0)}
 }
 
-func (m *MultiplexedStream) Handle(ctx context.Context) {
+func (m *ConnectionStream) Handle(ctx context.Context) {
 	dServerStream, rpc, err := m.manager.NewServerStream(ctx)
 	if err != nil {
-		m.logger.Err(err).Msg("error creating a server stream")
+		m.logger.Err(err).Msg("new server stream cannot be created")
 	}
 
 	err = m.handler.HandleRPC(dServerStream, rpc)
 	if err != nil {
-		m.logger.Err(err).Msg("error handling the rpc call")
+		sendErr := dServerStream.SendError(err)
+		if sendErr != nil {
+			m.logger.Err(sendErr).Msg("failure to send error to client")
+		}
 	}
 }
 
-func (m *MultiplexedStream) Invoke(ctx context.Context, rpc string, enc drpc.Encoding, in, out drpc.Message) (err error) {
+func (m *ConnectionStream) Invoke(ctx context.Context, rpc string, enc drpc.Encoding, in, out drpc.Message) (err error) {
 	var metadata []byte
 	if md, ok := drpcmetadata.Get(ctx); ok {
 		metadata, err = drpcmetadata.Encode(metadata, md)
@@ -73,31 +76,36 @@ func (m *MultiplexedStream) Invoke(ctx context.Context, rpc string, enc drpc.Enc
 	}
 
 	if len(metadata) > 0 {
-		if err := stream.RawWrite(drpcwire.KindInvokeMetadata, metadata); err != nil {
+		err = stream.RawWrite(drpcwire.KindInvokeMetadata, metadata)
+		if err != nil {
 			return err
 		}
 	}
 
-	if err := stream.RawWrite(drpcwire.KindInvoke, []byte(rpc)); err != nil {
+	err = stream.RawWrite(drpcwire.KindInvoke, []byte(rpc))
+	if err != nil {
 		return err
 	}
 
-	if err := stream.RawWrite(drpcwire.KindMessage, m.writeBuff); err != nil {
+	err = stream.RawWrite(drpcwire.KindMessage, m.writeBuff)
+	if err != nil {
 		return err
 	}
 
-	if err := stream.CloseSend(); err != nil {
+	err = stream.CloseSend()
+	if err != nil {
 		return err
 	}
 
-	if err := stream.MsgRecv(out, enc); err != nil {
+	err = stream.MsgRecv(out, enc)
+	if err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *MultiplexedStream) NewStream(ctx context.Context, rpc string, enc drpc.Encoding) (drpc.Stream, error) {
+func (m *ConnectionStream) NewStream(ctx context.Context, rpc string, enc drpc.Encoding) (drpc.Stream, error) {
 	var metadata []byte
 	var err error
 	if md, ok := drpcmetadata.Get(ctx); ok {
@@ -129,10 +137,10 @@ func (m *MultiplexedStream) NewStream(ctx context.Context, rpc string, enc drpc.
 	return stream, nil
 }
 
-func (m *MultiplexedStream) Close() error {
+func (m *ConnectionStream) Close() error {
 	return m.manager.Close()
 }
 
-func (m *MultiplexedStream) Closed() <-chan struct{} {
+func (m *ConnectionStream) Closed() <-chan struct{} {
 	return m.manager.Closed()
 }

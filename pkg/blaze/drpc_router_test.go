@@ -7,21 +7,20 @@ import (
 	"r3t.io/pleiades/pkg/blaze/testdata"
 )
 
-type DrpcMuxerTests struct {
+type RouterTests struct {
 	suite.Suite
 }
 
-func TestDrpcMuxer(t *testing.T) {
-	suite.Run(t, new(DrpcMuxerTests))
+func TestRouter(t *testing.T) {
+	suite.Run(t, new(RouterTests))
 }
 
-func (dmt *DrpcMuxerTests) TestNewMuxerWithRegistration() {
-	var mux *DrpcRouter
+func (dmt *RouterTests) TestNewMuxerWithRegistration() {
+	var mux *Router
 	var err error
 	dmt.Require().NotPanics(func() {
-		mux, err = NewDrpcRouter()
+		mux = NewRouter()
 	}, "there must not be a panic when building a new muxer")
-	dmt.Require().NoError(err, "there must not be an error when creating a new muxer")
 	dmt.Require().NotNil(mux, "the muxer must not be nil")
 	dmt.Require().NotNil(mux.targets, "the target map must not be nil")
 
