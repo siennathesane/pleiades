@@ -58,7 +58,14 @@ path "sys/capabilities-self"
 }
 
 # Work with pki secrets engine
-path "pki*" {
+path "*" {
   capabilities = [ "create", "read", "update", "delete", "list", "sudo" ]
 }
 
+path "consul*" {
+  capabilities = [ "create", "read", "update", "delete", "list", "sudo" ]
+}
+
+path "identity/*" {
+  capabilities = [ "create", "read", "update", "delete", "list", "sudo" ]
+}
