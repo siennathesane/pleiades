@@ -4,10 +4,8 @@ go 1.18
 
 require (
 	cloud.google.com/go/logging v1.4.2
-	github.com/allegro/bigcache v1.2.1
 	github.com/cespare/xxhash/v2 v2.1.2
 	github.com/hashicorp/consul/api v1.12.0
-	github.com/hashicorp/go-memdb v1.3.3
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/lucas-clemente/quic-go v0.27.1
 	github.com/magefile/mage v1.13.0
@@ -27,7 +25,6 @@ require (
 
 require (
 	cloud.google.com/go v0.81.0 // indirect
-	github.com/allegro/bigcache/v3 v3.0.2 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/cockroachdb/errors v1.7.5 // indirect
