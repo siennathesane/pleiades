@@ -1,0 +1,193 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "config/v1/config.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ConfigService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "GetConfigRequestSpecificity": {
+      "type": "string",
+      "enum": [
+        "SPECIFICITY_ONE",
+        "SPECIFICITY_EVERYTHING"
+      ],
+      "default": "SPECIFICITY_ONE"
+    },
+    "GetConfigRequestType": {
+      "type": "string",
+      "enum": [
+        "TYPE_ALL_UNSPECIFIED",
+        "TYPE_RAFT"
+      ],
+      "default": "TYPE_ALL_UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1ConfigResponseAll": {
+      "type": "object",
+      "properties": {
+        "raftConfigs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1ListRaftConfigurationResponse"
+          }
+        }
+      }
+    },
+    "v1GetConfigResponse": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "$ref": "#/definitions/v1ConfigResponseAll"
+        },
+        "allRaftConfigs": {
+          "$ref": "#/definitions/v1ListRaftConfigurationResponse"
+        },
+        "raftConfig": {
+          "$ref": "#/definitions/v1GetRaftConfigurationResponse"
+        }
+      }
+    },
+    "v1GetRaftConfigurationResponse": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "$ref": "#/definitions/v1RaftConfig"
+        }
+      }
+    },
+    "v1IsConfigType": {
+      "type": "string",
+      "enum": [
+        "IS_CONFIG_TYPE_SYSTEM",
+        "IS_CONFIG_TYPE_EXCHANGE",
+        "IS_CONFIG_TYPE_CUSTOMER_FSM"
+      ],
+      "default": "IS_CONFIG_TYPE_SYSTEM"
+    },
+    "v1ListRaftConfigurationResponse": {
+      "type": "object",
+      "properties": {
+        "availableConfigs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v1RaftConfig"
+          }
+        }
+      }
+    },
+    "v1PutRaftConfigurationResponse": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "v1RaftConfig": {
+      "type": "object",
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "clusterId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "checkQuorum": {
+          "type": "boolean"
+        },
+        "electionRoundTripTime": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "heartbeatRoundTripTime": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "snapshotEntries": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "compactionOverhead": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "orderedConfigurationChange": {
+          "type": "boolean"
+        },
+        "maxInMemoryLogSize": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "snapshotCompressionType": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "entryCompressionType": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "disableAutoCompactions": {
+          "type": "boolean"
+        },
+        "isObserver": {
+          "type": "boolean"
+        },
+        "isWitness": {
+          "type": "boolean"
+        },
+        "quiesce": {
+          "type": "boolean"
+        },
+        "type": {
+          "$ref": "#/definitions/v1IsConfigType"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+version: v1
+
+name: buf.build/mxplusb/pleiades
+
+deps:
+  - buf.build/googleapis/googleapis
+
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

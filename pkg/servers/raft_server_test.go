@@ -3,7 +3,7 @@ package servers
 //import (
 //	"testing"
 //
-//	"github.com/hashicorp/consul/api"
+//	"github.com/hashicorp/consul/etcd"
 //	dlog "github.com/lni/dragonboat/v3/logger"
 //	"github.com/stretchr/testify/require"
 //	"github.com/stretchr/testify/suite"
@@ -19,7 +19,7 @@ package servers
 //	bufferListener *bufconn.Listener
 //	env            *conf.EnvironmentConfig
 //	lifecycle      *fxtest.Lifecycle
-//	client         *api.Client
+//	client         *etcd.Client
 //	store          *services.StoreManager
 //	logger         dlog.ILogger
 //}

@@ -1,9 +1,0 @@
-syntax = "proto3";
-option go_package = "r3t.io/pleiades/pkg/pb";
-import "raft.proto";
-
-service RaftConfigService {
-  rpc PutConfiguration(PutRaftConfigRequest) returns (NewRaftConfigResponse) {}
-  rpc GetConfiguration(GetRaftConfigRequest) returns (GetRaftConfigResponse) {}
-  rpc ListConfigurations(ListRaftConfigsRequest) returns (ListRaftConfigsResponse) {}
-}

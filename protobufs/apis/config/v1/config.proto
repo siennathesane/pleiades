@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package v1;
+
+service ConfigService {
+  // Retrieve one or more configurations
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {}
+
+  // Store a raft configuration
+  rpc PutRaftConfiguration(PutRaftConfigurationRequest) returns (PutRaftConfigurationResponse) {}
+  rpc GetRaftConfiguration(GetRaftConfigurationRequest) returns (GetRaftConfigurationResponse) {}
+  rpc ListRaftConfiguration(ListRaftConfigurationRequest) returns (ListRaftConfigurationResponse) {}
+}
+
+message ConfigResponseAll {
+  repeated ListRaftConfigurationResponse raft_configs = 1;
+}
+
+message GetConfigResponse {
+  oneof type {
+    ConfigResponseAll all = 1;
+    ListRaftConfigurationResponse all_raft_configs = 2;
+    GetRaftConfigurationResponse raft_config = 3;
+  }
+}
+
+message GetConfigRequest {
+  enum Type {
+    TYPE_ALL_UNSPECIFIED = 0;
+    TYPE_RAFT = 1;
+  }
+  Type what = 1;
+
+  enum Specificity {
+    SPECIFICITY_ONE = 0;
+    SPECIFICITY_EVERYTHING = 1;
+  }
+  Specificity amount = 2;
+  optional string key = 3;
+}
+
+message RaftConfig {
+  uint64 node_id = 1;
+  uint64 cluster_id = 2;
+  bool check_quorum = 3;
+  uint64 election_round_trip_time = 4;
+  uint64 heartbeat_round_trip_time = 5;
+  uint64 snapshot_entries = 6;
+  uint64 compaction_overhead = 7;
+  bool ordered_configuration_change = 8;
+  uint64 max_in_memory_log_size = 9;
+  uint64 snapshot_compression_type = 10;
+  uint64 entry_compression_type = 11;
+  bool disable_auto_compactions = 12;
+  bool is_observer = 13;
+  bool is_witness = 14;
+  bool quiesce = 15;
+  IsConfigType type = 16;
+}
+
+enum IsConfigType {
+  IS_CONFIG_TYPE_SYSTEM = 0;
+  IS_CONFIG_TYPE_EXCHANGE = 1;
+  IS_CONFIG_TYPE_CUSTOMER_FSM = 100;
+}
+
+message PutRaftConfigurationRequest {
+  bool enable = 1;
+  string name = 2;
+  RaftConfig config = 3;
+}
+
+message PutRaftConfigurationResponse {
+  bool valid = 1;
+  optional string name = 2;
+  optional string error = 3;
+}
+
+message GetRaftConfigurationRequest {
+  string name = 1;
+}
+
+message GetRaftConfigurationResponse {
+  RaftConfig configuration = 1;
+}
+
+message ListRaftConfigurationRequest {}
+
+message ListRaftConfigurationResponse {
+  map<string, RaftConfig> available_configs = 1;
+}

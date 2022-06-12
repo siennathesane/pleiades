@@ -17,7 +17,7 @@ func main() {
 	app := fx.New(conf2.ProvideConsulClient(), conf2.ProvideEnvironmentConfig(), conf2.ProvideLogger())
 	app.Run()
 
-	//consulClient, err := api.NewClient(api.DefaultConfig())
+	//consulClient, err := etcd.NewClient(etcd.DefaultConfig())
 	//if err != nil {
 	//	panic(fmt.Errorf("cannot reach consul: %s", err))
 	//}

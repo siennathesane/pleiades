@@ -25,5 +25,5 @@ func TestNewConsulClient(t *testing.T) {
 		require.FailNow(t, "failed to connect to consul")
 	}
 
-	require.NotNil(t, client, "consul api instance is returning nil")
+	require.NotNil(t, client, "consul etcd instance is returning nil")
 }

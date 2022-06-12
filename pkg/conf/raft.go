@@ -7,7 +7,7 @@ package conf
 //	"fmt"
 //	"os"
 //
-//	"github.com/hashicorp/consul/api"
+//	"github.com/hashicorp/consul/etcd"
 //	"github.com/lni/dragonboat/v3/config"
 //	"github.com/lni/dragonboat/v3/sugaredLogger"
 //)
@@ -32,7 +32,7 @@ package conf
 //
 //// NewRaftConfig generates a new Raft node configuration
 //// todo (sienna): this should read from 169.254.169.254
-//func NewRaftConfig(client *api.Client, sugaredLogger sugaredLogger.ILogger) (config.Config, error) {
+//func NewRaftConfig(client *etcd.Client, sugaredLogger sugaredLogger.ILogger) (config.Config, error) {
 //	configLogger = sugaredLogger
 //
 //	hostname, err := os.Hostname()
@@ -40,7 +40,7 @@ package conf
 //		return config.Config{}, err
 //	}
 //
-//	pair, _, err := client.KV().Get(fmt.Sprintf("hosts/%s/conf/raft", hostname), &api.QueryOptions{})
+//	pair, _, err := client.KV().Get(fmt.Sprintf("hosts/%s/conf/raft", hostname), &etcd.QueryOptions{})
 //	if err != nil {
 //		configLogger.Errorf("can't get configuration from consul: %s", err)
 //		return config.Config{}, err
