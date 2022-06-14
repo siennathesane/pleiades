@@ -1,0 +1,15 @@
+---
+platform: linux
+inputs:
+  - name: pleiades
+image_resource:
+  type: registry-image
+  source: 
+    repository: golang:((.:version))
+run:
+  path: /bin/sh
+  args:
+    - -c
+    - |
+      cd pleiades
+      go vet ./...

@@ -1,0 +1,20 @@
+resources:
+  - name: pleiades
+    type: git
+    icon: gitlab
+    source:
+      uri: git@gitlab.com:mxplusb/pleiades.git
+      private_key: ((git.private_key))
+      branch: mainline
+
+jobs:
+  - name: build
+    plan:
+      - get: pleiades
+        trigger: true
+      - across:
+        - var: version
+          values: ["1.17", "1.18"]
+        do:
+          - task: vet
+            file: pleiades/ci/tasks/go-lint.yaml
