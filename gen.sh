@@ -11,7 +11,7 @@ echo "Generating system protobufs"
 pb_files=()
 while IFS= read -r line; do
     pb_files+=( "$line" )
-done < <(ls -1 ./protobufs/*.proto)
+done < <(ls -1 ./protobufs/apis/config/v1/*.proto)
 
 protoc \
   -I ./protobufs \

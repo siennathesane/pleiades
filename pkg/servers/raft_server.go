@@ -12,7 +12,7 @@ import (
 	"go.uber.org/atomic"
 	"r3t.io/pleiades/pkg"
 	"r3t.io/pleiades/pkg/fsm"
-	"r3t.io/pleiades/pkg/pb"
+	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
 )
 
 var (
@@ -30,15 +30,15 @@ func init() {
 }
 
 type RaftConfigServer struct {
-	pb.DRPCRaftConfigServiceUnimplementedServer
-	manager *fsm.RaftManager[pb.RaftConfig]
+	configv1.DRPCConfigServiceUnimplementedServer
+	manager *fsm.RaftManager[configv1.RaftConfig]
 	logger  dlog.ILogger
 
-	allCache map[string]*pb.RaftConfig
+	allCache map[string]*configv1.RaftConfig
 	count    *atomic.Uint64
 }
 
-func NewRaftConfigServer(manager *fsm.RaftManager[pb.RaftConfig], logger dlog.ILogger) *RaftConfigServer {
+func NewRaftConfigServer(manager *fsm.RaftManager[configv1.RaftConfig], logger dlog.ILogger) *RaftConfigServer {
 	count := atomic.NewUint64(0)
 	all, _ := manager.GetAll()
 	if all != nil {
@@ -47,19 +47,19 @@ func NewRaftConfigServer(manager *fsm.RaftManager[pb.RaftConfig], logger dlog.IL
 	return &RaftConfigServer{manager: manager, logger: logger, count: count}
 }
 
-func (rcs *RaftConfigServer) PutConfiguration(ctx context.Context, payload *pb.PutRaftConfigRequest) (*pb.NewRaftConfigResponse, error) {
+func (rcs *RaftConfigServer) PutConfiguration(ctx context.Context, payload *configv1.PutRaftConfigurationRequest) (*configv1.PutRaftConfigurationResponse, error) {
 	if err := rcs.validatePutRaftConfig(payload); err != nil {
 		errMsg := err.Error()
-		return &pb.NewRaftConfigResponse{Name: &payload.Name, Error: &errMsg, Valid: false}, err
+		return &configv1.PutRaftConfigurationResponse{Name: &payload.Name, Error: &errMsg, Valid: false}, err
 	}
 
 	// prep the in-memory cache
 	rcs.allCache[payload.Name] = payload.Config
 
-	return &pb.NewRaftConfigResponse{Name: &payload.Name, Error: nil, Valid: true}, nil
+	return &configv1.PutRaftConfigurationResponse{Name: &payload.Name, Error: nil, Valid: true}, nil
 }
 
-func (rcs *RaftConfigServer) validatePutRaftConfig(payload *pb.PutRaftConfigRequest) error {
+func (rcs *RaftConfigServer) validatePutRaftConfig(payload *configv1.PutRaftConfigurationRequest) error {
 	if payload == nil {
 		return errors.New("cannot validate an empty configuration")
 	}
@@ -67,14 +67,14 @@ func (rcs *RaftConfigServer) validatePutRaftConfig(payload *pb.PutRaftConfigRequ
 	config := payload.Config
 
 	switch config.Type {
-	case pb.IsConfigType_System:
+	case configv1.IsConfigType_IS_CONFIG_TYPE_SYSTEM:
 		return rcs.validateSystemCluster(payload)
 	}
 
 	return nil
 }
 
-func (rcs *RaftConfigServer) validateSystemCluster(payload *pb.PutRaftConfigRequest) error {
+func (rcs *RaftConfigServer) validateSystemCluster(payload *configv1.PutRaftConfigurationRequest) error {
 	config := payload.Config
 
 	if config.ClusterId < pkg.SystemClusterIdRangeStartingValue || config.ClusterId > pkg.SystemClusterIdRangeEndingValue {
@@ -101,7 +101,7 @@ func (rcs *RaftConfigServer) validateSystemCluster(payload *pb.PutRaftConfigRequ
 		rcs.logger.Warningf("ElectionRoundTripTime needs to be less than 10 times the value of HeartbeatRoundTripTime")
 	}
 
-	if config.MaxInMemLogSize > 0 && config.MaxInMemLogSize > maxInMemoryLogSize {
+	if config.GetMaxInMemoryLogSize() > 0 && config.GetMaxInMemoryLogSize() > maxInMemoryLogSize {
 		return fmt.Errorf("MaxInMemLogSize must be more than 0 and less than %d for this host", maxInMemoryLogSize)
 	}
 
@@ -125,7 +125,7 @@ func (rcs *RaftConfigServer) validateSystemCluster(payload *pb.PutRaftConfigRequ
 	return nil
 }
 
-func (rcs *RaftConfigServer) GetConfiguration(ctx context.Context, payload *pb.GetRaftConfigRequest) (*pb.GetRaftConfigResponse, error) {
+func (rcs *RaftConfigServer) GetConfiguration(ctx context.Context, payload *configv1.GetRaftConfigurationRequest) (*configv1.GetRaftConfigurationResponse, error) {
 	if payload == nil {
 		return nil, errors.New("cannot fetch an empty configuration")
 	}
@@ -137,7 +137,7 @@ func (rcs *RaftConfigServer) GetConfiguration(ctx context.Context, payload *pb.G
 	// try the fast path
 	val, ok := rcs.allCache[payload.Name]
 	if ok {
-		return &pb.GetRaftConfigResponse{Configuration: val}, nil
+		return &configv1.GetRaftConfigurationResponse{Configuration: val}, nil
 	}
 
 	// now we do the slow path
@@ -153,9 +153,9 @@ func (rcs *RaftConfigServer) GetConfiguration(ctx context.Context, payload *pb.G
 	return nil, nil
 }
 
-func (rcs *RaftConfigServer) ListConfigurations(ctx context.Context, payload *pb.ListRaftConfigsRequest) (*pb.ListRaftConfigsResponse, error) {
+func (rcs *RaftConfigServer) ListConfigurations(ctx context.Context, payload *configv1.ListRaftConfigurationRequest) (*configv1.ListRaftConfigurationResponse, error) {
 	var err error
-	all := make(map[string]*pb.RaftConfig)
+	all := make(map[string]*configv1.RaftConfig)
 	if len(rcs.allCache) == 0 {
 		all, err = rcs.manager.GetAll()
 		if err != nil {
@@ -165,7 +165,7 @@ func (rcs *RaftConfigServer) ListConfigurations(ctx context.Context, payload *pb
 		all = rcs.allCache
 	}
 
-	return &pb.ListRaftConfigsResponse{AvailableConfigs: all}, nil
+	return &configv1.ListRaftConfigurationResponse{AvailableConfigs: all}, nil
 }
 
 func (rcs *RaftConfigServer) mustEmbedUnimplementedRaftConfigServiceServer() {}

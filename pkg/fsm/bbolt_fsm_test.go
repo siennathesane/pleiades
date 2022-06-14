@@ -16,8 +16,9 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
 	"go.uber.org/fx/fxtest"
+	"google.golang.org/protobuf/proto"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/pb"
+	etcdv3 "r3t.io/pleiades/pkg/pb/etcd/v3"
 )
 
 type TestBBoltFsm struct {
@@ -204,7 +205,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []pb.KeyValue{
+	testKvps := []etcdv3.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -233,7 +234,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[0].MarshalVT()
+		val, err := proto.Marshal(&testKvps[0])
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -303,7 +304,7 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []pb.KeyValue{
+	testKvps := []etcdv3.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -332,7 +333,7 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].MarshalVT()
+		val, err := proto.Marshal(&testKvps[idx])
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -385,12 +386,17 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		return nil
 	}))
 
-	finalKvp := pb.KeyValue{}
-	if err := finalKvp.UnmarshalVT(target); err != nil {
+	var finalKvp etcdv3.KeyValue
+	if err := proto.Unmarshal(target, &finalKvp); err != nil {
 		bfsm.T().Error(err)
 	}
 
-	require.Equal(bfsm.T(), testKvps[len(testKvps)-1], finalKvp, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].Key, &finalKvp.Key, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].Version, &finalKvp.Version, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].ModRevision, &finalKvp.ModRevision, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].Lease, &finalKvp.Lease, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].CreateRevision, &finalKvp.CreateRevision, "the serialized result must match the initial value")
+	require.Equal(bfsm.T(), &testKvps[len(testKvps)-1].Value, &finalKvp.Value, "the serialized result must match the initial value")
 }
 
 func (bfsm *TestBBoltFsm) TestLookup() {
@@ -421,7 +427,7 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []pb.KeyValue{
+	testKvps := []etcdv3.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -450,7 +456,7 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].MarshalVT()
+		val, err := proto.Marshal(&testKvps[idx])
 		if err != nil {
 			bfsm.T().Error(err)
 		}
@@ -474,11 +480,20 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 	val, err := fsm.Lookup(testUpdates[len(testUpdates)-1].Cmd)
 	require.NoError(bfsm.T(), err, "there must not be an error when calling lookup")
 
-	var casted pb.KeyValue
-	require.NotPanics(bfsm.T(), func() {
-		casted = val.(pb.KeyValue)
+	var casted etcdv3.KeyValue
+	bfsm.Require().NotPanics(func() {
+		// unfortunately it's all values and no pointers
+		//goland:noinspection ALL
+		casted = val.(etcdv3.KeyValue)
 	}, "casting the lookup value must not panic")
-	require.Equal(bfsm.T(), testKvps[len(testUpdates)-1], casted, "the found value must be identical")
+
+	// test each field otherwise testify fails on protoimpl fields :eye-roll:
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Value, casted.Value, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Key, casted.Key, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Lease, casted.Lease, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].CreateRevision, casted.CreateRevision, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Version, casted.Version, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].ModRevision, casted.ModRevision, "the found value must be identical")
 }
 
 func (bfsm *TestBBoltFsm) TestSync() {
@@ -509,7 +524,7 @@ func (bfsm *TestBBoltFsm) TestSync() {
 		ResourceId:   "test-bucket",
 	}
 
-	testKvps := []pb.KeyValue{
+	testKvps := []etcdv3.KeyValue{
 		{
 			Key:            []byte(rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-0"),
 			CreateRevision: 0,
@@ -538,7 +553,7 @@ func (bfsm *TestBBoltFsm) TestSync() {
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		val, err := testKvps[idx].MarshalVT()
+		val, err := proto.Marshal(&testKvps[idx])
 		if err != nil {
 			bfsm.T().Error(err)
 		}

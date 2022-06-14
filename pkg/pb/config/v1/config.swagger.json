@@ -28,10 +28,10 @@
     "GetConfigRequestType": {
       "type": "string",
       "enum": [
-        "TYPE_ALL_UNSPECIFIED",
+        "TYPE_ALL",
         "TYPE_RAFT"
       ],
-      "default": "TYPE_ALL_UNSPECIFIED"
+      "default": "TYPE_ALL"
     },
     "protobufAny": {
       "type": "object",
@@ -130,6 +130,9 @@
     "v1RaftConfig": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "nodeId": {
           "type": "string",
           "format": "uint64"

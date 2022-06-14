@@ -15,9 +15,10 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"
 	"google.golang.org/grpc/test/bufconn"
+	"google.golang.org/protobuf/proto"
 	"r3t.io/pleiades/pkg/blaze"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/pb"
+	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
 	"r3t.io/pleiades/pkg/servers/services"
 	"r3t.io/pleiades/pkg/utils"
 )
@@ -69,7 +70,7 @@ func (cst *ConfigServerTests) TestNewConfigServer() {
 	configServer := NewConfigServiceServer(cst.store, cst.logger)
 	cst.Require().NotNil(configServer, "the config server must not be nil")
 
-	err := pb.DRPCRegisterConfigService(cst.mux, configServer)
+	err := configv1.DRPCRegisterConfigService(cst.mux, configServer)
 	cst.Require().NoError(err, "there must not be an error when registering the the config service")
 }
 
@@ -82,7 +83,7 @@ func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
 	cst.Require().NotNil(configServer, "the config server must not be nil")
 
 	// register it
-	err := pb.DRPCRegisterConfigService(cst.mux, configServer)
+	err := configv1.DRPCRegisterConfigService(cst.mux, configServer)
 	cst.Require().NoError(err, "there must not be an error when registering the the config service")
 
 	// generate the test server
@@ -93,16 +94,16 @@ func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
 	configServiceStream := blaze.NewConnectionStream(configServiceTransportStream, cst.mux, cst.logger)
 
 	// build a client
-	client := pb.NewDRPCConfigServiceClient(configServiceStream)
+	client := configv1.NewDRPCConfigServiceClient(configServiceStream)
 	cst.Require().NotNil(client, "the config server client must not be nil")
 
 	// top level context
 	ctx, _ := context.WithTimeout(context.Background(), 300*time.Second)
 
 	// build a new request which fetches nothing
-	requestOne := &pb.ConfigRequest{
-		What:   pb.ConfigRequest_RAFT,
-		Amount: pb.ConfigRequest_ONE,
+	requestOne := &configv1.GetConfigRequest{
+		What:   configv1.GetConfigRequest_TYPE_RAFT,
+		Amount: configv1.GetConfigRequest_SPECIFICITY_ONE,
 	}
 	respOne, err := client.GetConfig(ctx, requestOne)
 
@@ -111,19 +112,19 @@ func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
 	cst.Assert().Nil(respOne, "the response should be nil because there is an error")
 
 	// build and marshal a generic config
-	testStruct := &pb.RaftConfig{ClusterId: 123}
-	payload, err := testStruct.MarshalVT()
+	testStruct := &configv1.RaftConfig{ClusterId: 123}
+	payload, err := proto.Marshal(testStruct)
 	cst.Require().NoError(err, "there must not be an error serializing the test record")
 
 	// manually store the test config in the underlying store
 	testStorageKey := "request-one-test"
-	err = cst.store.Put(testStorageKey, payload, reflect.TypeOf(&pb.RaftConfig{}))
+	err = cst.store.Put(testStorageKey, payload, reflect.TypeOf(&configv1.RaftConfig{}))
 	cst.Require().NoError(err, "there must not be an error storing a record for the test")
 
 	// build the request to get the storage key we just manually stored
-	requestTwo := &pb.ConfigRequest{
-		What:   pb.ConfigRequest_RAFT,
-		Amount: pb.ConfigRequest_ONE,
+	requestTwo := &configv1.GetConfigRequest{
+		What:   configv1.GetConfigRequest_TYPE_RAFT,
+		Amount: configv1.GetConfigRequest_SPECIFICITY_ONE,
 		Key:    &testStorageKey,
 	}
 
@@ -134,8 +135,8 @@ func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
 
 	// verify it's the proper type
 	switch r := respTwo.Type.(type) {
-	case *pb.ConfigResponse_RaftConfig:
-		cst.Require().Equal(testStruct, r.RaftConfig.Configuration, "the fetched raft config should be equal")
+	case *configv1.GetConfigResponse_RaftConfig:
+		cst.Require().Equal(testStruct.ClusterId, r.RaftConfig.Configuration.ClusterId, "the fetched raft config should be equal")
 	}
 
 	// close the connection

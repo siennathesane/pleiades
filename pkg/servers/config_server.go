@@ -6,17 +6,17 @@ import (
 
 	"github.com/rs/zerolog"
 	"r3t.io/pleiades/pkg/fsm"
-	"r3t.io/pleiades/pkg/pb"
+	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
 	"r3t.io/pleiades/pkg/servers/services"
 )
 
-var _ pb.DRPCConfigServiceServer = (*ConfigServiceServer)(nil)
+var _ configv1.DRPCConfigServiceServer = (*ConfigServiceServer)(nil)
 
 type ConfigServiceServer struct {
-	pb.DRPCConfigServiceUnimplementedServer
+	configv1.DRPCConfigServiceUnimplementedServer
 	manager     *services.StoreManager
 	logger      zerolog.Logger
-	raftManager *fsm.RaftManager[pb.RaftConfig]
+	raftManager *fsm.RaftManager[configv1.RaftConfig]
 }
 
 func NewConfigServiceServer(manager *services.StoreManager, logger zerolog.Logger) *ConfigServiceServer {
@@ -26,21 +26,21 @@ func NewConfigServiceServer(manager *services.StoreManager, logger zerolog.Logge
 		raftManager: fsm.NewRaftManager(manager, logger)}
 }
 
-func (c *ConfigServiceServer) GetConfig(ctx context.Context, config *pb.ConfigRequest) (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) GetConfig(ctx context.Context, config *configv1.GetConfigRequest) (*configv1.GetConfigResponse, error) {
 	switch config.What {
-	case pb.ConfigRequest_ALL:
-	case pb.ConfigRequest_RAFT:
+	case configv1.GetConfigRequest_TYPE_ALL:
+	case configv1.GetConfigRequest_TYPE_RAFT:
 		switch config.Amount {
-		case pb.ConfigRequest_ONE:
+		case configv1.GetConfigRequest_SPECIFICITY_ONE:
 			return c.getRaftConfig(config.Key)
-		case pb.ConfigRequest_EVERYTHING:
+		case configv1.GetConfigRequest_SPECIFICITY_EVERYTHING:
 			return c.getAllRaftConfigs()
 		}
 	}
 	return nil, errors.New("cannot determine which type of config to return")
 }
 
-func (c *ConfigServiceServer) getRaftConfig(name *string) (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) getRaftConfig(name *string) (*configv1.GetConfigResponse, error) {
 	if name == nil {
 		return nil, errors.New("cannot request a named record without a key")
 	}
@@ -50,9 +50,9 @@ func (c *ConfigServiceServer) getRaftConfig(name *string) (*pb.ConfigResponse, e
 		return nil, err
 	}
 
-	t := &pb.ConfigResponse{
-		Type: &pb.ConfigResponse_RaftConfig{
-			RaftConfig: &pb.GetRaftConfigResponse{
+	t := &configv1.GetConfigResponse{
+		Type: &configv1.GetConfigResponse_RaftConfig{
+			RaftConfig: &configv1.GetRaftConfigurationResponse{
 				Configuration: val,
 			},
 		},
@@ -61,16 +61,16 @@ func (c *ConfigServiceServer) getRaftConfig(name *string) (*pb.ConfigResponse, e
 	return t, nil
 }
 
-func (c *ConfigServiceServer) getAllRaftConfigs() (*pb.ConfigResponse, error) {
+func (c *ConfigServiceServer) getAllRaftConfigs() (*configv1.GetConfigResponse, error) {
 
 	all, err := c.raftManager.GetAll()
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.ConfigResponse{
-		Type: &pb.ConfigResponse_AllRaftConfigs{
-			AllRaftConfigs: &pb.ListRaftConfigsResponse{
+	return &configv1.GetConfigResponse{
+		Type: &configv1.GetConfigResponse_AllRaftConfigs{
+			AllRaftConfigs: &configv1.ListRaftConfigurationResponse{
 				AvailableConfigs: all,
 			},
 		},

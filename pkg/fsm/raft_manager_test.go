@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"
 	"r3t.io/pleiades/pkg/conf"
-	"r3t.io/pleiades/pkg/pb"
+	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
 	"r3t.io/pleiades/pkg/servers/services"
 	"r3t.io/pleiades/pkg/utils"
 )
@@ -59,22 +59,22 @@ func (rmt *RaftManagerTests) TestNewRaftManager() {
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPut() {
-	var manager *RaftManager[pb.RaftConfig]
+	var manager *RaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	err := manager.Put("test", &pb.RaftConfig{ClusterId: 123})
+	err := manager.Put("test", &configv1.RaftConfig{ClusterId: 123})
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
-	var manager *RaftManager[pb.RaftConfig]
+	var manager *RaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	testStruct := &pb.RaftConfig{ClusterId: 123}
+	testStruct := &configv1.RaftConfig{ClusterId: 123}
 	err := manager.Put("test", testStruct)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 
@@ -82,7 +82,7 @@ func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 	if err != nil {
 		require.Nil(rmt.T(), err, "there must not be a fetch error")
 	}
-	assert.Equal(rmt.T(), testStruct, resp, "the fetched type must match the stored type")
+	assert.Equal(rmt.T(), testStruct.ClusterId, resp.ClusterId, "the fetched type must match the stored type")
 
 	testStruct.ClusterId = 456
 	err = manager.Put("another-test", testStruct)
@@ -95,29 +95,35 @@ func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 	if err != nil {
 		require.Nil(rmt.T(), err, "there must not be a fetch error")
 	}
-	assert.Equal(rmt.T(), testStruct, resp, "the fetched type must match the second stored type")
+	assert.Equal(rmt.T(), testStruct.ClusterId, resp.ClusterId, "the fetched type must match the second stored type")
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerGetAll() {
-	var manager *RaftManager[pb.RaftConfig]
+	var manager *RaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
 		manager = NewRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
-	testStructOne := &pb.RaftConfig{ClusterId: 123}
+	testStructOne := &configv1.RaftConfig{ClusterId: 123, Id: "testStructOne"}
 	err := manager.Put("test", testStructOne)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a raft config")
 
-	testStructTwo := &pb.RaftConfig{ClusterId: 456}
+	testStructTwo := &configv1.RaftConfig{ClusterId: 456, Id: "testStructTwo"}
 	err = manager.Put("another-test", testStructTwo)
 	require.Nil(rmt.T(), err, "there must not be an error when storing a second raft config")
 
 	all, err := manager.GetAll()
 	require.Nil(rmt.T(), err, "there must be no error when fetching all the stored raft configs")
 
-	tests := map[string]*pb.RaftConfig{
-		"test":         testStructOne,
-		"another-test": testStructTwo,
+	tests := map[string]*configv1.RaftConfig{
+		"testStructOne": testStructOne,
+		"testStructTwo": testStructTwo,
 	}
-	assert.Equal(rmt.T(), tests, all, "the results should be the same")
+
+	for idx, _ := range all {
+		targetVal := all[idx]
+		ref, ok := tests[targetVal.Id]
+		rmt.Require().True(ok, "the target value must exist")
+		rmt.Assert().Equal(ref.ClusterId, targetVal.ClusterId, "the results should be the same")
+	}
 }

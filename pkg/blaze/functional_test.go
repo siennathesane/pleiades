@@ -106,8 +106,9 @@ func (ft *FunctionalTests) TestMultiplexedStream() {
 	client := testdata.NewDRPCCookieMonsterClient(clientStream)
 	ft.Require().NotNil(client, "the cookie monster client must not be null")
 
-	ctx, _ = context.WithTimeout(context.Background(), ft.config.MaxIdleTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), ft.config.MaxIdleTimeout)
 	resp, err := client.EatCookie(ctx, &testdata.Cookie{Type: testdata.Cookie_Oatmeal})
 	ft.Require().NoError(err, "there must not be an error when trying to eat a cookie")
 	ft.Assert().Equal(testdata.Cookie_Oatmeal, resp.Cookie.Type, "the cookie types should match")
+	cancel()
 }
