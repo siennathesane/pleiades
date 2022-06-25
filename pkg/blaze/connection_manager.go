@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
@@ -16,6 +17,7 @@ type Server struct {
 	manager  *drpcmanager.Manager
 	logger   zerolog.Logger
 	closed   bool
+	mu sync.RWMutex
 }
 
 func NewServer(listener quic.Listener, router *Router, logger zerolog.Logger) *Server {
@@ -31,15 +33,19 @@ func (s *Server) Start(ctx context.Context) error {
 
 func (s *Server) Stop(ctx context.Context) error {
 	s.logger.Info().Msg("shutting down listener")
+	s.mu.Lock()
 	s.closed = false
+	s.mu.Unlock()
 	return s.listener.Close()
 }
 
 func (s *Server) handleConn(ctx context.Context) {
 	for {
+		s.mu.RLock()
 		if s.closed {
 			return
 		}
+		s.mu.RUnlock()
 
 		conn, err := s.listener.Accept(ctx)
 		if err != nil {
