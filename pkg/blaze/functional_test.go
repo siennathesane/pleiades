@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -79,6 +80,12 @@ func (ft *FunctionalTests) AfterTest(suiteName, testName string) {
 }
 
 func (ft *FunctionalTests) TestMultiplexedStream() {
+	// get environment variable CI
+	ci := os.Getenv("CI")
+	if ci == "true" {
+		ft.T().Skip("this test is not run in CI")
+	}
+
 	var testStreamServer *Server
 	ft.Require().NotPanics(func() {
 		testStreamServer = NewServer(ft.listener, ft.mux, ft.logger)

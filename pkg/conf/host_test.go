@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/consul/api"
@@ -26,19 +27,29 @@ func (h *HostConfigTests) SetupSuite() {
 }
 
 func (h *HostConfigTests) TestNewEnvironmentConfigLoad() {
+	ci := os.Getenv("CI")
+	if ci == "true" {
+		h.T().Skip("this test is not run in CI")
+	}
+
 	config, err := NewEnvironmentConfig(h.client)
-	assert.Nil(h.T(), err, "error reading configuration")
-	assert.NotEmpty(h.T(), config.Environment, "configuration environment cannot be empty")
-	assert.NotEmpty(h.T(), config.GCPProjectId, "the gcp project id cannot be empty")
-	assert.NotEmpty(h.T(), config.BaseDir, "the base directory must be set")
-	assert.NotEmpty(h.T(), config.BasePort, "the base port must be set")
-	assert.NotEmpty(h.T(), config.MaxPort, "the max port must be set")
-	assert.NotEmpty(h.T(), config.LocalClusterId, "the local cluster id must be set")
-	assert.NotEmpty(h.T(), config.LocalExchangeId, "the local exchange id must be set")
-	assert.NotEmpty(h.T(), config.Hostname, "the hostname must be set")
+	h.Assert().NotNil(err, "error reading configuration")
+	h.Assert().NotEmpty(config.Environment, "configuration environment cannot be empty")
+	h.Assert().NotEmpty(config.GCPProjectId, "the gcp project id cannot be empty")
+	h.Assert().NotEmpty(config.BaseDir, "the base directory must be set")
+	h.Assert().NotEmpty(config.BasePort, "the base port must be set")
+	h.Assert().NotEmpty(config.MaxPort, "the max port must be set")
+	h.Assert().NotEmpty(config.LocalClusterId, "the local cluster id must be set")
+	h.Assert().NotEmpty(config.LocalExchangeId, "the local exchange id must be set")
+	h.Assert().NotEmpty(config.Hostname, "the hostname must be set")
 }
 
 func (h *HostConfigTests) TestEnvironmentConfigVerification() {
+	ci := os.Getenv("CI")
+	if ci == "true" {
+		h.T().Skip("this test is not run in CI")
+	}
+
 	validateHostConfig = false
 	config, err := NewEnvironmentConfig(h.client)
 	assert.Nil(h.T(), err, "error reading configuration")
