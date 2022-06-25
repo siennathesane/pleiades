@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/consul/api"
@@ -35,6 +36,11 @@ func (l *LoggerTestSuite) SetupSuite() {
 }
 
 func (l *LoggerTestSuite) TestNewLogger() {
+	ci := os.Getenv("CI")
+	if ci == "true" {
+		l.T().Skip("this test is not run in CI")
+	}
+
 	logger, err := NewLogger(l.lifecycle, l.client, l.env)
 	assert.Nil(l.T(), err, "the logger can't be built")
 	assert.NotNil(l.T(), logger, "the sugaredLogger can't be nil")
