@@ -3,27 +3,10 @@ managed:
   enabled: true
   optimize_for: SPEED
   go_package_prefix:
-    default: r3t.io/pleiades/pkg/pb
+    default: r3t.io/pleiades/pkg/protocols
 plugins:
-  - name: go
-    out: pkg/pb
-    opt: 
-      - paths=source_relative
   - name: go-drpc
-    out: pkg/pb
+    out: pkg/protocols
     path: protoc-gen-go-drpc
     opt: 
       - paths=source_relative
-  - name: go-grpc
-    out: pkg/pb
-    path: protoc-gen-go-grpc
-    opt: 
-      - paths=source_relative
-  - name: grpc-gateway
-    out: pkg/pb
-    path: protoc-gen-grpc-gateway
-    opt:
-      - paths=source_relative
-  - name: openapi
-    out: pkg/pb
-    path: protoc-gen-openapiv2
