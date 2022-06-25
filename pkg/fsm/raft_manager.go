@@ -9,18 +9,18 @@ import (
 	"r3t.io/pleiades/pkg/servers/services"
 )
 
-var _ services.IStore[configv1.RaftConfig] = &RaftManager[configv1.RaftConfig]{}
+var _ services.IStore[configv1.RaftConfig] = &OldRaftManager[configv1.RaftConfig]{}
 
-type RaftManager[T configv1.RaftConfig] struct {
+type OldRaftManager[T configv1.RaftConfig] struct {
 	logger zerolog.Logger
 	store  *services.StoreManager
 }
 
-func NewRaftManager(store *services.StoreManager, logger zerolog.Logger) *RaftManager[configv1.RaftConfig] {
-	return &RaftManager[configv1.RaftConfig]{logger: logger, store: store}
+func NewOldRaftManager(store *services.StoreManager, logger zerolog.Logger) *OldRaftManager[configv1.RaftConfig] {
+	return &OldRaftManager[configv1.RaftConfig]{logger: logger, store: store}
 }
 
-func (rm *RaftManager[T]) Get(key string) (*configv1.RaftConfig, error) {
+func (rm *OldRaftManager[T]) Get(key string) (*configv1.RaftConfig, error) {
 	payload, err := rm.store.Get(key, reflect.TypeOf(&configv1.RaftConfig{}))
 
 	if err != nil {
@@ -35,7 +35,7 @@ func (rm *RaftManager[T]) Get(key string) (*configv1.RaftConfig, error) {
 	return &config, nil
 }
 
-func (rm *RaftManager[T]) GetAll() (map[string]*configv1.RaftConfig, error) {
+func (rm *OldRaftManager[T]) GetAll() (map[string]*configv1.RaftConfig, error) {
 	respMap, err := rm.store.GetAll(reflect.TypeOf(&configv1.RaftConfig{}))
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (rm *RaftManager[T]) GetAll() (map[string]*configv1.RaftConfig, error) {
 	return configs, nil
 }
 
-func (rm *RaftManager[T]) Put(key string, payload *configv1.RaftConfig) error {
+func (rm *OldRaftManager[T]) Put(key string, payload *configv1.RaftConfig) error {
 	encoded, err := proto2.Marshal(payload)
 	if err != nil {
 		return err

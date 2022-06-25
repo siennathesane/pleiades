@@ -42,7 +42,7 @@ func (rmt *RaftManagerTests) SetupSuite() {
 	require.Nil(rmt.T(), err, "the environment config is needed")
 	require.NotNil(rmt.T(), rmt.env, "the environment config must be rendered")
 
-	rmt.store = services.NewStoreManager(rmt.env, rmt.logger, rmt.client)
+	rmt.store = services.NewStoreManager(rmt.T().TempDir(), rmt.logger)
 	err = rmt.store.Start(false)
 	require.Nil(rmt.T(), err, "there can't be an error when starting the store manager")
 }
@@ -54,14 +54,14 @@ func (rmt *RaftManagerTests) BeforeTest(suiteName, testName string) {
 
 func (rmt *RaftManagerTests) TestNewRaftManager() {
 	require.NotPanics(rmt.T(), func() {
-		NewRaftManager(rmt.store, rmt.logger)
+		NewOldRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPut() {
-	var manager *RaftManager[configv1.RaftConfig]
+	var manager *OldRaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.store, rmt.logger)
+		manager = NewOldRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	err := manager.Put("test", &configv1.RaftConfig{ClusterId: 123})
@@ -69,9 +69,9 @@ func (rmt *RaftManagerTests) TestRaftManagerPut() {
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
-	var manager *RaftManager[configv1.RaftConfig]
+	var manager *OldRaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.store, rmt.logger)
+		manager = NewOldRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	testStruct := &configv1.RaftConfig{ClusterId: 123}
@@ -99,9 +99,9 @@ func (rmt *RaftManagerTests) TestRaftManagerPutAndGet() {
 }
 
 func (rmt *RaftManagerTests) TestRaftManagerGetAll() {
-	var manager *RaftManager[configv1.RaftConfig]
+	var manager *OldRaftManager[configv1.RaftConfig]
 	require.NotPanics(rmt.T(), func() {
-		manager = NewRaftManager(rmt.store, rmt.logger)
+		manager = NewOldRaftManager(rmt.store, rmt.logger)
 	}, "building a new raft manager should not panic")
 
 	testStructOne := &configv1.RaftConfig{ClusterId: 123, Id: "testStructOne"}
