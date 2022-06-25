@@ -1,15 +1,42 @@
 package blaze
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"strings"
 	"sync"
 
+	"capnproto.org/go/capnp/v3"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
+	configv1 "r3t.io/pleiades/pkg/protocols/config/v1"
 	"storj.io/drpc/drpcmanager"
 )
+
+var (
+	readBufferSize = 0
+)
+
+func init() {
+	msg, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
+	if err != nil {
+		panic(err)
+	}
+	svcType, err := configv1.NewRootServiceType(seg)
+	if err != nil {
+		panic(err)
+	}
+	svcType.SetType(configv1.ServiceType_Type_configService)
+
+	var buf bytes.Buffer
+	err = capnp.NewEncoder(&buf).Encode(msg)
+	if err != nil {
+		panic(err)
+	}
+
+	readBufferSize = buf.Len()
+}
 
 type Server struct {
 	listener quic.Listener
@@ -72,6 +99,7 @@ func (s *Server) handleStreams(conn quic.Connection, ctx context.Context) {
 			switch errData := err.(type) {
 			case *quic.ApplicationError:
 
+				// todo (sienna): figure out a better way to handle stream closures
 				// ref: https://www.rfc-editor.org/rfc/rfc9000.html#section-20.1-2.2.1
 				// the connection is closed with no errors, can't handle any more streams
 				if errData.ErrorCode == quic.ApplicationErrorCode(quic.NoError) {
