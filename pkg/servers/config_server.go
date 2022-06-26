@@ -16,14 +16,14 @@ type ConfigServiceServer struct {
 	configv1.DRPCConfigServiceUnimplementedServer
 	manager     *services.StoreManager
 	logger      zerolog.Logger
-	raftManager *fsm.RaftManager[configv1.RaftConfig]
+	raftManager *fsm.OldRaftManager[configv1.RaftConfig]
 }
 
 func NewConfigServiceServer(manager *services.StoreManager, logger zerolog.Logger) *ConfigServiceServer {
 	return &ConfigServiceServer{
 		manager:     manager,
 		logger:      logger,
-		raftManager: fsm.NewRaftManager(manager, logger)}
+		raftManager: fsm.NewOldRaftManager(manager, logger)}
 }
 
 func (c *ConfigServiceServer) GetConfig(ctx context.Context, config *configv1.GetConfigRequest) (*configv1.GetConfigResponse, error) {

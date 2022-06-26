@@ -43,6 +43,16 @@ struct AllConfigurations @0xa3cf4f7f955be932 {
     raft @0 :List(RaftConfiguration);
 }
 
+# ServiceType is the initial message payload sent by the client to the server so the stream can be
+# mapped to a specific server implementation.
+struct ServiceType @0xabc8f8f8f8f8f8f8 {
+    enum Type {
+        test @0;
+        configService @1;
+    }
+    type @0 :Type;
+}
+
 ################################################################################
 #             __ _
 #  _ __ __ _ / _| |_

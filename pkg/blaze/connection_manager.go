@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	readBufferSize = 0
+	readBufferSize int64 = 0
 )
 
 func init() {
@@ -35,7 +35,7 @@ func init() {
 		panic(err)
 	}
 
-	readBufferSize = buf.Len()
+	readBufferSize = int64(buf.Len())
 }
 
 type Server struct {
