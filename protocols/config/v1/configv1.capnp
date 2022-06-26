@@ -14,7 +14,7 @@ $Go.import("r3t.io/pkg/protocols/config/v1");
 ################################################################################
 
 interface ConfigService @0xcd55e3c0a182ac77 {
-    getConfig @0 (config :GetConfigurationRequest) -> (data :GetConfigurationResponse);
+    getConfig @0 (request :GetConfigurationRequest) -> (response :GetConfigurationResponse);
 }
 
 struct GetConfigurationRequest @0xc0e43eb9670b8d20 {
