@@ -7,6 +7,7 @@ package blaze
 import (
 	"testing"
 
+	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"r3t.io/pleiades/pkg/utils"
@@ -32,7 +33,7 @@ func (s *RegistryTests) SetupTest() {
 }
 
 func (s *RegistryTests) TestGet() {
-	err := s.registry.Put("key", []byte("value"))
+	err := s.registry.Put("key", &server.Server{})
 	s.Require().NoError(err, "there must not be an error putting the value")
 
 	value, _ := s.registry.Get("key")
@@ -40,7 +41,7 @@ func (s *RegistryTests) TestGet() {
 }
 
 func (s *RegistryTests) TestPut() {
-	err := s.registry.Put("key", []byte("value"))
+	err := s.registry.Put("key", &server.Server{})
 	s.Require().NoError(err, "there must not be an error putting the value")
 
 	value, _ := s.registry.Get("key")

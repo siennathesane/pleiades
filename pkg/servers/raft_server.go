@@ -31,14 +31,14 @@ func init() {
 
 type RaftConfigServer struct {
 	configv1.DRPCConfigServiceUnimplementedServer
-	manager *fsm.RaftManager[configv1.RaftConfig]
+	manager *fsm.OldRaftManager[configv1.RaftConfig]
 	logger  dlog.ILogger
 
 	allCache map[string]*configv1.RaftConfig
 	count    *atomic.Uint64
 }
 
-func NewRaftConfigServer(manager *fsm.RaftManager[configv1.RaftConfig], logger dlog.ILogger) *RaftConfigServer {
+func NewRaftConfigServer(manager *fsm.OldRaftManager[configv1.RaftConfig], logger dlog.ILogger) *RaftConfigServer {
 	count := atomic.NewUint64(0)
 	all, _ := manager.GetAll()
 	if all != nil {

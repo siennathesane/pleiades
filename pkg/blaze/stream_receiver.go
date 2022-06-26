@@ -5,8 +5,10 @@
 package blaze
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
+	"io"
 
 	"capnproto.org/go/capnp/v3"
 	"capnproto.org/go/capnp/v3/server"
@@ -19,7 +21,6 @@ import (
 type StreamReceiver struct {
 	logger zerolog.Logger
 	registry *Registry
-	readLength int
 }
 
 func NewStreamReceiver(logger zerolog.Logger, registry *Registry) (*StreamReceiver, error) {
@@ -30,25 +31,26 @@ func NewStreamReceiver(logger zerolog.Logger, registry *Registry) (*StreamReceiv
 
 func (sr *StreamReceiver) Receive(stream quic.Stream) (*server.Server, error) {
 	localLogger := sr.logger.With().Int64("stream_id", int64(stream.StreamID())).Logger()
-	readBuf := make([]byte, readBufferSize)
-	n, err := stream.Read(readBuf)
+
+	var buf bytes.Buffer
+	n, err := io.CopyN(&buf, stream, readBufferSize)
 	if err != nil {
-		localLogger.Err(err).Msg("error reading from stream")
+		localLogger.Err(err).Msg("error reading stream")
 		return nil, err
 	}
 
 	if n != readBufferSize {
 		if n < readBufferSize {
 			err := errors.New("read length is less than read buffer size")
-			localLogger.Err(err).Int("read_length", n).Msg("can't determine server when the read buffer isn't full")
+			localLogger.Err(err).Int64("read_length", n).Msg("can't determine server when the read buffer isn't full")
 			return nil, err
 		}
 	}
 
 	if n >= readBufferSize {
-		sr.logger.Trace().Int("read_length", n).Msg("read length might be greater than read buffer size, will try to determine service")
+		sr.logger.Trace().Int64("read_length", n).Msg("read length might be greater than read buffer size, will try to determine service")
 
-		msg,err := capnp.Unmarshal(readBuf)
+		msg,err := capnp.Unmarshal(buf.Bytes())
 		if err != nil {
 			localLogger.Err(err).Msg("error unmarshalling capnp message")
 			return nil, err
@@ -61,11 +63,14 @@ func (sr *StreamReceiver) Receive(stream quic.Stream) (*server.Server, error) {
 		}
 
 		t := svcType.Type().String()
-		localLogger.Trace().Str("service_type", t).Msg("determined service type")
+		localLogger.Trace().Str("service_type", t).Msg("discovered service type")
 
 		switch t {
 		case "configService":
 			localLogger.Trace().Msg("config service was determined")
+			return sr.checkRegistry(t)
+		case "test":
+			localLogger.Trace().Msg("test service was determined")
 			return sr.checkRegistry(t)
 		default:
 			localLogger.Trace().Str("service_type", t).Msg("unknown service type")
@@ -82,13 +87,11 @@ func (sr *StreamReceiver) checkRegistry(svc string) (*server.Server, error) {
 		sr.logger.Err(err).Str("service", svc).Msg("error getting server from registry")
 		return nil, err
 	}
-
-	serv := target.(*server.Server)
-	if serv == nil {
+	if target == nil {
 		err := errors.New("server is nil")
 		sr.logger.Err(err).Str("service", svc).Msg("error getting server from registry")
 		return nil, err
 	}
 
-	return serv, nil
+	return target, nil
 }

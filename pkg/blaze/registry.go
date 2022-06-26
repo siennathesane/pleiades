@@ -5,28 +5,31 @@
 package blaze
 
 import (
-	"github.com/allegro/bigcache/v3"
+	"fmt"
+
+	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 )
 
 type Registry struct {
 	logger zerolog.Logger
-	cache *bigcache.BigCache
+	cache map[string]*server.Server
 }
 
 func NewRegistry(logger zerolog.Logger) (*Registry, error) {
 	l := logger.With().Str("component", "registry").Logger()
-	cache, err := bigcache.NewBigCache(bigcache.DefaultConfig(1024 * 1024 * 1024))
-	if err != nil {
-		return nil, err
+	return &Registry{logger: l, cache: make(map[string]*server.Server)}, nil
+}
+
+func (r *Registry) Get(key string) (*server.Server, error) {
+	val, ok := r.cache[key]
+	if !ok {
+		return nil, fmt.Errorf("no server found for key: %s", key)
 	}
-	return &Registry{logger: l, cache: cache}, nil
+	return val, nil
 }
 
-func (r *Registry) Get(key string) (interface{}, error) {
-	return r.cache.Get(key)
-}
-
-func (r *Registry) Put(key string, payload []byte) error {
-	return r.cache.Set(key, payload)
+func (r *Registry) Put(key string, srv *server.Server) error {
+	r.cache[key] = srv
+	return nil
 }

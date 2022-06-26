@@ -10,10 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hashicorp/consul/api"
 	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
-	"r3t.io/pleiades/pkg/conf"
 )
 
 const (
@@ -24,22 +22,19 @@ const (
 
 // StoreManager is used for managing various types persistently
 type StoreManager struct {
-	env         *conf.EnvironmentConfig
+	baseDir     string
 	logger      zerolog.Logger
-	client      *api.Client
 	db          *bbolt.DB
 	initialized bool
 	typeMap     map[string]bool
 	mu          sync.RWMutex
 }
 
-func NewStoreManager(env *conf.EnvironmentConfig,
-	logger zerolog.Logger,
-	client *api.Client) *StoreManager {
+func NewStoreManager(baseDir string,
+	logger zerolog.Logger) *StoreManager {
 	return &StoreManager{
-		env:         env,
+		baseDir:     baseDir,
 		logger:      logger,
-		client:      client,
 		initialized: false,
 	}
 }
@@ -149,6 +144,9 @@ func (p *StoreManager) Flush() error {
 }
 
 func (p *StoreManager) Start(retry bool) error {
+	if p.initialized {
+		return nil
+	}
 	return p.init()
 }
 
@@ -175,7 +173,7 @@ func (p *StoreManager) Stop(retry bool) error {
 }
 
 func (p *StoreManager) init() error {
-	dbPath, err := dbPath(p.env.BaseDir)
+	dbPath, err := dbPath(p.baseDir)
 	if err != nil {
 		return err
 	}
