@@ -16,39 +16,42 @@ import (
 )
 
 var (
-	_ configv1.ConfigService_Server = (*ConfigService)(nil)
+	_ configv1.ConfigService_Server = (*ConfigServiceImpl)(nil)
 )
 
-type ConfigService struct {
-	store       *services.StoreManager
+type ConfigServiceImpl struct {
+	//store       *services.StoreManager
 	logger      zerolog.Logger
 	raftManager *fsm.ConfigServiceStoreManager
 }
 
-func NewConfigService(store *services.StoreManager, logger zerolog.Logger) (*ConfigService, error) {
+// NewConfigService creates a instance of the configuration service. This is a singleton.
+// The configuration service is responsible for managing all the service available on a deployed host.
+func NewConfigService(store *services.StoreManager, logger zerolog.Logger) (*ConfigServiceImpl, error) {
 	l := logger.With().Str("service", "config").Logger()
 	manager, err := fsm.NewConfigServiceStoreManager(logger, store)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ConfigService{
-		store:       store,
+	return &ConfigServiceImpl{
 		logger:      l,
 		raftManager: manager,
 	}, nil
 }
 
-func (c *ConfigService) GetConfig(ctx context.Context, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServiceImpl) GetConfig(ctx context.Context, call configv1.ConfigService_getConfig) error {
 	req, err := call.Args().Request()
 	if err != nil {
 		return err
 	}
 
-	switch req.What() {
+	what := req.What()
+	amount := req.Amount()
+	switch what {
 	case configv1.GetConfigurationRequest_Type_all:
 	case configv1.GetConfigurationRequest_Type_raft:
-		switch req.Amount() {
+		switch amount {
 		case configv1.GetConfigurationRequest_Specificity_one:
 			key, err := req.Id()
 			if err != nil {
@@ -62,7 +65,7 @@ func (c *ConfigService) GetConfig(ctx context.Context, call configv1.ConfigServi
 	return nil
 }
 
-func (c *ConfigService) getRaftConfig(ctx context.Context, key string, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServiceImpl) getRaftConfig(ctx context.Context, key string, call configv1.ConfigService_getConfig) error {
 	if key == "" {
 		return errors.New("cannot request a named record without a key")
 	}
@@ -73,6 +76,9 @@ func (c *ConfigService) getRaftConfig(ctx context.Context, key string, call conf
 		c.logger.Err(err).Str("key", key).Msg("error allocating results")
 		return err
 	}
+
+	// acknowledge the request now that we can allocate space for the results
+	call.Ack()
 
 	// find the target
 	val, err := c.raftManager.Get(key)
@@ -119,3 +125,4 @@ func (c *ConfigService) getRaftConfig(ctx context.Context, key string, call conf
 	// map it!
 	return res.SetResponse(config)
 }
+
