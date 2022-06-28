@@ -6,6 +6,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"testing"
 
@@ -40,17 +41,21 @@ func (cst *ConfigServiceTests) SetupSuite() {
 	cst.Require().NoError(err, "there must not be an error creating the raft manager")
 }
 
-func (cst *ConfigServiceTests) TestConfigService() {
-	_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-	cst.Require().NoError(err, "there must not be an error creating a message")
+func (cst *ConfigServiceTests) TestConfigService_Raft() {
+	for i := 0; i < 10; i++ {
+		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
+		cst.Require().NoError(err, "there must not be an error creating a message")
 
-	conf, err := v1.NewRootRaftConfiguration(seg)
-	cst.Require().NoError(err, "there must not be an error creating a configuration")
-	err = conf.SetId("test")
-	cst.Require().NoError(err, "there must not be an error setting the id")
+		conf, err := v1.NewRootRaftConfiguration(seg)
+		cst.Require().NoError(err, "there must not be an error creating a configuration")
 
-	err = cst.raftManager.Put("test", &conf)
-	cst.Require().NoError(err, "there must not be an error putting the configuration")
+		testId := fmt.Sprintf("test-%d", i)
+		err = conf.SetId(testId)
+		cst.Require().NoError(err, "there must not be an error setting the id")
+
+		err = cst.raftManager.Put(testId, &conf)
+		cst.Require().NoError(err, "there must not be an error putting the configuration")
+	}
 
 	configServiceImpl, err := NewConfigService(cst.store, cst.logger)
 	cst.Require().NoError(err, "there must not be an error creating a config service")
@@ -70,15 +75,14 @@ func (cst *ConfigServiceTests) TestConfigService() {
 	cst.Require().NotNil(client, "the client must not be nil")
 
 	resp, rel := client.GetConfig(ctx, func(getConfigParams v1.ConfigService_getConfig_Params) error {
-		_, s, err := capnp.NewMessage(capnp.SingleSegment(nil))
-		req, err := v1.NewRootGetConfigurationRequest(s)
+		req, err := getConfigParams.NewRequest()
 		if err != nil {
 			return err
 		}
 
 		req.SetWhat(v1.GetConfigurationRequest_Type_raft)
 		req.SetAmount(v1.GetConfigurationRequest_Specificity_one)
-		if err := req.SetId("test"); err != nil {
+		if err := req.SetId("test-1"); err != nil {
 			return err
 		}
 		return getConfigParams.SetRequest(req)
@@ -104,9 +108,35 @@ func (cst *ConfigServiceTests) TestConfigService() {
 
 	id, err := config.Id()
 	cst.Require().NoError(err, "there must not be an error getting the id")
-	cst.Require().Equal(id, "test", "the raft configuration must have an id of 'test'")
+	cst.Require().Equal(id, "test-1", "the raft configuration must have an id of 'test'")
 
 	cst.Require().NotPanics(func() { rel() }, "there must not be an error releasing the response")
+
+	resp, rel = client.GetConfig(ctx, func(getConfigParams v1.ConfigService_getConfig_Params) error {
+		req, err := getConfigParams.NewRequest()
+		if err != nil {
+			return err
+		}
+
+		req.SetWhat(v1.GetConfigurationRequest_Type_raft)
+		req.SetAmount(v1.GetConfigurationRequest_Specificity_everything)
+		return getConfigParams.SetRequest(req)
+	})
+
+	configResponse = resp.Response()
+	cst.Require().NotNil(configResponse, "the response must not be nil")
+
+	results, err = configResponse.Struct()
+	cst.Require().NoError(err, "there must not be an error getting the results")
+	cst.Require().NotNil(results, "the results must not be nil")
+
+	ok = results.HasRaft()
+	cst.Require().True(ok, "the results must have a raft configuration")
+
+	raftConfig, err = results.Raft()
+	cst.Require().NoError(err, "there must not be an error getting the raft configuration")
+	cst.Require().NotNil(raftConfig, "the raft configuration must not be nil")
+	cst.Require().Equal(raftConfig.Len(), 10, "the raft configuration must have a length of 10")
 
 	err = clientConn.Close()
 	cst.Require().NoError(err, "there must not be an error closing the client pipe")

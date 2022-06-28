@@ -59,6 +59,8 @@ func (c *ConfigServiceImpl) GetConfig(ctx context.Context, call configv1.ConfigS
 				return err
 			}
 			return c.getRaftConfig(ctx, key, call)
+			case configv1.GetConfigurationRequest_Specificity_everything:
+				return c.getAllRaftConfigs(ctx, call)
 		}
 	}
 
@@ -126,3 +128,62 @@ func (c *ConfigServiceImpl) getRaftConfig(ctx context.Context, key string, call 
 	return res.SetResponse(config)
 }
 
+func (c *ConfigServiceImpl) getAllRaftConfigs(ctx context.Context, call configv1.ConfigService_getConfig) error {
+
+	// allocate the results
+	res, err := call.AllocResults()
+	if err != nil {
+		c.logger.Err(err).Msg("error allocating getAllRaftConfigs results")
+		return err
+	}
+
+	// acknowledge the request now that we can allocate space for the results
+	call.Ack()
+
+	// find the target
+	val, err := c.raftManager.GetAll()
+	if err != nil {
+		c.logger.Err(err).Msg("error getting all configs")
+		return err
+	}
+
+	// prep the results
+	_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
+	if err != nil {
+		c.logger.Err(err).Msg("error creating message")
+		return err
+	}
+
+	// create the root config response
+	config, err := configv1.NewRootGetConfigurationResponse(seg)
+	if err != nil {
+		c.logger.Err(err).Msg("error creating getRaftConfigurationResponse")
+		return err
+	}
+
+	// create the config lists
+	slice, err := configv1.NewRaftConfiguration_List(seg, int32(len(val)))
+	if err != nil {
+		c.logger.Err(err).Msg("error creating raftConfiguration_List")
+		return err
+	}
+
+	// set the config into the slice
+	for idx, _ := range val {
+		err = slice.Set(0, *val[idx])
+		if err != nil {
+			c.logger.Err(err).Msg("error setting raftConfiguration_List")
+			return err
+		}
+	}
+
+	// set the config list into the config response
+	err = config.SetRaft(slice)
+	if err != nil {
+		c.logger.Err(err).Msg("error setting config")
+		return err
+	}
+
+	// map it!
+	return res.SetResponse(config)
+}
