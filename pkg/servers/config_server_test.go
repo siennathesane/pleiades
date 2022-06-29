@@ -87,7 +87,7 @@ func (cst *ConfigServerTests) TestConfigServerRaftConfigs() {
 	cst.Require().NoError(err, "there must not be an error when registering the the config service")
 
 	// generate the test server
-	testKit.NewServer(&blaze.TestKitServerArgs{AutoStart: true, Muxer: cst.mux})
+	testKit.NewTestKitServer(&blaze.TestKitServerArgs{AutoStart: true, Muxer: cst.mux})
 
 	// generate a new connection stream
 	configServiceTransportStream := testKit.NewConnectionStream()

@@ -92,7 +92,7 @@ BLlzHCDBvh3zBlkMWivluxbG5XZzQPQN+Y+WaC+ldJqE9oQeaOw3GDI=
 `
 )
 
-type SocketTestKit struct {
+type QuicTestKit struct {
 	t      *testing.T
 	logger zerolog.Logger
 
@@ -107,10 +107,11 @@ type SocketTestKit struct {
 	ctx context.Context
 }
 
-func NewSocketTestKit(t *testing.T) (*SocketTestKit) {
-	tk := &SocketTestKit{
+func NewQuicTestKit(t *testing.T) *QuicTestKit {
+	tk := &QuicTestKit{
 		logger: utils.NewTestLogger(t),
 		ctx:    context.Background(),
+		t:      t,
 	}
 
 	var err error
@@ -134,7 +135,22 @@ func NewSocketTestKit(t *testing.T) (*SocketTestKit) {
 	return tk
 }
 
-func (stk *SocketTestKit) GenerateTlsConfig() (*tls.Config, error) {
+func (stk *QuicTestKit) Start() {
+	var err error
+	stk.listener, err = quic.ListenAddr(testServerAddr, stk.tlsConf, stk.quicConfig)
+	if err != nil {
+		stk.t.Fatalf("failed to listen server: %v", err)
+	}
+}
+
+func (stk *QuicTestKit) Stop() {
+	stk.listener.Close()
+	//if err != nil {
+	//	stk.t.Fatalf("failed to close listener: %v", err)
+	//}
+}
+
+func (stk *QuicTestKit) GenerateTlsConfig() (*tls.Config, error) {
 	stk.certPool = x509.NewCertPool()
 	stk.certPool.AppendCertsFromPEM([]byte(tlsCa))
 
@@ -153,22 +169,22 @@ func (stk *SocketTestKit) GenerateTlsConfig() (*tls.Config, error) {
 	return stk.tlsConf, nil
 }
 
-func (stk *SocketTestKit) GetListener() quic.Listener {
+func (stk *QuicTestKit) GetListener() quic.Listener {
 	return stk.listener
 }
 
-func (stk *SocketTestKit) CloseListener() {
+func (stk *QuicTestKit) CloseListener() {
 	err := stk.listener.Close()
 	if err != nil {
 		stk.t.Error(err, "there was an error trying to close the listener")
 	}
 }
 
-func (stk *SocketTestKit) GetConnection() quic.Connection {
+func (stk *QuicTestKit) GetConnection() quic.Connection {
 	return stk.dialConn
 }
 
-func (stk *SocketTestKit) NewConnectionStream() quic.Stream {
+func (stk *QuicTestKit) NewConnectionStream() quic.Stream {
 	stream, err := stk.dialConn.OpenStream()
 	if err != nil {
 		stk.t.Error(err, "there was an error opening a new testkit stream")

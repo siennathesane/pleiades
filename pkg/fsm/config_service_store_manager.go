@@ -11,7 +11,7 @@ import (
 
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
-	v1 "r3t.io/pleiades/pkg/protocols/config/v1"
+	v1 "r3t.io/pleiades/pkg/protocols/v1/config"
 	"r3t.io/pleiades/pkg/servers/services"
 )
 

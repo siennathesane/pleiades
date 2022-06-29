@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/v1
+apiVersion: apps/config
 kind: Deployment
 metadata:
   name: cloudflared
@@ -61,7 +61,7 @@ spec:
           - key: config.yaml
             path: config.yaml
 ---
-apiVersion: v1
+apiVersion: config
 kind: ConfigMap
 metadata:
   name: cloudflared
