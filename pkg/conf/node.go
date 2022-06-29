@@ -51,7 +51,7 @@ package conf
 //		return config.Config{}, err
 //	}
 //
-//	pair, _, err := client.KV().Get(fmt.Sprintf("hosts/%s/conf/raft-conf", hostname), &etcd.QueryOptions{})
+//	pair, _, err := client.KV().GetServer(fmt.Sprintf("hosts/%s/conf/raft-conf", hostname), &etcd.QueryOptions{})
 //	if err != nil {
 //		configLogger.Errorf("can't get configuration from consul: %s", err)
 //		return config.Config{}, err

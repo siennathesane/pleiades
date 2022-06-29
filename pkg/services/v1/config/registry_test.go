@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Sienna Lloyd <sienna.lloyd@hey.com>
  */
 
-package blaze
+package config
 
 import (
 	"testing"
@@ -10,6 +10,7 @@ import (
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"r3t.io/pleiades/pkg/protocols/v1/config"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -33,17 +34,19 @@ func (s *RegistryTests) SetupTest() {
 }
 
 func (s *RegistryTests) TestGet() {
-	err := s.registry.Put("key", &server.Server{})
+	srv := &server.Server{}
+	err := s.registry.PutServer(config.ServiceType_Type_test, srv)
 	s.Require().NoError(err, "there must not be an error putting the value")
 
-	value, _ := s.registry.Get("key")
-	s.Assert().Equal([]byte("value"), value)
+	value, _ := s.registry.GetServer(config.ServiceType_Type_test)
+	s.Assert().Equal(srv, value)
 }
 
 func (s *RegistryTests) TestPut() {
-	err := s.registry.Put("key", &server.Server{})
+	srv := &server.Server{}
+	err := s.registry.PutServer(config.ServiceType_Type_test, srv)
 	s.Require().NoError(err, "there must not be an error putting the value")
 
-	value, _ := s.registry.Get("key")
-	s.Assert().Equal([]byte("value"), value)
+	value, _ := s.registry.GetServer(config.ServiceType_Type_test)
+	s.Assert().Equal(srv, value)
 }

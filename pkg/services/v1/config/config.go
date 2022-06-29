@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Sienna Lloyd <sienna.lloyd@hey.com>
  */
 
-package v1
+package config
 
 import (
 	"context"
@@ -11,36 +11,35 @@ import (
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 	"r3t.io/pleiades/pkg/fsm"
-	configv1 "r3t.io/pleiades/pkg/protocols/config/v1"
+	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
 	"r3t.io/pleiades/pkg/servers/services"
 )
 
 var (
-	_ configv1.ConfigService_Server = (*ConfigServiceImpl)(nil)
+	_ configv1.ConfigService_Server = (*ConfigServer)(nil)
 )
 
-type ConfigServiceImpl struct {
-	//store       *services.StoreManager
+type ConfigServer struct {
 	logger      zerolog.Logger
 	raftManager *fsm.ConfigServiceStoreManager
 }
 
-// NewConfigService creates a instance of the configuration service. This is a singleton.
+// NewConfigServer creates a instance of the configuration service. This is a singleton.
 // The configuration service is responsible for managing all the service available on a deployed host.
-func NewConfigService(store *services.StoreManager, logger zerolog.Logger) (*ConfigServiceImpl, error) {
+func NewConfigServer(store *services.StoreManager, logger zerolog.Logger) (*ConfigServer, error) {
 	l := logger.With().Str("service", "config").Logger()
 	manager, err := fsm.NewConfigServiceStoreManager(logger, store)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ConfigServiceImpl{
+	return &ConfigServer{
 		logger:      l,
 		raftManager: manager,
 	}, nil
 }
 
-func (c *ConfigServiceImpl) GetConfig(ctx context.Context, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) GetConfig(ctx context.Context, call configv1.ConfigService_getConfig) error {
 	req, err := call.Args().Request()
 	if err != nil {
 		return err
@@ -67,7 +66,7 @@ func (c *ConfigServiceImpl) GetConfig(ctx context.Context, call configv1.ConfigS
 	return nil
 }
 
-func (c *ConfigServiceImpl) getRaftConfig(ctx context.Context, key string, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call configv1.ConfigService_getConfig) error {
 	if key == "" {
 		return errors.New("cannot request a named record without a key")
 	}
@@ -128,7 +127,7 @@ func (c *ConfigServiceImpl) getRaftConfig(ctx context.Context, key string, call 
 	return res.SetResponse(config)
 }
 
-func (c *ConfigServiceImpl) getAllRaftConfigs(ctx context.Context, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.ConfigService_getConfig) error {
 
 	// allocate the results
 	res, err := call.AllocResults()

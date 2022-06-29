@@ -1,7 +1,7 @@
 kind: ConfigMap
 metadata:
   name: grafana-agent-logs
-apiVersion: v1
+apiVersion: config
 data:
   agent.yaml: |    
     metrics:
@@ -29,7 +29,7 @@ data:
       configs:
       - name: integrations
         clients:
-        - url: https://logs-prod3.grafana.net/loki/api/v1/push
+        - url: https://logs-prod3.grafana.net/loki/api/config/push
           basic_auth:
             username: 233276
             password: **REDACTED**

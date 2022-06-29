@@ -14,7 +14,8 @@ import (
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
-	configv1 "r3t.io/pleiades/pkg/protocols/config/v1"
+	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
+	"r3t.io/pleiades/pkg/services/v1/config"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -25,21 +26,21 @@ func TestStreamReceiver(t *testing.T) {
 
 type StreamReceiverTest struct {
 	suite.Suite
-	tk       *SocketTestKit
+	tk       *QuicTestKit
 	logger   zerolog.Logger
-	registry *Registry
+	registry *config.Registry
 }
 
 func (s *StreamReceiverTest) SetupSuite() {
 	s.logger = utils.NewTestLogger(s.T())
-	s.tk = NewSocketTestKit(s.T())
+	s.tk = NewQuicTestKit(s.T())
 
 	var err error
-	s.registry, err = NewRegistry(s.logger)
+	s.registry, err = config.NewRegistry(s.logger)
 	s.Require().NoError(err, "failed to create registry")
 
-	err = s.registry.Put(
-		"test",
+	err = s.registry.PutServer(
+		configv1.ServiceType_Type_test,
 		&server.Server{},
 	)
 	s.Require().NoError(err, "failed to register test server")
@@ -78,7 +79,5 @@ func (s *StreamReceiverTest) TestStreamReceiverServerRouter() {
 	s.Require().NoError(err, "there must not be an error when accepting a stream")
 	s.Require().NotNil(receivingTestStream, "the stream must not be nil")
 
-	srv, err := sr.Receive(receivingTestStream)
-	s.Require().NoError(err, "there must not be an error when receiving a stream")
-	s.Require().NotNil(srv, "the stream receiver must not be nil")
+	sr.Receive(context.Background(), s.logger, receivingTestStream)
 }

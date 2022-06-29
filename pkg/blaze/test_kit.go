@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/consul/api"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
+	"r3t.io/pleiades/pkg/services/v1/config"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -35,6 +36,8 @@ type TestKit struct {
 	mux     *Router
 	server  *Server
 	running bool
+
+	registry *config.Registry
 }
 
 func NewTestKit(t *testing.T) *TestKit {
@@ -61,6 +64,11 @@ func NewTestKit(t *testing.T) *TestKit {
 	}
 
 	time.Sleep(1 * time.Second)
+
+	tk.registry, err = config.NewRegistry(tk.logger)
+	if err != nil {
+		tk.t.Error(err, "there was an error creating the testkit registry")
+	}
 
 	return tk
 }
@@ -149,13 +157,13 @@ type TestKitServerArgs struct {
 	AutoStart bool
 }
 
-func (tk *TestKit) NewServer(args *TestKitServerArgs) {
+func (tk *TestKit) NewTestKitServer(args *TestKitServerArgs) {
 	if args.Muxer == nil {
 		tk.t.Error("the muxer cannot be nil")
 	}
 	tk.mux = args.Muxer
 
-	tk.server = NewServer(tk.listener, tk.mux, tk.logger)
+	tk.server = NewServer(tk.listener, tk.logger, tk.registry)
 
 	if args.AutoStart {
 		err := tk.server.Start(tk.ctx)

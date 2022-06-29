@@ -1,6 +1,6 @@
 ---
 # Source: gitlab-runner/templates/service-account.yaml
-apiVersion: v1
+apiVersion: config
 kind: ServiceAccount
 metadata:
   annotations:
@@ -12,7 +12,7 @@ metadata:
     heritage: "Helm"
 ---
 # Source: gitlab-runner/templates/secrets.yaml
-apiVersion: v1
+apiVersion: config
 kind: Secret
 metadata:
   name: "gitlab-runner"
@@ -28,7 +28,7 @@ data:
   runner-token: ""
 ---
 # Source: gitlab-runner/templates/configmap.yaml
-apiVersion: v1
+apiVersion: config
 kind: ConfigMap
 metadata:
   name: gitlab-runner
@@ -147,7 +147,7 @@ data:
   pre-entrypoint-script: |
 ---
 # Source: gitlab-runner/templates/role.yaml
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/config
 kind: "Role"
 metadata:
   name: gitlab-runner
@@ -163,7 +163,7 @@ rules:
   verbs: ["*"]
 ---
 # Source: gitlab-runner/templates/role-binding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/config
 kind: "RoleBinding"
 metadata:
   name: gitlab-runner
@@ -183,7 +183,7 @@ subjects:
   namespace: "gitlab-agent"
 ---
 # Source: gitlab-runner/templates/deployment.yaml
-apiVersion: apps/v1
+apiVersion: apps/config
 kind: Deployment
 metadata:
   name: gitlab-runner

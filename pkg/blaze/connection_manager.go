@@ -3,15 +3,14 @@ package blaze
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"strings"
 	"sync"
 
 	"capnproto.org/go/capnp/v3"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
-	configv1 "r3t.io/pleiades/pkg/protocols/config/v1"
-	"storj.io/drpc/drpcmanager"
+	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
+	"r3t.io/pleiades/pkg/services/v1/config"
 )
 
 var (
@@ -40,15 +39,15 @@ func init() {
 
 type Server struct {
 	listener quic.Listener
-	router   *Router
-	manager  *drpcmanager.Manager
 	logger   zerolog.Logger
 	closed   bool
 	mu sync.RWMutex
+	registry *config.Registry
 }
 
-func NewServer(listener quic.Listener, router *Router, logger zerolog.Logger) *Server {
-	return &Server{listener: listener, router: router, logger: logger}
+func NewServer(listener quic.Listener, logger zerolog.Logger, registry *config.Registry) *Server {
+	l := logger.With().Str("component", "stream-manager").Logger()
+	return &Server{listener: listener, logger: l, registry: registry}
 }
 
 func (s *Server) Start(ctx context.Context) error {
@@ -114,36 +113,25 @@ func (s *Server) handleStreams(conn quic.Connection, ctx context.Context) {
 		downstreamLogger := s.logger.
 			With().
 			Str("remote-addr", conn.RemoteAddr().String()).
-			Str("stream-id", fmt.Sprintf("%d", uint64(stream.StreamID()))).
 			Logger()
 		handlerCtx := context.WithValue(ctx, "stream-id", stream.StreamID())
 
-		go s.serveOne(stream, downstreamLogger, handlerCtx)
+		go s.receiveStream(handlerCtx, downstreamLogger, stream)
 	}
 }
 
-func (s *Server) serveOne(stream quic.Stream, inheritedLogger zerolog.Logger, ctx context.Context) {
-	streamManager := drpcmanager.New(stream)
+func (s *Server) receiveStream(ctx context.Context, inheritedLogger zerolog.Logger, stream quic.Stream) {
+	logger := inheritedLogger.With().Str("component", "stream").Logger()
 
-	for {
-		dServerStream, rpc, err := streamManager.NewServerStream(ctx)
+	sr, err := NewStreamReceiver(logger, s.registry)
+	if err != nil {
+		logger.Err(err).Msg("cannot create stream receiver")
+		err := stream.Close()
 		if err != nil {
-			// todo (sienna): figure out a better way to handle manager closures
-			if strings.Contains(err.Error(), "manager closed") {
-				if streamErr := stream.Close(); streamErr != nil {
-					inheritedLogger.Trace().Err(err).Msg("cannot close stream")
-				}
-				return
-			}
-			inheritedLogger.Err(err).Msg("new server stream cannot be created")
-			return
+			logger.Err(err).Msg("cannot close stream")
 		}
-
-		err = s.router.HandleRPC(dServerStream, rpc)
-		if err != nil {
-			sendErr := dServerStream.SendError(err)
-			inheritedLogger.Debug().Err(sendErr).Msg("failure to send error to client")
-
-		}
+		return
 	}
+
+	sr.Receive(ctx, logger, stream)
 }
