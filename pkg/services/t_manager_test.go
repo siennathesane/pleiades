@@ -6,11 +6,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hashicorp/consul/api"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"go.uber.org/fx/fxtest"
-	"r3t.io/pleiades/pkg/conf"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -25,9 +23,7 @@ type TestNestedStruct struct {
 
 type TManagerTestSuite struct {
 	suite.Suite
-	lifecycle *fxtest.Lifecycle
-	client    *api.Client
-	env       *conf.EnvironmentConfig
+	logger zerolog.Logger
 }
 
 func TestStoreManager(t *testing.T) {
@@ -35,21 +31,11 @@ func TestStoreManager(t *testing.T) {
 }
 
 func (s *TManagerTestSuite) SetupSuite() {
-	var err error
-	s.lifecycle = fxtest.NewLifecycle(s.T())
-	s.client, err = conf.NewConsulClient(s.lifecycle)
-	require.Nil(s.T(), err, "failed to connect to consul")
-	require.NotNil(s.T(), s.client, "the consul client can't be empty")
-
-	s.env, err = conf.NewEnvironmentConfig(s.client)
-	require.Nil(s.T(), err, "the environment config is needed")
-	require.NotNil(s.T(), s.env, "the environment config must be rendered")
+	s.logger = utils.NewTestLogger(s.T())
 }
 
 func (s *TManagerTestSuite) TestNewGenericManager() {
-	t := utils.NewTestLogger(s.T())
-
-	manager := NewStoreManager(s.env, t, s.client)
+	manager := NewStoreManager(s.T().TempDir(), s.logger)
 
 	var err error
 	require.NotPanics(s.T(), func() {
@@ -64,7 +50,7 @@ func (s *TManagerTestSuite) TestNewGenericManager() {
 }
 
 func (s *TManagerTestSuite) BeforeTest(suiteName, testName string) {
-	fullPath, err := dbPath(s.env.BaseDir)
+	fullPath, err := dbPath(s.T().TempDir())
 	if err != nil {
 		s.T().Error(err)
 	}
@@ -77,7 +63,7 @@ func (s *TManagerTestSuite) BeforeTest(suiteName, testName string) {
 func (s *TManagerTestSuite) TestManagerInitOnPut() {
 	t := utils.NewTestLogger(s.T())
 
-	manager := NewStoreManager(s.env, t, s.client)
+	manager := NewStoreManager(s.T().TempDir(), t)
 	require.Nil(s.T(), manager.Start(false), "there should be no errors starting the store manager")
 
 	testStruct := &TestStruct{
@@ -97,7 +83,7 @@ func (s *TManagerTestSuite) TestManagerInitOnPut() {
 func (s *TManagerTestSuite) TestManagerGet() {
 	t := utils.NewTestLogger(s.T())
 
-	manager := NewStoreManager(s.env, t, s.client)
+	manager := NewStoreManager(s.T().TempDir(), t)
 	require.Nil(s.T(), manager.Start(false), "there should be no errors starting the store manager")
 
 	testStruct := &TestStruct{

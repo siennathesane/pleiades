@@ -12,7 +12,7 @@ import (
 	"github.com/rs/zerolog"
 	"r3t.io/pleiades/pkg/fsm"
 	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	"r3t.io/pleiades/pkg/servers/services"
+	"r3t.io/pleiades/pkg/services"
 )
 
 var (
@@ -58,8 +58,8 @@ func (c *ConfigServer) GetConfig(ctx context.Context, call configv1.ConfigServic
 				return err
 			}
 			return c.getRaftConfig(ctx, key, call)
-			case configv1.GetConfigurationRequest_Specificity_everything:
-				return c.getAllRaftConfigs(ctx, call)
+		case configv1.GetConfigurationRequest_Specificity_everything:
+			return c.getAllRaftConfigs(ctx, call)
 		}
 	}
 
@@ -185,4 +185,78 @@ func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.Conf
 
 	// map it!
 	return res.SetResponse(config)
+}
+
+func (c *ConfigServer) PutConfig(ctx context.Context, call configv1.ConfigService_putConfig) error {
+	// acknowledge the request now that we can allocate space for the results
+	call.Ack()
+
+	// get the request
+	req, err := call.Args().Request()
+	if err != nil {
+		c.logger.Err(err).Msg("error getting request")
+		return err
+	}
+
+	switch req.Which() {
+	case configv1.PutConfigurationRequest_Which_raft:
+		return c.putRaftConfig(ctx, call)
+	case configv1.PutConfigurationRequest_Which_nodeHost:
+	}
+
+	return nil
+}
+
+func (c *ConfigServer) putRaftConfig(ctx context.Context, call configv1.ConfigService_putConfig) error {
+	res, err := call.AllocResults()
+	if err != nil {
+		c.logger.Err(err).Msg("error allocating putRaftConfig results")
+		return err
+	}
+
+	call.Ack()
+
+	req, err := call.Args().Request()
+	if err != nil {
+		c.logger.Err(err).Msg("error getting request")
+		return err
+	}
+
+	raftConfig, err := req.Raft()
+	if err != nil {
+		c.logger.Err(err).Msg("error getting raft config")
+		return err
+	}
+
+	configId, err := raftConfig.Id()
+	if err != nil {
+		c.logger.Err(err).Msg("error getting raft config id")
+		return err
+	}
+
+	err = c.raftManager.Put(configId, &raftConfig)
+	if err != nil {
+		c.logger.Err(err).Msg("error putting raft config")
+		return err
+	}
+
+	configResponse, err := res.NewResponse()
+	if err != nil {
+		c.logger.Err(err).Msg("error building response")
+		return err
+	}
+
+	err = configResponse.SetRaft(raftConfig)
+	if err != nil {
+		c.logger.Err(err).Msg("error setting raft config")
+		return err
+	}
+	configResponse.SetSuccess(true)
+	err = configResponse.SetStatus("")
+	if err != nil {
+		c.logger.Err(err).Msg("error setting status")
+		return err
+	}
+
+	return res.SetResponse(configResponse)
 }

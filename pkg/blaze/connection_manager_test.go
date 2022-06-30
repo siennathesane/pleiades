@@ -48,8 +48,7 @@ func (smt *StreamServerTests) TestHandleConnection() {
 	stream, err := conn.OpenStream()
 	smt.Require().NoError(err, "there must not be an error opening a stream")
 
-	// this will fail
+	// this will write but nothing is listening
 	n, err := stream.Write([]byte("hello"))
-	smt.Require().Error(err, "there must be an error writing to the stream")
 	smt.Require().Equal(5, n, "the number of bytes written must be 5")
 }

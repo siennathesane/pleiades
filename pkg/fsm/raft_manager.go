@@ -6,17 +6,17 @@ import (
 	"github.com/rs/zerolog"
 	proto2 "google.golang.org/protobuf/proto"
 	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
-	"r3t.io/pleiades/pkg/servers/services"
+	services2 "r3t.io/pleiades/pkg/services"
 )
 
-var _ services.IStore[configv1.RaftConfig] = &OldRaftManager[configv1.RaftConfig]{}
+var _ services2.IStore[configv1.RaftConfig] = &OldRaftManager[configv1.RaftConfig]{}
 
 type OldRaftManager[T configv1.RaftConfig] struct {
 	logger zerolog.Logger
-	store  *services.StoreManager
+	store  *services2.StoreManager
 }
 
-func NewOldRaftManager(store *services.StoreManager, logger zerolog.Logger) *OldRaftManager[configv1.RaftConfig] {
+func NewOldRaftManager(store *services2.StoreManager, logger zerolog.Logger) *OldRaftManager[configv1.RaftConfig] {
 	return &OldRaftManager[configv1.RaftConfig]{logger: logger, store: store}
 }
 

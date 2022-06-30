@@ -226,6 +226,22 @@ func (c ConfigService) GetConfig(ctx context.Context, params func(ConfigService_
 	ans, release := c.Client.SendCall(ctx, s)
 	return ConfigService_getConfig_Results_Future{Future: ans.Future()}, release
 }
+func (c ConfigService) PutConfig(ctx context.Context, params func(ConfigService_putConfig_Params) error) (ConfigService_putConfig_Results_Future, capnp.ReleaseFunc) {
+	s := capnp.Send{
+		Method: capnp.Method{
+			InterfaceID:   0xcd55e3c0a182ac77,
+			MethodID:      1,
+			InterfaceName: "protocols/v1/config/configv1.capnp:ConfigService",
+			MethodName:    "putConfig",
+		},
+	}
+	if params != nil {
+		s.ArgsSize = capnp.ObjectSize{DataSize: 0, PointerCount: 1}
+		s.PlaceArgs = func(s capnp.Struct) error { return params(ConfigService_putConfig_Params{Struct: s}) }
+	}
+	ans, release := c.Client.SendCall(ctx, s)
+	return ConfigService_putConfig_Results_Future{Future: ans.Future()}, release
+}
 
 func (c ConfigService) AddRef() ConfigService {
 	return ConfigService{
@@ -240,6 +256,8 @@ func (c ConfigService) Release() {
 // A ConfigService_Server is a ConfigService with a local implementation.
 type ConfigService_Server interface {
 	GetConfig(context.Context, ConfigService_getConfig) error
+
+	PutConfig(context.Context, ConfigService_putConfig) error
 }
 
 // ConfigService_NewServer creates a new Server from an implementation of ConfigService_Server.
@@ -258,7 +276,7 @@ func ConfigService_ServerToClient(s ConfigService_Server, policy *server.Policy)
 // This can be used to create a more complicated Server.
 func ConfigService_Methods(methods []server.Method, s ConfigService_Server) []server.Method {
 	if cap(methods) == 0 {
-		methods = make([]server.Method, 0, 1)
+		methods = make([]server.Method, 0, 2)
 	}
 
 	methods = append(methods, server.Method{
@@ -270,6 +288,18 @@ func ConfigService_Methods(methods []server.Method, s ConfigService_Server) []se
 		},
 		Impl: func(ctx context.Context, call *server.Call) error {
 			return s.GetConfig(ctx, ConfigService_getConfig{call})
+		},
+	})
+
+	methods = append(methods, server.Method{
+		Method: capnp.Method{
+			InterfaceID:   0xcd55e3c0a182ac77,
+			MethodID:      1,
+			InterfaceName: "protocols/v1/config/configv1.capnp:ConfigService",
+			MethodName:    "putConfig",
+		},
+		Impl: func(ctx context.Context, call *server.Call) error {
+			return s.PutConfig(ctx, ConfigService_putConfig{call})
 		},
 	})
 
@@ -291,6 +321,23 @@ func (c ConfigService_getConfig) Args() ConfigService_getConfig_Params {
 func (c ConfigService_getConfig) AllocResults() (ConfigService_getConfig_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return ConfigService_getConfig_Results{Struct: r}, err
+}
+
+// ConfigService_putConfig holds the state for a server call to ConfigService.putConfig.
+// See server.Call for documentation.
+type ConfigService_putConfig struct {
+	*server.Call
+}
+
+// Args returns the call's arguments.
+func (c ConfigService_putConfig) Args() ConfigService_putConfig_Params {
+	return ConfigService_putConfig_Params{Struct: c.Call.Args()}
+}
+
+// AllocResults allocates the results struct.
+func (c ConfigService_putConfig) AllocResults() (ConfigService_putConfig_Results, error) {
+	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
+	return ConfigService_putConfig_Results{Struct: r}, err
 }
 
 type ConfigService_getConfig_Params struct{ capnp.Struct }
@@ -431,6 +478,146 @@ func (p ConfigService_getConfig_Results_Future) Struct() (ConfigService_getConfi
 
 func (p ConfigService_getConfig_Results_Future) Response() GetConfigurationResponse_Future {
 	return GetConfigurationResponse_Future{Future: p.Future.Field(0, nil)}
+}
+
+type ConfigService_putConfig_Params struct{ capnp.Struct }
+
+// ConfigService_putConfig_Params_TypeID is the unique identifier for the type ConfigService_putConfig_Params.
+const ConfigService_putConfig_Params_TypeID = 0xc3273101c10b065a
+
+func NewConfigService_putConfig_Params(s *capnp.Segment) (ConfigService_putConfig_Params, error) {
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
+	return ConfigService_putConfig_Params{st}, err
+}
+
+func NewRootConfigService_putConfig_Params(s *capnp.Segment) (ConfigService_putConfig_Params, error) {
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
+	return ConfigService_putConfig_Params{st}, err
+}
+
+func ReadRootConfigService_putConfig_Params(msg *capnp.Message) (ConfigService_putConfig_Params, error) {
+	root, err := msg.Root()
+	return ConfigService_putConfig_Params{root.Struct()}, err
+}
+
+func (s ConfigService_putConfig_Params) String() string {
+	str, _ := text.Marshal(0xc3273101c10b065a, s.Struct)
+	return str
+}
+
+func (s ConfigService_putConfig_Params) Request() (PutConfigurationRequest, error) {
+	p, err := s.Struct.Ptr(0)
+	return PutConfigurationRequest{Struct: p.Struct()}, err
+}
+
+func (s ConfigService_putConfig_Params) HasRequest() bool {
+	return s.Struct.HasPtr(0)
+}
+
+func (s ConfigService_putConfig_Params) SetRequest(v PutConfigurationRequest) error {
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewRequest sets the request field to a newly
+// allocated PutConfigurationRequest struct, preferring placement in s's segment.
+func (s ConfigService_putConfig_Params) NewRequest() (PutConfigurationRequest, error) {
+	ss, err := NewPutConfigurationRequest(s.Struct.Segment())
+	if err != nil {
+		return PutConfigurationRequest{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+// ConfigService_putConfig_Params_List is a list of ConfigService_putConfig_Params.
+type ConfigService_putConfig_Params_List = capnp.StructList[ConfigService_putConfig_Params]
+
+// NewConfigService_putConfig_Params creates a new list of ConfigService_putConfig_Params.
+func NewConfigService_putConfig_Params_List(s *capnp.Segment, sz int32) (ConfigService_putConfig_Params_List, error) {
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
+	return capnp.StructList[ConfigService_putConfig_Params]{List: l}, err
+}
+
+// ConfigService_putConfig_Params_Future is a wrapper for a ConfigService_putConfig_Params promised by a client call.
+type ConfigService_putConfig_Params_Future struct{ *capnp.Future }
+
+func (p ConfigService_putConfig_Params_Future) Struct() (ConfigService_putConfig_Params, error) {
+	s, err := p.Future.Struct()
+	return ConfigService_putConfig_Params{s}, err
+}
+
+func (p ConfigService_putConfig_Params_Future) Request() PutConfigurationRequest_Future {
+	return PutConfigurationRequest_Future{Future: p.Future.Field(0, nil)}
+}
+
+type ConfigService_putConfig_Results struct{ capnp.Struct }
+
+// ConfigService_putConfig_Results_TypeID is the unique identifier for the type ConfigService_putConfig_Results.
+const ConfigService_putConfig_Results_TypeID = 0xdc2aa0850f905013
+
+func NewConfigService_putConfig_Results(s *capnp.Segment) (ConfigService_putConfig_Results, error) {
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
+	return ConfigService_putConfig_Results{st}, err
+}
+
+func NewRootConfigService_putConfig_Results(s *capnp.Segment) (ConfigService_putConfig_Results, error) {
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1})
+	return ConfigService_putConfig_Results{st}, err
+}
+
+func ReadRootConfigService_putConfig_Results(msg *capnp.Message) (ConfigService_putConfig_Results, error) {
+	root, err := msg.Root()
+	return ConfigService_putConfig_Results{root.Struct()}, err
+}
+
+func (s ConfigService_putConfig_Results) String() string {
+	str, _ := text.Marshal(0xdc2aa0850f905013, s.Struct)
+	return str
+}
+
+func (s ConfigService_putConfig_Results) Response() (PutConfigurationResponse, error) {
+	p, err := s.Struct.Ptr(0)
+	return PutConfigurationResponse{Struct: p.Struct()}, err
+}
+
+func (s ConfigService_putConfig_Results) HasResponse() bool {
+	return s.Struct.HasPtr(0)
+}
+
+func (s ConfigService_putConfig_Results) SetResponse(v PutConfigurationResponse) error {
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewResponse sets the response field to a newly
+// allocated PutConfigurationResponse struct, preferring placement in s's segment.
+func (s ConfigService_putConfig_Results) NewResponse() (PutConfigurationResponse, error) {
+	ss, err := NewPutConfigurationResponse(s.Struct.Segment())
+	if err != nil {
+		return PutConfigurationResponse{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+// ConfigService_putConfig_Results_List is a list of ConfigService_putConfig_Results.
+type ConfigService_putConfig_Results_List = capnp.StructList[ConfigService_putConfig_Results]
+
+// NewConfigService_putConfig_Results creates a new list of ConfigService_putConfig_Results.
+func NewConfigService_putConfig_Results_List(s *capnp.Segment, sz int32) (ConfigService_putConfig_Results_List, error) {
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 0, PointerCount: 1}, sz)
+	return capnp.StructList[ConfigService_putConfig_Results]{List: l}, err
+}
+
+// ConfigService_putConfig_Results_Future is a wrapper for a ConfigService_putConfig_Results promised by a client call.
+type ConfigService_putConfig_Results_Future struct{ *capnp.Future }
+
+func (p ConfigService_putConfig_Results_Future) Struct() (ConfigService_putConfig_Results, error) {
+	s, err := p.Future.Struct()
+	return ConfigService_putConfig_Results{s}, err
+}
+
+func (p ConfigService_putConfig_Results_Future) Response() PutConfigurationResponse_Future {
+	return PutConfigurationResponse_Future{Future: p.Future.Field(0, nil)}
 }
 
 type GetConfigurationRequest struct{ capnp.Struct }
@@ -794,10 +981,402 @@ func (p AllConfigurations_Future) Struct() (AllConfigurations, error) {
 	return AllConfigurations{s}, err
 }
 
+type PutConfigurationRequest struct{ capnp.Struct }
+type PutConfigurationRequest_Which uint16
+
+const (
+	PutConfigurationRequest_Which_raft     PutConfigurationRequest_Which = 0
+	PutConfigurationRequest_Which_nodeHost PutConfigurationRequest_Which = 1
+)
+
+func (w PutConfigurationRequest_Which) String() string {
+	const s = "raftnodeHost"
+	switch w {
+	case PutConfigurationRequest_Which_raft:
+		return s[0:4]
+	case PutConfigurationRequest_Which_nodeHost:
+		return s[4:12]
+
+	}
+	return "PutConfigurationRequest_Which(" + strconv.FormatUint(uint64(w), 10) + ")"
+}
+
+// PutConfigurationRequest_TypeID is the unique identifier for the type PutConfigurationRequest.
+const PutConfigurationRequest_TypeID = 0x93c59921a137c8db
+
+func NewPutConfigurationRequest(s *capnp.Segment) (PutConfigurationRequest, error) {
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 8, PointerCount: 1})
+	return PutConfigurationRequest{st}, err
+}
+
+func NewRootPutConfigurationRequest(s *capnp.Segment) (PutConfigurationRequest, error) {
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 8, PointerCount: 1})
+	return PutConfigurationRequest{st}, err
+}
+
+func ReadRootPutConfigurationRequest(msg *capnp.Message) (PutConfigurationRequest, error) {
+	root, err := msg.Root()
+	return PutConfigurationRequest{root.Struct()}, err
+}
+
+func (s PutConfigurationRequest) String() string {
+	str, _ := text.Marshal(0x93c59921a137c8db, s.Struct)
+	return str
+}
+
+func (s PutConfigurationRequest) Which() PutConfigurationRequest_Which {
+	return PutConfigurationRequest_Which(s.Struct.Uint16(0))
+}
+func (s PutConfigurationRequest) Raft() (RaftConfiguration, error) {
+	if s.Struct.Uint16(0) != 0 {
+		panic("Which() != raft")
+	}
+	p, err := s.Struct.Ptr(0)
+	return RaftConfiguration{Struct: p.Struct()}, err
+}
+
+func (s PutConfigurationRequest) HasRaft() bool {
+	if s.Struct.Uint16(0) != 0 {
+		return false
+	}
+	return s.Struct.HasPtr(0)
+}
+
+func (s PutConfigurationRequest) SetRaft(v RaftConfiguration) error {
+	s.Struct.SetUint16(0, 0)
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewRaft sets the raft field to a newly
+// allocated RaftConfiguration struct, preferring placement in s's segment.
+func (s PutConfigurationRequest) NewRaft() (RaftConfiguration, error) {
+	s.Struct.SetUint16(0, 0)
+	ss, err := NewRaftConfiguration(s.Struct.Segment())
+	if err != nil {
+		return RaftConfiguration{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+func (s PutConfigurationRequest) NodeHost() (NodeHostConfiguration, error) {
+	if s.Struct.Uint16(0) != 1 {
+		panic("Which() != nodeHost")
+	}
+	p, err := s.Struct.Ptr(0)
+	return NodeHostConfiguration{Struct: p.Struct()}, err
+}
+
+func (s PutConfigurationRequest) HasNodeHost() bool {
+	if s.Struct.Uint16(0) != 1 {
+		return false
+	}
+	return s.Struct.HasPtr(0)
+}
+
+func (s PutConfigurationRequest) SetNodeHost(v NodeHostConfiguration) error {
+	s.Struct.SetUint16(0, 1)
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewNodeHost sets the nodeHost field to a newly
+// allocated NodeHostConfiguration struct, preferring placement in s's segment.
+func (s PutConfigurationRequest) NewNodeHost() (NodeHostConfiguration, error) {
+	s.Struct.SetUint16(0, 1)
+	ss, err := NewNodeHostConfiguration(s.Struct.Segment())
+	if err != nil {
+		return NodeHostConfiguration{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+// PutConfigurationRequest_List is a list of PutConfigurationRequest.
+type PutConfigurationRequest_List = capnp.StructList[PutConfigurationRequest]
+
+// NewPutConfigurationRequest creates a new list of PutConfigurationRequest.
+func NewPutConfigurationRequest_List(s *capnp.Segment, sz int32) (PutConfigurationRequest_List, error) {
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 8, PointerCount: 1}, sz)
+	return capnp.StructList[PutConfigurationRequest]{List: l}, err
+}
+
+// PutConfigurationRequest_Future is a wrapper for a PutConfigurationRequest promised by a client call.
+type PutConfigurationRequest_Future struct{ *capnp.Future }
+
+func (p PutConfigurationRequest_Future) Struct() (PutConfigurationRequest, error) {
+	s, err := p.Future.Struct()
+	return PutConfigurationRequest{s}, err
+}
+
+func (p PutConfigurationRequest_Future) Raft() RaftConfiguration_Future {
+	return RaftConfiguration_Future{Future: p.Future.Field(0, nil)}
+}
+
+func (p PutConfigurationRequest_Future) NodeHost() NodeHostConfiguration_Future {
+	return NodeHostConfiguration_Future{Future: p.Future.Field(0, nil)}
+}
+
+type PutConfigurationRequest_Type uint16
+
+// PutConfigurationRequest_Type_TypeID is the unique identifier for the type PutConfigurationRequest_Type.
+const PutConfigurationRequest_Type_TypeID = 0xf737c9d3531fa703
+
+// Values of PutConfigurationRequest_Type.
+const (
+	PutConfigurationRequest_Type_raft     PutConfigurationRequest_Type = 0
+	PutConfigurationRequest_Type_nodeHost PutConfigurationRequest_Type = 1
+)
+
+// String returns the enum's constant name.
+func (c PutConfigurationRequest_Type) String() string {
+	switch c {
+	case PutConfigurationRequest_Type_raft:
+		return "raft"
+	case PutConfigurationRequest_Type_nodeHost:
+		return "nodeHost"
+
+	default:
+		return ""
+	}
+}
+
+// PutConfigurationRequest_TypeFromString returns the enum value with a name,
+// or the zero value if there's no such value.
+func PutConfigurationRequest_TypeFromString(c string) PutConfigurationRequest_Type {
+	switch c {
+	case "raft":
+		return PutConfigurationRequest_Type_raft
+	case "nodeHost":
+		return PutConfigurationRequest_Type_nodeHost
+
+	default:
+		return 0
+	}
+}
+
+type PutConfigurationRequest_Type_List = capnp.EnumList[PutConfigurationRequest_Type]
+
+func NewPutConfigurationRequest_Type_List(s *capnp.Segment, sz int32) (PutConfigurationRequest_Type_List, error) {
+	return capnp.NewEnumList[PutConfigurationRequest_Type](s, sz)
+}
+
+type PutConfigurationResponse struct{ capnp.Struct }
+type PutConfigurationResponse_Which uint16
+
+const (
+	PutConfigurationResponse_Which_raft     PutConfigurationResponse_Which = 0
+	PutConfigurationResponse_Which_nodeHost PutConfigurationResponse_Which = 1
+)
+
+func (w PutConfigurationResponse_Which) String() string {
+	const s = "raftnodeHost"
+	switch w {
+	case PutConfigurationResponse_Which_raft:
+		return s[0:4]
+	case PutConfigurationResponse_Which_nodeHost:
+		return s[4:12]
+
+	}
+	return "PutConfigurationResponse_Which(" + strconv.FormatUint(uint64(w), 10) + ")"
+}
+
+// PutConfigurationResponse_TypeID is the unique identifier for the type PutConfigurationResponse.
+const PutConfigurationResponse_TypeID = 0x9f8f8f8f8f8f8f8f
+
+func NewPutConfigurationResponse(s *capnp.Segment) (PutConfigurationResponse, error) {
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 8, PointerCount: 2})
+	return PutConfigurationResponse{st}, err
+}
+
+func NewRootPutConfigurationResponse(s *capnp.Segment) (PutConfigurationResponse, error) {
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 8, PointerCount: 2})
+	return PutConfigurationResponse{st}, err
+}
+
+func ReadRootPutConfigurationResponse(msg *capnp.Message) (PutConfigurationResponse, error) {
+	root, err := msg.Root()
+	return PutConfigurationResponse{root.Struct()}, err
+}
+
+func (s PutConfigurationResponse) String() string {
+	str, _ := text.Marshal(0x9f8f8f8f8f8f8f8f, s.Struct)
+	return str
+}
+
+func (s PutConfigurationResponse) Which() PutConfigurationResponse_Which {
+	return PutConfigurationResponse_Which(s.Struct.Uint16(0))
+}
+func (s PutConfigurationResponse) Raft() (RaftConfiguration, error) {
+	if s.Struct.Uint16(0) != 0 {
+		panic("Which() != raft")
+	}
+	p, err := s.Struct.Ptr(0)
+	return RaftConfiguration{Struct: p.Struct()}, err
+}
+
+func (s PutConfigurationResponse) HasRaft() bool {
+	if s.Struct.Uint16(0) != 0 {
+		return false
+	}
+	return s.Struct.HasPtr(0)
+}
+
+func (s PutConfigurationResponse) SetRaft(v RaftConfiguration) error {
+	s.Struct.SetUint16(0, 0)
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewRaft sets the raft field to a newly
+// allocated RaftConfiguration struct, preferring placement in s's segment.
+func (s PutConfigurationResponse) NewRaft() (RaftConfiguration, error) {
+	s.Struct.SetUint16(0, 0)
+	ss, err := NewRaftConfiguration(s.Struct.Segment())
+	if err != nil {
+		return RaftConfiguration{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+func (s PutConfigurationResponse) NodeHost() (NodeHostConfiguration, error) {
+	if s.Struct.Uint16(0) != 1 {
+		panic("Which() != nodeHost")
+	}
+	p, err := s.Struct.Ptr(0)
+	return NodeHostConfiguration{Struct: p.Struct()}, err
+}
+
+func (s PutConfigurationResponse) HasNodeHost() bool {
+	if s.Struct.Uint16(0) != 1 {
+		return false
+	}
+	return s.Struct.HasPtr(0)
+}
+
+func (s PutConfigurationResponse) SetNodeHost(v NodeHostConfiguration) error {
+	s.Struct.SetUint16(0, 1)
+	return s.Struct.SetPtr(0, v.Struct.ToPtr())
+}
+
+// NewNodeHost sets the nodeHost field to a newly
+// allocated NodeHostConfiguration struct, preferring placement in s's segment.
+func (s PutConfigurationResponse) NewNodeHost() (NodeHostConfiguration, error) {
+	s.Struct.SetUint16(0, 1)
+	ss, err := NewNodeHostConfiguration(s.Struct.Segment())
+	if err != nil {
+		return NodeHostConfiguration{}, err
+	}
+	err = s.Struct.SetPtr(0, ss.Struct.ToPtr())
+	return ss, err
+}
+
+func (s PutConfigurationResponse) Success() bool {
+	return s.Struct.Bit(16)
+}
+
+func (s PutConfigurationResponse) SetSuccess(v bool) {
+	s.Struct.SetBit(16, v)
+}
+
+func (s PutConfigurationResponse) Status() (string, error) {
+	p, err := s.Struct.Ptr(1)
+	return p.Text(), err
+}
+
+func (s PutConfigurationResponse) HasStatus() bool {
+	return s.Struct.HasPtr(1)
+}
+
+func (s PutConfigurationResponse) StatusBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(1)
+	return p.TextBytes(), err
+}
+
+func (s PutConfigurationResponse) SetStatus(v string) error {
+	return s.Struct.SetText(1, v)
+}
+
+func (s PutConfigurationResponse) Type() PutConfigurationResponse_Type {
+	return PutConfigurationResponse_Type(s.Struct.Uint16(4))
+}
+
+func (s PutConfigurationResponse) SetType(v PutConfigurationResponse_Type) {
+	s.Struct.SetUint16(4, uint16(v))
+}
+
+// PutConfigurationResponse_List is a list of PutConfigurationResponse.
+type PutConfigurationResponse_List = capnp.StructList[PutConfigurationResponse]
+
+// NewPutConfigurationResponse creates a new list of PutConfigurationResponse.
+func NewPutConfigurationResponse_List(s *capnp.Segment, sz int32) (PutConfigurationResponse_List, error) {
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 8, PointerCount: 2}, sz)
+	return capnp.StructList[PutConfigurationResponse]{List: l}, err
+}
+
+// PutConfigurationResponse_Future is a wrapper for a PutConfigurationResponse promised by a client call.
+type PutConfigurationResponse_Future struct{ *capnp.Future }
+
+func (p PutConfigurationResponse_Future) Struct() (PutConfigurationResponse, error) {
+	s, err := p.Future.Struct()
+	return PutConfigurationResponse{s}, err
+}
+
+func (p PutConfigurationResponse_Future) Raft() RaftConfiguration_Future {
+	return RaftConfiguration_Future{Future: p.Future.Field(0, nil)}
+}
+
+func (p PutConfigurationResponse_Future) NodeHost() NodeHostConfiguration_Future {
+	return NodeHostConfiguration_Future{Future: p.Future.Field(0, nil)}
+}
+
+type PutConfigurationResponse_Type uint16
+
+// PutConfigurationResponse_Type_TypeID is the unique identifier for the type PutConfigurationResponse_Type.
+const PutConfigurationResponse_Type_TypeID = 0xa2bce3bdb6c5201d
+
+// Values of PutConfigurationResponse_Type.
+const (
+	PutConfigurationResponse_Type_raft     PutConfigurationResponse_Type = 0
+	PutConfigurationResponse_Type_nodeHost PutConfigurationResponse_Type = 1
+)
+
+// String returns the enum's constant name.
+func (c PutConfigurationResponse_Type) String() string {
+	switch c {
+	case PutConfigurationResponse_Type_raft:
+		return "raft"
+	case PutConfigurationResponse_Type_nodeHost:
+		return "nodeHost"
+
+	default:
+		return ""
+	}
+}
+
+// PutConfigurationResponse_TypeFromString returns the enum value with a name,
+// or the zero value if there's no such value.
+func PutConfigurationResponse_TypeFromString(c string) PutConfigurationResponse_Type {
+	switch c {
+	case "raft":
+		return PutConfigurationResponse_Type_raft
+	case "nodeHost":
+		return PutConfigurationResponse_Type_nodeHost
+
+	default:
+		return 0
+	}
+}
+
+type PutConfigurationResponse_Type_List = capnp.EnumList[PutConfigurationResponse_Type]
+
+func NewPutConfigurationResponse_Type_List(s *capnp.Segment, sz int32) (PutConfigurationResponse_Type_List, error) {
+	return capnp.NewEnumList[PutConfigurationResponse_Type](s, sz)
+}
+
 type ServiceType struct{ capnp.Struct }
 
 // ServiceType_TypeID is the unique identifier for the type ServiceType.
-const ServiceType_TypeID = 0xabc8f8f8f8f8f8f8
+const ServiceType_TypeID = 0x94e84f47e297127c
 
 func NewServiceType(s *capnp.Segment) (ServiceType, error) {
 	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 8, PointerCount: 0})
@@ -815,7 +1394,7 @@ func ReadRootServiceType(msg *capnp.Message) (ServiceType, error) {
 }
 
 func (s ServiceType) String() string {
-	str, _ := text.Marshal(0xabc8f8f8f8f8f8f8, s.Struct)
+	str, _ := text.Marshal(0x94e84f47e297127c, s.Struct)
 	return str
 }
 
@@ -847,7 +1426,7 @@ func (p ServiceType_Future) Struct() (ServiceType, error) {
 type ServiceType_Type uint16
 
 // ServiceType_Type_TypeID is the unique identifier for the type ServiceType_Type.
-const ServiceType_Type_TypeID = 0x962be5e31fc6adcd
+const ServiceType_Type_TypeID = 0xdfa79f9e4e6e0810
 
 // Values of ServiceType_Type.
 const (
@@ -1545,144 +2124,382 @@ func (p PutRaftConfigurationResponse_Future) Struct() (PutRaftConfigurationRespo
 	return PutRaftConfigurationResponse{s}, err
 }
 
-const schema_9f0a9459eb121bf0 = "x\xda\xacW]l\x1cW\x15>\xe7\xce\xec\xce\xae\xb3" +
-	"\xeb\xdd\xe9\x8cE\xe2*rH\x82hLq\x9cZ!" +
-	"\xad[\xd8\xa4v\x1aR9\x8d\xc7\xe3B\x09\xb4\xcax" +
-	"\xf6z=\xb0;\xb3\x9e\x99\xddd#U\x0e\x01\x1eZ" +
-	")\x02DA\xa5/Q\x8b\xfa\x12\x88*\x95\x08\x91\x87" +
-	"\x92\x16D)\x82\x08*\x95\x0a\x0a\x95\x80\xc4\x88\xaa\xa4" +
-	"\xe4\xa5\".M\x07\x9dY\xef\xce\xd8\xde:\xa6\xa9_" +
-	"\x12\x7f\xf7\xf8|\xe7\xef~\xf7\xcc\xe0\x97\xc5\xdd\xe2\x8e" +
-	"\xec\xa9\x140\xad\x98H\x06\xdf\\\xfc\x01m\x0bbp" +
-	"\xe5\xe6\x9b\xde\xfc\xc2c]\xa7 \xc1$\x80\xa1\x9d\"" +
-	"c\x8a&J\x00\xca\x01\xf1\x19\xc0\xe0\xc2\x99\x17\xfb." +
-	"\xce\x7f\xe2{ og\xc1\xd5\xf0\xe7\xa5\x1f\x02\xe0\xd0" +
-	"\xbc\xf8\x14*\xd7B\xcb\x05q\x17`P\xff\xf5\xfa\xb1" +
-	"M/\x0c=\x05\xf2\x96\xb8[$\xb7\x98x\x07\x95\x8d" +
-	"\x092\xde\x90(\x00\x06\xb7\xbd\xf1\xc5\xef\xce\x1d\xfc\xdd" +
-	"\x0f:\x19\xdf\x918\x8d\x8a\x16\x1a\x1f\x08\x8d\xdb\xb4K" +
-	"#&\xee\xa1\x87\x13\xc7P\xf9v\xe2#\x00\xca\xf7C" +
-	"\xe3_|\xfa\xf1\xf3\xb3\x0f\xed:\x03\xf2\x0e\x84E\x8f" +
-	"\xe7\x12\xbd\x0cPy948\xf7\xb7\xb9\xff\x1c;\xfe" +
-	"\x9d3\xcb\xbc\xedE\x89\x01\x0c\xbd\x9d\xf8;*r\x92" +
-	"\xc8\xb3\xc9#\x80\xc1]\x83{\x1f\xfb\xc9\xef\x9f=\x03" +
-	"\xf2\x16\x16Y\x03\x0e5\x92.*'C\xcbG\x92\x07" +
-	"\x01\x83O}\xeej\xb7\xf3\xd0{g;\xe5\xf4t\x92" +
-	"1\xe5\x85\xd0\xf8\xb9$E\xb1\xf5\x96\xbb\xd4\x85\xb7\xee" +
-	"\xfb\x19\xc8w\xb2`\xd3\xc9u\xa5s\x9f\xb9\xf4<\xb9" +
-	"}=9\xcc\x94k\xa1\xe5B\x92\xea\xda>\\\xd6\xaf" +
-	"fa\xa5\xd7P\xd9(}\x1c@\xd9)Q\xbf\xd6\x9f" +
-	"\xb8\xf3\xc7\x87\xc77\xfc\xb2S\x10\x17\xa4.\xa6\\\x96" +
-	"\xc8\xf5\x1b\x12\x05\xf1\xf6\xae\x9b/\x0d\xe6\x0e\xfdj\xa9" +
-	"qX\xd7\x0d)\xc6\x94\x9d)\x09\x84\xe0\xc8\x8fN<" +
-	"\xf9\xfc\xc5\xfb/\x80\xbcEXR\x019\xf5(*\xdb" +
-	"R\xe4\xefc\xa9}\x8aF\xff\x0bNI\xdd\xcf\xbdu" +
-	"\xd5|\x15\xe4\x81v\xfd\xefHm\xa6\xfak)\"u" +
-	"\xdf]8\x8e_*\xbe\xba\"\xf3Y\xa2<\x19\xba{" +
-	"$E\x99g{>z\xb4w\xfa\x89?S\xe6]\xcb" +
-	"\x939\x99:\x8d\xca\xd3d=\xf4d\xea\xbc\x00\x18\xf4" +
-	"t\xbd8\x7fv\xe2\xd0\xc5\x15q\xfe)\xe3\xa2r9" +
-	"\x13\xe6\x9d\xd9\xa7\xf4d)\xce{\xce\xfef\xdb\x88\xf0" +
-	"\xf8\xbf\xe2sr-s\x13\xc5\xd9\x93\xa58\xbf\xf5\xe0" +
-	"3s\x89\x87\xff\xf1\xef\xce\xf7$\xfb\x0e*Z6\x9c" +
-	"\xd1,\xd5\xfd\xbfo:\x85\xf3\xe5\x9f.4\xd3\x0eK" +
-	"8\x9f\xede0\x18T]\xc7wL\xa7,y\xdb\xeb" +
-	";\xb6\x9b\x8e=m\x95\x16\xff\xa9\xef\x180\x8d\xaa]" +
-	"\x1d\x1e\xaf\xf9\x13\xc6\xb4?\x12\xa25\xd7\xf0-\xc7\x9e" +
-	"\xe0^\xd5\xb1=\x0e\xe3\x88ZF\x10\x01D\x04\x90\xf7" +
-	"\xde\x06\xa0\xed\x16P\x1bc\x88\xa8\"a\xfb\xfb\x01\xb4" +
-	"Q\x01\xb5q\x862C\x15\x19\x80|\x80\x0c?+\xa0" +
-	"6\xc9\xb0\xafn\x94\xad\"\"0D\xc0\x9cmT8" +
-	"f\x80a\x06\xb0\x8f\xbb\xae\xe3\xb6~kG\x9bX%" +
-	"Z\x9d\xbbu\xcb\xe4\x93\x8d*\x1f\x98\x94\x1aUN\x11" +
-	"\xa6BR\xb9\x1f\x00QN\xbb\x009\x9f{~\xd0\xfc" +
-	"S\x9dC_\xf87m\xff\xc9U\xfc\xef\xe3\x1d\xaaQ" +
-	"\xe0\xb35\xee\xf9D%\xb6\x8b\x91\xed\x05\xd0R\x02j" +
-	"*C\xc1*\xfe_Y\xec)\x97#\x86\x9c\xe5\xd8\xde" +
-	"2\xdf\xfd\x8b\xbe\xb72\xcc\xb9\xc6\xb4\x8f\xdd\x80\xe3\x02" +
-	"b>\x1aL@\x02\xdbt\xe2\xf5\x8aVhVM\x13" +
-	"1\xae\xac\xd8\x9fk\xa2+\xb9U\x869\xbfQ\xe5\x98" +
-	"\x8b\xec\x011\x17#]m\xaeF\x16\xab\x1f\xd6~\xa0" +
-	"\xc4\x17k\xbau\x82{\xb5\xb2\xe0{q\xca{\x01\xb4" +
-	"\x8c\x80\xdaz\x86\x81\xdb\x9a=\x00\xccG\x8a\x09\x88\xf9" +
-	"\x18\xf3uz\xb8r\x9a%\xdbk\xce\x8a f\x82 " +
-	"\xa4\xdd\xb6\x19@\xdb*\xa06\xc80\x8b\xef\x05\xcd\x81" +
-	"\xfe$\xe5\x7f\x8b\x80\xda(C\xc9(\x971\x1f\xbd\x18" +
-	"\xcd >\x84\x8e\x84\xf1\xf5\x95&\x17\x078\x13\x0e\xf0" +
-	"\xc6\xe1p\x80{\xee\x05@&\xcbS\x00\x05\xaf\xe1\xf9" +
-	"\xbc\x12\xf0\xa3\xe6\x8ca\x97\xa8&\x81Y\xf3|\xa7\xc2" +
-	"]\x90\xee\xf1*k\xeaD\xc7\x99\x8e\xdf\xf0X'\x86" +
-	"\xa3\xe6\x17\x9an\x96e\x98_c\xfbW6!\xbcC" +
-	"\x03z\x95\x9bVa\xda2-\xbf\x11\xbb\xbb\x9b\x9bw" +
-	"\xf7\x10\x80\xe4\xd8<\xe0u\xee6\xfc\x19\x0b\x04\xbb\xf4" +
-	"\x01{>[\xe3\x82\xe7k)\x8c\xcb~\xba?\xf6\xfa" +
-	"%\xa6\xc2\xd9\x0f\xc2\x90\xa6-\x13$\xcbo\xc4\xe5\xae" +
-	"?\x92;\xb9\xadw\xc3\x91\xde![\x94\xbb\xdeH\xee" +
-	"rGf\x0c\x1fs\x11g\xf3\xca\x14\x8c\x8aS\xb3\xe9" +
-	"\xa0\xcd\xdf<\xe8$\x1d\xab\xd5u\xcc\xf2V\xe9\xe6\xf2" +
-	"v\xde\x1d\xe9\xc8\\\xd3\x91w\xfd\xc1\xfd\x00\xf4ao" +
-	"\x89|M\xf2\xb7D\x1aZ1'b\x0f#\xb66)" +
-	"Y\x9e\x00&\xa7\xa5\xa0\xa5\x1f\x80\xa5\xdd\x18\xe7Y-" +
-	"\xd8\xfbx\xc9\xf1-\xc3w\xdc\x013N\x19j\x90T" +
-	"^\xaaA\x9b\xa3\xc9\x97\xbc\xba\x89r\xb4|\xd0h\xde" +
-	"\xe0\xd8\xd3\xa0\xc1\xcay\xef\x07 \x8d\x09\x15eM\xa5" +
-	"[R\xfb\x1c1\x90\xd3\xd1V\x1a\xca\x05\xec\x05\xd0_" +
-	"B\x01\xf5W\xb0\xfdJ+/\xe30\x80\xfe[\x82\xff" +
-	"\x88\xd1C\xad\xfc\x01'\x00\xf4W\x08\xff+\xe1\xc2q" +
-	"\x15\x05\x00\xe5u\x9c\x02\xd0\xffB\xf8?\x09\x17\x05\x15" +
-	"E\x00e\x1eO\x00\xe8\x97\x08\xbfBxBT1\x01" +
-	"\xa0\\\xc6G\x01\xf4+\x84\xbfKx2\xa1b\x92\xd6" +
-	"\xc8\xd0\xfe*\xe1\"c(KI\x95\xb6\x1d\x05\xd9\x13" +
-	"\x00\xba\xc8\x04\xd4\xf3\x84\xa7\xbe\xaab\x8a\xf6^\xf6\x1a" +
-	"\x80\xae\x12\xbe\x89\xf0\xb4\xa4b\x1a@\xd9\x18\xdao\"" +
-	"\xfcV\xc2\xbbR*v\x01(\xdb\xd8\xcf\x01\xf4[\x09" +
-	"\xbf\x9d\xf0ui\x15\xd7\xd1B\xcaN\x03\xe8\xb7\x13>" +
-	"Jx\xe6\x84\x8a\x19\x00e\x0f{\x16@\x1f%|\x9c" +
-	"\xf0\xec\xd7T\xcc\xd2\"\xc5\x0e\x01\xe8c\x84?@x" +
-	"\xf7\xd7U\xec\x06P\xeegT\x9fI\xc2\x0f\x13\x9e\xfb" +
-	"\x86\x8a9\x00\xe5Av7\x80\xfe\x00\xe1E\xc2\xf3i" +
-	"\x15\xf3\x00\x8a\x11\xfa9Lx\x99-\xd9\x0b\x0a\xb6S" +
-	"\xe4\xfb\x8b\x98\x06\x86i\xc0\xc0,\xd7<\x9f\xbb\xfb\x01" +
-	"c\xd8\x0c7\xbf\xa2\xd5\x1c\x90\xdcZ\xa5\xb51\x05\xbc" +
-	"\xccMj4NZ\x15\xee\xd4|h\xdb\xcfp\xc3\xf5" +
-	"\xa7\xb8\x81~\xeb(:\xf3l\xa3\xea\xcd8>\xee\xb5" +
-	"}\xd7\xe2^tb:\x95\xaaa\xfa\x16:\xf6\xc1:" +
-	"wg\xb8`D!8n\x91\xbb\xbc8\xc2\xe2C<" +
-	"2c\xd8B\x89\xb7#\xaa\x18G\xf7\xdb\x07x\x05\x1d" +
-	"\xb71\xe6\x94tK8\xc6W\x10\xb3\x11\xa7Ru\xb9" +
-	"\xe7Y\x8e\x1dN\x7f\xdb\x82\xdb\xbe\xdb\x18q*\xd8:" +
-	"\x0ee\xb8}\\\xb4<c\xaa\xcc\xf7`\xcdw\xc8\x87" +
-	"\xd1\xd7L\xbf\xc5ny\x07\xa7<\xee\xd6A\xe0n\x0c" +
-	"\xfc\xbc\xe5\xdb\x94\xa6\xd7\xc2\xe6fk\x16\xf7\xcc(\xec" +
-	"\xe6U\x9al\x80\x10.5\xed\xaf\xabeK\x8dx=" +
-	"E\xe9\x0b%%R\xad\xd6\xfe\x8d\xad\xef\x0fYv\x9b" +
-	"\xaa\xb5l\x03]\xbbr\xbd\xdf\xf24n\xb8F\x05\xbd" +
-	"N\x12\xaf2\x9cs\x9bj\x83\xf9\xf8\xc7\xcd\x9a\xf7\xa6" +
-	"\x8e_\x02\xb1\xdd7\xf62\x0e\xaf\xf5C`8z\x19" +
-	"\x0b\xdc\xa6\xbev\xfc\x12\xb8\xb1]\xe3}u\x9e\xca%" +
-	"T\xbc\xff\x05\x00\x00\xff\xff\xd5\xeb\x8dv"
+type NodeHostConfiguration struct{ capnp.Struct }
+
+// NodeHostConfiguration_TypeID is the unique identifier for the type NodeHostConfiguration.
+const NodeHostConfiguration_TypeID = 0x859698645e9c4a44
+
+func NewNodeHostConfiguration(s *capnp.Segment) (NodeHostConfiguration, error) {
+	st, err := capnp.NewStruct(s, capnp.ObjectSize{DataSize: 24, PointerCount: 7})
+	return NodeHostConfiguration{st}, err
+}
+
+func NewRootNodeHostConfiguration(s *capnp.Segment) (NodeHostConfiguration, error) {
+	st, err := capnp.NewRootStruct(s, capnp.ObjectSize{DataSize: 24, PointerCount: 7})
+	return NodeHostConfiguration{st}, err
+}
+
+func ReadRootNodeHostConfiguration(msg *capnp.Message) (NodeHostConfiguration, error) {
+	root, err := msg.Root()
+	return NodeHostConfiguration{root.Struct()}, err
+}
+
+func (s NodeHostConfiguration) String() string {
+	str, _ := text.Marshal(0x859698645e9c4a44, s.Struct)
+	return str
+}
+
+func (s NodeHostConfiguration) DeploymentId() uint64 {
+	return s.Struct.Uint64(0)
+}
+
+func (s NodeHostConfiguration) SetDeploymentId(v uint64) {
+	s.Struct.SetUint64(0, v)
+}
+
+func (s NodeHostConfiguration) WriteAheadLogDir() (string, error) {
+	p, err := s.Struct.Ptr(0)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasWriteAheadLogDir() bool {
+	return s.Struct.HasPtr(0)
+}
+
+func (s NodeHostConfiguration) WriteAheadLogDirBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(0)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetWriteAheadLogDir(v string) error {
+	return s.Struct.SetText(0, v)
+}
+
+func (s NodeHostConfiguration) NodeHostDir() (string, error) {
+	p, err := s.Struct.Ptr(1)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasNodeHostDir() bool {
+	return s.Struct.HasPtr(1)
+}
+
+func (s NodeHostConfiguration) NodeHostDirBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(1)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetNodeHostDir(v string) error {
+	return s.Struct.SetText(1, v)
+}
+
+func (s NodeHostConfiguration) RoundTripTimeMilliseconds() uint64 {
+	return s.Struct.Uint64(8)
+}
+
+func (s NodeHostConfiguration) SetRoundTripTimeMilliseconds(v uint64) {
+	s.Struct.SetUint64(8, v)
+}
+
+func (s NodeHostConfiguration) RaftAddress() (string, error) {
+	p, err := s.Struct.Ptr(2)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasRaftAddress() bool {
+	return s.Struct.HasPtr(2)
+}
+
+func (s NodeHostConfiguration) RaftAddressBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(2)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetRaftAddress(v string) error {
+	return s.Struct.SetText(2, v)
+}
+
+func (s NodeHostConfiguration) ApiAddress() (string, error) {
+	p, err := s.Struct.Ptr(3)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasApiAddress() bool {
+	return s.Struct.HasPtr(3)
+}
+
+func (s NodeHostConfiguration) ApiAddressBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(3)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetApiAddress(v string) error {
+	return s.Struct.SetText(3, v)
+}
+
+func (s NodeHostConfiguration) MutualTls() bool {
+	return s.Struct.Bit(128)
+}
+
+func (s NodeHostConfiguration) SetMutualTls(v bool) {
+	s.Struct.SetBit(128, v)
+}
+
+func (s NodeHostConfiguration) CaFile() (string, error) {
+	p, err := s.Struct.Ptr(4)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasCaFile() bool {
+	return s.Struct.HasPtr(4)
+}
+
+func (s NodeHostConfiguration) CaFileBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(4)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetCaFile(v string) error {
+	return s.Struct.SetText(4, v)
+}
+
+func (s NodeHostConfiguration) CertFile() (string, error) {
+	p, err := s.Struct.Ptr(5)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasCertFile() bool {
+	return s.Struct.HasPtr(5)
+}
+
+func (s NodeHostConfiguration) CertFileBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(5)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetCertFile(v string) error {
+	return s.Struct.SetText(5, v)
+}
+
+func (s NodeHostConfiguration) KeyFile() (string, error) {
+	p, err := s.Struct.Ptr(6)
+	return p.Text(), err
+}
+
+func (s NodeHostConfiguration) HasKeyFile() bool {
+	return s.Struct.HasPtr(6)
+}
+
+func (s NodeHostConfiguration) KeyFileBytes() ([]byte, error) {
+	p, err := s.Struct.Ptr(6)
+	return p.TextBytes(), err
+}
+
+func (s NodeHostConfiguration) SetKeyFile(v string) error {
+	return s.Struct.SetText(6, v)
+}
+
+// NodeHostConfiguration_List is a list of NodeHostConfiguration.
+type NodeHostConfiguration_List = capnp.StructList[NodeHostConfiguration]
+
+// NewNodeHostConfiguration creates a new list of NodeHostConfiguration.
+func NewNodeHostConfiguration_List(s *capnp.Segment, sz int32) (NodeHostConfiguration_List, error) {
+	l, err := capnp.NewCompositeList(s, capnp.ObjectSize{DataSize: 24, PointerCount: 7}, sz)
+	return capnp.StructList[NodeHostConfiguration]{List: l}, err
+}
+
+// NodeHostConfiguration_Future is a wrapper for a NodeHostConfiguration promised by a client call.
+type NodeHostConfiguration_Future struct{ *capnp.Future }
+
+func (p NodeHostConfiguration_Future) Struct() (NodeHostConfiguration, error) {
+	s, err := p.Future.Struct()
+	return NodeHostConfiguration{s}, err
+}
+
+const schema_9f0a9459eb121bf0 = "x\xda\xa4Xkl\x1c\xd5\x15>\xe7\xce\xaegw\xbd" +
+	"\x0fO\xeeF\x85P\xcb!IEb\x81\x89qi\x82" +
+	"\x09u\x1e\x0e\xc4\x91\x93x\xb2\xa6\x85\x14P&\xbb7" +
+	"\xf6\x94\xdd\x99\xcd\xcc\xac\x13\xa3FNR\xa2\x16\x04*" +
+	"\x88\xd0\x06\xd46\x85\xfe@E\x8d\x90(\xa0\"\x95\x02" +
+	"E\xb4\xa4-\xea\x0bP\x0bTm\x81T \x0a\xa5?" +
+	"*\x08ELu\xeexwf\x9d%l\x1e\x7fb\x7f" +
+	"\xf7\xf8\x9cs\xcf\xeb\x9eo\x96\x8fv\xac\x8e\xf5g\xd4" +
+	"N`\xfa\xbex\x87?\xbc\xf1\xbb7\x94\x0e\x7f\xfb " +
+	"\xe8\x8bQ\xf1\xdf;o\xde\xdb\xd7\x1eJ\x1d\x81\xb8\xaa" +
+	"\x02\x0c\x98\xf1_#?\x18\xa7\x1f\xf7\xc7W0@\xff" +
+	"[\xb3\xffH\x1c#\xe2\x8cd\xdeR\x19\xe3\xf1\x84\x0a" +
+	"\xc01\xf1\x10\xa0\xff\xcas+\xee;\xff\x9eg\xef\x9a" +
+	"#\xbd\x1eU\x060pO\xe2e\xe4\x8f&>\x03\xc0" +
+	"\x9fH\xec\x06\xf4\xbf6\xef;\xaf]\xb5\xe5\xcdCs" +
+	"\xc4c\xa4\xbb;y\x13\xf2\xfe$\x09_\x96\x1c\x0a=" +
+	"92W7\x93\xba\xafM\xbe\x86\xbcF\xe2\x03{\x93" +
+	"=\x08\xe8O\x1d;gt\xe1\xd3\x03\xf7\x83\xb68\xea" +
+	"8\x92\xf2;S\x1f\"?\x9a\"\xc7\x7f\x94\"\xe5\xdd" +
+	"\x0b\x9f}\xec\x89\xd7\x7fv?h\xabXh\x09p\xe0" +
+	"X*\xc5\xf8[R\xf2xj\x05\xa0\x7f\xc9[_\xb9" +
+	"{f\xcb\xef~\xd8J\xed;\xa9\x07\x91\xc7;e<" +
+	":I\xed3W\x1c~r\xd7\x0d+\x8e\x82\xd6\x8f0" +
+	"+\xd4\xdf\xb9\x80\x01\xf2\x11)\xf0\xf8?f\xde\xbfi" +
+	"\xdf]G[\x07\xac\xd2\xf9\x1a\xf2[\xa4\xbe\x83\x9d\x14" +
+	"\xb0U\xcb\xd7\x1fz\xec\xf7\x0f\x1f\x05m1\x0b\xa5\x01" +
+	"\x07\xfe\xd3\xe9 \x8f\xa7\xa5\xe5\xf4\x16@\xff\x0b_\xfa" +
+	" k\xdf\xf0\xf1#\xad\xdc\xecN3\xc6/\x93\xc2\x97" +
+	"\xa6\xc9\x8b%KW\xe5O\xbc\xbb\xf9\xe7\xa0]\xce\xfc" +
+	"\x85\xb7wN<\xfe\xc57\x9e\"\xb5W\xa7\x07\x19\xaf" +
+	"I\xc9]i\xba}\xe3pN9H\xbd\xd3\xe9\x97\x91" +
+	"\xdf\x9d\xbe\x00\x80\x1fMS9l\xeb\xe8|\x1a\xfb/" +
+	"x&z\xfd\xf5\x99yt\xfd\xeb3d\xf8\x9c\x03\x97" +
+	"\xffd\xfb\xd8\xb9\xcf\xb6\xf2ro&\xc5\xf8\xf72d" +
+	"\xfb\x1e)\xfc\xdf\x15\xe7\xbd\xb1<\xb7\xedW\xcd\xc2\xb2" +
+	"X\x8ee\x18\xe3\xc73*(\xfe\xee\x1f\x1f\xb8\xef\xa9" +
+	"\xd7\xaf~\x1e\xb4\xc5JS\x88\x9e\xce\xdc\x8a\xfc/R" +
+	"\xdf\x8b\x99o\xf0\x8b\xb2*\x80\x7fD\xcd>\xf1\xee\x07" +
+	"\xc5\x97@\xebkx8?\xbb\x88<\xbc(KF\x9d" +
+	"\x8fN\xec\xc3\xebJ/\x9d\x14\x9aMY\xc6\xb8IJ" +
+	"\xb8\xc8Rh2\xf3\xcf\xdf\xb3`\xe7\xbd\xafPhR" +
+	"s/cf\x1fD\xbe?+\xef\x95}R\x01\xf4\xf9" +
+	"\xd8\x1d\xb9\x83?\xe8}5\x1a\x9bG\xe7\xc9\xd2x~" +
+	"\x1eY\xeeJX\x9b\xbf\x7f\xe4\x81\xbf\x81v1\x0b;" +
+	"\x85r=\xef~\xe4IN\x96\xe3\x9c,\xcfO\xfd\xf2" +
+	"\xf8#[\xb7\xbd~\xd2\x953\xdcA~\xbe\x94\xec\xe6" +
+	"W\xf1\x11\xfa\xc9\xbf\xf2\x91\xdf,[\xa7\x1c\xfeWS" +
+	"Mr\x99\x94\x11N\x86\xef\xb8\xfe\xa1\x99\xf8\xde\x7f\xfe" +
+	"\xbbe\xcb\x9b\xfcC\xe4\x07\xa5\xca\xfd\x9cr\xac<\xd0" +
+	"S\xf8\xd3\xb1\x15\xef\xcb\x005\xfa\x1fp\xe0\xdc<c" +
+	"\xfc\xd2<I\xf6\xe7\xc9\xcd\xff\xbdm\x0f=Y\xfe\xe9" +
+	"\x89 \xd62o\x97\xe5\x170X\xeeW\x1d\xdb\xb3\x8b" +
+	"v\xb9\xc3\xbdx\xaa\xff\xe2\xa2m\xed4'f\xff\x9b" +
+	"\xea\xef+\x1aU\xab:\xb8\xd9.\x89\x0d\xb6\xeb\xad\x93" +
+	"p\xcd1<\xd3\xb6\x00\xc6\x10\xf5\xa5J\x0c \x86\x00" +
+	"<\x89_\x05($P\xc1B\x1e\x19\"\xe6\x91`\x0d" +
+	"o\x05(\xe4\x09^\x88\x0c5\x86yd\x14\x14\xdc\x01" +
+	"P\xf8,\xe1K\x09W0\x8f\x0a\x00\xff\x1c\xfe\x11\xa0" +
+	"p!\xe1+\x09\x8f\xb1<\xc6\xa8[\xa4\xfc\xe7\x09_" +
+	"Mx\\\xc9c\x1c\x80_\x81\xdb\x00\x0a\xab\x08\xdf@" +
+	"x\xc7\xbe<v\x00\xf0\xf5\xb8\x15\xa00L\xf8\x18\xe1" +
+	"j,O\xe1\xe6\x9bp\x10\xa0\xb0\x81\xf0q\xc2\x13\xf1" +
+	"<&\x00\xb8\x8e\x1b\x01\x0ac\x84_Gx\xb2#\x8f" +
+	"I\x00~-\xae\x05(\x8c\x13\xbe\x1d\x19\xfa%Q-" +
+	"\xdb\xd3\x15\x019\xcb\x1b)a\x12\x18&\x01\xfd\xdd\x8e" +
+	"\xe9\x895\x93\x02\x8d\xd2\xa8=1l:\x00\x98\x06\x86" +
+	"i@\xdf\x9a\x0d\x1f\xa8\xc3\xa6\xd3@\x1d\xbbf\x95\xc6" +
+	"\x1d\x93U\xc7\xcd\x8a\xd8d\x96\xcb\xa6+\x8a\xb6UB" +
+	"\xb7\xa1\xd51vzkJ%\x07T\xe1\xba\x8d\xbf4" +
+	"\xaa&\x81\x02\x94\x08X\xa9y5\xa3<^\x06t\x11" +
+	"\x81!\x02\x0e\x15\x8d+\xcd\xb2h\x88\x14\x85\xe3\x11\x00" +
+	"\xa1o37\x8a\xe9&\x99z9\xa8\xa7(\x87\xb1\x9a" +
+	"\xb7\xd5\xd8\xd9\\\x0d[\x85[\xb5-W\xc8\xa2H\xd7" +
+	"\x8bB[\x7f\x09\x80\xbeZA}\xb4Q\x11\xdaH/" +
+	"\x80>\xac\xa0>\x16\x96\x83\xb6\x89\x047(\xa8\x8f3" +
+	"\xec\x992\xcaf\xa9~\x8b\x9ceT\x1a\xfe\xf5\x08\xc7" +
+	"\xb1\x9d\x93\xbc\xed8\xb5\xb7s<\xddU\x13\x8a\xeb\xe9" +
+	"1\x8cv\x10\xf6\xe6\xc6\xa7\xabBO(\xb1\xb4\xefK" +
+	"\xe7\x97\x91\xa3K\x14\xd4\x973\xcc\xe0\xc7~\xe0\xfeE" +
+	"\x1b\x01\xf4\x0b\x15\xd4W2\xccQ\x82\xb0+\x9c?\x80" +
+	"\xd8\x15\xcd8\x00v\x85\xcf\xfe\xeci\xdd\xeb\xd8)\xbc" +
+	".\x08g\xca\x1c*\x0a\xe9\x13y\x1a\x8e\xa4\xba\xa7\xb1" +
+	"F\x943\xe4hBA=\xcf0\xe7MW\x05\xe6B" +
+	"y@\xcc\x9dq\xa8\xdc\xaa\xadZn\xe0A\xf8N\xd7" +
+	"=\xc8\x87\xb1\xdaK.\xecQP\xbf9\x1a\xab\xfd\x14" +
+	"\xab}\x0a\xea\xb7Q\xaa\xbb\x82T\xdf\xb2\x16@\xbfY" +
+	"A\xfd\x8e\xb0\xed\xb5\xdb\x07\x01\xf4o*\xa8\x1f\x0a{" +
+	"^\xbb\x93\x94\xde\xa6\xa0~\xf8\x0cC=\xe3\xd6\x8aE" +
+	"j\x9dzG\xb8\x9e\xe1\xd5\x1aMS\x8fU\xe3f\xa7" +
+	"\x11\xab\xabD\x8b&\x18\xa2\xdar=\xea\x81Hv\x16" +
+	"\x84\xd9Q\xcc\xd2\xe9\xb6Z\xcb6\xeb\xa3\xf8\x07\x138" +
+	"!\x83\xaa\xf5\x92\xf3Zr#\x80\x8cT4.\x0dK" +
+	"\xf1SXZS.\x87\x96r\xa6m\xb9snQ\xaf" +
+	"\xb1%\xf5\\d\x01\xc7\x14\x9c\x93\x92l\x9b\x17\x0bl" +
+	"\xc9*/\x8a\xbe\x091{\xcd%[\x85[++\x9e" +
+	"\x1b\xb5LE\x94VP?\x87\xa1\xef\xd4\xe7\x8cLw" +
+	"c\x85\x9b\xd3Y\x9f\x92\xb8\xd6E.\x83\x19\xe9\xfeE" +
+	"-\xbb\x9f\xc2\xb0TA}\x98\xa1j\x94\xcb\xd8\x15n" +
+	"\xa5\x81\x13m\x06'\xf6i\xc1\xe9\x99\xa0\x1c\xcbq*" +
+	"3\xdc=(3<\x7f#\x002M\xdb\x010\xe4N" +
+	"\xbb\x9e\xa8\xf8bOq\xd2\xb0&(&~\xb1\xe6z" +
+	"vE8\xa0^\xe9V\xda\xcaD\xcbB\x8eN\xf3H" +
+	"&\x06\xc3J\x1e\x0a\xd4\xb4\xe8\xc86\x8d\x9e<\x94]" +
+	"\xaf\xafP\x15Esh\xa7Y4\xbd\xe9Hq/\x0a" +
+	"\x8a{\x1b\x80j[\xc2\x17S\xc2\x99\xf6&MP\xac" +
+	"\x893\xcc\xf9\xec\x1b\x90\xc0\xe8\x9a\x99\xec\x8d\xac\xe3\xf1" +
+	"\x1dr\xc8\xf9\xd2\xa5\x9df\x11T\xd3\x9b\x8e>m\xbd" +
+	"\xe1\xd3\xa65\xde\xb6\xc1\xf0mC6\xfb\xb4-\x08\x9f" +
+	"\xb6\xdc\xeeI\xc3\xc3\\h3\x988CF\xc5\xaeY" +
+	"t\xd0\xb0\x1f\x1c\x9c\xee\xbchn\xabj}z,\x19" +
+	"3\x1c\xa3\x82M]\xb56\xcc\xe5\x8c\x13\x84\x1f\xbb\xa2" +
+	"[d\xdb\xc9\x1c5\xddS\x94\xd0\xdc\x1aZ\x1b\xce\x91" +
+	"\x99@\x91{v\xa3\xe4\x13\xcc\xcb\x1b\x91\xf1\xb6\xc6_" +
+	"S\xe0f\x07\xab\x12\x8f\xac\xecX\xe7\x93Z\xffV`" +
+	"\xda2\x15C\x8e\x85uB\xa1u\xd3\xd9|\xd5\xaf\x0f" +
+	"4\xc0\x89\xd5\xe8\xd7\xf3 \x7f\x8bzt\xaakm\x16" +
+	"\x13\xb6g\x1a\x9e\xed\xf4\x15\xa3\xce\xc9\x11\xa9\x96\x9bG" +
+	"\xe4\xa20\x99\xaa;UD-\xe4b\xd49g\xd9\x95" +
+	"\xf2\xb19\xb9\x1d{\x01h\x04\x06\xefM;An\xca" +
+	"R\x8e,\x90\xd2\xe1\x06\x85x\x1e\x17\x00\x14\x9e\xa3]" +
+	"\xfb\x85\x08\x85\xf8\x83\\\xd9\x7fK\xf0\x9f\xa3\x14\xe2E" +
+	"\xb9\xe2\xbf@\xf8\xdf%\x85\xd8\x17P\x88\xbfJ\xaa\xf0" +
+	"*\xe1oJ\x0a\xa1\x04\x14\xe28\x1e\x00(\xbcA\xf8" +
+	"{\x92B\xc4\x02\x0a\xf1\x8e\xa4(\xef\x11\xfe\x91\xa4\x10" +
+	"\xf1\x80B\x9c\x90\xf2\x1f\x10\x1ecD!:\x02\x0a\x81" +
+	"\xec^\x80B\x8c)X\xe8\"<\xb1?\xa0\x10\x19\xf6" +
+	"2Q\x1d\xc2\x17\x12\x9eT\x03\x0a\xd1-\xe5\x17\x12~" +
+	"!\xe1\xa9D\x1eS\x00|\x19\xfb\x05Q\x1d\xc2W\x12" +
+	"\xde\x99\xccc'Q\x1d\xf6 @a%\xe1\xc3\x84\xa7" +
+	"\x0f\xe41\x0d\xc0\xd7\xb0\x87\x89\xd2\x10>Fx\xe6\xeb" +
+	"y\xcc\x10\xa5aD\x81F\x09\xbf\x86\xf0\xec\xcdy\xcc" +
+	"\x02\xf0\xab\x19\xc5g\x9c\xf0\xed\x84\xe7\x0e\xe61\x07\xc0" +
+	"\xafgDi\xae!\xbcDxW2\x8f]\x00\xdc\x90" +
+	"z\xb6\x13^fM\xbb\xca\x10m\x13\x11\xb6S,\xd7" +
+	"\\O8#\x80\x11lR\x14o\xd4k6\xa8N\xad" +
+	"R_\xb8|Q\x16EJ4\x12\xc9\xb1k\x1e4\xe4" +
+	"'\x85\xe1x;\x84\x81^\xfd(<s-\xa3\xeaN" +
+	"\xda\x1e\xae\xb7<\xc7\x14nxR\xb4+U\xa3\xe8\x99" +
+	"h[[\xa6\x843)\x14#t\xc1vJ\xc2\x11\xa5" +
+	"u,Z\xc4\xeb&\x0dK\x99\x10\x0d\x8f*\xc6\x9e\x11" +
+	"k\x93\xa8\xa0\xedL\x8f\xda\x13\x05S\xb9I\x9cd\x98" +
+	"\xad\xb3+UG\xb8\xaei[\xb2\xfa\x1b\x12\xc2\xf2\x9c" +
+	"\xe9uv\x05\xeb\xc7\xf2\x95h\x1c\x97L\xd7\xd8Q\x16" +
+	"k\xb0\xe6\xd9\xa4\xc3\xe8\x09\xae_\xb7n\xba[v\xb8" +
+	"\xc2\x99\x02E8\x11\xf0\xcb\xa6g\xd15\x1b\x9b\xea\xcc" +
+	"\xae\x9a)\xdcb\xe8v\xd0J\xe3\xd3\xa0\xc8\x95\xb5\xf1" +
+	"5j\xce\xcaz&\x8f\xc3\xe9\xed\\\x91/tM/" +
+	"D\xfc\xd3\xd8L@f\xfa\xc6\xd5\xd9\xb5\xa6yqu" +
+	"\x00r\x9ep=\xbf>\xec\xa0G\xfeM[\x0b\x93\x9c" +
+	"\x95=rX\x06\xaf\x0dM\xee\xfa7\x0f\xac\x7fh\xd2" +
+	"4\x07\x98\x96T\xe7\x9ah\x7f&\x7f\xd2\xd6\xda\xf6\xf3" +
+	"\x1a\xf9\x8a\xd5\xf6\xc2\xda\x92nG\x98Fd%\x19l" +
+	"\x97m\x0f\x86+\xc9\x90\xb0\xa8b[\xd2\xed\xb3[\xf2" +
+	"Z2\xef\x16\xcfI;\xd4\xe5\x8c^JJ\x8bRq" +
+	"\xff\x1f\x00\x00\xff\xff\x11vOG"
 
 func init() {
 	schemas.Register(schema_9f0a9459eb121bf0,
+		0x859698645e9c4a44,
 		0x8f8f8f8f8f8f8f8f,
-		0x962be5e31fc6adcd,
+		0x93c59921a137c8db,
+		0x94e84f47e297127c,
+		0x9f8f8f8f8f8f8f8f,
 		0xa233c1204c18c976,
+		0xa2bce3bdb6c5201d,
 		0xa3cf4f7f955be932,
-		0xabc8f8f8f8f8f8f8,
 		0xad375e71bf983dc3,
 		0xad93807af77fe1b9,
 		0xadb2d0b69445303c,
 		0xb4fe5e6f0ef85636,
 		0xbe4eeef9143c2824,
 		0xc0e43eb9670b8d20,
+		0xc3273101c10b065a,
 		0xc5195060b33b8218,
 		0xc75a0f30e41b37f5,
 		0xcd55e3c0a182ac77,
 		0xd663f8eebd0e079f,
 		0xd6645c0180f9fc72,
 		0xdb9a661a7821150d,
+		0xdc2aa0850f905013,
+		0xdfa79f9e4e6e0810,
 		0xe35a52b4e5c60a15,
 		0xec98034329cbb446,
 		0xefe67d057faf5d90,
+		0xf737c9d3531fa703,
 		0xf9b86cbf3f6febfb)
 }

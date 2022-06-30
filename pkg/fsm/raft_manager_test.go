@@ -4,25 +4,19 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/consul/api"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"go.uber.org/fx/fxtest"
-	"r3t.io/pleiades/pkg/conf"
 	configv1 "r3t.io/pleiades/pkg/pb/config/v1"
-	"r3t.io/pleiades/pkg/servers/services"
+	"r3t.io/pleiades/pkg/services"
 	"r3t.io/pleiades/pkg/utils"
 )
 
 type RaftManagerTests struct {
 	suite.Suite
-	logger    zerolog.Logger
-	store     *services.StoreManager
-	lifecycle *fxtest.Lifecycle
-	client    *api.Client
-	env       *conf.EnvironmentConfig
+	logger zerolog.Logger
+	store  *services.StoreManager
 }
 
 func TestRaftManager(t *testing.T) {
@@ -32,18 +26,8 @@ func TestRaftManager(t *testing.T) {
 func (rmt *RaftManagerTests) SetupSuite() {
 	rmt.logger = utils.NewTestLogger(rmt.T())
 
-	var err error
-	rmt.lifecycle = fxtest.NewLifecycle(rmt.T())
-	rmt.client, err = conf.NewConsulClient(rmt.lifecycle)
-	require.Nil(rmt.T(), err, "failed to connect to consul")
-	require.NotNil(rmt.T(), rmt.client, "the consul client can't be empty")
-
-	rmt.env, err = conf.NewEnvironmentConfig(rmt.client)
-	require.Nil(rmt.T(), err, "the environment config is needed")
-	require.NotNil(rmt.T(), rmt.env, "the environment config must be rendered")
-
 	rmt.store = services.NewStoreManager(rmt.T().TempDir(), rmt.logger)
-	err = rmt.store.Start(false)
+	err := rmt.store.Start(false)
 	require.Nil(rmt.T(), err, "there can't be an error when starting the store manager")
 }
 

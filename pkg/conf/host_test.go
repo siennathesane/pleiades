@@ -34,6 +34,7 @@ func (h *HostConfigTests) TestNewEnvironmentConfigLoad() {
 
 	config, err := NewEnvironmentConfig(h.client)
 	h.Assert().NotNil(err, "error reading configuration")
+	h.Require().NotNil(config, "the config must not be nil")
 	h.Assert().NotEmpty(config.Environment, "configuration environment cannot be empty")
 	h.Assert().NotEmpty(config.GCPProjectId, "the gcp project id cannot be empty")
 	h.Assert().NotEmpty(config.BaseDir, "the base directory must be set")
@@ -52,7 +53,8 @@ func (h *HostConfigTests) TestEnvironmentConfigVerification() {
 
 	validateHostConfig = false
 	config, err := NewEnvironmentConfig(h.client)
-	assert.Nil(h.T(), err, "error reading configuration")
+	h.Require().NoError(err, "error reading configuration")
+	h.Require().NotNil(config, "the config must not be nil")
 
 	priorPort := config.BasePort
 	config.BasePort = 150

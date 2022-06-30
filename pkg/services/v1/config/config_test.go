@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"r3t.io/pleiades/pkg/fsm"
 	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	"r3t.io/pleiades/pkg/servers/services"
+	"r3t.io/pleiades/pkg/services"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -41,7 +41,7 @@ func (cst *ConfigServiceTests) SetupSuite() {
 	cst.Require().NoError(err, "there must not be an error creating the raft manager")
 }
 
-func (cst *ConfigServiceTests) TestConfigService_Raft() {
+func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 	for i := 0; i < 10; i++ {
 		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 		cst.Require().NoError(err, "there must not be an error creating a message")
@@ -137,6 +137,70 @@ func (cst *ConfigServiceTests) TestConfigService_Raft() {
 	cst.Require().NoError(err, "there must not be an error getting the raft configuration")
 	cst.Require().NotNil(raftConfig, "the raft configuration must not be nil")
 	cst.Require().Equal(raftConfig.Len(), 10, "the raft configuration must have a length of 10")
+
+	err = clientConn.Close()
+	cst.Require().NoError(err, "there must not be an error closing the client pipe")
+
+	err = srvConn.Close()
+	cst.Require().NoError(err, "there must not be an error closing the server pipe")
+}
+
+func (cst *ConfigServiceTests) TestConfigService_PutRaft() {
+	configServiceImpl, err := NewConfigServer(cst.store, cst.logger)
+	cst.Require().NoError(err, "there must not be an error creating a config service")
+	cst.Require().NotNil(configServiceImpl, "the config service must not be nil")
+
+	input, output := net.Pipe()
+
+	clientFactory := configv1.ConfigService_ServerToClient(configServiceImpl, &server.Policy{MaxConcurrentCalls: 10})
+	srvConn := rpc.NewConn(rpc.NewStreamTransport(input), &rpc.Options{
+		BootstrapClient: clientFactory.Client,
+	})
+
+	clientConn := rpc.NewConn(rpc.NewStreamTransport(output), nil)
+
+	ctx := context.Background()
+	client := configv1.ConfigService{Client: clientConn.Bootstrap(ctx)}
+	cst.Require().NotNil(client, "the client must not be nil")
+
+	_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
+	cst.Require().NoError(err, "there must not be an error creating a message")
+
+	raftConf, err := configv1.NewRootRaftConfiguration(seg)
+	cst.Require().NoError(err, "there must not be an error creating a configuration")
+
+	err = raftConf.SetId("test-put")
+	cst.Require().NoError(err, "there must not be an error setting the id")
+
+	resp, free := client.PutConfig(ctx, func(params configv1.ConfigService_putConfig_Params) error {
+		req, err := params.NewRequest()
+		if err != nil {
+			return err
+		}
+		err = req.SetRaft(raftConf)
+		if err != nil {
+			return err
+		}
+
+		return params.SetRequest(req)
+	})
+
+	results := resp.Response()
+	cst.Require().NotNil(results, "the response must not be nil")
+
+	configResponse, err := results.Struct()
+	cst.Require().NoError(err, "there must not be an error getting the rpc results")
+	cst.Require().NotNil(configResponse, "the config response must not be nil")
+
+	raftConfig, err := configResponse.Raft()
+	cst.Require().NoError(err, "there must not be an error getting the raft configuration")
+	cst.Require().NotNil(raftConfig, "the raft configuration must not be nil")
+
+	id, err := raftConfig.Id()
+	cst.Require().NoError(err, "there must not be an error getting the id")
+	cst.Require().Equal(id, "test-put", "the fetched results must be the same")
+
+	free()
 
 	err = clientConn.Close()
 	cst.Require().NoError(err, "there must not be an error closing the client pipe")
