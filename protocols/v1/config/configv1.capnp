@@ -19,6 +19,7 @@ interface Negotiator @0xe35a52b4e5c60a15 {
 
 interface ConfigService @0xcd55e3c0a182ac77 {
     getConfig @0 (request :GetConfigurationRequest) -> (response :GetConfigurationResponse);
+    putConfig @1 (request :PutConfigurationRequest) -> (response :PutConfigurationResponse);
 }
 
 struct GetConfigurationRequest @0xc0e43eb9670b8d20 {
@@ -47,9 +48,36 @@ struct AllConfigurations @0xa3cf4f7f955be932 {
     raft @0 :List(RaftConfiguration);
 }
 
+struct PutConfigurationRequest @0x93c59921a137c8db {
+    enum Type {
+        raft @0;
+        nodeHost @1;
+    }
+    union {
+        raft @0 :RaftConfiguration;
+        nodeHost @1 :NodeHostConfiguration;
+    }
+}
+
+struct PutConfigurationResponse @0x9f8f8f8f8f8f8f8f {
+    enum Type {
+            raft @0;
+            nodeHost @1;
+    }
+    union {
+        raft @0 :RaftConfiguration;
+        nodeHost @1 :NodeHostConfiguration;
+    }
+    success @2 :Bool;
+    status @3 :Text;
+    type @4 :Type;
+}
+
 # ServiceType is the initial message payload sent by the client to the server so the stream can be
+
 # mapped to a specific server implementation.
-struct ServiceType @0xabc8f8f8f8f8f8f8 {
+
+struct ServiceType @0x94e84f47e297127c {
     enum Type {
         test @0;
         configService @1;
@@ -124,4 +152,17 @@ struct PutRaftConfigurationResponse @0x8f8f8f8f8f8f8f8f {
     valid @0 :Bool;
     name @1 :Text;
     error @2 :Text;
+}
+
+struct NodeHostConfiguration @0x859698645e9c4a44 {
+    deploymentId @0 :UInt64;
+    writeAheadLogDir @1 :Text;
+    nodeHostDir @2 :Text;
+    roundTripTimeMilliseconds @3 :UInt64;
+    raftAddress @4 :Text;
+    apiAddress @5 :Text;
+    mutualTls @6 :Bool;
+    caFile @7 :Text;
+    certFile @8 :Text;
+    keyFile @9 :Text;
 }

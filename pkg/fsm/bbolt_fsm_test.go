@@ -9,45 +9,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/consul/api"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
-	"go.uber.org/fx/fxtest"
 	"google.golang.org/protobuf/proto"
-	"r3t.io/pleiades/pkg/conf"
 	etcdv3 "r3t.io/pleiades/pkg/pb/etcd/v3"
 )
 
 type TestBBoltFsm struct {
 	suite.Suite
-	lifecycle *fxtest.Lifecycle
-	client    *api.Client
-	env       *conf.EnvironmentConfig
 }
 
 func TestBBoltStateMachine(t *testing.T) {
 	suite.Run(t, new(TestBBoltFsm))
-}
-
-func (bfsm *TestBBoltFsm) SetupSuite() {
-	var err error
-	bfsm.lifecycle = fxtest.NewLifecycle(bfsm.T())
-	bfsm.client, err = conf.NewConsulClient(bfsm.lifecycle)
-	require.Nil(bfsm.T(), err, "failed to connect to consul")
-	require.NotNil(bfsm.T(), bfsm.client, "the consul client can't be empty")
-
-	bfsm.env, err = conf.NewEnvironmentConfig(bfsm.client)
-	require.Nil(bfsm.T(), err, "the environment config is needed")
-	require.NotNil(bfsm.T(), bfsm.env, "the environment config must be rendered")
-}
-
-func (bfsm *TestBBoltFsm) BeforeTest(suiteName, testName string) {
-	if err := os.RemoveAll(bfsm.env.BaseDir); err != nil {
-		bfsm.T().Errorf("error cleaning test directory: %s", err)
-	}
 }
 
 func (bfsm *TestBBoltFsm) TestNewBBoltStateMachine() {
@@ -65,7 +41,7 @@ func (bfsm *TestBBoltFsm) TestNewBBoltStateMachine() {
 	}
 
 	require.NotPanics(bfsm.T(), func() {
-		NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, opts)
+		NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), opts)
 	}, "creating a new bbolt fsm must not throw an error")
 }
 
@@ -83,7 +59,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineOpen() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 
 	// verify the core path constructs for humans are available
 	dbPath := fsm.dbPath(true)
@@ -107,10 +83,10 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineOpen() {
 	require.NoError(bfsm.T(), err, "there must not be an error opening a brand new fsm")
 	require.NoError(bfsm.T(), fsm.db.Close(), "there must not be an error when closing the the brand new database")
 
-	fi, err := os.Lstat(bfsm.env.BaseDir)
+	fi, err := os.Lstat(bfsm.T().TempDir())
 	val := fi.Mode().Perm()
 	assert.NotEmpty(bfsm.T(), val)
-	err = os.RemoveAll(bfsm.env.BaseDir)
+	err = os.RemoveAll(bfsm.T().TempDir())
 	require.NoError(bfsm.T(), err, "there must not be an error when deleting the test directory")
 
 	err = os.MkdirAll(fsm.dbPath(false), os.FileMode(dbDirModeVal))
@@ -160,7 +136,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineClose() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 
 	index, err := fsm.Open(make(<-chan struct{}))
 	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
@@ -190,7 +166,7 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 
 	index, err := fsm.Open(make(<-chan struct{}))
 	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
@@ -270,7 +246,7 @@ func (bfsm *TestBBoltFsm) TestPrepareSnapshot() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 	empty, err := fsm.PrepareSnapshot()
 	require.Empty(bfsm.T(), empty, "this must be a noop")
 	require.NoError(bfsm.T(), err, "there must be no error")
@@ -290,7 +266,7 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 	index, err := fsm.Open(make(<-chan struct{}))
 	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
 	require.Equal(bfsm.T(), uint64(0), index, "the index must equal as there are no records")
@@ -413,7 +389,7 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 	index, err := fsm.Open(make(<-chan struct{}))
 	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
 	require.Equal(bfsm.T(), uint64(0), index, "the index must equal as there are no records")
@@ -510,7 +486,7 @@ func (bfsm *TestBBoltFsm) TestSync() {
 		Mlock:           false,
 	}
 
-	fsm := NewBBoltStateMachine(1, 1, bfsm.env.BaseDir, testOpts)
+	fsm := NewBBoltStateMachine(1, 1, bfsm.T().TempDir(), testOpts)
 	index, err := fsm.Open(make(<-chan struct{}))
 	require.NoError(bfsm.T(), err, "there must not be an error when opening the database")
 	require.Equal(bfsm.T(), uint64(0), index, "the index must equal as there are no records")

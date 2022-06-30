@@ -5,12 +5,10 @@
 package blaze
 
 import (
-	"bytes"
 	"context"
 	"testing"
-	"time"
 
-	"capnproto.org/go/capnp/v3"
+	"capnproto.org/go/capnp/v3/rpc"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -47,37 +45,44 @@ func (s *StreamReceiverTest) SetupSuite() {
 }
 
 // StreamReceiverTest tests the StreamReceiver class.
-func (s *StreamReceiverTest) TestStreamReceiverServerRouter() {
+func (s *StreamReceiverTest) TestStreamReceiver() {
+
 	sr, err := NewStreamReceiver(s.logger, s.registry)
 	s.Require().NoError(err, "there must not be an error when creating a stream receiver")
-
-	msg,seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-	s.Require().NoError(err, "there must not be an error when creating a message")
-
-	svcType, err := configv1.NewRootServiceType(seg)
-	s.Require().NoError(err, "there must not be an error when creating a service type")
-	svcType.SetType(configv1.ServiceType_Type_test)
-
-	var buf bytes.Buffer
-	err = capnp.NewEncoder(&buf).Encode(msg)
-	s.Require().NoError(err, "there must not be an error when creating a capnp message")
-
-	testStream := s.tk.NewConnectionStream()
-
-	go func() {
-		time.Sleep(time.Second * 1)
-		n, err := testStream.Write(buf.Bytes())
-		s.Require().NoError(err, "there must not be an error when writing to a stream")
-		s.Require().Equal(buf.Len(), n, "the number of bytes written must match the number of bytes read")
-	}()
 
 	conn, err := s.tk.GetListener().Accept(context.Background())
 	s.Require().NoError(err, "there must not be an error when accepting a connection")
 	s.Require().NotNil(conn, "the connection must not be nil")
 
-	receivingTestStream, err := conn.AcceptStream(context.Background())
-	s.Require().NoError(err, "there must not be an error when accepting a stream")
-	s.Require().NotNil(receivingTestStream, "the stream must not be nil")
+	ctx := context.Background()
+	go func(ctx context.Context, s *StreamReceiverTest) {
+		for {
+			receivingTestStream, err := conn.AcceptStream(ctx)
+			s.Require().NoError(err, "there must not be an error when accepting a stream")
+			s.Require().NotNil(receivingTestStream, "the stream must not be nil")
+			sr.Receive(ctx, s.logger, receivingTestStream)
+		}
+	}(ctx, s)
 
-	sr.Receive(context.Background(), s.logger, receivingTestStream)
+	dialer := s.tk.GetConnection()
+	stream, err := dialer.OpenStream()
+	s.Require().NoError(err, "there must not be an error when opening a stream")
+
+	rpcConn := rpc.NewConn(rpc.NewStreamTransport(stream), nil)
+	s.Require().NotNil(rpcConn, "the rpc connection must not be nil")
+
+	client := configv1.Negotiator{Client: rpcConn.Bootstrap(ctx)}
+	s.Require().NotNil(client, "the client must not be nil")
+
+	future, free := client.ConfigService(ctx, nil)
+	configService := future.Svc()
+	s.Require().NotNil(configService, "the config service must not be nil")
+
+	configSrv := configService.AddRef()
+	s.Require().NotNil(configSrv, "the config service must not be nil")
+
+	free()
+	s.Require().NotNil(configSrv, "the config service reference must not be nil after calling free()")
+
+	ctx.Done()
 }

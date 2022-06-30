@@ -13,8 +13,8 @@ import (
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
-	v1 "r3t.io/pleiades/pkg/protocols/config/v1"
-	"r3t.io/pleiades/pkg/servers/services"
+	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
+	"r3t.io/pleiades/pkg/services"
 	"r3t.io/pleiades/pkg/utils"
 )
 
@@ -49,7 +49,7 @@ func (test *ConfigServiceStoreManagerTests) Test_Get_Returns_Correct_Configurati
 	msg, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 	test.Require().NoError(err, "there must be no error creating a new message")
 
-	config, err := v1.NewRootRaftConfiguration(seg)
+	config, err := configv1.NewRootRaftConfiguration(seg)
 	test.Require().NoError(err, "there must not be an error creating a new RaftConfiguration")
 
 	err = config.SetId("test")
@@ -59,7 +59,7 @@ func (test *ConfigServiceStoreManagerTests) Test_Get_Returns_Correct_Configurati
 	err = capnp.NewEncoder(&buf).Encode(msg)
 	test.Require().NoError(err, "there must not be an error encoding the RaftConfiguration")
 
-	err = test.store.Put("test", buf.Bytes(), reflect.TypeOf(v1.RaftConfiguration{}))
+	err = test.store.Put("test", buf.Bytes(), reflect.TypeOf(configv1.RaftConfiguration{}))
 	test.Require().NoError(err, "there must not be an error putting the RaftConfiguration")
 
 	res, err := cssm.Get("test")
@@ -81,7 +81,7 @@ func (test *ConfigServiceStoreManagerTests) Test_GetAll_Returns_Correct_Configur
 		msg, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 		test.Require().NoError(err, "there must be no error creating a new message")
 
-		config, err := v1.NewRootRaftConfiguration(seg)
+		config, err := configv1.NewRootRaftConfiguration(seg)
 		test.Require().NoError(err, "there must not be an error creating a new RaftConfiguration")
 
 		err = config.SetId(testName)
@@ -91,7 +91,7 @@ func (test *ConfigServiceStoreManagerTests) Test_GetAll_Returns_Correct_Configur
 		err = capnp.NewEncoder(&buf).Encode(msg)
 		test.Require().NoError(err, "there must not be an error encoding the RaftConfiguration")
 
-		err = test.store.Put(testName, buf.Bytes(), reflect.TypeOf(v1.RaftConfiguration{}))
+		err = test.store.Put(testName, buf.Bytes(), reflect.TypeOf(configv1.RaftConfiguration{}))
 		test.Require().NoError(err, "there must not be an error putting the RaftConfiguration")
 	}
 
@@ -114,7 +114,7 @@ func (test *ConfigServiceStoreManagerTests) Test_Put_Returns_Correct_Configurati
 	_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 	test.Require().NoError(err, "there must be no error creating a new message")
 
-	config, err := v1.NewRootRaftConfiguration(seg)
+	config, err := configv1.NewRootRaftConfiguration(seg)
 	test.Require().NoError(err, "there must not be an error creating a new RaftConfiguration")
 
 	err = config.SetId("test")

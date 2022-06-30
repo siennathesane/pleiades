@@ -12,19 +12,19 @@ import (
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 	v1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	"r3t.io/pleiades/pkg/servers/services"
+	services2 "r3t.io/pleiades/pkg/services"
 )
 
 var (
-	_ services.IStore[v1.RaftConfiguration] = (*ConfigServiceStoreManager)(nil)
+	_ services2.IStore[v1.RaftConfiguration] = (*ConfigServiceStoreManager)(nil)
 )
 
 type ConfigServiceStoreManager struct {
 	logger zerolog.Logger
-	store  *services.StoreManager
+	store  *services2.StoreManager
 }
 
-func NewConfigServiceStoreManager(logger zerolog.Logger, store *services.StoreManager) (*ConfigServiceStoreManager, error) {
+func NewConfigServiceStoreManager(logger zerolog.Logger, store *services2.StoreManager) (*ConfigServiceStoreManager, error) {
 	cssm := &ConfigServiceStoreManager{logger: logger, store: store}
 	err := store.Start(false)
 	if err != nil {

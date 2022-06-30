@@ -95,6 +95,7 @@ BLlzHCDBvh3zBlkMWivluxbG5XZzQPQN+Y+WaC+ldJqE9oQeaOw3GDI=
 type QuicTestKit struct {
 	t      *testing.T
 	logger zerolog.Logger
+	testServerAddr string
 
 	quicConfig *quic.Config
 	listener   quic.Listener
@@ -112,6 +113,7 @@ func NewQuicTestKit(t *testing.T) *QuicTestKit {
 		logger: utils.NewTestLogger(t),
 		ctx:    context.Background(),
 		t:      t,
+		testServerAddr: testServerAddr(),
 	}
 
 	var err error
@@ -122,12 +124,12 @@ func NewQuicTestKit(t *testing.T) *QuicTestKit {
 
 	tk.quicConfig = &quic.Config{MaxIdleTimeout: 300 * time.Second}
 
-	tk.listener, err = quic.ListenAddr(testServerAddr, tk.tlsConf, tk.quicConfig)
+	tk.listener, err = quic.ListenAddr(tk.testServerAddr, tk.tlsConf, tk.quicConfig)
 	if err != nil {
 		t.Fatalf("failed to listen server: %v", err)
 	}
 
-	tk.dialConn, err = quic.DialAddr(testServerAddr, tk.tlsConf, tk.quicConfig)
+	tk.dialConn, err = quic.DialAddr(tk.testServerAddr, tk.tlsConf, tk.quicConfig)
 	if err != nil {
 		t.Fatalf("failed to dial server: %v", err)
 	}
@@ -137,7 +139,7 @@ func NewQuicTestKit(t *testing.T) *QuicTestKit {
 
 func (stk *QuicTestKit) Start() {
 	var err error
-	stk.listener, err = quic.ListenAddr(testServerAddr, stk.tlsConf, stk.quicConfig)
+	stk.listener, err = quic.ListenAddr(testServerAddr(), stk.tlsConf, stk.quicConfig)
 	if err != nil {
 		stk.t.Fatalf("failed to listen server: %v", err)
 	}
