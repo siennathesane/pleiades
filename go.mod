@@ -8,7 +8,6 @@ require (
 	capnproto.org/go/capnp/v3 v3.0.0-alpha.3
 	cloud.google.com/go/logging v1.4.2
 	github.com/cespare/xxhash/v2 v2.1.2
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	github.com/hashicorp/consul/api v1.13.0
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/lucas-clemente/quic-go v0.27.2
@@ -20,10 +19,6 @@ require (
 	go.uber.org/fx v1.17.1
 	gonum.org/v1/gonum v0.11.0
 	google.golang.org/api v0.85.0
-	google.golang.org/grpc v1.47.0
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0
-	google.golang.org/protobuf v1.28.0
-	storj.io/drpc v0.0.32
 )
 
 require (
@@ -35,7 +30,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
-	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/btree v1.1.2 // indirect
@@ -74,7 +68,6 @@ require (
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
-	github.com/zeebo/errs v1.3.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/dig v1.14.1 // indirect
@@ -92,6 +85,8 @@ require (
 	golang.org/x/tools v0.1.11 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220621134657-43db42f103f7 // indirect
+	google.golang.org/grpc v1.47.0 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

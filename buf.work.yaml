@@ -1,4 +1,0 @@
-version: config
-directories:
-  - protobufs/apis
-  - protobufs/vendor
