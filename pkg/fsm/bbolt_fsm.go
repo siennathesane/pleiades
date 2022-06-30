@@ -1,6 +1,7 @@
 package fsm
 
 import (
+	"bytes"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -11,10 +12,10 @@ import (
 	"strings"
 	"sync"
 
+	"capnproto.org/go/capnp/v3"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"go.etcd.io/bbolt"
-	"google.golang.org/protobuf/proto"
-	kvv3 "r3t.io/pleiades/pkg/pb/etcd/v3"
+	"r3t.io/pleiades/pkg/protocols/v1/database"
 )
 
 type op int
@@ -120,10 +121,18 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		}
 
 		for idx := range entries {
-			kvp := kvv3.KeyValue{}
-			if err := proto.Unmarshal(entries[idx].Cmd, &kvp); err != nil {
+			msg , err := capnp.Unmarshal(entries[idx].Cmd)
+			if err != nil {
 				return err
 			}
+
+			kvp, err := database.ReadRootKeyValue(msg)
+			if err != nil {
+				return err
+			}
+
+			key, _ := kvp.Key()
+			if len(key) == 0 { }
 
 			parentBucketName, childBucketNames, err := prepBucket(kvp)
 			if err != nil {
@@ -185,9 +194,18 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 }
 
 // prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errors
-func prepBucket(kvp kvv3.KeyValue) (string, []string, error) {
+func prepBucket(kvp database.KeyValue) (string, []string, error) {
 	// verify we're not trying to create an empty bucket and skip the first item
-	bucketHierarchy := strings.Split(string(kvp.Key[:]), "/")[1:]
+	key, err := kvp.Key()
+	if err != nil {
+		return "", []string{}, err
+	}
+
+	if len(key) == 0 {
+		return "", []string{}, fmt.Errorf("key is empty")
+	}
+
+	bucketHierarchy := strings.Split(string(key[:]), "/")[1:]
 	bucketHierarchyLen := len(bucketHierarchy)
 	if bucketHierarchy[bucketHierarchyLen-1] == "" {
 		return "", []string{}, errors.New("cannot create empty bucket")
@@ -233,15 +251,26 @@ func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, ope
 }
 
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
-	payload := kvv3.KeyValue{}
+	var payload database.KeyValue
 
 	b.mu.Lock()
 	err := b.db.Update(func(tx *bbolt.Tx) error {
-		if err := proto.Unmarshal(i.([]byte), &payload); err != nil {
+		msg, err := capnp.NewDecoder(bytes.NewBuffer(i.([]byte))).Decode()
+		if err != nil {
 			return err
 		}
 
-		if string(payload.Key) == "" {
+		payload, err = database.ReadRootKeyValue(msg)
+		if err != nil {
+			return err
+		}
+
+		key, err := payload.Key()
+		if err != nil {
+			return err
+		}
+
+		if string(key) == "" {
 			return errors.New("cannot find an empty key")
 		}
 
@@ -266,7 +295,13 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 			return nil
 		}
 
-		if err := proto.Unmarshal(target, &payload); err != nil {
+		msg, err = capnp.NewDecoder(bytes.NewBuffer(target)).Decode()
+		if err != nil {
+			return err
+		}
+
+		payload, err = database.ReadRootKeyValue(msg)
+		if err != nil {
 			return err
 		}
 
