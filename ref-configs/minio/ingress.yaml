@@ -3,7 +3,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: s3
-  namespace: s3
 spec:
   secretName: s3-tls
   dnsNames:
@@ -17,7 +16,6 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: s3-headers
-  namespace: s3
 spec:
   headers:
     customRequestHeaders:
@@ -27,7 +25,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: s3
-  namespace: s3
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: s3-s3-headers@kubernetescrd
 spec:
