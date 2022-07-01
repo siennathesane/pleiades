@@ -1,47 +1,29 @@
+/*
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
+ */
+
 package blaze
 
 import (
-	"bytes"
 	"context"
 	"strings"
 	"sync"
 
-	"capnproto.org/go/capnp/v3"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
-	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
 	"r3t.io/pleiades/pkg/services/v1/config"
 )
-
-var (
-	readBufferSize int64 = 0
-)
-
-func init() {
-	msg, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-	if err != nil {
-		panic(err)
-	}
-	svcType, err := configv1.NewRootServiceType(seg)
-	if err != nil {
-		panic(err)
-	}
-	svcType.SetType(configv1.ServiceType_Type_configService)
-
-	var buf bytes.Buffer
-	err = capnp.NewEncoder(&buf).Encode(msg)
-	if err != nil {
-		panic(err)
-	}
-
-	readBufferSize = int64(buf.Len())
-}
 
 type Server struct {
 	listener quic.Listener
 	logger   zerolog.Logger
 	closed   bool
-	mu sync.RWMutex
+	mu       sync.RWMutex
 	registry *config.Registry
 }
 

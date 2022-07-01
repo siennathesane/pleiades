@@ -1,5 +1,11 @@
+
 /*
- * Copyright (c) 2022 Sienna Lloyd <sienna.lloyd@hey.com>
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
 package blaze
@@ -93,8 +99,8 @@ BLlzHCDBvh3zBlkMWivluxbG5XZzQPQN+Y+WaC+ldJqE9oQeaOw3GDI=
 )
 
 type QuicTestKit struct {
-	t      *testing.T
-	logger zerolog.Logger
+	t              *testing.T
+	logger         zerolog.Logger
 	testServerAddr string
 
 	quicConfig *quic.Config
@@ -110,9 +116,9 @@ type QuicTestKit struct {
 
 func NewQuicTestKit(t *testing.T) *QuicTestKit {
 	tk := &QuicTestKit{
-		logger: utils.NewTestLogger(t),
-		ctx:    context.Background(),
-		t:      t,
+		logger:         utils.NewTestLogger(t),
+		ctx:            context.Background(),
+		t:              t,
 		testServerAddr: testServerAddr(),
 	}
 

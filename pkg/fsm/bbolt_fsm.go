@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
+ */
+
 package fsm
 
 import (
@@ -121,7 +130,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		}
 
 		for idx := range entries {
-			msg , err := capnp.Unmarshal(entries[idx].Cmd)
+			msg, err := capnp.Unmarshal(entries[idx].Cmd)
 			if err != nil {
 				return err
 			}
@@ -132,7 +141,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 
 			key, _ := kvp.Key()
-			if len(key) == 0 { }
+			if len(key) == 0 {
+			}
 
 			parentBucketName, childBucketNames, err := prepBucket(kvp)
 			if err != nil {
@@ -212,7 +222,7 @@ func prepBucket(kvp database.KeyValue) (string, []string, error) {
 	}
 
 	if bucketHierarchyLen < fsmRootKeyCount {
-		return "", []string{},errors.New("the fsm root key count is not correct")
+		return "", []string{}, errors.New("the fsm root key count is not correct")
 	}
 
 	if bucketHierarchyLen+3 > maxKeyDepth {
@@ -285,12 +295,12 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 		}
 
 		retVal := make(chan []byte, 1)
-		if err := keyOp(bucket, childBucketNames, make([]byte,0), get, &retVal); err != nil {
+		if err := keyOp(bucket, childBucketNames, make([]byte, 0), get, &retVal); err != nil {
 			return err
 		}
 
 		// if it's empty, that's okay, we just don't want a serialized value
-		target := <- retVal
+		target := <-retVal
 		if target == nil {
 			return nil
 		}
