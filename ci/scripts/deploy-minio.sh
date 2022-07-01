@@ -14,6 +14,7 @@ set -e
 echo "preparing kubeconfig"
 mkdir -p "${HOME}"/.kube
 echo "${KUBE_CONFIG}" | base64 -d > "${HOME}"/.kube/config
+chmod go-r "${HOME}"/.kube/config
 
 echo "adding minio repo"
 helm repo add minio https://charts.min.io/
@@ -30,6 +31,8 @@ fi
 
 echo "applying minio helm chart"
 
+set -x
+
 helm "${COMMAND}" \
   "${CHART_NAME}" \
   --atomic \
@@ -41,6 +44,8 @@ helm "${COMMAND}" \
   --namespace "${NAMESPACE}" \
   minio/minio
 
+set +x
+
 echo "creating ingress"
 
-kubectl apply -f ref-configs/minio/ingress.yaml
+kubectl apply --namespace "${NAMESPACE}" -f ref-configs/minio/ingress.yaml
