@@ -12,7 +12,16 @@
 mkdir -p "${HOME}"/.kube
 echo "${KUBE_CONFIG}" > "${HOME}"/.kube/config
 
-helm install \
+exists=$(helm ls -A -o json | jq -r '.[].name' | grep "${CHART_NAME}")
+
+COMMAND="upgrade"
+export COMMAND
+
+if [ -z "${exists}" ]; then
+  COMMAND="install"
+fi
+
+helm "${COMMAND}" \
   --set rootUser="${ROOT_USER}" \
   --set rootPassword="${ROOT_PASSWORD}" \
   --create-namespace \

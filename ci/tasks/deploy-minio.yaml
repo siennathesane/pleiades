@@ -1,0 +1,20 @@
+---
+platform: linux
+inputs:
+  - name: pleiades
+image_resource:
+  type: registry-image
+  source:
+    repository: registry.gitlab.com/anthropos-labs/pleiades/ci
+    tag: latest
+    username: ((registry.username))
+    password: ((registry.password))
+params:
+  KUBE_CONFIG: ((minio.kube-config))
+  NAMESPACE: ((minio.namespace))
+  CHART_NAME: ((minio.helm-chart-name))
+  ROOT_USER: ((minio.root-user))
+  ROOT_PASSWORD: ((minio.root-password))
+run:
+  path: ci/scripts/deploy-minio.sh
+  dir: pleiades

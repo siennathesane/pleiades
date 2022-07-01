@@ -8,6 +8,7 @@ resources:
       branch: mainline
   - name: ci-image
     type: registry-image
+    icon: docker
     source:
       repository: registry.gitlab.com/anthropos-labs/pleiades/ci
       tag: latest
@@ -50,6 +51,14 @@ jobs:
             file: pleiades/ci/tasks/go-compile.yaml
           - task: test
             file: pleiades/ci/tasks/go-test.yaml
+  - name: deploy-minio
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - build-ci-image
+      - task: deploy
+        file: pleiades/ci/tasks/deploy-minio.yaml
   - name: generate-binary
     plan:
       - get: pleiades
