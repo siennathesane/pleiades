@@ -1,6 +1,6 @@
 gitlabUrl: https://gitlab.com/
 runnerRegistrationToken: "GR1348941xCoWt8pwWrQSzDGkF3oL"
 rbac:
-    create: true
+  create: true
 runners:
-    privileged: true
+  privileged: true

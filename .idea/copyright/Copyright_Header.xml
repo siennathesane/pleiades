@@ -1,6 +1,6 @@
 <component name="CopyrightManager">
   <copyright>
-    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Sienna Lloyd &lt;sienna.lloyd@hey.com&gt;" />
+    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Sienna Lloyd&#10;&#10;Licensed under the PolyForm Strict License 1.0.0 (the &quot;License&quot;); &#10;you may not use this file except in compliance with the License. &#10;You may obtain a copy of the License here:&#10; https://github.com/mxplusb/pleiades/blob/mainline/LICENSE" />
     <option name="myName" value="Copyright Header" />
   </copyright>
 </component>

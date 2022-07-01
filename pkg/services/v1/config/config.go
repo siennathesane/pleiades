@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd <sienna.lloyd@hey.com>
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
 package config
@@ -168,7 +173,7 @@ func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.Conf
 	}
 
 	// set the config into the slice
-	for idx, _ := range val {
+	for idx := range val {
 		err = slice.Set(0, *val[idx])
 		if err != nil {
 			c.logger.Err(err).Msg("error setting raftConfiguration_List")

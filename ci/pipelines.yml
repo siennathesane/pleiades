@@ -13,8 +13,9 @@ jobs:
       - get: pleiades
         trigger: true
       - across:
-        - var: version
-          values: ["1.18.0", "1.18.1"]
+          - var: version
+            values: [ "1.18.0", "1.18.1", "1.18.2", "1.18.3" ]
+            max_in_flight: 5
         do:
           - task: vet
             file: pleiades/ci/tasks/go-lint.yaml

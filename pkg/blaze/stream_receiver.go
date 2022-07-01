@@ -1,5 +1,10 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd <sienna.lloyd@hey.com>
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
 package blaze
@@ -16,13 +21,13 @@ import (
 )
 
 const (
-	ConfigService configv1.ServiceType_Type = configv1.ServiceType_Type_configService
-	TestService configv1.ServiceType_Type = configv1.ServiceType_Type_test
+	ConfigService = configv1.ServiceType_Type_configService
+	TestService   = configv1.ServiceType_Type_test
 )
 
 // StreamReceiver takes a new stream and returns a *server.Server reference from the registry
 type StreamReceiver struct {
-	logger zerolog.Logger
+	logger   zerolog.Logger
 	registry *config.Registry
 }
 

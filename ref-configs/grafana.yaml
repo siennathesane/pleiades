@@ -3,7 +3,7 @@ metadata:
   name: grafana-agent-logs
 apiVersion: config
 data:
-  agent.yaml: |    
+  agent.yaml: |
     metrics:
       wal_directory: /tmp/grafana-agent-wal
       global:
@@ -23,8 +23,8 @@ data:
         basic_auth:
           username: 468612
           password: **REDACTED**
-      
-      
+    
+    
     logs:
       configs:
       - name: integrations

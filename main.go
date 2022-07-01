@@ -6,11 +6,10 @@
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
+package main
 
-//go:build tools
+import "r3t.io/pleiades/cmd"
 
-package tools
-
-import (
-	_ "capnproto.org/go/capnp/v3/capnpc-go"
-)
+func main() {
+	cmd.Execute()
+}

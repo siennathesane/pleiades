@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../random/go-capnproto2/example/hashes/.idea/hashes.iml" filepath="$PROJECT_DIR$/../random/go-capnproto2/example/hashes/.idea/hashes.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/pleiades.iml" filepath="$PROJECT_DIR$/.idea/pleiades.iml" />
     </modules>
   </component>
