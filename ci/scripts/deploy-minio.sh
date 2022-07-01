@@ -44,8 +44,4 @@ helm "${COMMAND}" \
   --namespace "${NAMESPACE}" \
   minio/minio
 
-set +x
-
-echo "creating ingress"
-
 kubectl apply --namespace "${NAMESPACE}" -f ref-configs/minio/ingress.yaml

@@ -15,9 +15,6 @@ SHA=$(git rev-parse --short HEAD)
 export SHA
 
 go build \
-  -ldflags "
-    -X pkg.Sha=${SHA}
-    -X pkg.GoVersion=$(go version)
-    -X pkg.Version='22.6.30-dev.1'" \
-  -o bin/pleiades-"${SHA}"
+  -ldflags "-X pkg.Sha=${SHA} -X pkg.GoVersion=$(go version) -X pkg.Version='22.6.30-dev.1'" \
+  -o bin/pleiades-"${SHA}" \
   main.go
