@@ -10,7 +10,7 @@
 #
 
 mkdir -p "${HOME}"/.kube
-echo "${KUBE_CONFIG}" > "${HOME}"/.kube/config
+echo "${KUBE_CONFIG}" | base64 -d > "${HOME}"/.kube/config
 
 exists=$(helm ls -A -o json | jq -r '.[].name' | grep "${CHART_NAME}")
 
@@ -22,9 +22,14 @@ if [ -z "${exists}" ]; then
 fi
 
 helm "${COMMAND}" \
+  "${CHART_NAME}" \
+  --atomic \
   --set rootUser="${ROOT_USER}" \
   --set rootPassword="${ROOT_PASSWORD}" \
+  --set mode=standalone \
+  --set replicas=1 \
   --create-namespace \
   --namespace "${NAMESPACE}" \
-  "${CHART_NAME}"
   minio/minio
+
+kubectl apply -f ref-configs/minio/ingress.yaml
