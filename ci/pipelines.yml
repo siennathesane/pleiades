@@ -3,17 +3,25 @@ resources:
     type: git
     icon: gitlab
     source:
-      uri: git@gitlab.com:mxplusb/pleiades.git
+      uri: git@gitlab.com:anthropos-labs/pleiades.git
       private_key: ((git.private_key))
+#      username: ((git.username))
+#      password: ((git.password))
       branch: mainline
 
 jobs:
+  - name: set-pipeline
+    plan:
+      - get: pleiades
+        trigger: true
+      - set_pipeline: pleiades
+        file: pleiades/ci/pipelines.yml
   - name: build
     plan:
       - get: pleiades
         trigger: true
       - across:
-          - var: version
+          - var: go-versions
             values: [ "1.18.0", "1.18.1", "1.18.2", "1.18.3" ]
             max_in_flight: 5
         do:
