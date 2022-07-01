@@ -1,41 +1,40 @@
 ---
-apiVersion: cert-manager.io/config
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: minio
-  namespace: minio
+  name: s3
+  namespace: s3
 spec:
-  secretName: minio-tls
+  secretName: s3-tls
   dnsNames:
     - s3.r3t.io
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
     group: cert-manager.io
-
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: minio-headers
-  namespace: minio
+  name: s3-headers
+  namespace: s3
 spec:
   headers:
     customRequestHeaders:
       X-Forwarded-Proto: "https"
 ---
-apiVersion: networking.k8s.io/config
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: minio
-  namespace: minio
+  name: s3
+  namespace: s3
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: minio-minio-headers@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: s3-s3-headers@kubernetescrd
 spec:
   tls:
     - hosts:
         - s3.r3t.io
-      secretName: minio-tls
+      secretName: s3-tls
   rules:
     - host: s3.r3t.io
       http:
