@@ -12,6 +12,7 @@ package pkg
 const (
 	Version string = ""
 	Sha string = ""
+	GoVersion string = ""
 )
 
 //goland:noinspection GoCommentStart
