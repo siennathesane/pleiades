@@ -6,7 +6,7 @@ image_resource:
   type: registry-image
   source:
     repository: golang
-    tag: ((.:version))
+    tag: ((.:go-versions))
 run:
   path: /bin/sh
   args:
