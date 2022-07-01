@@ -13,4 +13,9 @@ run:
     - -c
     - |
       cd pleiades
-      go build ./...
+      mkdir bin
+      export SHA=$(git rev-parse --short HEAD)
+      go build \
+        -ldflags "-X pkg.Sha=${SHA} -X pkg.GoVersion=$(go version) -X pkg.Version='22.6.30-dev.1'" \
+        -o bin/pleiades-"${SHA}"
+        main.go
