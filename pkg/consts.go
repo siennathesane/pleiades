@@ -9,6 +9,11 @@
 
 package pkg
 
+const (
+	Version string = ""
+	Sha string = ""
+)
+
 //goland:noinspection GoCommentStart
 const (
 	// the ranges a system cluster (internal to pleiades) can be
