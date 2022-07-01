@@ -5,9 +5,14 @@ resources:
     source:
       uri: git@gitlab.com:anthropos-labs/pleiades.git
       private_key: ((git.private_key))
-#      username: ((git.username))
-#      password: ((git.password))
       branch: mainline
+  - name: ci-image
+    type: registry-image
+    source:
+      repository: registry.gitlab.com/anthropos-labs/pleiades
+      tag: ci
+      username: ((registry.username))
+      password: ((registry.password))
 
 jobs:
   - name: set-pipeline
@@ -15,7 +20,19 @@ jobs:
       - get: pleiades
         trigger: true
       - set_pipeline: self
-        file: pleiades/ci/pipelines.yml
+        file: pleiades/ci/pipelines.yaml
+  - name: build-ci-image
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - set-pipeline
+      - task: build
+        privileged: true
+        file: pleiades/ci/tasks/build-ci-image.yaml
+      - put: ci-image
+        params:
+          image: image/image.tar
   - name: build
     plan:
       - get: pleiades
@@ -33,3 +50,11 @@ jobs:
             file: pleiades/ci/tasks/go-compile.yaml
           - task: test
             file: pleiades/ci/tasks/go-test.yaml
+  - name: generate-binary
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - build
+      - task: build-binary
+        file: pleiades/ci/tasks/go-build.yaml
