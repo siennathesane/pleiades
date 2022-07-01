@@ -9,8 +9,6 @@
 #  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
 #
 
-cd pleiades || exit 1
-
 mkdir bin
 
 SHA=$(git rev-parse --short HEAD)

@@ -2,20 +2,14 @@
 platform: linux
 inputs:
   - name: pleiades
+outputs:
+  - name: binary
+    path: pleiades/bin
 image_resource:
   type: registry-image
   source:
     repository: golang
-    tag: ((.:go-versions))
+    tag: latest
 run:
-  path: /bin/sh
-  args:
-    - -c
-    - |
-      cd pleiades
-      mkdir bin
-      export SHA=$(git rev-parse --short HEAD)
-      go build \
-        -ldflags "-X pkg.Sha=${SHA} -X pkg.GoVersion=$(go version) -X pkg.Version='22.6.30-dev.1'" \
-        -o bin/pleiades-"${SHA}"
-        main.go
+  path: ci/scripts/generate-binary.sh
+  dir: pleiades
