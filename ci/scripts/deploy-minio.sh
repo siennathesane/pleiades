@@ -9,8 +9,15 @@
 #  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
 #
 
+set -e
+
+echo "preparing kubeconfig"
 mkdir -p "${HOME}"/.kube
 echo "${KUBE_CONFIG}" | base64 -d > "${HOME}"/.kube/config
+
+echo "adding minio repo"
+helm repo add minio https://charts.min.io/
+helm repo update
 
 exists=$(helm ls -A -o json | jq -r '.[].name' | grep "${CHART_NAME}")
 
@@ -20,6 +27,8 @@ export COMMAND
 if [ -z "${exists}" ]; then
   COMMAND="install"
 fi
+
+echo "applying minio helm chart"
 
 helm "${COMMAND}" \
   "${CHART_NAME}" \
@@ -31,5 +40,7 @@ helm "${COMMAND}" \
   --create-namespace \
   --namespace "${NAMESPACE}" \
   minio/minio
+
+echo "creating ingress"
 
 kubectl apply -f ref-configs/minio/ingress.yaml
