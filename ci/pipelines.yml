@@ -19,3 +19,7 @@ jobs:
         do:
           - task: vet
             file: pleiades/ci/tasks/go-lint.yaml
+          - task: compile
+            file: pleiades/ci/tasks/go-build.yaml
+          - task: test
+            file: pleiades/ci/tasks/go-test.yaml
