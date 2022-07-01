@@ -2,14 +2,14 @@
 platform: linux
 inputs:
   - name: pleiades
+outputs:
+  - name: image
 image_resource:
   type: registry-image
   source:
     repository: concourse/oci-build-task
 params:
-  CONTEXT=pleiades
-  DOCKERFILE=pleiades/dockerfiles/ci.Dockerfile
-outputs:
-  - name: image
+  CONTEXT: pleiades
+  DOCKERFILE: pleiades/dockerfiles/ci.Dockerfile
 run:
   path: build
