@@ -8,7 +8,8 @@ RUN apt update -y && \
         ca-certificates \
         curl \
         gnupg    \
-        jq
+        jq \
+        vim
 
 # helm
 RUN curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null && \

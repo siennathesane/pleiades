@@ -1,0 +1,49 @@
+---
+apiVersion: cert-manager.io/config
+kind: Certificate
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  secretName: minio-tls
+  dnsNames:
+    - s3.r3t.io
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: minio-headers
+  namespace: minio
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+---
+apiVersion: networking.k8s.io/config
+kind: Ingress
+metadata:
+  name: minio
+  namespace: minio
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: minio-minio-headers@kubernetescrd
+spec:
+  tls:
+    - hosts:
+        - s3.r3t.io
+      secretName: minio-tls
+  rules:
+    - host: s3.r3t.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: concourse-web
+                port:
+                  number: 9000
