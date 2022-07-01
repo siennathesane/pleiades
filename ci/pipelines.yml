@@ -14,12 +14,14 @@ jobs:
     plan:
       - get: pleiades
         trigger: true
-      - set_pipeline: pleiades
+      - set_pipeline: self
         file: pleiades/ci/pipelines.yml
   - name: build
     plan:
       - get: pleiades
         trigger: true
+        passed:
+          - set-pipeline
       - across:
           - var: go-versions
             values: [ "1.18.0", "1.18.1", "1.18.2", "1.18.3" ]
