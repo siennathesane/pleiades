@@ -40,6 +40,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: concourse-web
+                name: s3-minio-console
                 port:
-                  number: 9000
+                  number: 9001

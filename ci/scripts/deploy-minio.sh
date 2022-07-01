@@ -9,7 +9,7 @@
 #  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
 #
 
-set -e
+set -eux
 
 echo "preparing kubeconfig"
 mkdir -p "${HOME}"/.kube
@@ -20,7 +20,7 @@ echo "adding minio repo"
 helm repo add minio https://charts.min.io/
 helm repo update
 
-exists=$(helm ls -A -o json | jq -r '.[].name' | grep "${CHART_NAME}")
+exists="$(helm ls -A -o json | jq -r '.[].name' | grep ${CHART_NAME} || true)"
 
 COMMAND="upgrade"
 export COMMAND
@@ -31,8 +31,6 @@ fi
 
 echo "applying minio helm chart"
 
-set -x
-
 helm "${COMMAND}" \
   "${CHART_NAME}" \
   --atomic \
@@ -40,6 +38,8 @@ helm "${COMMAND}" \
   --set rootPassword="${ROOT_PASSWORD}" \
   --set mode=standalone \
   --set replicas=1 \
+  --set resources.requests.memory="512Mi" \
+  --set buckets[0].name="${BINARIES_BUCKET}",buckets[0].policy=none,buckets[0].purge=false \
   --create-namespace \
   --namespace "${NAMESPACE}" \
   minio/minio
