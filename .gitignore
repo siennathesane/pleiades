@@ -2,4 +2,5 @@
 .idea/usage.statistics.xml
 .idea/shelf/
 **/tmp
-!/pleiades*
+pleiades*
+**vars.yaml
