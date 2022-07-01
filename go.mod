@@ -25,6 +25,7 @@ require (
 	cloud.google.com/go/compute v1.7.0 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/cheekybits/genny v1.0.0 // indirect
+	github.com/coreos/go-systemd/v22 v22.3.3-0.20220203105225-a9a7ef127534 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect

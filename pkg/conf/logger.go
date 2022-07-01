@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2022 Sienna Lloyd
  *
@@ -11,43 +10,30 @@
 package conf
 
 import (
-	"context"
+	"io"
 	"os"
 	"strconv"
 
-	"github.com/hashicorp/consul/api"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	zlog "github.com/rs/zerolog"
-	"go.uber.org/fx"
+	"github.com/rs/zerolog/journald"
+	"r3t.io/pleiades/pkg"
 )
 
-func ProvideLogger() fx.Option {
-	return fx.Provide(NewConsulClient, NewEnvironmentConfig, NewLogger)
-}
-
 var _ dlog.ILogger = Logger{}
-var _ dlog.Factory = Logger{}.LoggerFactory
 
 type Logger struct {
-	lifecycle fx.Lifecycle
-	client    *api.Client
-	env       *EnvironmentConfig
-	logger    zlog.Logger
-	gcpLogger gcpLogger
+	logger zlog.Logger
 }
 
-func NewLogger(lifecycle fx.Lifecycle, client *api.Client, env *EnvironmentConfig) (Logger, error) {
+func NewLogger(writers ...io.Writer) (Logger, error) {
 
-	l := Logger{env: env, lifecycle: lifecycle, client: client}
+	l := Logger{}
 
-	// set up gcp and console logging
-	var err error
-	l.gcpLogger, err = newGcpLogger(l)
-	if err != nil {
-		return Logger{}, err
-	}
-	consoleWriter := zlog.ConsoleWriter{Out: os.Stdout}
-	multiWriter := zlog.MultiLevelWriter(consoleWriter, l.gcpLogger)
+	writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout}, journald.NewJournalDWriter())
+
+	// write to both console and journald for linux
+	multiWriter := zlog.MultiLevelWriter(writers...)
 
 	// adds `Lshortfile` equivalence
 	zlog.CallerMarshalFunc = func(file string, line int) string {
@@ -62,44 +48,20 @@ func NewLogger(lifecycle fx.Lifecycle, client *api.Client, env *EnvironmentConfi
 		return file + ":" + strconv.Itoa(line)
 	}
 
-	switch env.Environment {
-	case Development:
-		l.logger = zlog.New(multiWriter).With().
-			Str("owner", "root").
-			Str("env", "development").
-			Timestamp().
-			Caller().
-			Logger().
-			Level(zlog.DebugLevel)
-
-	case Production:
-		l.logger = zlog.New(multiWriter).With().
-			Str("owner", "root").
-			Str("env", "production").
-			Timestamp().
-			Caller().
-			Logger().
-			Level(zlog.InfoLevel)
-	}
-
-	lifecycle.Append(fx.Hook{OnStop: func(ctx context.Context) error {
-		if err := l.gcpLogger.Close(); err != nil {
-			return err
-		}
-		return nil
-	}})
+	l.logger = zlog.New(multiWriter).With().
+		Str("sha", pkg.Sha).
+		Timestamp().
+		Caller().
+		Logger().
+		Level(zlog.InfoLevel)
 
 	return l, nil
 }
 
 func (l Logger) LoggerFactory(pkgName string) dlog.ILogger {
-	logz := l.logger.With().Str("owner", pkgName).Logger()
+	logz := l.logger.With().Str("pkg", pkgName).Logger()
 	return Logger{
-		lifecycle: l.lifecycle,
-		client:    l.client,
-		env:       l.env,
-		gcpLogger: l.gcpLogger,
-		logger:    logz,
+		logger: logz,
 	}
 }
 
