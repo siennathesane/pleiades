@@ -9,8 +9,8 @@ resources:
   - name: ci-image
     type: registry-image
     source:
-      repository: registry.gitlab.com/anthropos-labs/pleiades
-      tag: ci
+      repository: registry.gitlab.com/anthropos-labs/pleiades/ci
+      tag: latest
       username: ((registry.username))
       password: ((registry.password))
 
@@ -56,5 +56,6 @@ jobs:
         trigger: true
         passed:
           - build
+          - build-ci-image
       - task: build-binary
         file: pleiades/ci/tasks/go-build.yaml
