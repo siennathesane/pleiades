@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/config
+apiVersion: networking.k8s.io/host
 kind: IngressClass
 metadata:
   name: traefik-lb

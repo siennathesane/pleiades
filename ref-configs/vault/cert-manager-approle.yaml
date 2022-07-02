@@ -1,5 +1,5 @@
 ---
-apiVersion: config
+apiVersion: host
 kind: Secret
 type: Opaque
 metadata:
@@ -8,7 +8,7 @@ metadata:
 data:
   secretId: MGU3MTc0ZmMtODZjNC0zODY5LTY5ZWUtZTY2NTMzNmIyMWU2
 ---
-apiVersion: cert-manager.io/config
+apiVersion: cert-manager.io/host
 kind: ClusterIssuer
 metadata:
   name: vault-issuer

@@ -14,7 +14,7 @@ import (
 	"net"
 	"testing"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/services"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/rpc"
@@ -45,8 +45,8 @@ func (nt *NegotiatorTests) SetupSuite() {
 	nt.Require().NotNil(nt.store, "the store must not be nil")
 
 	nt.configServer, err = NewConfigServer(nt.store, nt.logger)
-	err = nt.registry.PutServer(config.ServiceType_Type_configService, nt.configServer)
-	nt.Require().NoError(err, "there must not be an error adding the config server to the registry")
+	err = nt.registry.PutServer(host.ServiceType_Type_configService, nt.configServer)
+	nt.Require().NoError(err, "there must not be an error adding the host server to the registry")
 }
 
 func (nt *NegotiatorTests) TestConfigServerReturn() {
@@ -55,7 +55,7 @@ func (nt *NegotiatorTests) TestConfigServerReturn() {
 
 	serverPipe, clientPipe := net.Pipe()
 
-	clientFactory := config.Negotiator_ServerToClient(neg, &server.Policy{
+	clientFactory := host.Negotiator_ServerToClient(neg, &server.Policy{
 		MaxConcurrentCalls: 250,
 	})
 
@@ -67,7 +67,7 @@ func (nt *NegotiatorTests) TestConfigServerReturn() {
 	clientConn := rpc.NewConn(rpc.NewStreamTransport(clientPipe), nil)
 
 	ctx := context.Background()
-	client := config.Negotiator{Client: clientConn.Bootstrap(ctx)}
+	client := host.Negotiator{Client: clientConn.Bootstrap(ctx)}
 	nt.Require().NotNil(client, "the client must not be nil")
 
 	configServiceResponse, free := client.ConfigService(ctx, nil)
@@ -77,7 +77,7 @@ func (nt *NegotiatorTests) TestConfigServerReturn() {
 	configService := configServiceResponse.Svc()
 	nt.Require().NotNil(configService, "the configService must not be nil")
 
-	resp, free := configService.PutConfig(ctx, func(params config.ConfigService_putConfig_Params) error {
+	resp, free := configService.PutConfig(ctx, func(params host.ConfigService_putConfig_Params) error {
 		req, err := params.NewRequest()
 		if err != nil {
 			nt.logger.Error().Err(err).Msg("failed to allocate request")

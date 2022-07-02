@@ -12,7 +12,7 @@ package blaze
 import (
 	"context"
 
-	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/services/v1/config"
 	"capnproto.org/go/capnp/v3/rpc"
 	"capnproto.org/go/capnp/v3/server"

@@ -1,6 +1,6 @@
 ---
 # Source: gitlab-runner/templates/service-account.yaml
-apiVersion: config
+apiVersion: host
 kind: ServiceAccount
 metadata:
   annotations:
@@ -12,7 +12,7 @@ metadata:
     heritage: "Helm"
 ---
 # Source: gitlab-runner/templates/secrets.yaml
-apiVersion: config
+apiVersion: host
 kind: Secret
 metadata:
   name: "gitlab-runner"
@@ -28,7 +28,7 @@ data:
   runner-token: ""
 ---
 # Source: gitlab-runner/templates/configmap.yaml
-apiVersion: config
+apiVersion: host
 kind: ConfigMap
 metadata:
   name: gitlab-runner
@@ -147,7 +147,7 @@ data:
   pre-entrypoint-script: |
 ---
 # Source: gitlab-runner/templates/role.yaml
-apiVersion: rbac.authorization.k8s.io/config
+apiVersion: rbac.authorization.k8s.io/host
 kind: "Role"
 metadata:
   name: gitlab-runner
@@ -163,7 +163,7 @@ rules:
     verbs: [ "*" ]
 ---
 # Source: gitlab-runner/templates/role-binding.yaml
-apiVersion: rbac.authorization.k8s.io/config
+apiVersion: rbac.authorization.k8s.io/host
 kind: "RoleBinding"
 metadata:
   name: gitlab-runner
@@ -183,7 +183,7 @@ subjects:
     namespace: "gitlab-agent"
 ---
 # Source: gitlab-runner/templates/deployment.yaml
-apiVersion: apps/config
+apiVersion: apps/host
 kind: Deployment
 metadata:
   name: gitlab-runner
@@ -230,7 +230,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: [ "/entrypoint", "unregister", "--config=/home/gitlab-runner/.gitlab-runner/config.toml" ]
+                command: [ "/entrypoint", "unregister", "--host=/home/gitlab-runner/.gitlab-runner/host.toml" ]
           lifecycle:
             preStop:
               exec:

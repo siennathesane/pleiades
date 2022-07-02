@@ -12,22 +12,22 @@ package config
 import (
 	"fmt"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/rs/zerolog"
 )
 
 type Registry struct {
 	logger           zerolog.Logger
-	serverMap        map[config.ServiceType_Type]any
+	serverMap        map[host.ServiceType_Type]any
 	clientFactoryMap map[string]any
 }
 
 func NewRegistry(logger zerolog.Logger) (*Registry, error) {
 	l := logger.With().Str("component", "registry").Logger()
-	return &Registry{logger: l, serverMap: make(map[config.ServiceType_Type]any)}, nil
+	return &Registry{logger: l, serverMap: make(map[host.ServiceType_Type]any)}, nil
 }
 
-func (r *Registry) GetServer(key config.ServiceType_Type) (any, error) {
+func (r *Registry) GetServer(key host.ServiceType_Type) (any, error) {
 	val, ok := r.serverMap[key]
 	if !ok {
 		return nil, fmt.Errorf("no server found for key: %s", key)
@@ -43,7 +43,7 @@ func (r *Registry) GetClientFactory(key string) (any, error) {
 	return val, nil
 }
 
-func (r *Registry) PutServer(key config.ServiceType_Type, srv any) error {
+func (r *Registry) PutServer(key host.ServiceType_Type, srv any) error {
 	r.serverMap[key] = srv
 	return nil
 }

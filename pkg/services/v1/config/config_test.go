@@ -17,7 +17,7 @@ import (
 	"testing"
 
 	"github.com/mxplusb/pleiades/pkg/fsm"
-	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/services"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3"
@@ -52,7 +52,7 @@ func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 		cst.Require().NoError(err, "there must not be an error creating a message")
 
-		conf, err := configv1.NewRootRaftConfiguration(seg)
+		conf, err := hostv1.NewRootRaftConfiguration(seg)
 		cst.Require().NoError(err, "there must not be an error creating a configuration")
 
 		testId := fmt.Sprintf("test-%d", i)
@@ -64,12 +64,12 @@ func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 	}
 
 	configServiceImpl, err := NewConfigServer(cst.store, cst.logger)
-	cst.Require().NoError(err, "there must not be an error creating a config service")
-	cst.Require().NotNil(configServiceImpl, "the config service must not be nil")
+	cst.Require().NoError(err, "there must not be an error creating a host service")
+	cst.Require().NotNil(configServiceImpl, "the host service must not be nil")
 
 	input, output := net.Pipe()
 
-	clientFactory := configv1.ConfigService_ServerToClient(configServiceImpl, &server.Policy{MaxConcurrentCalls: 10})
+	clientFactory := hostv1.ConfigService_ServerToClient(configServiceImpl, &server.Policy{MaxConcurrentCalls: 10})
 	srvConn := rpc.NewConn(rpc.NewStreamTransport(input), &rpc.Options{
 		BootstrapClient: clientFactory.Client,
 	})
@@ -77,17 +77,17 @@ func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 	clientConn := rpc.NewConn(rpc.NewStreamTransport(output), nil)
 
 	ctx := context.Background()
-	client := configv1.ConfigService{Client: clientConn.Bootstrap(ctx)}
+	client := hostv1.ConfigService{Client: clientConn.Bootstrap(ctx)}
 	cst.Require().NotNil(client, "the client must not be nil")
 
-	resp, rel := client.GetConfig(ctx, func(getConfigParams configv1.ConfigService_getConfig_Params) error {
+	resp, rel := client.GetConfig(ctx, func(getConfigParams hostv1.ConfigService_getConfig_Params) error {
 		req, err := getConfigParams.NewRequest()
 		if err != nil {
 			return err
 		}
 
-		req.SetWhat(configv1.GetConfigurationRequest_Type_raft)
-		req.SetAmount(configv1.GetConfigurationRequest_Specificity_one)
+		req.SetWhat(hostv1.GetConfigurationRequest_Type_raft)
+		req.SetAmount(hostv1.GetConfigurationRequest_Specificity_one)
 		if err := req.SetId("test-1"); err != nil {
 			return err
 		}
@@ -118,14 +118,14 @@ func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 
 	cst.Require().NotPanics(func() { rel() }, "there must not be an error releasing the response")
 
-	resp, rel = client.GetConfig(ctx, func(getConfigParams configv1.ConfigService_getConfig_Params) error {
+	resp, rel = client.GetConfig(ctx, func(getConfigParams hostv1.ConfigService_getConfig_Params) error {
 		req, err := getConfigParams.NewRequest()
 		if err != nil {
 			return err
 		}
 
-		req.SetWhat(configv1.GetConfigurationRequest_Type_raft)
-		req.SetAmount(configv1.GetConfigurationRequest_Specificity_everything)
+		req.SetWhat(hostv1.GetConfigurationRequest_Type_raft)
+		req.SetAmount(hostv1.GetConfigurationRequest_Specificity_everything)
 		return getConfigParams.SetRequest(req)
 	})
 
@@ -153,12 +153,12 @@ func (cst *ConfigServiceTests) TestConfigService_GetRaft() {
 
 func (cst *ConfigServiceTests) TestConfigService_PutRaft() {
 	configServiceImpl, err := NewConfigServer(cst.store, cst.logger)
-	cst.Require().NoError(err, "there must not be an error creating a config service")
-	cst.Require().NotNil(configServiceImpl, "the config service must not be nil")
+	cst.Require().NoError(err, "there must not be an error creating a host service")
+	cst.Require().NotNil(configServiceImpl, "the host service must not be nil")
 
 	input, output := net.Pipe()
 
-	clientFactory := configv1.ConfigService_ServerToClient(configServiceImpl, &server.Policy{MaxConcurrentCalls: 10})
+	clientFactory := hostv1.ConfigService_ServerToClient(configServiceImpl, &server.Policy{MaxConcurrentCalls: 10})
 	srvConn := rpc.NewConn(rpc.NewStreamTransport(input), &rpc.Options{
 		BootstrapClient: clientFactory.Client,
 	})
@@ -166,19 +166,19 @@ func (cst *ConfigServiceTests) TestConfigService_PutRaft() {
 	clientConn := rpc.NewConn(rpc.NewStreamTransport(output), nil)
 
 	ctx := context.Background()
-	client := configv1.ConfigService{Client: clientConn.Bootstrap(ctx)}
+	client := hostv1.ConfigService{Client: clientConn.Bootstrap(ctx)}
 	cst.Require().NotNil(client, "the client must not be nil")
 
 	_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
 	cst.Require().NoError(err, "there must not be an error creating a message")
 
-	raftConf, err := configv1.NewRootRaftConfiguration(seg)
+	raftConf, err := hostv1.NewRootRaftConfiguration(seg)
 	cst.Require().NoError(err, "there must not be an error creating a configuration")
 
 	err = raftConf.SetId("test-put")
 	cst.Require().NoError(err, "there must not be an error setting the id")
 
-	resp, free := client.PutConfig(ctx, func(params configv1.ConfigService_putConfig_Params) error {
+	resp, free := client.PutConfig(ctx, func(params hostv1.ConfigService_putConfig_Params) error {
 		req, err := params.NewRequest()
 		if err != nil {
 			return err
@@ -196,7 +196,7 @@ func (cst *ConfigServiceTests) TestConfigService_PutRaft() {
 
 	configResponse, err := results.Struct()
 	cst.Require().NoError(err, "there must not be an error getting the rpc results")
-	cst.Require().NotNil(configResponse, "the config response must not be nil")
+	cst.Require().NotNil(configResponse, "the host response must not be nil")
 
 	raftConfig, err := configResponse.Raft()
 	cst.Require().NoError(err, "there must not be an error getting the raft configuration")

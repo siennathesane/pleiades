@@ -14,14 +14,14 @@ import (
 	"errors"
 
 	"github.com/mxplusb/pleiades/pkg/fsm"
-	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/services"
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 )
 
 var (
-	_ configv1.ConfigService_Server = (*ConfigServer)(nil)
+	_ hostv1.ConfigService_Server = (*ConfigServer)(nil)
 )
 
 type ConfigServer struct {
@@ -32,7 +32,7 @@ type ConfigServer struct {
 // NewConfigServer creates a instance of the configuration service. This is a singleton.
 // The configuration service is responsible for managing all the service available on a deployed host.
 func NewConfigServer(store *services.StoreManager, logger zerolog.Logger) (*ConfigServer, error) {
-	l := logger.With().Str("service", "config").Logger()
+	l := logger.With().Str("service", "host").Logger()
 	manager, err := fsm.NewConfigServiceStoreManager(logger, store)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func NewConfigServer(store *services.StoreManager, logger zerolog.Logger) (*Conf
 	}, nil
 }
 
-func (c *ConfigServer) GetConfig(ctx context.Context, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) GetConfig(ctx context.Context, call hostv1.ConfigService_getConfig) error {
 	req, err := call.Args().Request()
 	if err != nil {
 		return err
@@ -53,17 +53,17 @@ func (c *ConfigServer) GetConfig(ctx context.Context, call configv1.ConfigServic
 	what := req.What()
 	amount := req.Amount()
 	switch what {
-	case configv1.GetConfigurationRequest_Type_all:
-	case configv1.GetConfigurationRequest_Type_raft:
+	case hostv1.GetConfigurationRequest_Type_all:
+	case hostv1.GetConfigurationRequest_Type_raft:
 		switch amount {
-		case configv1.GetConfigurationRequest_Specificity_one:
+		case hostv1.GetConfigurationRequest_Specificity_one:
 			key, err := req.Id()
 			if err != nil {
 				c.logger.Err(err).Str("key", key).Msg("error reading key")
 				return err
 			}
 			return c.getRaftConfig(ctx, key, call)
-		case configv1.GetConfigurationRequest_Specificity_everything:
+		case hostv1.GetConfigurationRequest_Specificity_everything:
 			return c.getAllRaftConfigs(ctx, call)
 		}
 	}
@@ -71,7 +71,7 @@ func (c *ConfigServer) GetConfig(ctx context.Context, call configv1.ConfigServic
 	return nil
 }
 
-func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call hostv1.ConfigService_getConfig) error {
 	if key == "" {
 		return errors.New("cannot request a named record without a key")
 	}
@@ -89,7 +89,7 @@ func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call confi
 	// find the target
 	val, err := c.raftManager.Get(key)
 	if err != nil {
-		c.logger.Err(err).Str("key", key).Msg("error getting config")
+		c.logger.Err(err).Str("key", key).Msg("error getting host")
 		return err
 	}
 
@@ -100,31 +100,31 @@ func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call confi
 		return err
 	}
 
-	// create the root config response
-	config, err := configv1.NewRootGetConfigurationResponse(seg)
+	// create the root host response
+	config, err := hostv1.NewRootGetConfigurationResponse(seg)
 	if err != nil {
 		c.logger.Err(err).Str("key", key).Msg("error creating getRaftConfigurationResponse")
 		return err
 	}
 
-	// create the config list
-	slice, err := configv1.NewRaftConfiguration_List(seg, 1)
+	// create the host list
+	slice, err := hostv1.NewRaftConfiguration_List(seg, 1)
 	if err != nil {
 		c.logger.Err(err).Str("key", key).Msg("error creating raftConfiguration_List")
 		return err
 	}
 
-	// set the config into the slice
+	// set the host into the slice
 	err = slice.Set(0, *val)
 	if err != nil {
 		c.logger.Err(err).Str("key", key).Msg("error setting raftConfiguration_List")
 		return err
 	}
 
-	// set the config list into the config response
+	// set the host list into the host response
 	err = config.SetRaft(slice)
 	if err != nil {
-		c.logger.Err(err).Str("key", key).Msg("error setting config")
+		c.logger.Err(err).Str("key", key).Msg("error setting host")
 		return err
 	}
 
@@ -132,7 +132,7 @@ func (c *ConfigServer) getRaftConfig(ctx context.Context, key string, call confi
 	return res.SetResponse(config)
 }
 
-func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.ConfigService_getConfig) error {
+func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call hostv1.ConfigService_getConfig) error {
 
 	// allocate the results
 	res, err := call.AllocResults()
@@ -158,21 +158,21 @@ func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.Conf
 		return err
 	}
 
-	// create the root config response
-	config, err := configv1.NewRootGetConfigurationResponse(seg)
+	// create the root host response
+	config, err := hostv1.NewRootGetConfigurationResponse(seg)
 	if err != nil {
 		c.logger.Err(err).Msg("error creating getRaftConfigurationResponse")
 		return err
 	}
 
-	// create the config lists
-	slice, err := configv1.NewRaftConfiguration_List(seg, int32(len(val)))
+	// create the host lists
+	slice, err := hostv1.NewRaftConfiguration_List(seg, int32(len(val)))
 	if err != nil {
 		c.logger.Err(err).Msg("error creating raftConfiguration_List")
 		return err
 	}
 
-	// set the config into the slice
+	// set the host into the slice
 	for idx := range val {
 		err = slice.Set(0, *val[idx])
 		if err != nil {
@@ -181,10 +181,10 @@ func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.Conf
 		}
 	}
 
-	// set the config list into the config response
+	// set the host list into the host response
 	err = config.SetRaft(slice)
 	if err != nil {
-		c.logger.Err(err).Msg("error setting config")
+		c.logger.Err(err).Msg("error setting host")
 		return err
 	}
 
@@ -192,7 +192,7 @@ func (c *ConfigServer) getAllRaftConfigs(ctx context.Context, call configv1.Conf
 	return res.SetResponse(config)
 }
 
-func (c *ConfigServer) PutConfig(ctx context.Context, call configv1.ConfigService_putConfig) error {
+func (c *ConfigServer) PutConfig(ctx context.Context, call hostv1.ConfigService_putConfig) error {
 	// acknowledge the request now that we can allocate space for the results
 	call.Ack()
 
@@ -204,15 +204,15 @@ func (c *ConfigServer) PutConfig(ctx context.Context, call configv1.ConfigServic
 	}
 
 	switch req.Which() {
-	case configv1.PutConfigurationRequest_Which_raft:
+	case hostv1.PutConfigurationRequest_Which_raft:
 		return c.putRaftConfig(ctx, call)
-	case configv1.PutConfigurationRequest_Which_nodeHost:
+	case hostv1.PutConfigurationRequest_Which_nodeHost:
 	}
 
 	return nil
 }
 
-func (c *ConfigServer) putRaftConfig(ctx context.Context, call configv1.ConfigService_putConfig) error {
+func (c *ConfigServer) putRaftConfig(ctx context.Context, call hostv1.ConfigService_putConfig) error {
 	res, err := call.AllocResults()
 	if err != nil {
 		c.logger.Err(err).Msg("error allocating putRaftConfig results")
@@ -229,19 +229,19 @@ func (c *ConfigServer) putRaftConfig(ctx context.Context, call configv1.ConfigSe
 
 	raftConfig, err := req.Raft()
 	if err != nil {
-		c.logger.Err(err).Msg("error getting raft config")
+		c.logger.Err(err).Msg("error getting raft host")
 		return err
 	}
 
 	configId, err := raftConfig.Id()
 	if err != nil {
-		c.logger.Err(err).Msg("error getting raft config id")
+		c.logger.Err(err).Msg("error getting raft host id")
 		return err
 	}
 
 	err = c.raftManager.Put(configId, &raftConfig)
 	if err != nil {
-		c.logger.Err(err).Msg("error putting raft config")
+		c.logger.Err(err).Msg("error putting raft host")
 		return err
 	}
 
@@ -253,7 +253,7 @@ func (c *ConfigServer) putRaftConfig(ctx context.Context, call configv1.ConfigSe
 
 	err = configResponse.SetRaft(raftConfig)
 	if err != nil {
-		c.logger.Err(err).Msg("error setting raft config")
+		c.logger.Err(err).Msg("error setting raft host")
 		return err
 	}
 	configResponse.SetSuccess(true)

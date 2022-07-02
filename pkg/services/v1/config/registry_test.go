@@ -13,7 +13,7 @@ package config
 import (
 	"testing"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
@@ -41,18 +41,18 @@ func (s *RegistryTests) SetupTest() {
 
 func (s *RegistryTests) TestGet() {
 	srv := &server.Server{}
-	err := s.registry.PutServer(config.ServiceType_Type_test, srv)
+	err := s.registry.PutServer(host.ServiceType_Type_test, srv)
 	s.Require().NoError(err, "there must not be an error putting the value")
 
-	value, _ := s.registry.GetServer(config.ServiceType_Type_test)
+	value, _ := s.registry.GetServer(host.ServiceType_Type_test)
 	s.Assert().Equal(srv, value)
 }
 
 func (s *RegistryTests) TestPut() {
 	srv := &server.Server{}
-	err := s.registry.PutServer(config.ServiceType_Type_test, srv)
+	err := s.registry.PutServer(host.ServiceType_Type_test, srv)
 	s.Require().NoError(err, "there must not be an error putting the value")
 
-	value, _ := s.registry.GetServer(config.ServiceType_Type_test)
+	value, _ := s.registry.GetServer(host.ServiceType_Type_test)
 	s.Assert().Equal(srv, value)
 }
