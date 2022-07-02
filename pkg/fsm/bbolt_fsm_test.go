@@ -19,11 +19,11 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/database"
 	"capnproto.org/go/capnp/v3"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
-	"r3t.io/pleiades/pkg/protocols/v1/database"
 )
 
 type TestBBoltFsm struct {
