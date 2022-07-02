@@ -38,7 +38,7 @@ package blaze
 //	logger     zerolog.Logger
 //	mux        *Router
 //	client     *testdata.CookieMonsterClient
-//	config *quic.Config
+//	host *quic.Config
 //}
 //
 //func (ft *FunctionalTests) SetupSuite() {
@@ -65,9 +65,9 @@ package blaze
 //		NextProtos:   []string{"multiplexed-string-tests"},
 //	}
 //
-//	ft.config = &quic.Config{MaxIdleTimeout: 300 * time.Second}
+//	ft.host = &quic.Config{MaxIdleTimeout: 300 * time.Second}
 //
-//	ft.listener, err = quic.ListenAddr("localhost:8080", ft.tls, ft.config)
+//	ft.listener, err = quic.ListenAddr("localhost:8080", ft.tls, ft.host)
 //	ft.Require().NoError(err, "there must not be an error when starting the listener")
 //
 //	ft.Require().NotPanics(func() {
@@ -111,7 +111,7 @@ package blaze
 //
 //	ft.Require().NoError(err, "there must not be an error when starting the stream server")
 //
-//	dialConn, err := quic.DialAddr(testServerAddr, ft.tls, ft.config)
+//	dialConn, err := quic.DialAddr(testServerAddr, ft.tls, ft.host)
 //	ft.Require().NoError(err, "there must not be an error when dialing the test server")
 //
 //	stream, err := dialConn.OpenStream()
@@ -123,7 +123,7 @@ package blaze
 //	client := testdata.NewDRPCCookieMonsterClient(clientStream)
 //	ft.Require().NotNil(client, "the cookie monster client must not be null")
 //
-//	ctx, cancel := context.WithTimeout(context.Background(), ft.config.MaxIdleTimeout)
+//	ctx, cancel := context.WithTimeout(context.Background(), ft.host.MaxIdleTimeout)
 //	resp, err := client.EatCookie(ctx, &testdata.Cookie{Type: testdata.Cookie_Oatmeal})
 //	ft.Require().NoError(err, "there must not be an error when trying to eat a cookie")
 //	ft.Assert().Equal(testdata.Cookie_Oatmeal, resp.Cookie.Type, "the cookie types should match")

@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/config
+apiVersion: apps/host
 kind: Deployment
 metadata:
   name: cloudflared
@@ -18,11 +18,11 @@ spec:
           image: cloudflare/cloudflared:latest
           args:
             - tunnel
-            # Points cloudflared to the config file, which configures what
+            # Points cloudflared to the host file, which configures what
             # cloudflared will actually do. This file is created by a ConfigMap
             # below.
-            - --config
-            - /etc/cloudflared/config/config.yaml
+            - --host
+            - /etc/cloudflared/host/host.yaml
             - run
           livenessProbe:
             httpGet:
@@ -34,8 +34,8 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
           volumeMounts:
-            - name: config
-              mountPath: /etc/cloudflared/config
+            - name: host
+              mountPath: /etc/cloudflared/host
               readOnly: true
             # Each tunnel has an associated "credentials file" which authorizes machines
             # to run the tunnel. cloudflared will read this file from its local filesystem,
@@ -53,15 +53,15 @@ spec:
             # --from-file=credentials.json=/Users/yourusername/.cloudflared/<tunnel ID>.json
             # ```
             secretName: tunnel-credentials
-        # Create a config.yaml file from the ConfigMap below.
-        - name: config
+        # Create a host.yaml file from the ConfigMap below.
+        - name: host
           configMap:
             name: cloudflared
             items:
-              - key: config.yaml
-                path: config.yaml
+              - key: host.yaml
+                path: host.yaml
 ---
-apiVersion: config
+apiVersion: host
 kind: ConfigMap
 metadata:
   name: cloudflared

@@ -13,13 +13,13 @@ package config
 import (
 	"context"
 
-	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 )
 
 var (
-	_ configv1.Negotiator_Server = (*NegotiatorServer)(nil)
+	_ hostv1.Negotiator_Server = (*NegotiatorServer)(nil)
 )
 
 type NegotiatorServer struct {
@@ -31,25 +31,25 @@ func NewNegotiator(logger zerolog.Logger, registry *Registry) *NegotiatorServer 
 	return &NegotiatorServer{logger: logger, registry: registry}
 }
 
-func (n *NegotiatorServer) Register(t configv1.ServiceType_Type, srv any) error {
+func (n *NegotiatorServer) Register(t hostv1.ServiceType_Type, srv any) error {
 	return n.registry.PutServer(t, srv)
 }
 
-func (n *NegotiatorServer) ConfigService(ctx context.Context, call configv1.Negotiator_configService) error {
+func (n *NegotiatorServer) ConfigService(ctx context.Context, call hostv1.Negotiator_configService) error {
 	results, err := call.AllocResults()
 	if err != nil {
 		n.logger.Error().Err(err).Msg("failed to allocate results")
 		return err
 	}
 
-	val, err := n.registry.GetServer(configv1.ServiceType_Type_configService)
+	val, err := n.registry.GetServer(hostv1.ServiceType_Type_configService)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("failed to get config service")
+		n.logger.Error().Err(err).Msg("failed to get host service")
 		return err
 	}
 
 	target := val.(*ConfigServer)
-	svc := configv1.ConfigService_ServerToClient(target, &server.Policy{
+	svc := hostv1.ConfigService_ServerToClient(target, &server.Policy{
 		MaxConcurrentCalls: 250,
 	})
 

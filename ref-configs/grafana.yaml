@@ -1,7 +1,7 @@
 kind: ConfigMap
 metadata:
   name: grafana-agent-logs
-apiVersion: config
+apiVersion: host
 data:
   agent.yaml: |
     metrics:

@@ -125,7 +125,7 @@ func NewQuicTestKit(t *testing.T) *QuicTestKit {
 	var err error
 	tk.tlsConf, err = tk.GenerateTlsConfig()
 	if err != nil {
-		t.Fatalf("failed to generate tls config: %v", err)
+		t.Fatalf("failed to generate tls host: %v", err)
 	}
 
 	tk.quicConfig = &quic.Config{MaxIdleTimeout: 300 * time.Second}

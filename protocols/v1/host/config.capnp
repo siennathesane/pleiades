@@ -1,7 +1,7 @@
 using Go = import "/go.capnp";
 @0x9f0a9459eb121bf0;
-$Go.package("config");
-$Go.import("r3t.io/pkg/protocols/v1/config");
+$Go.package("host");
+$Go.import("r3t.io/pkg/protocols/v1/host");
 
 ################################################################################
 #                  __ _
@@ -12,10 +12,6 @@ $Go.import("r3t.io/pkg/protocols/v1/config");
 #                       |___/
 #
 ################################################################################
-
-interface Negotiator @0xe35a52b4e5c60a15 {
-    configService @0 () -> (svc :ConfigService);
-}
 
 interface ConfigService @0xcd55e3c0a182ac77 {
     getConfig @0 (request :GetConfigurationRequest) -> (response :GetConfigurationResponse);

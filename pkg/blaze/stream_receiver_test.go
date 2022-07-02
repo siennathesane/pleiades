@@ -14,7 +14,7 @@ import (
 	"context"
 	"testing"
 
-	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/mxplusb/pleiades/pkg/services/v1/config"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/rpc"
@@ -44,7 +44,7 @@ func (s *StreamReceiverTest) SetupSuite() {
 	s.Require().NoError(err, "failed to create registry")
 
 	err = s.registry.PutServer(
-		configv1.ServiceType_Type_test,
+		hostv1.ServiceType_Type_test,
 		&server.Server{},
 	)
 	s.Require().NoError(err, "failed to register test server")
@@ -77,18 +77,18 @@ func (s *StreamReceiverTest) TestStreamReceiver() {
 	rpcConn := rpc.NewConn(rpc.NewStreamTransport(stream), nil)
 	s.Require().NotNil(rpcConn, "the rpc connection must not be nil")
 
-	client := configv1.Negotiator{Client: rpcConn.Bootstrap(ctx)}
+	client := hostv1.Negotiator{Client: rpcConn.Bootstrap(ctx)}
 	s.Require().NotNil(client, "the client must not be nil")
 
 	future, free := client.ConfigService(ctx, nil)
 	configService := future.Svc()
-	s.Require().NotNil(configService, "the config service must not be nil")
+	s.Require().NotNil(configService, "the host service must not be nil")
 
 	configSrv := configService.AddRef()
-	s.Require().NotNil(configSrv, "the config service must not be nil")
+	s.Require().NotNil(configSrv, "the host service must not be nil")
 
 	free()
-	s.Require().NotNil(configSrv, "the config service reference must not be nil after calling free()")
+	s.Require().NotNil(configSrv, "the host service reference must not be nil after calling free()")
 
 	ctx.Done()
 }
