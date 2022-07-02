@@ -16,6 +16,10 @@ import (
 	"gonum.org/v1/gonum/graph/simple"
 )
 
+var (
+	_ IServiceLibrary = (*ServiceLibrary)(nil)
+)
+
 type ServiceLibrary struct {
 	graph *simple.DirectedGraph
 }

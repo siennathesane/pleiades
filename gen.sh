@@ -11,7 +11,7 @@
 
 set -e
 
-echo "generating config protocols"
+echo "generating host protocols"
 capnp compile \
   -I$GOPATH/src/capnproto.org/go/capnp/std \
   -ogo:pkg \

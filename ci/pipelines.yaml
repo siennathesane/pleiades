@@ -55,6 +55,8 @@ jobs:
     plan:
       - get: pleiades
         trigger: true
+        passed:
+          - set-pipeline
       - task: deploy
         file: pleiades/ci/tasks/deploy-minio.yaml
   - name: generate-binary
