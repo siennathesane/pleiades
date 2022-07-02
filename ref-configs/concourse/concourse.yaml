@@ -7,7 +7,7 @@ concourse:
     enableAcrossStep: true
     enablePipelineInstances: true
     enableRedactSecrets: true
-    externalUrl: https://ci.r3t.io
+    externalUrl: https://ci.a13s.io
     kubernetes:
       enabled: false
     vault:
