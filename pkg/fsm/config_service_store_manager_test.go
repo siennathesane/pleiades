@@ -15,12 +15,12 @@ import (
 	"reflect"
 	"testing"
 
+	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	"github.com/mxplusb/pleiades/pkg/services"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
-	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	"r3t.io/pleiades/pkg/services"
-	"r3t.io/pleiades/pkg/utils"
 )
 
 func TestConfigServiceStoreManager(t *testing.T) {

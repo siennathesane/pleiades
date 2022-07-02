@@ -14,10 +14,10 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/mxplusb/pleiades/pkg"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	zlog "github.com/rs/zerolog"
 	"github.com/rs/zerolog/journald"
-	"r3t.io/pleiades/pkg"
 )
 
 var _ dlog.ILogger = Logger{}

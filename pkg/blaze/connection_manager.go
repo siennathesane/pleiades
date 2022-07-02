@@ -14,9 +14,9 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/mxplusb/pleiades/pkg/services/v1/config"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
-	"r3t.io/pleiades/pkg/services/v1/config"
 )
 
 type Server struct {

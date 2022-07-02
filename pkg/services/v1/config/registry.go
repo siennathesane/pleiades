@@ -12,8 +12,8 @@ package config
 import (
 	"fmt"
 
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/config"
 	"github.com/rs/zerolog"
-	"r3t.io/pleiades/pkg/protocols/v1/config"
 )
 
 type Registry struct {

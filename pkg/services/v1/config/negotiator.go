@@ -13,9 +13,9 @@ package config
 import (
 	"context"
 
+	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
-	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
 )
 
 var (

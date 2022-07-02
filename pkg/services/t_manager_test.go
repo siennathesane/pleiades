@@ -15,10 +15,10 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"r3t.io/pleiades/pkg/utils"
 )
 
 type TestStruct struct {

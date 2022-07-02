@@ -14,13 +14,13 @@ import (
 	"context"
 	"testing"
 
+	configv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	"github.com/mxplusb/pleiades/pkg/services/v1/config"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/rpc"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
-	configv1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	"r3t.io/pleiades/pkg/services/v1/config"
-	"r3t.io/pleiades/pkg/utils"
 )
 
 // StreamReceiverTest tests the StreamReceiver class.

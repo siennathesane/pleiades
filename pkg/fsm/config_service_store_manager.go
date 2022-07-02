@@ -14,10 +14,10 @@ import (
 	"errors"
 	"reflect"
 
+	v1 "github.com/mxplusb/pleiades/pkg/protocols/v1/config"
+	services2 "github.com/mxplusb/pleiades/pkg/services"
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
-	v1 "r3t.io/pleiades/pkg/protocols/v1/config"
-	services2 "r3t.io/pleiades/pkg/services"
 )
 
 var (
