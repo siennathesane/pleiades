@@ -81,6 +81,10 @@ var reverseInternalSeverityMap = map[zlog.Level]dlog.LogLevel{
 	zlog.DebugLevel: dlog.DEBUG,
 }
 
+func (l Logger) GetLogger() zlog.Logger {
+	return l.logger
+}
+
 func (l Logger) GetLevel() dlog.LogLevel {
 	return reverseInternalSeverityMap[l.logger.GetLevel()]
 }
