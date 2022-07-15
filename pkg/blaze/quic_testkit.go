@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	tlsCa = `-----BEGIN CERTIFICATE-----
+	DevTlsCa = `-----BEGIN CERTIFICATE-----
 MIIDlTCCAn2gAwIBAgIUVC411J3YD6VlJAEXkCVCgVgyYo4wDQYJKoZIhvcNAQEL
 BQAwETEPMA0GA1UEAxMGcjN0LmlvMB4XDTIyMDYwNDAyMTcyNloXDTI3MDYwMzAy
 MTc1NlowKzEpMCcGA1UEAxMgcjN0LmlvIEludGVybWVkaWF0ZSBBdXRob3JpdHkg
@@ -47,7 +47,7 @@ gm6OgQ/Jkzytt+0NqfCQ1uEdrTKO4vIPvmWcDFIq/LAh9GBkV56LyID+ZIZMGZ9f
 DdGYKdthyS0n
 -----END CERTIFICATE-----
 `
-	tlsCert = `-----BEGIN CERTIFICATE-----
+	DevTlsCert = `-----BEGIN CERTIFICATE-----
 MIIDVjCCAj6gAwIBAgIUfkYIfDYgS3yUHW1qX0AQ5fC760gwDQYJKoZIhvcNAQEL
 BQAwKzEpMCcGA1UEAxMgcjN0LmlvIEludGVybWVkaWF0ZSBBdXRob3JpdHkgRzEw
 HhcNMjIwNzE1MTE1NzE3WhcNMjQwNzE0MTE1NzQ2WjAUMRIwEAYDVQQDEwlsb2Nh
@@ -68,7 +68,7 @@ C2+g6AXRPryP3d1Q3cuCxvgs6EV6v2dHk9CbgK873gPy0rEX83abAHOFg5VtgPeZ
 oqCcKFv/lVR9cd4hSIgPmYCOR0Jpb5ftto8Cc3wztRSO3fZ9dZtDL3Jv
 -----END CERTIFICATE-----
 `
-	tlsKey = `-----BEGIN RSA PRIVATE KEY-----
+	DevTlsKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAr8JRu20wLqvs1PMB7ri63niK/MCgrfq3HrzHkw3B6WqHeuj3
 cNG8J55wHnBwF8temTlq9eYse94vJCvFK3fEMxQlnK3QqZSP+7s0NzvnVR834/3d
 V28vFLCCErtlF96bfuAivJ5Hz5x/4j+3l1ZzkBRJP6UD8F6w81vlbkk99f8sdU8K
@@ -160,10 +160,10 @@ func (stk *QuicTestKit) Stop() {
 
 func (stk *QuicTestKit) GenerateTlsConfig() (*tls.Config, error) {
 	stk.certPool = x509.NewCertPool()
-	stk.certPool.AppendCertsFromPEM([]byte(tlsCa))
+	stk.certPool.AppendCertsFromPEM([]byte(DevTlsCa))
 
 	var err error
-	stk.keyPair, err = tls.X509KeyPair([]byte(tlsCert), []byte(tlsKey))
+	stk.keyPair, err = tls.X509KeyPair([]byte(DevTlsCert), []byte(DevTlsKey))
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate tls key pair: %v", err)
 	}
