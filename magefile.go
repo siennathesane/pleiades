@@ -10,6 +10,14 @@ import (
 	"path/filepath"
 
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
+	"github.com/magefile/mage/sh"
+	"github.com/magefile/mage/mage"
+)
+
+var (
+	homebrewTargets = []string{
+		"capnp",
+	}
 )
 
 // compile pleiades with the local build information
@@ -30,41 +38,39 @@ func Install() error {
 func InstallDeps() error {
 	fmt.Println("installing tools...")
 
-	mg.Deps(func() error {
-		cmd := exec.Command("brew", "install", "capnp")
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println(err)
+	// each of these should be their own dep :shrug:
+	mg.Deps(func () error {
+		for idx := range homebrewTargets {
+			if err := sh.RunWithV(nil, "brew", "install", homebrewTargets[idx]); err != nil {
+				return err
+			}
 		}
-		return err
+		return nil
 	})
 
 	mg.Deps(func() error {
-		cmd := exec.Command("go", "install", "capnproto.org/go/capnp/v3/capnpc-go@latest")
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println(err)
-		}
-		return err
+		fmt.Println("installing capn' proto compiler")
+		return run("brew install capnp")
 	})
 
 	mg.Deps(func() error {
-		os.Setenv("GO111MODULE", "off")
-		cmd := exec.Command("go", "get", "-u", "capnproto.org/go/capnp/v3/")
-		err := cmd.Run()
-		os.Unsetenv("GO111MODULE")
-		if err != nil {
-			fmt.Println(err)
-		}
-		return err
+		fmt.Println("installing capn' proto go compiler plugin")
+		return sh.RunWithV(nil, "go", "install", "capnproto.org/go/capnp/v3/capnpc-go@latest")
 	})
 
-	cmd := exec.Command("go", "get", "-v", "./...")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
-	}
-	return cmd.Run()
+	mg.Deps(func() error {
+		fmt.Println("installing cap'n proto golang compiler cli")
+		return sh.RunWithV(map[string]string{
+			"GO111MODULE": "off",
+		}, "go", "get", "-u", "capnproto.org/go/capnp/v3/")
+	})
+
+	mg.Deps(func() error {
+		fmt.Println("getting pleiades deps")
+		return run("go get -v ./...")
+	})
+
+	return nil
 }
 
 // quickly recompile pleiades
@@ -97,12 +103,17 @@ func Reset() error {
 	os.RemoveAll("build")
 
 	fmt.Println("cleaning mod cache...")
-	cmd := exec.Command("go", "clean", "-modcache")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(err)
+	if err := sh.RunWithV(nil, "go", "clean", "-modcache"); err != nil {
+		return err
 	}
-	return err
+
+	fmt.Println("removing homebrew tools")
+	for idx := range homebrewTargets {
+		if err := sh.RunWithV(nil, "brew", "remove", homebrewTargets[idx]); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // compiles the local capnp schemas and generates the go code
@@ -124,6 +135,21 @@ func Generate() error {
 	cmd.Stderr = &stderrBuf
 
 	err = cmd.Run()
+	if err != nil {
+		fmt.Println(stderrBuf.String())
+	}
+	return err
+}
+
+func run(shellCmd string) error {
+	cmd := exec.Command("bash", "-c", shellCmd)
+
+	var stdoutBuf bytes.Buffer
+	var stderrBuf bytes.Buffer
+	cmd.Stdout = &stdoutBuf
+	cmd.Stderr = &stderrBuf
+
+	err := cmd.Run()
 	if err != nil {
 		fmt.Println(stderrBuf.String())
 	}
