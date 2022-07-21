@@ -11,7 +11,7 @@ import (
 	strconv "strconv"
 )
 
-type ConfigService struct{ Client *capnp.Client }
+type ConfigService struct{ Client capnp.Client }
 
 // ConfigService_TypeID is the unique identifier for the type ConfigService.
 const ConfigService_TypeID = 0xcd55e3c0a182ac77
@@ -144,6 +144,15 @@ func (c ConfigService_putConfig) Args() ConfigService_putConfig_Params {
 func (c ConfigService_putConfig) AllocResults() (ConfigService_putConfig_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return ConfigService_putConfig_Results{Struct: r}, err
+}
+
+// ConfigService_List is a list of ConfigService.
+type ConfigService_List = capnp.CapList[ConfigService]
+
+// NewConfigService creates a new list of ConfigService.
+func NewConfigService_List(s *capnp.Segment, sz int32) (ConfigService_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[ConfigService](l), err
 }
 
 type ConfigService_getConfig_Params struct{ capnp.Struct }
