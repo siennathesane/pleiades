@@ -6,10 +6,12 @@ outputs:
   - name: binary
     path: pleiades/bin
 image_resource:
-  repository: registry.gitlab.com/anthropos-labs/pleiades/ci
-  tag: latest
-  username: ((username))
-  password: ((password))
+  type: registry-image
+  source:
+    repository: registry.gitlab.com/anthropos-labs/pleiades/ci
+    tag: latest
+    username: ((registry.username))
+    password: ((registry.password))
 params:
   MAGE_COMMAND: ((cmd))
 run:

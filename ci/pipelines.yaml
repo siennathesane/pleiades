@@ -23,6 +23,7 @@ jobs:
       - set_pipeline: self
         file: pleiades/ci/pipelines.yaml
   - name: build-ci-image
+    serial: true
     plan:
       - get: pleiades
         trigger: true
@@ -35,6 +36,7 @@ jobs:
         params:
           image: image/image.tar
   - name: build-gitpod-image
+    serial: true
     plan:
       - get: pleiades
         trigger: true
