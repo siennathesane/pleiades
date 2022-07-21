@@ -34,6 +34,15 @@ jobs:
       - put: ci-image
         params:
           image: image/image.tar
+  - name: build-gitpod-image
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - set-pipeline
+      - task: build
+        privileged: true
+        file: pleiades/ci/tasks/build-gitpod-image.yaml
   - name: build
     plan:
       - get: pleiades
@@ -42,15 +51,21 @@ jobs:
           - set-pipeline
       - across:
           - var: go-versions
-            values: [ "1.18.0", "1.18.1", "1.18.2", "1.18.3" ]
-            max_in_flight: 5
+            values: [ "1.18.0", "1.18.1", "1.18.2", "1.18.3", "1.18.4" ]
+            max_in_flight: 2
         do:
           - task: vet
-            file: pleiades/ci/tasks/go-lint.yaml
+            file: pleiades/ci/tasks/mage-cmd.yaml
+            vars:
+              cmd: "build:vet"
           - task: compile
-            file: pleiades/ci/tasks/go-compile.yaml
+            file: pleiades/ci/tasks/mage-cmd.yaml
+            vars:
+              cmd: "build:compile"
           - task: test
-            file: pleiades/ci/tasks/go-test.yaml
+            file: pleiades/ci/tasks/mage-cmd.yaml
+            vars:
+              cmd: "build:test"
   - name: deploy-minio
     plan:
       - get: pleiades
@@ -67,4 +82,6 @@ jobs:
           - build
           - build-ci-image
       - task: build-binary
-        file: pleiades/ci/tasks/go-build.yaml
+        file: pleiades/ci/tasks/mage-cmd.yaml
+        vars:
+          cmd: "build:compile"
