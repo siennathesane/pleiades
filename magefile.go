@@ -34,7 +34,7 @@ func (Install) Local() error {
 
 // install the binary to a homebrew location
 func (Install) Homebrew(path string) error {
-	mg.Deps(Install.Deps, Build.Compile)
+	mg.Deps(Build.Compile)
 	fmt.Println("installing to homebrew...")
 	return os.Rename("build/pleiades", path)
 }
