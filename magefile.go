@@ -32,6 +32,13 @@ func (Install) Local() error {
 	return os.Rename("build/pleiades", "/usr/bin/pleiades")
 }
 
+// install the binary to a homebrew location
+func (Install) Homebrew(path string) error {
+	mg.Deps(Install.Deps, Build.Compile)
+	fmt.Println("installing to homebrew...")
+	return os.Rename("build/pleiades", path)
+}
+
 // install necessary tools and dependencies to develop pleiades
 func (Install) Deps() error {
 	fmt.Println("installing tools...")
@@ -64,20 +71,10 @@ func (Install) Deps() error {
 	})
 
 	mg.Deps(func() error {
-		err := os.Chdir("..")
-		if err != nil {
-			return err
-		}
-
 		fmt.Println("installing cap'n proto golang compiler cli")
-		err = sh.RunWithV(map[string]string{
-			"GO111MODULE": "off",
+		return sh.RunWithV(map[string]string{
+			//"GO111MODULE": "off",
 		}, "go", "get", "-u", "capnproto.org/go/capnp/v3")
-		if err != nil {
-			return err
-		}
-
-		return os.Chdir("pleiades")
 	})
 
 	mg.Deps(func() error {
