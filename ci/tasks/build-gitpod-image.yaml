@@ -10,6 +10,6 @@ image_resource:
     repository: concourse/oci-build-task
 params:
   CONTEXT: pleiades
-  DOCKERFILE: pleiades/dockerfiles/ci.Dockerfile
+  DOCKERFILE: pleiades/dockerfiles/gitpod.Dockerfile
 run:
   path: build

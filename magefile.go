@@ -32,10 +32,16 @@ func (Install) Local() error {
 	return os.Rename("build/pleiades", "/usr/bin/pleiades")
 }
 
-// install the binary to a homebrew location
+// install the binary to a homebrew location - only for use with homebrew
 func (Install) Homebrew(path string) error {
 	fmt.Println("installing to homebrew...")
 	return compileWithPath(path)
+}
+
+// fetch the go dependencies
+func (Install) Godeps() error {
+	fmt.Println("installing go dependencies")
+	return sh.RunWithV(nil, "go", "get", "-v", "./...")
 }
 
 // install necessary tools and dependencies to develop pleiades
@@ -74,11 +80,6 @@ func (Install) Deps() error {
 		return sh.RunWithV(map[string]string{
 			//"GO111MODULE": "off",
 		}, "go", "get", "-u", "capnproto.org/go/capnp/v3")
-	})
-
-	mg.Deps(func() error {
-		fmt.Println("getting pleiades deps")
-		return sh.RunWithV(nil, "go", "get", "-v", "./...")
 	})
 
 	return nil
@@ -199,12 +200,77 @@ func (Build) Rebuild() error {
 	return nil
 }
 
+// lint the repo
+func (Build) Vet() error {
+	fmt.Println("running linter")
+	return sh.RunWithV(nil, "go", "vet", "./...")
+}
+
+type Test mg.Namespace
+
+// run all tests
+func (Test) Cleanroom() error {
+	fmt.Println("running all tests in cleanroom environment")
+	mg.SerialDeps(Clean.Build, Clean.Cache, Install.Godeps)
+	return sh.RunWithV(nil, "go", "test", "-v", "./...")
+}
+
+// run all tests
+func (Test) All() error {
+	fmt.Println("running all tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./...")
+}
+
+// run blaze server tests
+func (Test) Blaze() error {
+	fmt.Println("running blaze tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/blaze/...")
+}
+
+// run config tests
+func (Test) Config() error {
+	fmt.Println("running config tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/conf/...")
+}
+
+// run fsm tests
+func (Test) FSM() error {
+	fmt.Println("running fsm tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/fsm/...")
+}
+
+// run routing tests
+func (Test) Routing() error {
+	fmt.Println("running routing tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/routing/...")
+}
+
+// run service tests
+func (Test) Services() error {
+	fmt.Println("running service tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/services/...")
+}
+
 type Clean mg.Namespace
 
 // clear the local build directory
+func (Clean) Build() error {
+	fmt.Println("cleaning build cache")
+	if err := sh.Rm("build"); err != nil {
+		return err
+	}
+
+	if err := sh.RunWithV(nil, "go", "clean"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// clear the package cache
 func (Clean) Cache() error {
-	fmt.Println("Cleaning...")
-	return os.RemoveAll("build")
+	fmt.Println("cleaning mod cache...")
+	return sh.RunWithV(nil, "go", "clean", "-modcache")
 }
 
 // clear all tools and dependencies
