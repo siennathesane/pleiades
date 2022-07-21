@@ -58,14 +58,17 @@ jobs:
             file: pleiades/ci/tasks/mage-cmd.yaml
             vars:
               cmd: "build:vet"
+              registry: ((registry))
           - task: compile
             file: pleiades/ci/tasks/mage-cmd.yaml
             vars:
               cmd: "build:compile"
+              registry: ((registry))
           - task: test
             file: pleiades/ci/tasks/mage-cmd.yaml
             vars:
               cmd: "build:test"
+              registry: ((registry))
   - name: deploy-minio
     plan:
       - get: pleiades
