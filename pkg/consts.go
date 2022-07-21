@@ -9,10 +9,11 @@
 
 package pkg
 
-const (
-	Version string = ""
+var (
 	Sha string = ""
 	GoVersion string = ""
+	BuildTime string = ""
+	Dirty string = ""
 )
 
 //goland:noinspection GoCommentStart

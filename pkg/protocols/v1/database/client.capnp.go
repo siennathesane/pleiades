@@ -10,7 +10,7 @@ import (
 	context "context"
 )
 
-type Client struct{ Client *capnp.Client }
+type Client struct{ Client capnp.Client }
 
 // Client_TypeID is the unique identifier for the type Client.
 const Client_TypeID = 0xc212c5427766d750
@@ -331,6 +331,15 @@ func (c Client_read) Args() Client_read_Params {
 func (c Client_read) AllocResults() (Client_read_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return Client_read_Results{Struct: r}, err
+}
+
+// Client_List is a list of Client.
+type Client_List = capnp.CapList[Client]
+
+// NewClient creates a new list of Client.
+func NewClient_List(s *capnp.Segment, sz int32) (Client_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Client](l), err
 }
 
 type Client_newSession_Params struct{ capnp.Struct }
@@ -1097,7 +1106,7 @@ func (p Session_Future) Struct() (Session, error) {
 	return Session{s}, err
 }
 
-type RequestState struct{ Client *capnp.Client }
+type RequestState struct{ Client capnp.Client }
 
 // RequestState_TypeID is the unique identifier for the type RequestState.
 const RequestState_TypeID = 0xb3cd040205e8ec8c
@@ -1183,6 +1192,15 @@ func (c RequestState_completed) Args() RequestState_completed_Params {
 func (c RequestState_completed) AllocResults() (RequestState_completed_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return RequestState_completed_Results{Struct: r}, err
+}
+
+// RequestState_List is a list of RequestState.
+type RequestState_List = capnp.CapList[RequestState]
+
+// NewRequestState creates a new list of RequestState.
+func NewRequestState_List(s *capnp.Segment, sz int32) (RequestState_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[RequestState](l), err
 }
 
 type RequestState_completed_Params struct{ capnp.Struct }
@@ -1291,7 +1309,7 @@ func (p RequestState_completed_Results_Future) Iterator() RequestResultIterator 
 	return RequestResultIterator{Client: p.Future.Field(0, nil).Client()}
 }
 
-type RequestResult struct{ Client *capnp.Client }
+type RequestResult struct{ Client capnp.Client }
 
 // RequestResult_TypeID is the unique identifier for the type RequestResult.
 const RequestResult_TypeID = 0x83bb5f78b82ac5dc
@@ -1565,6 +1583,15 @@ func (c RequestResult_timeout) Args() RequestResult_timeout_Params {
 func (c RequestResult_timeout) AllocResults() (RequestResult_timeout_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 8, PointerCount: 0})
 	return RequestResult_timeout_Results{Struct: r}, err
+}
+
+// RequestResult_List is a list of RequestResult.
+type RequestResult_List = capnp.CapList[RequestResult]
+
+// NewRequestResult creates a new list of RequestResult.
+func NewRequestResult_List(s *capnp.Segment, sz int32) (RequestResult_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[RequestResult](l), err
 }
 
 type RequestResult_completed_Params struct{ capnp.Struct }
@@ -2027,7 +2054,7 @@ func (p RequestResult_timeout_Results_Future) Struct() (RequestResult_timeout_Re
 	return RequestResult_timeout_Results{s}, err
 }
 
-type RequestResultIterator struct{ Client *capnp.Client }
+type RequestResultIterator struct{ Client capnp.Client }
 
 // RequestResultIterator_TypeID is the unique identifier for the type RequestResultIterator.
 const RequestResultIterator_TypeID = 0xba9a01628ce6fb28
@@ -2160,6 +2187,15 @@ func (c RequestResultIterator_next) Args() RequestResultIterator_next_Params {
 func (c RequestResultIterator_next) AllocResults() (RequestResultIterator_next_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 8, PointerCount: 0})
 	return RequestResultIterator_next_Results{Struct: r}, err
+}
+
+// RequestResultIterator_List is a list of RequestResultIterator.
+type RequestResultIterator_List = capnp.CapList[RequestResultIterator]
+
+// NewRequestResultIterator creates a new list of RequestResultIterator.
+func NewRequestResultIterator_List(s *capnp.Segment, sz int32) (RequestResultIterator_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[RequestResultIterator](l), err
 }
 
 type RequestResultIterator_get_Params struct{ capnp.Struct }

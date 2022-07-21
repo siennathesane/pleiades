@@ -10,7 +10,7 @@ import (
 	context "context"
 )
 
-type Service struct{ Client *capnp.Client }
+type Service struct{ Client capnp.Client }
 
 // Service_TypeID is the unique identifier for the type Service.
 const Service_TypeID = 0xed78136d1400ca3e
@@ -457,6 +457,15 @@ func (c Service_stop) AllocResults() (Service_stop_Results, error) {
 	return Service_stop_Results{Struct: r}, err
 }
 
+// Service_List is a list of Service.
+type Service_List = capnp.CapList[Service]
+
+// NewService creates a new list of Service.
+func NewService_List(s *capnp.Segment, sz int32) (Service_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Service](l), err
+}
+
 type Service_setNodeId_Params struct{ capnp.Struct }
 
 // Service_setNodeId_Params_TypeID is the unique identifier for the type Service_setNodeId_Params.
@@ -830,25 +839,25 @@ func (s Service_getDependencies_Results) String() string {
 	return str
 }
 
-func (s Service_getDependencies_Results) Dependencies() (capnp.PointerList, error) {
+func (s Service_getDependencies_Results) Dependencies() (Service_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Service_List{List: p.List()}, err
 }
 
 func (s Service_getDependencies_Results) HasDependencies() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s Service_getDependencies_Results) SetDependencies(v capnp.PointerList) error {
+func (s Service_getDependencies_Results) SetDependencies(v Service_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewDependencies sets the dependencies field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s Service_getDependencies_Results) NewDependencies(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Service_List, preferring placement in s's segment.
+func (s Service_getDependencies_Results) NewDependencies(n int32) (Service_List, error) {
+	l, err := NewService_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Service_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -1293,7 +1302,7 @@ func (p Service_stop_Results_Future) Struct() (Service_stop_Results, error) {
 	return Service_stop_Results{s}, err
 }
 
-type Node struct{ Client *capnp.Client }
+type Node struct{ Client capnp.Client }
 
 // Node_TypeID is the unique identifier for the type Node.
 const Node_TypeID = 0xe322c44e33fc17b4
@@ -1379,6 +1388,15 @@ func (c Node_id) Args() Node_id_Params {
 func (c Node_id) AllocResults() (Node_id_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 8, PointerCount: 0})
 	return Node_id_Results{Struct: r}, err
+}
+
+// Node_List is a list of Node.
+type Node_List = capnp.CapList[Node]
+
+// NewNode creates a new list of Node.
+func NewNode_List(s *capnp.Segment, sz int32) (Node_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Node](l), err
 }
 
 type Node_id_Params struct{ capnp.Struct }
@@ -1473,7 +1491,7 @@ func (p Node_id_Results_Future) Struct() (Node_id_Results, error) {
 	return Node_id_Results{s}, err
 }
 
-type Edge struct{ Client *capnp.Client }
+type Edge struct{ Client capnp.Client }
 
 // Edge_TypeID is the unique identifier for the type Edge.
 const Edge_TypeID = 0x9d51abb4c18add06
@@ -1653,6 +1671,15 @@ func (c Edge_reversedEdge) Args() Edge_reversedEdge_Params {
 func (c Edge_reversedEdge) AllocResults() (Edge_reversedEdge_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return Edge_reversedEdge_Results{Struct: r}, err
+}
+
+// Edge_List is a list of Edge.
+type Edge_List = capnp.CapList[Edge]
+
+// NewEdge creates a new list of Edge.
+func NewEdge_List(s *capnp.Segment, sz int32) (Edge_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Edge](l), err
 }
 
 type Edge_from_Params struct{ capnp.Struct }
@@ -1973,7 +2000,7 @@ func (p Edge_reversedEdge_Results_Future) Edge() Edge {
 	return Edge{Client: p.Future.Field(0, nil).Client()}
 }
 
-type Graph struct{ Client *capnp.Client }
+type Graph struct{ Client capnp.Client }
 
 // Graph_TypeID is the unique identifier for the type Graph.
 const Graph_TypeID = 0xc20098da5460c109
@@ -2249,6 +2276,15 @@ func (c Graph_edge) AllocResults() (Graph_edge_Results, error) {
 	return Graph_edge_Results{Struct: r}, err
 }
 
+// Graph_List is a list of Graph.
+type Graph_List = capnp.CapList[Graph]
+
+// NewGraph creates a new list of Graph.
+func NewGraph_List(s *capnp.Segment, sz int32) (Graph_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Graph](l), err
+}
+
 type Graph_node_Params struct{ capnp.Struct }
 
 // Graph_node_Params_TypeID is the unique identifier for the type Graph_node_Params.
@@ -2430,25 +2466,25 @@ func (s Graph_nodes_Results) String() string {
 	return str
 }
 
-func (s Graph_nodes_Results) Nodes() (capnp.PointerList, error) {
+func (s Graph_nodes_Results) Nodes() (Node_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Node_List{List: p.List()}, err
 }
 
 func (s Graph_nodes_Results) HasNodes() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s Graph_nodes_Results) SetNodes(v capnp.PointerList) error {
+func (s Graph_nodes_Results) SetNodes(v Node_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewNodes sets the nodes field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s Graph_nodes_Results) NewNodes(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Node_List, preferring placement in s's segment.
+func (s Graph_nodes_Results) NewNodes(n int32) (Node_List, error) {
+	l, err := NewNode_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Node_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -2546,25 +2582,25 @@ func (s Graph_from_Results) String() string {
 	return str
 }
 
-func (s Graph_from_Results) Nodes() (capnp.PointerList, error) {
+func (s Graph_from_Results) Nodes() (Node_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Node_List{List: p.List()}, err
 }
 
 func (s Graph_from_Results) HasNodes() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s Graph_from_Results) SetNodes(v capnp.PointerList) error {
+func (s Graph_from_Results) SetNodes(v Node_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewNodes sets the nodes field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s Graph_from_Results) NewNodes(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Node_List, preferring placement in s's segment.
+func (s Graph_from_Results) NewNodes(n int32) (Node_List, error) {
+	l, err := NewNode_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Node_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -2817,7 +2853,7 @@ func (p Graph_edge_Results_Future) Edge() Edge {
 	return Edge{Client: p.Future.Field(0, nil).Client()}
 }
 
-type DirectedGraph struct{ Client *capnp.Client }
+type DirectedGraph struct{ Client capnp.Client }
 
 // DirectedGraph_TypeID is the unique identifier for the type DirectedGraph.
 const DirectedGraph_TypeID = 0xca335475fc06b787
@@ -3102,6 +3138,15 @@ func (c DirectedGraph_to) AllocResults() (DirectedGraph_to_Results, error) {
 	return DirectedGraph_to_Results{Struct: r}, err
 }
 
+// DirectedGraph_List is a list of DirectedGraph.
+type DirectedGraph_List = capnp.CapList[DirectedGraph]
+
+// NewDirectedGraph creates a new list of DirectedGraph.
+func NewDirectedGraph_List(s *capnp.Segment, sz int32) (DirectedGraph_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[DirectedGraph](l), err
+}
+
 type DirectedGraph_hasEdgeFromTo_Params struct{ capnp.Struct }
 
 // DirectedGraph_hasEdgeFromTo_Params_TypeID is the unique identifier for the type DirectedGraph_hasEdgeFromTo_Params.
@@ -3285,25 +3330,25 @@ func (s DirectedGraph_to_Results) String() string {
 	return str
 }
 
-func (s DirectedGraph_to_Results) Nodes() (capnp.PointerList, error) {
+func (s DirectedGraph_to_Results) Nodes() (Node_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Node_List{List: p.List()}, err
 }
 
 func (s DirectedGraph_to_Results) HasNodes() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s DirectedGraph_to_Results) SetNodes(v capnp.PointerList) error {
+func (s DirectedGraph_to_Results) SetNodes(v Node_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewNodes sets the nodes field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s DirectedGraph_to_Results) NewNodes(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Node_List, preferring placement in s's segment.
+func (s DirectedGraph_to_Results) NewNodes(n int32) (Node_List, error) {
+	l, err := NewNode_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Node_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -3326,7 +3371,7 @@ func (p DirectedGraph_to_Results_Future) Struct() (DirectedGraph_to_Results, err
 	return DirectedGraph_to_Results{s}, err
 }
 
-type ServiceLibrary struct{ Client *capnp.Client }
+type ServiceLibrary struct{ Client capnp.Client }
 
 // ServiceLibrary_TypeID is the unique identifier for the type ServiceLibrary.
 const ServiceLibrary_TypeID = 0x8930b538011a6d48
@@ -3790,6 +3835,15 @@ func (c ServiceLibrary_getServiceStatuses) AllocResults() (ServiceLibrary_getSer
 	return ServiceLibrary_getServiceStatuses_Results{Struct: r}, err
 }
 
+// ServiceLibrary_List is a list of ServiceLibrary.
+type ServiceLibrary_List = capnp.CapList[ServiceLibrary]
+
+// NewServiceLibrary creates a new list of ServiceLibrary.
+func NewServiceLibrary_List(s *capnp.Segment, sz int32) (ServiceLibrary_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[ServiceLibrary](l), err
+}
+
 type ServiceLibrary_addService_Params struct{ capnp.Struct }
 
 // ServiceLibrary_addService_Params_TypeID is the unique identifier for the type ServiceLibrary_addService_Params.
@@ -3939,25 +3993,25 @@ func (s ServiceLibrary_addServices_Params) String() string {
 	return str
 }
 
-func (s ServiceLibrary_addServices_Params) Svcs() (capnp.PointerList, error) {
+func (s ServiceLibrary_addServices_Params) Svcs() (Service_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Service_List{List: p.List()}, err
 }
 
 func (s ServiceLibrary_addServices_Params) HasSvcs() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s ServiceLibrary_addServices_Params) SetSvcs(v capnp.PointerList) error {
+func (s ServiceLibrary_addServices_Params) SetSvcs(v Service_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewSvcs sets the svcs field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s ServiceLibrary_addServices_Params) NewSvcs(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Service_List, preferring placement in s's segment.
+func (s ServiceLibrary_addServices_Params) NewSvcs(n int32) (Service_List, error) {
+	l, err := NewService_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Service_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -4211,25 +4265,25 @@ func (s ServiceLibrary_getServices_Params) String() string {
 	return str
 }
 
-func (s ServiceLibrary_getServices_Params) Svcs() (capnp.PointerList, error) {
+func (s ServiceLibrary_getServices_Params) Svcs() (Service_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Service_List{List: p.List()}, err
 }
 
 func (s ServiceLibrary_getServices_Params) HasSvcs() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s ServiceLibrary_getServices_Params) SetSvcs(v capnp.PointerList) error {
+func (s ServiceLibrary_getServices_Params) SetSvcs(v Service_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewSvcs sets the svcs field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s ServiceLibrary_getServices_Params) NewSvcs(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Service_List, preferring placement in s's segment.
+func (s ServiceLibrary_getServices_Params) NewSvcs(n int32) (Service_List, error) {
+	l, err := NewService_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Service_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -4277,25 +4331,25 @@ func (s ServiceLibrary_getServices_Results) String() string {
 	return str
 }
 
-func (s ServiceLibrary_getServices_Results) Svcs() (capnp.PointerList, error) {
+func (s ServiceLibrary_getServices_Results) Svcs() (Service_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Service_List{List: p.List()}, err
 }
 
 func (s ServiceLibrary_getServices_Results) HasSvcs() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s ServiceLibrary_getServices_Results) SetSvcs(v capnp.PointerList) error {
+func (s ServiceLibrary_getServices_Results) SetSvcs(v Service_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewSvcs sets the svcs field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s ServiceLibrary_getServices_Results) NewSvcs(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Service_List, preferring placement in s's segment.
+func (s ServiceLibrary_getServices_Results) NewSvcs(n int32) (Service_List, error) {
+	l, err := NewService_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Service_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -4649,25 +4703,25 @@ func (s ServiceLibrary_stopServices_Params) SetForce(v bool) {
 	s.Struct.SetBit(1, v)
 }
 
-func (s ServiceLibrary_stopServices_Params) Svcs() (capnp.PointerList, error) {
+func (s ServiceLibrary_stopServices_Params) Svcs() (Service_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return Service_List{List: p.List()}, err
 }
 
 func (s ServiceLibrary_stopServices_Params) HasSvcs() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s ServiceLibrary_stopServices_Params) SetSvcs(v capnp.PointerList) error {
+func (s ServiceLibrary_stopServices_Params) SetSvcs(v Service_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewSvcs sets the svcs field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s ServiceLibrary_stopServices_Params) NewSvcs(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated Service_List, preferring placement in s's segment.
+func (s ServiceLibrary_stopServices_Params) NewSvcs(n int32) (Service_List, error) {
+	l, err := NewService_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return Service_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -4899,25 +4953,25 @@ func (s ServiceLibrary_getServiceStatuses_Params) String() string {
 	return str
 }
 
-func (s ServiceLibrary_getServiceStatuses_Params) Svcs() (capnp.PointerList, error) {
+func (s ServiceLibrary_getServiceStatuses_Params) Svcs() (ServiceStatus_List, error) {
 	p, err := s.Struct.Ptr(0)
-	return capnp.PointerList{List: p.List()}, err
+	return ServiceStatus_List{List: p.List()}, err
 }
 
 func (s ServiceLibrary_getServiceStatuses_Params) HasSvcs() bool {
 	return s.Struct.HasPtr(0)
 }
 
-func (s ServiceLibrary_getServiceStatuses_Params) SetSvcs(v capnp.PointerList) error {
+func (s ServiceLibrary_getServiceStatuses_Params) SetSvcs(v ServiceStatus_List) error {
 	return s.Struct.SetPtr(0, v.List.ToPtr())
 }
 
 // NewSvcs sets the svcs field to a newly
-// allocated capnp.PointerList, preferring placement in s's segment.
-func (s ServiceLibrary_getServiceStatuses_Params) NewSvcs(n int32) (capnp.PointerList, error) {
-	l, err := capnp.NewPointerList(s.Struct.Segment(), n)
+// allocated ServiceStatus_List, preferring placement in s's segment.
+func (s ServiceLibrary_getServiceStatuses_Params) NewSvcs(n int32) (ServiceStatus_List, error) {
+	l, err := NewServiceStatus_List(s.Struct.Segment(), n)
 	if err != nil {
-		return capnp.PointerList{}, err
+		return ServiceStatus_List{}, err
 	}
 	err = s.Struct.SetPtr(0, l.List.ToPtr())
 	return l, err
@@ -5000,7 +5054,7 @@ func (p ServiceLibrary_getServiceStatuses_Results_Future) Struct() (ServiceLibra
 	return ServiceLibrary_getServiceStatuses_Results{s}, err
 }
 
-type ServiceStatus struct{ Client *capnp.Client }
+type ServiceStatus struct{ Client capnp.Client }
 
 // ServiceStatus_TypeID is the unique identifier for the type ServiceStatus.
 const ServiceStatus_TypeID = 0xfe5ad4396565b592
@@ -5086,6 +5140,15 @@ func (c ServiceStatus_status) Args() ServiceStatus_status_Params {
 func (c ServiceStatus_status) AllocResults() (ServiceStatus_status_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 8, PointerCount: 0})
 	return ServiceStatus_status_Results{Struct: r}, err
+}
+
+// ServiceStatus_List is a list of ServiceStatus.
+type ServiceStatus_List = capnp.CapList[ServiceStatus]
+
+// NewServiceStatus creates a new list of ServiceStatus.
+func NewServiceStatus_List(s *capnp.Segment, sz int32) (ServiceStatus_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[ServiceStatus](l), err
 }
 
 type ServiceStatus_SvcState uint16

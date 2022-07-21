@@ -10,7 +10,7 @@ import (
 	context "context"
 )
 
-type Negotiator struct{ Client *capnp.Client }
+type Negotiator struct{ Client capnp.Client }
 
 // Negotiator_TypeID is the unique identifier for the type Negotiator.
 const Negotiator_TypeID = 0xe35a52b4e5c60a15
@@ -96,6 +96,15 @@ func (c Negotiator_configService) Args() Negotiator_configService_Params {
 func (c Negotiator_configService) AllocResults() (Negotiator_configService_Results, error) {
 	r, err := c.Call.AllocResults(capnp.ObjectSize{DataSize: 0, PointerCount: 1})
 	return Negotiator_configService_Results{Struct: r}, err
+}
+
+// Negotiator_List is a list of Negotiator.
+type Negotiator_List = capnp.CapList[Negotiator]
+
+// NewNegotiator creates a new list of Negotiator.
+func NewNegotiator_List(s *capnp.Segment, sz int32) (Negotiator_List, error) {
+	l, err := capnp.NewPointerList(s, sz)
+	return capnp.CapList[Negotiator](l), err
 }
 
 type Negotiator_configService_Params struct{ capnp.Struct }
