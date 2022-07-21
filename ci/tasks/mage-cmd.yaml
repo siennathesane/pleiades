@@ -8,8 +8,8 @@ outputs:
 image_resource:
   repository: registry.gitlab.com/anthropos-labs/pleiades/ci
   tag: latest
-  username: ((registry.username))
-  password: ((registry.password))
+  username: ((username))
+  password: ((password))
 params:
   MAGE_COMMAND: ((cmd))
 run:
