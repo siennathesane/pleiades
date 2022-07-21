@@ -34,9 +34,8 @@ func (Install) Local() error {
 
 // install the binary to a homebrew location
 func (Install) Homebrew(path string) error {
-	mg.Deps(Build.Compile)
 	fmt.Println("installing to homebrew...")
-	return os.Rename("build/pleiades", path)
+	return compileWithPath(path)
 }
 
 // install necessary tools and dependencies to develop pleiades
@@ -79,7 +78,7 @@ func (Install) Deps() error {
 
 	mg.Deps(func() error {
 		fmt.Println("getting pleiades deps")
-		return sh.RunWithV(nil, "go", "get", "-u", "./...")
+		return sh.RunWithV(nil, "go", "get", "-v", "./...")
 	})
 
 	return nil
@@ -90,7 +89,12 @@ type Build mg.Namespace
 // compile pleiades with the local build information
 func (Build) Compile() error {
 	fmt.Println("compiling...")
-	return sh.RunWithV(nil, "go", "build", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", "build/pleiades", "./main.go")
+	return compileWithPath("build/pleiades")
+}
+
+// compile pleiades with the local build information
+func compileWithPath(path string) error {
+	return sh.RunWithV(nil, "go", "build", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", path, "./main.go")
 }
 
 func ldflags() string {
