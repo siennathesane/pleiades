@@ -1,0 +1,36 @@
+resources:
+  - name: pleiades
+    type: git
+    icon: gitlab
+    source:
+      uri: git@gitlab.com:anthropos-labs/pleiades.git
+      private_key: ((git.private_key))
+      branch: mainline
+      paths:
+        - ci/
+        - magefiles/
+        - ref-configs/
+  - name: minio
+    type: registry-image
+    icon: docker
+    source:
+      repository: quay.io/minio/minio
+      tag: latest
+
+jobs:
+  - name: set-pipeline
+    plan:
+      - get: pleiades
+        trigger: true
+      - set_pipeline: self
+        file: pleiades/ci/pipelines/pleiades.yaml
+  - name: deploy-minio
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - set-pipeline
+      - get: minio
+        trigger: true
+      - task: deploy
+        file: pleiades/ci/tasks/deploy-minio.yaml
