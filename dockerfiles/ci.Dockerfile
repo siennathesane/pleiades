@@ -5,5 +5,6 @@ RUN brew install \
     helm \
     jq \
     kubectl \
+    mage \
     minio-mc \
     vim
