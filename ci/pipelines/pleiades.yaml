@@ -6,6 +6,12 @@ resources:
       uri: git@gitlab.com:anthropos-labs/pleiades.git
       private_key: ((git.private_key))
       branch: mainline
+      ignore_paths:
+        - ci/
+        - build/
+        - magefiles/
+        - dockerfiles/
+        - ref-configs/
 
 jobs:
   - name: set-pipeline
