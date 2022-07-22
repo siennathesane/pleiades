@@ -10,12 +10,12 @@ image_resource:
     username: ((registry.username))
     password: ((registry.password))
 params:
-  KUBE_CONFIG: ((minio.kube-host))
-  NAMESPACE: ((minio.namespace))
-  CHART_NAME: ((minio.helm-chart-name))
-  ROOT_USER: ((minio.root-user))
-  ROOT_PASSWORD: ((minio.root-password))
-  BINARIES_BUCKET: ((minio.binaries-bucket))
+  KUBE_CONFIG: ((config.kube-config))
+  NAMESPACE: ((config.namespace))
+  CHART_NAME: ((config.helm-chart-name))
+  ROOT_USER: ((config.root-user))
+  ROOT_PASSWORD: ((config.root-password))
+  BINARIES_BUCKET: ((config.binaries-bucket))
 run:
   path: ci/scripts/deploy-minio.sh
   dir: pleiades
