@@ -22,6 +22,8 @@ jobs:
     plan:
       - get: pleiades
         trigger: true
+      - get: minio
+        trigger: true
       - set_pipeline: self
         file: pleiades/ci/pipelines/pleiades.yaml
   - name: deploy-minio
@@ -30,7 +32,5 @@ jobs:
         trigger: true
         passed:
           - set-pipeline
-      - get: minio
-        trigger: true
       - task: deploy
         file: pleiades/ci/tasks/deploy-minio.yaml
