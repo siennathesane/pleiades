@@ -19,6 +19,8 @@ import (
 var (
 	homebrewTargets = []string{
 		"capnp",
+		"vault",
+		"yq",
 	}
 )
 
