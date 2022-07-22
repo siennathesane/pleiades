@@ -12,6 +12,19 @@ spec:
     kind: ClusterIssuer
     group: cert-manager.io
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: s3-console
+spec:
+  secretName: s3-console-tls
+  dnsNames:
+    - console.s3.r3t.io
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
@@ -31,9 +44,20 @@ spec:
   tls:
     - hosts:
         - s3.r3t.io
+        - console.s3.r3t.io
       secretName: s3-tls
   rules:
     - host: s3.r3t.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: s3-minio
+                port:
+                  number: 9000
+    - host: console.s3.r3t.io
       http:
         paths:
           - path: /
