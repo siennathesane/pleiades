@@ -22,7 +22,7 @@ jobs:
       - get: pleiades
         trigger: true
       - set_pipeline: self
-        file: pleiades/ci/pipelines.yaml
+        file: pleiades/ci/pipelines/images.yaml
   - name: build-ci-image
     serial: true
     plan:
