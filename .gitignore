@@ -2,6 +2,6 @@
 .idea/usage.statistics.xml
 .idea/shelf/
 **/tmp
-pleiades*
-**vars.yaml
+ci/vars/**.yaml
+ci/vars/**.sh
 build/
