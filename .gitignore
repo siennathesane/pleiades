@@ -1,7 +1,9 @@
-.idea/workspace.xml
-.idea/usage.statistics.xml
 .idea/shelf/
+.idea/usage.statistics.xml
+.idea/workspace.xml
 **/tmp
-ci/vars/**.yaml
-ci/vars/**.sh
+bin/
 build/
+ci/vars/**.sh
+ci/vars/**.yaml
+vendor/

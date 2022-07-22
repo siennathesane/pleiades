@@ -1,8 +1,10 @@
 //go:build mage
+
 package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 	"strconv"
@@ -15,6 +17,10 @@ import (
 )
 
 type Build mg.Namespace
+
+func (Build) Setup() {
+	mg.Deps(Install.Godeps)
+}
 
 // compile pleiades with the local build information
 func (Build) Compile() error {
@@ -133,4 +139,14 @@ func (Build) Rebuild() error {
 func (Build) Vet() error {
 	fmt.Println("running linter")
 	return sh.RunWithV(nil, "go", "vet", "./...")
+}
+
+func verifyVendor() error {
+	_, err := os.Stat(vendorDir)
+	if os.IsNotExist(err) {
+		fmt.Printf("%s does not exist, creating", vendorDir)
+		sh.RunWithV(nil, "vend")
+	}
+
+	return err
 }

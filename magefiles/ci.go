@@ -3,13 +3,17 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
+	"text/template"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -19,18 +23,20 @@ import (
 
 const (
 	concourseTargetUrl = "https://ci.a13s.io"
+	concourseTarget = "-tp"
 	acrossStepFlag     = "--enable-across-step"
 
 	renderVarsShTemplate = `#!/bin/sh
 set -e
-for key in $(vault kv list -format=json concourse/main/%s | jq -r '.[]'); do
+[ -e {{ .Filename }}.yaml ] && rm -- {{ .Filename }}.yaml
+for key in $(vault kv list -format=json concourse/main/{{ .Pipeline }} | jq -r '.[]'); do
 	echo "rendering ${key}"
-	vault kv get -format=yaml concourse/main/%s/"${key}" | KEY=$key yq '{env(KEY): .data.data}' >> %s.yaml
+	vault kv get -format=yaml concourse/main/{{ .Pipeline }}/"${key}" | KEY=$key yq '{env(KEY): .data.data}' >> {{ .Filename }}.yaml
 done`
 )
 
 var (
-	knownPipelines = []string{"images", "pleiades"}
+	knownPipelines = []string{"images", "pleiades", "minio"}
 )
 
 type CI mg.Namespace
@@ -66,8 +72,6 @@ func (CI) Validate(pipelineName string) error {
 		return fmt.Errorf("pipeline %s isn't supported in the build system", pipelineName)
 	}
 
-	mg.Deps(CI.Rendervars)
-
 	return validatePipeline(pipelineName)
 }
 
@@ -83,20 +87,7 @@ func (CI) Rendervars() error {
 	}
 
 	for idx := range knownPipelines {
-		targetPipeline := knownPipelines[idx]
-		renderScriptLocation := fmt.Sprintf("ci/vars/render-%s-vars.sh", targetPipeline)
-		renderedVarsLocation := fmt.Sprintf("ci/vars/%s", targetPipeline)
-		renderedScript := fmt.Sprintf(renderVarsShTemplate, targetPipeline, targetPipeline, renderedVarsLocation)
-
-		fmt.Printf("rendering variables for %s pipeline\n", targetPipeline)
-
-		err := ioutil.WriteFile(renderScriptLocation, []byte(renderedScript), 0677)
-		if err != nil {
-			return fmt.Errorf("error while working on %s pipeline vars", targetPipeline)
-		}
-
-		err = sh.RunWithV(nil, "/bin/sh", renderScriptLocation)
-		if err != nil {
+		if err := renderPipelineVars(knownPipelines[idx]); err != nil {
 			return err
 		}
 	}
@@ -104,11 +95,102 @@ func (CI) Rendervars() error {
 	return nil
 }
 
+// run a oneoff pipeline task. $1 is the task name (not the filename) and $2 is any extra inputs in "key=value,key2=value2" format ("pleiades=." is included by default)
+func (CI) Run(taskName string, extraInputs string) error {
+	pleiadesInput := fmt.Sprintf("pleiades=.")
+	otherInputs := strings.Split(extraInputs, ",")
+
+	// make the task inputs
+	inputs := make([]string, 0)
+	inputs = append(inputs, "-i", pleiadesInput)
+	for idx := range otherInputs {
+		inputs = append(inputs, "-i", otherInputs[idx])
+	}
+
+	taskName = fmt.Sprintf("ci/tasks/%s.yaml", taskName)
+
+	// clear out the all.yaml file, just in case
+	allVarsLocation := "ci/vars/all.yaml"
+	if err := sh.Rm(allVarsLocation); err != nil {
+		return err
+	}
+
+	// render the vars into a single vars file
+	files, err := filepath.Glob("ci/vars/*.yaml")
+	if err != nil {
+		return err
+	}
+	yqArgs := make([]string, 0)
+	yqArgs = append(yqArgs, "ea", `. as $item ireduce ({}; . * $item )`)
+	yqArgs = append(yqArgs, files...)
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	cmd := exec.Command("yq", yqArgs...)
+	cmd.Stderr = &stderr
+	cmd.Stdout = &stdout
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("error when running yq command: %s", stderr.String())
+	}
+
+	if err := ioutil.WriteFile(allVarsLocation, stdout.Bytes(), 0644); err != nil {
+		return err
+	}
+
+	args := make([]string, 0)
+	args = append(args, concourseTarget, "execute", "-c", taskName, "-l", allVarsLocation)
+
+	return sh.RunWithV(nil, "fly", args...)
+}
+
+func renderPipelineVars(targetPipeline string) error {
+	renderScriptLocation := fmt.Sprintf("ci/vars/render-%s-vars.sh", targetPipeline)
+	renderedVarsLocation := fmt.Sprintf("ci/vars/%s", targetPipeline)
+
+	renderData := struct{
+		Filename string
+		Pipeline string
+	}{
+		Filename: renderedVarsLocation,
+		Pipeline: targetPipeline,
+	}
+
+	tmpl := template.New("rendered")
+	tmpl, err := tmpl.Parse(renderVarsShTemplate)
+	if err != nil {
+		return err
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, renderData); err != nil {
+		return err
+	}
+
+	fmt.Printf("rendering variables for %s pipeline\n", targetPipeline)
+
+	err = ioutil.WriteFile(renderScriptLocation, buf.Bytes(), 0677)
+	if err != nil {
+		return fmt.Errorf("error while working on %s pipeline vars", targetPipeline)
+	}
+	defer sh.Rm(renderScriptLocation)
+
+	err = sh.RunWithV(nil, "/bin/sh", renderScriptLocation)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func validatePipeline(pipeline string) error {
+	renderPipelineVars(pipeline)
+
 	imagesPipelineFile := fmt.Sprintf("ci/pipelines/%s.yaml", pipeline)
 	varsFile := fmt.Sprintf("ci/vars/%s.yaml", pipeline)
 
-	return sh.RunWithV(nil, "fly", "-tp", "validate-pipeline", "-c", imagesPipelineFile, "-l", varsFile, acrossStepFlag)
+	return sh.RunWithV(nil, "fly", concourseTarget, "validate-pipeline", "-c", imagesPipelineFile, "-l", varsFile, acrossStepFlag)
 }
 
 type concourseVersionInfo struct {
@@ -130,6 +212,7 @@ func installConcourseCli() error {
 	_, err := os.Stat("build/fly")
 	if !os.IsNotExist(err) {
 		fmt.Println("the cli exists, skipping source build")
+		fmt.Println("delete build/fly if there's something wrong with the binary")
 		return nil
 	}
 
@@ -213,7 +296,7 @@ func installConcourseCli() error {
 
 func concourseLogin() error {
 	fmt.Println("logging into concourse")
-	err := sh.RunWithV(nil, "fly", "-tp", "login", "-c", concourseTargetUrl)
+	err := sh.RunWithV(nil, "fly", concourseTarget, "login", "-c", concourseTargetUrl)
 	if err != nil {
 		return err
 	}

@@ -21,7 +21,7 @@ type Install mg.Namespace
 
 // install pleiades to your local directory
 func (Install) Local() error {
-	mg.Deps(Install.Deps, Build.Compile)
+	mg.Deps(Install.Tools, Build.Compile)
 	fmt.Println("installing...")
 	return os.Rename("build/pleiades", "/usr/bin/pleiades")
 }
@@ -35,11 +35,16 @@ func (Install) Homebrew(path string) error {
 // fetch the go dependencies
 func (Install) Godeps() error {
 	fmt.Println("installing go dependencies")
-	return sh.RunWithV(nil, "go", "get", "-v", "./...")
+	err := sh.RunWithV(nil, "go", "get", "-v", "./...")
+	if err != nil {
+		return err
+	}
+
+	return verifyVendor()
 }
 
 // install necessary tools and dependencies to develop pleiades
-func (Install) Deps() error {
+func (Install) Tools() error {
 	fmt.Println("installing tools...")
 
 	// each of these should be their own dep :shrug:
@@ -60,20 +65,10 @@ func (Install) Deps() error {
 	})
 
 	mg.Deps(func() error {
-		fmt.Println("installing capn' proto compiler")
-		return sh.RunWithV(nil, "brew", "install", "capnp")
-	})
-
-	mg.Deps(func() error {
-		fmt.Println("installing capn' proto go compiler plugin")
-		return sh.RunWithV(nil, "go", "install", "capnproto.org/go/capnp/v3/capnpc-go@latest")
-	})
-
-	mg.Deps(func() error {
-		fmt.Println("installing cap'n proto golang compiler cli")
-		return sh.RunWithV(map[string]string{
-			//"GO111MODULE": "off",
-		}, "go", "get", "-u", "capnproto.org/go/capnp/v3")
+		if err := sh.RunWithV(nil, "go", "install", "github.com/nomad-software/vend@latest"); err != nil {
+			return err
+		}
+		return nil
 	})
 
 	return nil
