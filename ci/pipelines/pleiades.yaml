@@ -13,7 +13,7 @@ jobs:
       - get: pleiades
         trigger: true
       - set_pipeline: self
-        file: pleiades/ci/pipelines.yaml
+        file: pleiades/ci/pipelines/pleiades.yaml
   - name: build
     plan:
       - get: pleiades
@@ -57,7 +57,6 @@ jobs:
         trigger: true
         passed:
           - build
-          - build-ci-image
       - task: build-binary
         file: pleiades/ci/tasks/mage-cmd.yaml
         vars:
