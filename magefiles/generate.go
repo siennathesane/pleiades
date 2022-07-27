@@ -44,6 +44,8 @@ var (
 		"--ts_opt=outputServices=default,outputServices=generic-definitions",
 		"--ts_opt=useDate=true",
 		"--ts_opt=useAsyncIterable=true",
+		"--ts_opt=fileSuffix=.pb",
+		"--ts_opt=iportSuffix=.js",
 		"--go_opt=paths=source_relative",
 		"--go_out=.",
 		"--go-starpc_out=.",
