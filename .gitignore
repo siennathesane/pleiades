@@ -1,9 +1,12 @@
+**/tmp
 .idea/shelf/
 .idea/usage.statistics.xml
 .idea/workspace.xml
-**/tmp
 bin/
 build/
 ci/vars/**.sh
 ci/vars/**.yaml
+node_modules/
+package-lock.json
+**.tgz
 vendor/
