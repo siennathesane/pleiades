@@ -1,0 +1,38 @@
+syntax = "proto3";
+package database;
+
+// this is relative to the root of the repo
+import "api/v1/database/kv.proto";
+
+option go_package = "./database";
+
+message Session {
+  uint64 cluster_id = 1;
+  uint64 client_id = 2;
+  uint64 session_id = 3;
+  uint64 responded_to = 4;
+}
+
+message NewSessionRequest {
+  uint64 cluster_id = 1;
+  uint64 client_id = 2;
+}
+
+message NewSessionResponse {
+  uint64 session_id = 1;
+}
+
+message ProposeRequest {
+  Session session = 1;
+  KeyValue command = 2;
+}
+
+message ProposeResponse {
+  uint64 command_id = 1;
+}
+
+service Database {
+  rpc NewSession(NewSessionRequest) returns (NewSessionResponse);
+  rpc CloseSession(Session) returns (Session);
+  rpc Propose(ProposeRequest) returns (ProposeResponse);
+}
