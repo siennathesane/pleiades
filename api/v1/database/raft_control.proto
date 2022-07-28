@@ -1,0 +1,120 @@
+syntax = "proto3";
+package database;
+
+// this is relative to the root of the repo
+import "api/v1/database/kv.proto";
+
+option go_package = "./database";
+
+// RaftControlService represents the Raft control plane for a given host
+service RaftControlService {
+  rpc GetLeaderID(GetLeaderIDRequest) returns (GetLeaderIDResponse);
+  rpc GetID(IdRequest) returns (IdResponse);
+  rpc ReadIndex(ReadIndexRequest) returns (stream IndexState);
+  rpc ReadLocalNode(ReadLocalNodeRequest) returns (KeyValue);
+  rpc AddNode(ModifyNodeRequest) returns (stream IndexState);
+  rpc AddObserver(ModifyNodeRequest) returns (stream IndexState);
+  rpc AddWitness(ModifyNodeRequest) returns (stream IndexState);
+  rpc RequestCompaction(ModifyNodeRequest) returns (SysOpState);
+  rpc RequestDeleteNode(ModifyNodeRequest) returns (stream IndexState);
+  rpc RequestLeaderTransfer(ModifyNodeRequest) returns (RequestLeaderTransferResponse);
+  rpc RequestSnapshot(RequestSnapshotRequest) returns (stream IndexState);
+  rpc Stop(StopRequest) returns (StopResponse);
+  rpc StopNode(ModifyNodeRequest) returns (StopNodeResponse);
+}
+
+message StopNodeResponse {}
+
+message StopRequest {}
+
+message StopResponse {}
+
+message RequestSnapshotRequest {
+  uint64 clusterId = 1;
+  SnapshotOption options = 2;
+  int64 timeout = 3;
+}
+
+// SnapshotOption is the options users can specify when requesting a snapshot
+// to be generated.
+message SnapshotOption {
+  // CompactionOverhead is the compaction overhead value to use for the request
+  // snapshot operation when OverrideCompactionOverhead is true. This field is
+  // ignored when exporting a snapshot, that is when Exported is true.
+  uint64 CompactionOverhead = 1;
+  // ExportPath is the path where the exported snapshot should be stored, it
+  // must point to an existing directory for which the current user has write
+  // permission to it.
+  string ExportPath = 2;
+  // Exported is a boolean flag indicating whether the snapshot requested to
+  // be generated should be exported. For an exported snapshot, it is users'
+  // responsibility to manage the snapshot files. By default, a requested
+  // snapshot is not considered as exported, such a regular snapshot is managed
+  // the system.
+  bool Exported = 3;
+  // OverrideCompactionOverhead defines whether the requested snapshot operation
+  // should override the compaction overhead setting specified in node's config.
+  // This field is ignored by the system when exporting a snapshot.
+  bool OverrideCompactionOverhead = 4;
+}
+
+// RequestLeaderTransferResponse is the response to a NodeHostService.RequestLeaderTransfer call
+message RequestLeaderTransferResponse {}
+
+// SysOpState is the object used to provide system maintenance operation result
+// to users.
+message SysOpState {}
+
+// ModifyNodeRequest is the object used to modify the node's configuration. All fields are optional and not all methods require all fields to be set.
+message ModifyNodeRequest {
+  optional uint64 clusterId = 1;
+  optional uint64 nodeId = 2;
+  optional string target = 3;
+  optional uint64 configChangeIndex = 4;
+  optional int64 timeout = 5;
+  optional bool synchronous = 6;
+}
+
+message ReadLocalNodeRequest {
+  KeyValue query = 1;
+}
+
+message ReadIndexRequest {
+  uint64 clusterId = 1;
+  int64 timeout = 2;
+}
+
+message IndexState {
+  enum ResultCode {
+    Timeout = 0;
+    Completed = 1;
+    Terminated = 2;
+    Rejected = 3;
+    Dropped = 4;
+    Aborted = 5;
+    Committed = 6;
+  }
+  ResultCode Status = 1;
+  uint64 SnapshotIndex = 2;
+  optional Result Results = 3;
+}
+
+message Result  {
+  uint64 Value = 1;
+  bytes Data = 2;
+}
+
+message IdRequest {}
+
+message IdResponse {
+  string id = 1;
+}
+
+message GetLeaderIDRequest {
+  uint64 clusterId = 1;
+}
+
+message GetLeaderIDResponse {
+  uint64 leaderId = 1;
+  bool isLeader = 2;
+}

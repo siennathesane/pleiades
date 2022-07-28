@@ -3,8 +3,20 @@ package database;
 
 // this is relative to the root of the repo
 import "api/v1/database/kv.proto";
+import "api/v1/database/raft_control.proto";
 
 option go_package = "./database";
+
+service SessionService {
+  rpc NewSession(NewSessionRequest) returns (NewSessionResponse);
+  rpc CloseSession(Session) returns (Session);
+  rpc ProposeSession(ProposeSessionRequest) returns (stream IndexState);
+}
+
+message ProposeSessionRequest {
+  Session session = 1;
+  int64 timeout = 2;
+}
 
 message Session {
   uint64 cluster_id = 1;
@@ -29,10 +41,4 @@ message ProposeRequest {
 
 message ProposeResponse {
   uint64 command_id = 1;
-}
-
-service Database {
-  rpc NewSession(NewSessionRequest) returns (NewSessionResponse);
-  rpc CloseSession(Session) returns (Session);
-  rpc Propose(ProposeRequest) returns (ProposeResponse);
 }

@@ -1,8 +1,35 @@
 // package: database
-// file: api/v1/database/client.proto
+// file: api/v1/database/session.proto
 
 import * as jspb from "google-protobuf";
 import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
+import * as api_v1_database_raft_control_pb from "../../../api/v1/database/raft_control_pb";
+
+export class ProposeSessionRequest extends jspb.Message {
+  hasSession(): boolean;
+  clearSession(): void;
+  getSession(): Session | undefined;
+  setSession(value?: Session): void;
+
+  getTimeout(): number;
+  setTimeout(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ProposeSessionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ProposeSessionRequest): ProposeSessionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: ProposeSessionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ProposeSessionRequest;
+  static deserializeBinaryFromReader(message: ProposeSessionRequest, reader: jspb.BinaryReader): ProposeSessionRequest;
+}
+
+export namespace ProposeSessionRequest {
+  export type AsObject = {
+    session?: Session.AsObject,
+    timeout: number,
+  }
+}
 
 export class Session extends jspb.Message {
   getClusterId(): number;
