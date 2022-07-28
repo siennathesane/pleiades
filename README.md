@@ -1,3 +1,3 @@
 # Pleiades
 
-Pleiades is a Platform Operating System.
+Pleiades is a globally distributed database developed by Sienna Lloyd. 
