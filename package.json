@@ -1,27 +1,24 @@
 {
-  "name": "pleiades",
-  "version": "22.7.0",
-  "description": "Pleiades is a Platform Operating System.",
-  "main": "index.js",
+  "name": "@anthropos-labs/api",
+  "version": "22.7.1",
+  "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/anthropos-labs/pleiades.git"
-  },
-  "author": "",
+  "author": "Anthrophos Labs",
   "license": "PolyForm Strict License 1.0.0",
   "bugs": {
     "url": "https://gitlab.com/anthropos-labs/pleiades/issues"
   },
-  "homepage": "https://gitlab.com/anthropos-labs/pleiades#readme",
+  "homepage": "https://anthroposlabs.com",
   "dependencies": {
+    "@grpc/grpc-js": "^1.6.8",
     "google-protobuf": "^3.20.1",
     "ts-protoc-gen": "^0.15.0"
   },
   "files": [
     "api/v1/database/*.ts",
-    "api/v1/database/*.js"
+    "api/v1/database/*.js",
+    "api/v1/database/*.proto"
   ]
 }
