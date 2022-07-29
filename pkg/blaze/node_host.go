@@ -47,7 +47,7 @@ func NewNode(conf dconfig.NodeHostConfig, logger zerolog.Logger) (*Node, error) 
 // NewOrGetClusterManager creates a new ICluster instance or gets the existing one.
 func (n *Node) NewOrGetClusterManager() (ICluster, error) {
 	err, ok := n.verifyStarted()
-	if !ok {
+	if !ok || err != nil {
 		return nil, err
 	}
 
@@ -60,7 +60,7 @@ func (n *Node) NewOrGetClusterManager() (ICluster, error) {
 // NewOrGetSessionManager creates a new ISession instance or gets the existing one.
 func (n *Node) NewOrGetSessionManager() (ISession, error) {
 	err, ok := n.verifyStarted()
-	if !ok {
+	if !ok || err != nil {
 		return nil, err
 	}
 
@@ -73,7 +73,7 @@ func (n *Node) NewOrGetSessionManager() (ISession, error) {
 // NewOrGetStoreManager creates a new IStore instance or gets the existing one.
 func (n *Node) NewOrGetStoreManager() (IStore, error) {
 	err, ok := n.verifyStarted()
-	if !ok {
+	if !ok || err != nil {
 		return nil, err
 	}
 
@@ -84,74 +84,162 @@ func (n *Node) NewOrGetStoreManager() (IStore, error) {
 }
 
 func (n *Node) GetLeaderID(clusterID uint64) (uint64, bool, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return 0, false, err
+	}
+
 	return n.nh.GetLeaderID(clusterID)
 }
 
 func (n *Node) GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.GetNodeUser(clusterID)
 }
 
 func (n *Node) ID() string {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return err.Error()
+	}
+
 	return n.nh.ID()
 }
 
 func (n *Node) NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.NAReadLocalNode(rs, query)
 }
 
 func (n *Node) RaftAddress() string {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return err.Error()
+	}
+
 	return n.nh.RaftAddress()
 }
 
 func (n *Node) ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.ReadIndex(clusterID, timeout)
 }
 
 func (n *Node) ReadLocalNode(rs *dragonboat.RequestState, query interface{}) (interface{}, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.ReadLocalNode(rs, query)
 }
 
 func (n *Node) RemoveData(clusterID uint64, nodeID uint64) error {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return err
+	}
+
 	return n.nh.RemoveData(clusterID, nodeID)
 }
 
 func (n *Node) RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestAddNode(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
 func (n *Node) RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestAddObserver(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
 func (n *Node) RequestAddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestAddWitness(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
 func (n *Node) RequestCompaction(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestCompaction(clusterID, nodeID)
 }
 
 func (n *Node) RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestDeleteNode(clusterID, nodeID, configChangeIndex, timeout)
 }
 
 func (n *Node) RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return err
+	}
+
 	return n.nh.RequestLeaderTransfer(clusterID, targetNodeID)
 }
 
 func (n *Node) RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.RequestSnapshot(clusterID, opt, timeout)
 }
 
 func (n *Node) StaleRead(clusterID uint64, query interface{}) (interface{}, error) {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return nil, err
+	}
+
 	return n.nh.StaleRead(clusterID, query)
 }
 
 func (n *Node) Stop() {
+	if !n.started {
+		return
+	}
 	n.nh.Stop()
 }
 
 func (n *Node) StopNode(clusterID uint64, nodeID uint64) error {
+	err, ok := n.verifyStarted()
+	if !ok || err != nil {
+		return err
+	}
+
 	return n.nh.StopNode(clusterID, nodeID)
 }
 
