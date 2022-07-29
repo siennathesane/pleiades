@@ -8,7 +8,9 @@ option go_package = "./database";
 
 // RaftControlService represents the Raft control plane for a given host
 service RaftControlService {
+  // GetLeaderID returns the leader node ID of the specified Raft cluster based on local node's knowledge.
   rpc GetLeaderID(GetLeaderIDRequest) returns (GetLeaderIDResponse);
+  // ID returns the string representation of the NodeHost ID value. The NodeHost ID is assigned to each NodeHost on its initial creation and it can be used to uniquely identify the NodeHost instance for its entire life cycle. When the system is running in the AddressByNodeHost mode, it is used as the target value when calling the StartCluster, RequestAddNode, RequestAddObserver, RequestAddWitness methods.
   rpc GetID(IdRequest) returns (IdResponse);
   rpc ReadIndex(ReadIndexRequest) returns (stream IndexState);
   rpc ReadLocalNode(ReadLocalNodeRequest) returns (KeyValue);
@@ -20,6 +22,9 @@ service RaftControlService {
   rpc RequestLeaderTransfer(ModifyNodeRequest) returns (RequestLeaderTransferResponse);
   rpc RequestSnapshot(RequestSnapshotRequest) returns (stream IndexState);
   rpc Stop(StopRequest) returns (StopResponse);
+  //  StopNode removes the specified Raft cluster node from the NodeHost and stops that running Raft node.
+  //
+  //  Note: this is not the membership change operation to remove the node from the Raft cluster.
   rpc StopNode(ModifyNodeRequest) returns (StopNodeResponse);
 }
 
