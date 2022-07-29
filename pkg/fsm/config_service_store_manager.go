@@ -11,12 +11,12 @@ package fsm
 
 import (
 	"bytes"
-	"errors"
 	"reflect"
 
 	v1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	services2 "github.com/mxplusb/pleiades/pkg/services"
 	"capnproto.org/go/capnp/v3"
+	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 )
 

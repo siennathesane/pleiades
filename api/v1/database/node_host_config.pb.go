@@ -327,7 +327,7 @@ type NodeHostConfig struct {
 	// DeploymentID is used to determine whether two NodeHost instances belong to
 	// the same deployment and thus allowed to communicate with each other. This
 	// helps to prvent accidentially misconfigured NodeHost instances to cause
-	// data corruption errors by sending out of context messages to unrelated
+	// data corruption errs by sending out of context messages to unrelated
 	// Raft nodes.
 	// For a particular dragonboat based application, you can set DeploymentID
 	// to the same uint64 value on all production NodeHost instances, then use
