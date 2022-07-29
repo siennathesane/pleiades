@@ -11,8 +11,9 @@ package utils
 
 import (
 	"database/sql"
-	"errors"
 	"reflect"
+
+	"github.com/cockroachdb/errors"
 )
 
 // DeepCopy is an O(n) function where N is the number of elements in the interface{}

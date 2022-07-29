@@ -11,7 +11,6 @@ package services
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -19,6 +18,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
 )
