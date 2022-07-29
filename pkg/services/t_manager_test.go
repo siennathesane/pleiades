@@ -73,7 +73,7 @@ func (s *TManagerTestSuite) TestManagerInitOnPut() {
 	t := utils.NewTestLogger(s.T())
 
 	manager := NewStoreManager(s.T().TempDir(), t)
-	require.Nil(s.T(), manager.Start(false), "there should be no errors starting the store manager")
+	require.Nil(s.T(), manager.Start(false), "there should be no errs starting the store manager")
 
 	testStruct := &TestStruct{
 		Key: "test-key",
@@ -93,7 +93,7 @@ func (s *TManagerTestSuite) TestManagerGet() {
 	t := utils.NewTestLogger(s.T())
 
 	manager := NewStoreManager(s.T().TempDir(), t)
-	require.Nil(s.T(), manager.Start(false), "there should be no errors starting the store manager")
+	require.Nil(s.T(), manager.Start(false), "there should be no errs starting the store manager")
 
 	testStruct := &TestStruct{
 		Key: "test-key",

@@ -82,7 +82,7 @@ func (s *Server) handleStreams(conn quic.Connection, ctx context.Context) {
 
 				// todo (sienna): figure out a better way to handle stream closures
 				// ref: https://www.rfc-editor.org/rfc/rfc9000.html#section-20.1-2.2.1
-				// the connection is closed with no errors, can't handle any more streams
+				// the connection is closed with no errs, can't handle any more streams
 				if errData.ErrorCode == quic.ApplicationErrorCode(quic.NoError) {
 					return
 				}

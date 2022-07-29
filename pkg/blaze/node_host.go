@@ -13,6 +13,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
@@ -25,8 +26,14 @@ var (
 type Node struct {
 	logger zerolog.Logger
 	nh *dragonboat.NodeHost
+
+	started bool
+	clusterManager ICluster
+	sessionManager ISession
+	storeManager IStore
 }
 
+// NewNode creates a new Node instance.
 func NewNode(conf dconfig.NodeHostConfig, logger zerolog.Logger) (*Node, error) {
 	l := logger.With().Str("component", "node").Logger()
 	nh, err := dragonboat.NewNodeHost(conf)
@@ -34,7 +41,46 @@ func NewNode(conf dconfig.NodeHostConfig, logger zerolog.Logger) (*Node, error) 
 		l.Error().Err(err).Msg("failed to create node host")
 		return nil, err
 	}
-	return &Node{l, nh}, nil
+	return &Node{logger: l, nh: nh}, nil
+}
+
+// NewOrGetClusterManager creates a new ICluster instance or gets the existing one.
+func (n *Node) NewOrGetClusterManager() (ICluster, error) {
+	err, ok := n.verifyStarted()
+	if !ok {
+		return nil, err
+	}
+
+	if n.clusterManager != nil {
+		n.clusterManager = newClusterManager(n.logger, n.nh)
+	}
+	return n.clusterManager, nil
+}
+
+// NewOrGetSessionManager creates a new ISession instance or gets the existing one.
+func (n *Node) NewOrGetSessionManager() (ISession, error) {
+	err, ok := n.verifyStarted()
+	if !ok {
+		return nil, err
+	}
+
+	if n.sessionManager != nil {
+		n.sessionManager = newSessionManager(n.logger, n.nh)
+	}
+	return n.sessionManager, nil
+}
+
+// NewOrGetStoreManager creates a new IStore instance or gets the existing one.
+func (n *Node) NewOrGetStoreManager() (IStore, error) {
+	err, ok := n.verifyStarted()
+	if !ok {
+		return nil, err
+	}
+
+	if n.storeManager != nil {
+		n.storeManager = newStoreManager(n.logger, n.nh)
+	}
+	return n.storeManager, nil
 }
 
 func (n *Node) GetLeaderID(clusterID uint64) (uint64, bool, error) {
@@ -133,3 +179,13 @@ func (n *Node) SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dr
 	return n.nh.SyncRequestSnapshot(ctx, clusterID, opt)
 }
 
+// verifyStarted checks if the node host is started and okay
+func (n *Node) verifyStarted() (error, bool) {
+	if n.nh == nil {
+		return errors.New("node host is nil, has it been started?"), false
+	}
+	if !n.started {
+		return errors.New("node host isn't running"), true
+	}
+	return nil, true
+}

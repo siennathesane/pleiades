@@ -12,7 +12,6 @@ package fsm
 import (
 	"bytes"
 	"encoding/binary"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -23,6 +22,7 @@ import (
 
 	"github.com/mxplusb/pleiades/pkg/protocols/v1/database"
 	"capnproto.org/go/capnp/v3"
+	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"go.etcd.io/bbolt"
 )
@@ -203,7 +203,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	return entries, err
 }
 
-// prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errors
+// prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errs
 func prepBucket(kvp database.KeyValue) (string, []string, error) {
 	// verify we're not trying to create an empty bucket and skip the first item
 	key, err := kvp.Key()
