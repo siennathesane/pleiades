@@ -21,8 +21,10 @@ concourse:
         gitlab:
           group: anthropos-labs
           user: mxplusb
+persistence:
+  worker:
+    size: "1Gi"
 secrets:
   gitlabClientId: 4dc19cb53a771395d1e27aacf87a1ff4f15b4c94621a448886966672d1279daa
   gitlabClientSecret: b9730c912d01e8c2359eb37f28fb1a329089f7ac1e8065603a399cbaa016ff1e
-  #  vaultClientToken: hvs.CAESIK5xxxBrr_2fs9EoN7v2Z47ZDGHuc8hJbxED6IGVtbk_Gh4KHGh2cy5pYW5vTkhNWEJFZVpvUmJqODZmMXNiUEw
   vaultAuthParam: "role_id:2baf1f67-0e87-5551-6511-4c901a45d8f0,secret_id:a0a48358-e5de-d94c-c21e-197eb4e9cd9a"
