@@ -12,14 +12,13 @@
 export ROOT_DOMAIN="a13s.io"
 export PREFIX="a13s-io"
 
-sudo mkdir -p /var/lib/rancher/k3s/server/tls/
+sudo mkdir -p /var/lib/rancher/k3s/server/tls/etcd
 
 k8s_certs=(
-  request-header-ca
-  client-ca
-  server-ca
   client-kube-apiserver
-  client-admin client-auth-proxy
+  client-admin
+  client-auth-proxy
+  client-kubelet
   client-controller
   client-k3s-cloud-controller
   client-k3s-controller
