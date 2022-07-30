@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
+ */
+
 //go:build mage
 
 package main
@@ -23,6 +32,7 @@ import (
 
 const (
 	concourseTargetUrl = "https://ci.a13s.io"
+	concourseVersionUrl = "https://ci.github.com/mxplusb/pleiades/pkg/api/v1/info"
 	concourseTarget = "-tp"
 	acrossStepFlag     = "--enable-across-step"
 
@@ -41,7 +51,7 @@ var (
 
 type CI mg.Namespace
 
-// install and setup the concourse cli (fly)
+// install and set up the concourse cli (fly)
 func (CI) Setup() error {
 	fmt.Println("installing fly cli")
 
@@ -185,7 +195,9 @@ func renderPipelineVars(targetPipeline string) error {
 }
 
 func validatePipeline(pipeline string) error {
-	renderPipelineVars(pipeline)
+	if err := renderPipelineVars(pipeline); err != nil {
+		return err
+	}
 
 	imagesPipelineFile := fmt.Sprintf("ci/pipelines/%s.yaml", pipeline)
 	varsFile := fmt.Sprintf("ci/vars/%s.yaml", pipeline)
@@ -219,7 +231,7 @@ func installConcourseCli() error {
 	fmt.Println("querying concourse for version info")
 	client := http.DefaultClient
 
-	earl, err := url.Parse(concourseTargetUrl)
+	earl, err := url.Parse(concourseVersionUrl)
 	if err != nil {
 		return nil
 	}
@@ -296,7 +308,7 @@ func installConcourseCli() error {
 
 func concourseLogin() error {
 	fmt.Println("logging into concourse")
-	err := sh.RunWithV(nil, "fly", concourseTarget, "login", "-c", concourseTargetUrl)
+	err := sh.RunWithV(nil, fmt.Sprintf("%s/fly", buildDir), concourseTarget, "login", "-c", concourseTargetUrl)
 	if err != nil {
 		return err
 	}

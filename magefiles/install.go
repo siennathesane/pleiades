@@ -24,6 +24,8 @@ var (
 		"vault",
 		"yq",
 		"nvm",
+		"krew",
+		"kubernetes-cli",
 	}
 )
 
