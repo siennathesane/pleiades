@@ -12,7 +12,7 @@ concourse:
       enabled: false
     vault:
       enabled: true
-      url: "http://v.r3t.io:8200"
+      url: "https://v.r3t.io"
       authBackend: approle
     auth:
       gitlab:
