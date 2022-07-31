@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
-	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
 
@@ -87,7 +87,7 @@ func (n *NodeRPCServer) ReadIndex(request *database.ReadIndexRequest, stream dat
 			return err
 		}
 
-		if count == 2 {
+		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
 			return nil
 		}
@@ -126,28 +126,179 @@ func (n *NodeRPCServer) ReadLocalNode(ctx context.Context, request *database.Rea
 }
 
 func (n *NodeRPCServer) AddNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddNodeStream) error {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	rs, err := n.node.RequestAddNode(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		return err
+	}
+
+	indexState := &database.IndexState{}
+
+	count := 0
+	select {
+	case response := <-rs.ResultC():
+		results := response.GetResult()
+
+		indexState.Results = &database.Result{
+			Value: results.Value,
+			Data:  results.Data,
+		}
+		indexState.SnapshotIndex = response.SnapshotIndex()
+		indexState.Status = n.requestStateCodeToResultCode(response)
+
+		count += 1
+
+		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
+			return err
+		}
+
+		if n.node.NotifyOnCommit() && count == 2 {
+			n.logger.Debug().Msg("returned both results")
+			return nil
+		}
+	}
+	return nil
 }
 
 func (n *NodeRPCServer) AddObserver(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddObserverStream) error {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	rs, err := n.node.RequestAddObserver(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		return err
+	}
+
+	indexState := &database.IndexState{}
+
+	count := 0
+	select {
+	case response := <-rs.ResultC():
+		results := response.GetResult()
+
+		indexState.Results = &database.Result{
+			Value: results.Value,
+			Data:  results.Data,
+		}
+		indexState.SnapshotIndex = response.SnapshotIndex()
+		indexState.Status = n.requestStateCodeToResultCode(response)
+
+		count += 1
+
+		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
+			return err
+		}
+
+		if n.node.NotifyOnCommit() && count == 2 {
+			n.logger.Debug().Msg("returned both results")
+			return nil
+		}
+	}
+	return nil
 }
 
 func (n *NodeRPCServer) AddWitness(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddWitnessStream) error {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	rs, err := n.node.RequestAddWitness(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		return err
+	}
+
+	indexState := &database.IndexState{}
+
+	count := 0
+	select {
+	case response := <-rs.ResultC():
+		results := response.GetResult()
+
+		indexState.Results = &database.Result{
+			Value: results.Value,
+			Data:  results.Data,
+		}
+		indexState.SnapshotIndex = response.SnapshotIndex()
+		indexState.Status = n.requestStateCodeToResultCode(response)
+
+		count += 1
+
+		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
+			return err
+		}
+
+		if n.node.NotifyOnCommit() && count == 2 {
+			n.logger.Debug().Msg("returned both results")
+			return nil
+		}
+	}
+	return nil
 }
 
+// note (sienna): this blocks until the request has been resolved
 func (n *NodeRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest) (*database.SysOpState, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx = n.logger.WithContext(ctx)
+
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	state, err := n.node.RequestCompaction(clusterId, nodeId)
+	if err != nil {
+		return nil, err
+	}
+
+	select {
+	case <- state.ResultC():
+		return &database.SysOpState{}, nil
+	}
 }
 
 func (n *NodeRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_RequestDeleteNodeStream) error {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	configChange := request.GetConfigChangeIndex()
+
+	rs, err := n.node.RequestDeleteNode(clusterId, nodeId, configChange, timeout)
+	if err != nil {
+		return err
+	}
+
+	indexState := &database.IndexState{}
+
+	count := 0
+	select {
+	case response := <-rs.ResultC():
+		results := response.GetResult()
+
+		indexState.Results = &database.Result{
+			Value: results.Value,
+			Data:  results.Data,
+		}
+		indexState.SnapshotIndex = response.SnapshotIndex()
+		indexState.Status = n.requestStateCodeToResultCode(response)
+
+		count += 1
+
+		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
+			return err
+		}
+
+		if n.node.NotifyOnCommit() && count == 2 {
+			n.logger.Debug().Msg("returned both results")
+			return nil
+		}
+	}
+	return nil
 }
 
 func (n *NodeRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest) (*database.RequestLeaderTransferResponse, error) {

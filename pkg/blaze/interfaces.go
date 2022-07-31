@@ -34,6 +34,7 @@ type INodeConfig interface {
 }
 
 type INodeHost interface {
+	NotifyOnCommit() bool
 	GetLeaderID(clusterID uint64) (uint64, bool, error)
 	GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
 	ID() string
