@@ -25,23 +25,32 @@ var (
 
 type Node struct {
 	logger zerolog.Logger
-	nh *dragonboat.NodeHost
+	nh     *dragonboat.NodeHost
 
-	started bool
+	started        bool
+	notifyOnCommit bool
 	clusterManager ICluster
 	sessionManager ISession
-	storeManager IStore
+	storeManager   IStore
 }
 
 // NewNode creates a new Node instance.
 func NewNode(conf dconfig.NodeHostConfig, logger zerolog.Logger) (*Node, error) {
 	l := logger.With().Str("component", "node").Logger()
+
 	nh, err := dragonboat.NewNodeHost(conf)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to create node host")
 		return nil, err
 	}
-	return &Node{logger: l, nh: nh}, nil
+
+	node := &Node{logger: l, nh: nh}
+
+	if conf.NotifyCommit {
+		node.notifyOnCommit = true
+	}
+
+	return node, nil
 }
 
 // NewOrGetClusterManager creates a new ICluster instance or gets the existing one.
@@ -81,6 +90,10 @@ func (n *Node) NewOrGetStoreManager() (IStore, error) {
 		n.storeManager = newStoreManager(n.logger, n.nh)
 	}
 	return n.storeManager, nil
+}
+
+func (n *Node) NotifyOnCommit() bool {
+	return n.notifyOnCommit
 }
 
 func (n *Node) GetLeaderID(clusterID uint64) (uint64, bool, error) {
