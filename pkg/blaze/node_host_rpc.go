@@ -302,23 +302,76 @@ func (n *NodeRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, s
 }
 
 func (n *NodeRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest) (*database.RequestLeaderTransferResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	targetNodeId := request.GetNodeId()
+	err := n.node.RequestLeaderTransfer(clusterId, targetNodeId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &database.RequestLeaderTransferResponse{}, nil
 }
 
 func (n *NodeRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream database.SRPCRaftControlService_RequestSnapshotStream) error {
-	//TODO implement me
-	panic("implement me")
+	clusterId := request.GetClusterId()
+	snapOpts := request.GetOptions()
+	timeout := time.Duration(request.GetTimeout())
+
+	opts := dragonboat.SnapshotOption{
+		CompactionOverhead:         snapOpts.CompactionOverhead,
+		ExportPath:                 snapOpts.ExportPath,
+		Exported:                   snapOpts.Exported,
+		OverrideCompactionOverhead: snapOpts.OverrideCompactionOverhead,
+	}
+
+	rs, err := n.node.RequestSnapshot(clusterId, opts, timeout)
+	if err != nil {
+		return err
+	}
+
+	indexState := &database.IndexState{}
+
+	count := 0
+	select {
+	case response := <-rs.ResultC():
+		results := response.GetResult()
+
+		indexState.Results = &database.Result{
+			Value: results.Value,
+			Data:  results.Data,
+		}
+		indexState.SnapshotIndex = response.SnapshotIndex()
+		indexState.Status = n.requestStateCodeToResultCode(response)
+
+		count += 1
+
+		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
+			return err
+		}
+
+		if n.node.NotifyOnCommit() && count == 2 {
+			n.logger.Debug().Msg("returned both results")
+			return nil
+		}
+	}
+	return nil
 }
 
 func (n *NodeRPCServer) Stop(ctx context.Context, request *database.StopRequest) (*database.StopResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx = n.logger.WithContext(ctx)
+
+	n.node.Stop()
+
+	return nil, nil
 }
 
 func (n *NodeRPCServer) StopNode(ctx context.Context, request *database.ModifyNodeRequest) (*database.StopNodeResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	ctx = n.logger.WithContext(ctx)
+
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+
+	return nil, errors.Wrap(n.node.StopNode(clusterId ,nodeId), "could not stop node")
 }
 
 func (n *NodeRPCServer) requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {
