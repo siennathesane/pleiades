@@ -13,23 +13,11 @@ spec:
     kind: ClusterIssuer
     group: cert-manager.io
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: concourse-headers
-  namespace: concourse
-spec:
-  headers:
-    customRequestHeaders:
-      X-Forwarded-Proto: "https"
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: concourse
   namespace: concourse
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: concourse-concourse-headers@kubernetescrd
 spec:
   tls:
     - hosts:
