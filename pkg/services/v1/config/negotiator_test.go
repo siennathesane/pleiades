@@ -14,9 +14,9 @@ import (
 	"net"
 	"testing"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
-	"github.com/mxplusb/pleiades/pkg/services"
-	"github.com/mxplusb/pleiades/pkg/utils"
+	"gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	"gitlab.com/anthropos-labs/pleiades/pkg/services"
+	"gitlab.com/anthropos-labs/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/rpc"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"

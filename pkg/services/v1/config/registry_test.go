@@ -13,8 +13,8 @@ package config
 import (
 	"testing"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
-	"github.com/mxplusb/pleiades/pkg/utils"
+	"gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	"gitlab.com/anthropos-labs/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
