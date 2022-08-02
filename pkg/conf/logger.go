@@ -14,7 +14,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/mxplusb/pleiades/pkg"
+	"gitlab.com/anthropos-labs/pleiades/pkg"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	zlog "github.com/rs/zerolog"
 	"github.com/rs/zerolog/journald"

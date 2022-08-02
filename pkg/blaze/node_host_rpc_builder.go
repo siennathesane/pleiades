@@ -8,3 +8,15 @@
  */
 
 package blaze
+
+import (
+	"github.com/rs/zerolog"
+)
+
+func NewNodeHostRpcServer(logger zerolog.Logger) {
+	//nodeHostRpc := NewNodeHostRPCServer()
+}
+
+func buildNodeHostConfig() {
+
+}

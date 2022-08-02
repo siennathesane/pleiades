@@ -12,9 +12,9 @@ package config
 import (
 	"context"
 
-	"github.com/mxplusb/pleiades/pkg/fsm"
-	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
-	"github.com/mxplusb/pleiades/pkg/services"
+	"gitlab.com/anthropos-labs/pleiades/pkg/fsm"
+	hostv1 "gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	"gitlab.com/anthropos-labs/pleiades/pkg/services"
 	"capnproto.org/go/capnp/v3"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"

@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mxplusb/pleiades/pkg"
+	"gitlab.com/anthropos-labs/pleiades/pkg"
 	"github.com/spf13/cobra"
 )
 

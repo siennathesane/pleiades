@@ -3,7 +3,7 @@ url: a13s.io
 # must be alphabetical
 packages:
   cliflags:
-    repo: git@gitlab.com:anthropos-labs/cliflags.git
+    repo: gitlab.com/anthropos-labs/cliflags
   pleiades:
     repo: git@gitlab.com:anthropos-labs/pleiades.git
  

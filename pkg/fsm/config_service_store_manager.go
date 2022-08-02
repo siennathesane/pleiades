@@ -13,8 +13,8 @@ import (
 	"bytes"
 	"reflect"
 
-	v1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
-	services2 "github.com/mxplusb/pleiades/pkg/services"
+	v1 "gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	services2 "gitlab.com/anthropos-labs/pleiades/pkg/services"
 	"capnproto.org/go/capnp/v3"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
