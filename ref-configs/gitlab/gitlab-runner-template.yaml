@@ -182,7 +182,7 @@ subjects:
     name: gitlab-runner
     namespace: "gitlab-agent"
 ---
-# Source: gitlab-runner/templates/deployment.yaml
+# Source: gitlab-runner/templates/k8s.yaml
 apiVersion: apps/host
 kind: Deployment
 metadata:

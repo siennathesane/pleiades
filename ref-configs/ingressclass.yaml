@@ -1,6 +1,0 @@
-apiVersion: networking.k8s.io/host
-kind: IngressClass
-metadata:
-  name: traefik-lb
-spec:
-  controller: traefik.io/ingress-controller
