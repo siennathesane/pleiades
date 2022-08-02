@@ -14,6 +14,14 @@ resources:
       tag: latest
       username: ((registry.username))
       password: ((registry.password))
+  - name: sally
+    type: registry-image
+    icon: docker
+    source:
+      repository: registry.gitlab.com/anthropos-labs/pleiades/sally
+      tag: latest
+      username: ((registry.username))
+      password: ((registry.password))
 
 jobs:
   - name: set-pipeline
@@ -34,6 +42,19 @@ jobs:
         privileged: true
         file: pleiades/ci/tasks/build-ci-image.yaml
       - put: ci-image
+        params:
+          image: image/image.tar
+  - name: build-sally-image
+    serial: true
+    plan:
+      - get: pleiades
+        trigger: true
+        passed:
+          - set-pipeline
+      - task: build
+        privileged: true
+        file: pleiades/ci/tasks/build-sally-image.yaml
+      - put: sally
         params:
           image: image/image.tar
   - name: verify-gitpod-image
