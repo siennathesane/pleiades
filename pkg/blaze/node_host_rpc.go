@@ -13,7 +13,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/api/v1/database"
+	"gitlab.com/anthropos-labs/pleiades/api/v1/database"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"

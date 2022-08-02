@@ -15,9 +15,9 @@ import (
 	"reflect"
 	"testing"
 
-	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
-	"github.com/mxplusb/pleiades/pkg/services"
-	"github.com/mxplusb/pleiades/pkg/utils"
+	hostv1 "gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	"gitlab.com/anthropos-labs/pleiades/pkg/services"
+	"gitlab.com/anthropos-labs/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"

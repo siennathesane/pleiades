@@ -20,7 +20,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/database"
+	"gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/database"
 	"capnproto.org/go/capnp/v3"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3/statemachine"
