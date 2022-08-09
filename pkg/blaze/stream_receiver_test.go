@@ -14,9 +14,9 @@ import (
 	"context"
 	"testing"
 
-	hostv1 "gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
-	"gitlab.com/anthropos-labs/pleiades/pkg/services/v1/config"
-	"gitlab.com/anthropos-labs/pleiades/pkg/utils"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
+	"github.com/mxplusb/pleiades/pkg/services/v1/config"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"capnproto.org/go/capnp/v3/rpc"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"

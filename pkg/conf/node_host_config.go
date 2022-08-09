@@ -9,12 +9,6 @@
 
 package conf
 
-import (
-	dconfig "github.com/lni/dragonboat/v3/config"
-	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
-)
-
 type NodeHostConfig struct {
 	DevMode                       bool         `flag:"dev d" desc:"enable dev mode?"`
 	DeploymentID                  uint64       `desc:"deployment id of the node host"`
@@ -41,12 +35,4 @@ type NodeHostGossipConfig struct {
 	BindAddress      string   `desc:"address for the gossip service to bind to and listen on"`
 	AdvertiseAddress string   `desc:"address to advertise to other NodeHost instances used for NAT traversal"`
 	Seed             []string `desc:"list of advertise addresses of remote node host instances"`
-}
-
-func UnmarshalConfig(v viper.Viper, logger zerolog.Logger) (*dconfig.NodeHostConfig, error) {
-	return nil, nil
-}
-
-func loadConfig() *dconfig.Config {
-	return nil
 }

@@ -11,19 +11,18 @@ package cmd
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"runtime"
 
 	"github.com/mxplusb/cliflags/gen/gpflag"
-	"github.com/lucas-clemente/quic-go"
+	"github.com/mxplusb/pleiades/pkg/blaze"
+	"github.com/mxplusb/pleiades/pkg/conf"
+	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"gitlab.com/anthropos-labs/pleiades/pkg/blaze"
-	"gitlab.com/anthropos-labs/pleiades/pkg/conf"
-	"gitlab.com/anthropos-labs/pleiades/pkg/services/v1/config"
 )
 
 // serverCmd represents the server command
@@ -236,25 +235,16 @@ gossip network is enough.
 }
 
 var (
-	devMode bool = false
-	listenerPort int = 0
-	tlsCa string = ""
-	tlsCert string = ""
-	tlsKey string = ""
-	hostname string = ""
-	nodeHostDir string = ""
-	initialRtt uint64 = 0
-	raftAddr string = fmt.Sprintf("%s:%d", hostname, listenerPort)
-	deploymentId uint64 = 1
 	cfg *conf.NodeHostConfig = &conf.NodeHostConfig{
+		DevMode:                       true,
 		DeploymentID:                  1,
 		WALDir:                        "/var/pleiades/wal",
 		NodeHostDir:                   "/var/pleiades/data",
 		RTTMillisecond:                200,
-		RaftAddress:                   "",
+		RaftAddress:                   "0.0.0.0:5001",
 		AddressByNodeHostID:           false,
-		ListenAddress:                 "0.0.0.0:5000",
-		MutualTLS:                     true,
+		ListenAddress:                 "0.0.0.0:5002",
+		MutualTLS:                     false,
 		CAFile:                        "/etc/pleiades/ca.pem",
 		CertFile:                      "/etc/pleiades/cert.pem",
 		KeyFile:                       "/etc/pleiades/cert.key",
@@ -264,22 +254,41 @@ var (
 		MaxSnapshotSendBytesPerSecond: 0,
 		MaxSnapshotRecvBytesPerSecond: 0,
 		NotifyCommit:                  true,
-		Gossip:                        conf.GossipConfig{
+		Gossip: conf.GossipConfig{
 			AdvertiseAddress: "",
-			BindAddress: "",
-			Seed: []string{},
+			BindAddress:      "",
+			Seed:             []string{},
 		},
 	}
 )
 
 func init() {
 	rootCmd.AddCommand(serverCmd)
+
+	// if we're on a mac, set different paths for the default config
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		dir, err := homedir.Dir()
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to get home directory")
+		}
+
+		cfg.WALDir = filepath.Join(dir, "Library", "pleiades", "wal")
+		cfg.NodeHostDir = filepath.Join(dir, "Library", "pleiades", "data")
+		cfg.CAFile = ""
+		cfg.CertFile = ""
+		cfg.KeyFile = ""
+	}
+
 	if err := gpflag.ParseTo(cfg, serverCmd.Flags()); err != nil {
-		panic(err)
+		log.Logger.Err(err).Msg("cannot properly parse command strings")
+		os.Exit(1)
 	}
 }
 
 func startServer() {
+	ctx, cancel := context.WithCancel(context.Background())
+
 	logger, err := conf.NewLogger()
 	if err != nil {
 		err = fmt.Errorf("could not instantiate logger: %w", err)
@@ -289,77 +298,31 @@ func startServer() {
 
 	l := logger.GetLogger()
 
-	registry, err := config.NewRegistry(logger.GetLogger())
-	if err != nil {
-		l.Error().Err(err).Msg("cannot instantiate new registry")
-		os.Exit(1)
-	}
-
-	var tlsConfig *tls.Config
-	certPool := x509.NewCertPool()
-
-	if devMode {
-		keyPair, err := tls.X509KeyPair([]byte(blaze.DevTlsCert), []byte(blaze.DevTlsKey))
-		if err != nil {
-			l.Error().Err(err).Msg("cannot instantiate dev tls key pair")
-			os.Exit(1)
-		}
-		certPool.AppendCertsFromPEM([]byte(blaze.DevTlsCa))
-
-		tlsConfig = &tls.Config{
-			Certificates: []tls.Certificate{keyPair},
-			RootCAs:      certPool,
-			ServerName:   "localhost",
-			NextProtos: []string{"pleiades"},
-		}
-	} else {
-		ca, err := ioutil.ReadFile(tlsCa)
-		if err != nil {
-			l.Error().Err(err).Msg("cannot read certificate authority file")
-		}
-
-		certPool.AppendCertsFromPEM(ca)
-
-		keyPair, err := tls.LoadX509KeyPair(tlsCert, tlsKey)
-		if err != nil {
-			l.Error().Err(err).Msg("cannot load key pair")
-			os.Exit(1)
-		}
-		tlsConfig = &tls.Config{
-			Certificates: []tls.Certificate{keyPair},
-			RootCAs:      certPool,
-			ServerName:   "localhost",
-			NextProtos: []string{"pleiades"},
-			ClientAuth:   tls.RequireAndVerifyClientCert,
-		}
-	}
-
-	listener, err := quic.ListenAddr("0.0.0.0:"+fmt.Sprintf("%d", listenerPort), tlsConfig, nil)
-
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, os.Kill)
 
 	done := make(chan bool, 1)
-	go func(done chan bool) {
+	go func(sigs chan os.Signal, done chan bool) {
 		<-sigs
 		done <- true
-	}(done)
+	}(sigs, done)
 
-	ctx := context.Background()
-
-	server := blaze.NewServer(listener, logger.GetLogger(), registry)
-	err = server.Start(ctx)
+	server, err := blaze.NewRuntime(ctx, cfg, logger)
 	if err != nil {
-		l.Error().Err(err).Msg("cannot start server")
+		l.Error().Err(err).Msg("could not instantiate runtime")
+		os.Exit(1)
+	}
+
+	if err := server.Run(); err != nil {
+		l.Error().Err(err).Msg("error with server")
 		os.Exit(1)
 	}
 
 	// wait until we get a signal
 	<-done
 
-	err = server.Stop(ctx)
-	if err != nil {
-		l.Error().Err(err).Msg("cannot stop server safely")
-		os.Exit(1)
-	}
+	server.Stop()
+	cancel()
+
+	l.Info().Msg("goodbye")
 }

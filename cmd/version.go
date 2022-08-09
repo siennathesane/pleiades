@@ -13,14 +13,14 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.com/anthropos-labs/pleiades/pkg"
+	"github.com/mxplusb/pleiades/pkg"
 	"github.com/spf13/cobra"
 )
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version of Pleiades",
+	Short: "print the version of pleiades",
 	Run: func(cmd *cobra.Command, args []string) {
 		printVersionInfo()
 	},
