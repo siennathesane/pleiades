@@ -13,7 +13,7 @@ package config
 import (
 	"context"
 
-	hostv1 "gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	hostv1 "github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"capnproto.org/go/capnp/v3/server"
 	"github.com/rs/zerolog"
 )

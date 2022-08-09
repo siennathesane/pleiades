@@ -12,9 +12,10 @@ package conf
 import (
 	"io"
 	"os"
+	"runtime"
 	"strconv"
 
-	"gitlab.com/anthropos-labs/pleiades/pkg"
+	"github.com/mxplusb/pleiades/pkg"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	zlog "github.com/rs/zerolog"
 	"github.com/rs/zerolog/journald"
@@ -30,7 +31,11 @@ func NewLogger(writers ...io.Writer) (Logger, error) {
 
 	l := Logger{}
 
-	writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout}, journald.NewJournalDWriter())
+	if runtime.GOOS != "darwin" {
+		writers = append(writers, journald.NewJournalDWriter())
+	} else {
+		writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout})
+	}
 
 	// write to both console and journald for linux
 	multiWriter := zlog.MultiLevelWriter(writers...)

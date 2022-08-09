@@ -14,7 +14,7 @@ import (
 	"strings"
 	"sync"
 
-	"gitlab.com/anthropos-labs/pleiades/pkg/services/v1/config"
+	"github.com/mxplusb/pleiades/pkg/services/v1/config"
 	"github.com/lucas-clemente/quic-go"
 	"github.com/rs/zerolog"
 )

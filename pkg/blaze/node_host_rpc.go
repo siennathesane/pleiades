@@ -13,8 +13,9 @@ import (
 	"context"
 	"time"
 
-	"gitlab.com/anthropos-labs/pleiades/api/v1/database"
+	"github.com/mxplusb/pleiades/pkg/api/v1/database"
 	"github.com/cockroachdb/errors"
+	"github.com/libp2p/go-libp2p-core/protocol"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 )
@@ -23,7 +24,11 @@ var (
 	_ database.SRPCRaftControlServiceServer = (*NodeRPCServer)(nil)
 )
 
-func NewNodeHostRPCServer(logger zerolog.Logger, node INodeHost) *NodeRPCServer {
+const (
+	NodeHostProtocolVersion protocol.ID = "pleiades/raft-control/0.0.1"
+)
+
+func NewNodeHostRPCServer(node INodeHost, logger zerolog.Logger) *NodeRPCServer {
 	return &NodeRPCServer{
 		logger: logger,
 		node:   node,

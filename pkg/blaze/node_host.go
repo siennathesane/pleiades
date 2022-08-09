@@ -13,9 +13,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/conf"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
+	dlog "github.com/lni/dragonboat/v3/logger"
 	"github.com/rs/zerolog"
 )
 
@@ -35,9 +37,11 @@ type Node struct {
 }
 
 // NewNode creates a new Node instance.
-func NewNode(conf dconfig.NodeHostConfig, logger zerolog.Logger) (*Node, error) {
+func NewNode(conf dconfig.NodeHostConfig, clogger conf.Logger) (*Node, error) {
+	logger := clogger.GetLogger()
 	l := logger.With().Str("component", "node").Logger()
 
+	dlog.SetLoggerFactory(clogger.LoggerFactory)
 	nh, err := dragonboat.NewNodeHost(conf)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to create node host")
