@@ -36,8 +36,8 @@ type Node struct {
 	storeManager   IStore
 }
 
-// NewNode creates a new Node instance.
-func NewNode(conf dconfig.NodeHostConfig, clogger conf.Logger) (*Node, error) {
+// NewRaftControlNode creates a new Node instance.
+func NewRaftControlNode(conf dconfig.NodeHostConfig, clogger conf.Logger) (*Node, error) {
 	logger := clogger.GetLogger()
 	l := logger.With().Str("component", "node").Logger()
 
