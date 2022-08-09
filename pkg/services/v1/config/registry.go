@@ -12,7 +12,7 @@ package config
 import (
 	"fmt"
 
-	"gitlab.com/anthropos-labs/pleiades/pkg/protocols/v1/host"
+	"github.com/mxplusb/pleiades/pkg/protocols/v1/host"
 	"github.com/rs/zerolog"
 )
 

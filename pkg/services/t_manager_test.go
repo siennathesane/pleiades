@@ -15,7 +15,7 @@ import (
 	"reflect"
 	"testing"
 
-	"gitlab.com/anthropos-labs/pleiades/pkg/utils"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
