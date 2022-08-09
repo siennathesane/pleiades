@@ -44,7 +44,7 @@ func NewRuntime(ctx context.Context, conf *conf.NodeHostConfig, clogger conf.Log
 		addrs:  make([]multiaddr.Multiaddr, 0),
 	}
 
-	err := RegisterNodeHostRpcServer(mux, conf, clogger)
+	err := RegisterRaftControlRpcServer(mux, conf, clogger)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to register node host rpc server")
 		return nil, err
@@ -125,7 +125,7 @@ func (r *Runtime) Run() error {
 		return err
 	}
 
-	r.host.SetStreamHandler(NodeHostProtocolVersion, r.handleStream)
+	r.host.SetStreamHandler(RaftControlProtocolVersion, r.handleStream)
 
 	return nil
 }

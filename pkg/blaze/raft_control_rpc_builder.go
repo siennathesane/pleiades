@@ -16,7 +16,7 @@ import (
 	dconfig "github.com/lni/dragonboat/v3/config"
 )
 
-func RegisterNodeHostRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.Logger) error {
+func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.Logger) error {
 	logger := clogger.GetLogger()
 	l := logger.With().Str("service", "node-host").Logger()
 
@@ -26,13 +26,13 @@ func RegisterNodeHostRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger 
 		return err
 	}
 
-	node, err := NewNode(translatedConf, clogger)
+	node, err := NewRaftControlNode(translatedConf, clogger)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to build node")
 		return err
 	}
 
-	nodeHostRpc := NewNodeHostRPCServer(node, l)
+	nodeHostRpc := NewRaftControlRPCServer(node, l)
 
 	if err := database.SRPCRegisterRaftControlService(mux, nodeHostRpc); err != nil {
 		l.Error().Err(err).Msg("failed to register raft control service")

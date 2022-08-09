@@ -21,27 +21,27 @@ import (
 )
 
 var (
-	_ database.SRPCRaftControlServiceServer = (*NodeRPCServer)(nil)
+	_ database.SRPCRaftControlServiceServer = (*RaftControlRPCServer)(nil)
 )
 
 const (
-	NodeHostProtocolVersion protocol.ID = "pleiades/raft-control/0.0.1"
+	RaftControlProtocolVersion protocol.ID = "pleiades/raft-control/0.0.1"
 )
 
-func NewNodeHostRPCServer(node INodeHost, logger zerolog.Logger) *NodeRPCServer {
-	return &NodeRPCServer{
+func NewRaftControlRPCServer(node INodeHost, logger zerolog.Logger) *RaftControlRPCServer {
+	return &RaftControlRPCServer{
 		logger: logger,
 		node:   node,
 	}
 }
 
-type NodeRPCServer struct {
+type RaftControlRPCServer struct {
 	database.SRPCRaftControlServiceUnimplementedServer
 	logger zerolog.Logger
 	node   INodeHost
 }
 
-func (n *NodeRPCServer) GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest) (*database.GetLeaderIDResponse, error) {
+func (n *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest) (*database.GetLeaderIDResponse, error) {
 	ctx = n.logger.WithContext(ctx)
 	clusterId := request.GetClusterId()
 	leaderId, ok, err := n.node.GetLeaderID(clusterId)
@@ -58,13 +58,13 @@ func (n *NodeRPCServer) GetLeaderID(ctx context.Context, request *database.GetLe
 	}, err
 }
 
-func (n *NodeRPCServer) GetID(ctx context.Context, _ *database.IdRequest) (*database.IdResponse, error) {
+func (n *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest) (*database.IdResponse, error) {
 	ctx = n.logger.WithContext(ctx)
 	id := n.node.ID()
 	return &database.IdResponse{Id: id}, nil
 }
 
-func (n *NodeRPCServer) ReadIndex(request *database.ReadIndexRequest, stream database.SRPCRaftControlService_ReadIndexStream) error {
+func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream database.SRPCRaftControlService_ReadIndexStream) error {
 	clusterId := request.GetClusterId()
 	timeout := time.Duration(request.GetTimeout())
 	rs, err := n.node.ReadIndex(clusterId, timeout)
@@ -100,7 +100,7 @@ func (n *NodeRPCServer) ReadIndex(request *database.ReadIndexRequest, stream dat
 	return nil
 }
 
-func (n *NodeRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest) (*database.KeyValue, error) {
+func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest) (*database.KeyValue, error) {
 	ctx = n.logger.WithContext(ctx)
 
 	query, err := request.GetQuery().MarshalVT()
@@ -130,7 +130,7 @@ func (n *NodeRPCServer) ReadLocalNode(ctx context.Context, request *database.Rea
 	return kv, nil
 }
 
-func (n *NodeRPCServer) AddNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddNodeStream) error {
+func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddNodeStream) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -170,7 +170,7 @@ func (n *NodeRPCServer) AddNode(request *database.ModifyNodeRequest, stream data
 	return nil
 }
 
-func (n *NodeRPCServer) AddObserver(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddObserverStream) error {
+func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddObserverStream) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -210,7 +210,7 @@ func (n *NodeRPCServer) AddObserver(request *database.ModifyNodeRequest, stream 
 	return nil
 }
 
-func (n *NodeRPCServer) AddWitness(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddWitnessStream) error {
+func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddWitnessStream) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -251,7 +251,7 @@ func (n *NodeRPCServer) AddWitness(request *database.ModifyNodeRequest, stream d
 }
 
 // note (sienna): this blocks until the request has been resolved
-func (n *NodeRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest) (*database.SysOpState, error) {
+func (n *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest) (*database.SysOpState, error) {
 	ctx = n.logger.WithContext(ctx)
 
 	clusterId := request.GetClusterId()
@@ -267,7 +267,7 @@ func (n *NodeRPCServer) RequestCompaction(ctx context.Context, request *database
 	}
 }
 
-func (n *NodeRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_RequestDeleteNodeStream) error {
+func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_RequestDeleteNodeStream) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -306,7 +306,7 @@ func (n *NodeRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, s
 	return nil
 }
 
-func (n *NodeRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest) (*database.RequestLeaderTransferResponse, error) {
+func (n *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest) (*database.RequestLeaderTransferResponse, error) {
 	clusterId := request.GetClusterId()
 	targetNodeId := request.GetNodeId()
 	err := n.node.RequestLeaderTransfer(clusterId, targetNodeId)
@@ -317,7 +317,7 @@ func (n *NodeRPCServer) RequestLeaderTransfer(ctx context.Context, request *data
 	return &database.RequestLeaderTransferResponse{}, nil
 }
 
-func (n *NodeRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream database.SRPCRaftControlService_RequestSnapshotStream) error {
+func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream database.SRPCRaftControlService_RequestSnapshotStream) error {
 	clusterId := request.GetClusterId()
 	snapOpts := request.GetOptions()
 	timeout := time.Duration(request.GetTimeout())
@@ -362,7 +362,7 @@ func (n *NodeRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest
 	return nil
 }
 
-func (n *NodeRPCServer) Stop(ctx context.Context, request *database.StopRequest) (*database.StopResponse, error) {
+func (n *RaftControlRPCServer) Stop(ctx context.Context, request *database.StopRequest) (*database.StopResponse, error) {
 	ctx = n.logger.WithContext(ctx)
 
 	n.node.Stop()
@@ -370,7 +370,7 @@ func (n *NodeRPCServer) Stop(ctx context.Context, request *database.StopRequest)
 	return nil, nil
 }
 
-func (n *NodeRPCServer) StopNode(ctx context.Context, request *database.ModifyNodeRequest) (*database.StopNodeResponse, error) {
+func (n *RaftControlRPCServer) StopNode(ctx context.Context, request *database.ModifyNodeRequest) (*database.StopNodeResponse, error) {
 	ctx = n.logger.WithContext(ctx)
 
 	clusterId := request.GetClusterId()
@@ -379,7 +379,7 @@ func (n *NodeRPCServer) StopNode(ctx context.Context, request *database.ModifyNo
 	return nil, errors.Wrap(n.node.StopNode(clusterId ,nodeId), "could not stop node")
 }
 
-func (n *NodeRPCServer) requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {
+func (n *RaftControlRPCServer) requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {
 	switch {
 	case result.Aborted():
 		return database.IndexState_Aborted
