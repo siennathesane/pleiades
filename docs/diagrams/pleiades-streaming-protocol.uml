@@ -1,0 +1,60 @@
+@startuml
+title Pleiades Stream Protocol
+
+participant Client
+participant Host
+participant RPC Service
+
+activate Client
+Client->Host: Open a new STREAM
+activate Host
+note over Client: message STATE {\n  fixed32 State = 1;\n  fixed32 HeaderToFollow = 2;\n}
+Client->Host: Send STATE
+activate Host
+Host->Host: Read STATE
+opt Error reading STATE
+Host--xClient: Bad STATE
+end
+deactivate Host
+note over Client:message HEADER {\n  fixed32 Size = 1;\n  fixed32 Checksum = 2;\n}
+Client->Host: Send HEADER
+activate Host
+Host->Host: Read HEADER
+opt Error reading HEADER
+Host--xClient:Bad HEADER
+end
+deactivate Host
+note over Client: message MESSAGE {\n  oneof Types { ... }\n  enum MethodNames { ... }\n  MethodNames Method;\n}
+Client->Host: Send MESSAGE
+activate Host
+Host->Host: Read MESSAGE
+opt Error reading MESSAGE
+Host--xClient:Bad MESSAGE
+end
+activate RPC Service
+Host->RPC Service: Handle MESSAGE
+RPC Service->Host:Return MESSAGE
+deactivate RPC Service
+Host-->Client: Send STATE
+Host-->Client: Send HEADER
+Host-->Client: Send MESSAGE
+opt Streaming Response
+Host-->Client: Send STATE
+Host-->Client: Send HEADER
+Host-->Client: Send MESSAGE
+Host-->Client: [repeating]
+end
+deactivate Host
+opt Close STREAM
+Host-->Client: Send STATE
+deactivate Host
+deactivate Client
+end 
+opt Close STREAM
+activate Client
+activate Host
+Client-->Host: Send STATE
+deactivate Host
+deactivate Client
+end
+@enduml

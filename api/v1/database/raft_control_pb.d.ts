@@ -4,6 +4,154 @@
 import * as jspb from "google-protobuf";
 import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
 
+export class RaftControlPayload extends jspb.Message {
+  hasGetleaderidrequest(): boolean;
+  clearGetleaderidrequest(): void;
+  getGetleaderidrequest(): GetLeaderIDRequest | undefined;
+  setGetleaderidrequest(value?: GetLeaderIDRequest): void;
+
+  hasGetleaderidresponse(): boolean;
+  clearGetleaderidresponse(): void;
+  getGetleaderidresponse(): GetLeaderIDResponse | undefined;
+  setGetleaderidresponse(value?: GetLeaderIDResponse): void;
+
+  hasIdrequest(): boolean;
+  clearIdrequest(): void;
+  getIdrequest(): IdRequest | undefined;
+  setIdrequest(value?: IdRequest): void;
+
+  hasIdresponse(): boolean;
+  clearIdresponse(): void;
+  getIdresponse(): IdResponse | undefined;
+  setIdresponse(value?: IdResponse): void;
+
+  hasIndexstate(): boolean;
+  clearIndexstate(): void;
+  getIndexstate(): IndexState | undefined;
+  setIndexstate(value?: IndexState): void;
+
+  hasModifynoderequest(): boolean;
+  clearModifynoderequest(): void;
+  getModifynoderequest(): ModifyNodeRequest | undefined;
+  setModifynoderequest(value?: ModifyNodeRequest): void;
+
+  hasReadindexrequest(): boolean;
+  clearReadindexrequest(): void;
+  getReadindexrequest(): ReadIndexRequest | undefined;
+  setReadindexrequest(value?: ReadIndexRequest): void;
+
+  hasReadlocalnoderequest(): boolean;
+  clearReadlocalnoderequest(): void;
+  getReadlocalnoderequest(): ReadLocalNodeRequest | undefined;
+  setReadlocalnoderequest(value?: ReadLocalNodeRequest): void;
+
+  hasRequestleadertransferresponse(): boolean;
+  clearRequestleadertransferresponse(): void;
+  getRequestleadertransferresponse(): RequestLeaderTransferResponse | undefined;
+  setRequestleadertransferresponse(value?: RequestLeaderTransferResponse): void;
+
+  hasRequestsnapshotrequest(): boolean;
+  clearRequestsnapshotrequest(): void;
+  getRequestsnapshotrequest(): RequestSnapshotRequest | undefined;
+  setRequestsnapshotrequest(value?: RequestSnapshotRequest): void;
+
+  hasSnapshotoption(): boolean;
+  clearSnapshotoption(): void;
+  getSnapshotoption(): SnapshotOption | undefined;
+  setSnapshotoption(value?: SnapshotOption): void;
+
+  hasStopnoderesponse(): boolean;
+  clearStopnoderesponse(): void;
+  getStopnoderesponse(): StopNodeResponse | undefined;
+  setStopnoderesponse(value?: StopNodeResponse): void;
+
+  hasStoprequest(): boolean;
+  clearStoprequest(): void;
+  getStoprequest(): StopRequest | undefined;
+  setStoprequest(value?: StopRequest): void;
+
+  hasStopresponse(): boolean;
+  clearStopresponse(): void;
+  getStopresponse(): StopResponse | undefined;
+  setStopresponse(value?: StopResponse): void;
+
+  hasSysopstate(): boolean;
+  clearSysopstate(): void;
+  getSysopstate(): SysOpState | undefined;
+  setSysopstate(value?: SysOpState): void;
+
+  getMethod(): RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap];
+  setMethod(value: RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap]): void;
+
+  getTypesCase(): RaftControlPayload.TypesCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RaftControlPayload.AsObject;
+  static toObject(includeInstance: boolean, msg: RaftControlPayload): RaftControlPayload.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: RaftControlPayload, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RaftControlPayload;
+  static deserializeBinaryFromReader(message: RaftControlPayload, reader: jspb.BinaryReader): RaftControlPayload;
+}
+
+export namespace RaftControlPayload {
+  export type AsObject = {
+    getleaderidrequest?: GetLeaderIDRequest.AsObject,
+    getleaderidresponse?: GetLeaderIDResponse.AsObject,
+    idrequest?: IdRequest.AsObject,
+    idresponse?: IdResponse.AsObject,
+    indexstate?: IndexState.AsObject,
+    modifynoderequest?: ModifyNodeRequest.AsObject,
+    readindexrequest?: ReadIndexRequest.AsObject,
+    readlocalnoderequest?: ReadLocalNodeRequest.AsObject,
+    requestleadertransferresponse?: RequestLeaderTransferResponse.AsObject,
+    requestsnapshotrequest?: RequestSnapshotRequest.AsObject,
+    snapshotoption?: SnapshotOption.AsObject,
+    stopnoderesponse?: StopNodeResponse.AsObject,
+    stoprequest?: StopRequest.AsObject,
+    stopresponse?: StopResponse.AsObject,
+    sysopstate?: SysOpState.AsObject,
+    method: RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap],
+  }
+
+  export interface MethodNameMap {
+    ADD_NODE: 0;
+    ADD_OBSERVER: 1;
+    ADD_WITNESS: 2;
+    GET_ID: 3;
+    GET_LEADER_ID: 4;
+    READ_INDEX: 5;
+    READ_LOCAL_NODE: 6;
+    REQUEST_COMPACTION: 7;
+    REQUEST_DELETE_NODE: 8;
+    REQUEST_LEADER_TRANSFER: 9;
+    REQUEST_SNAPSHOT: 10;
+    STOP: 11;
+    STOP_NODE: 12;
+  }
+
+  export const MethodName: MethodNameMap;
+
+  export enum TypesCase {
+    TYPES_NOT_SET = 0,
+    GETLEADERIDREQUEST = 1,
+    GETLEADERIDRESPONSE = 2,
+    IDREQUEST = 3,
+    IDRESPONSE = 4,
+    INDEXSTATE = 5,
+    MODIFYNODEREQUEST = 6,
+    READINDEXREQUEST = 7,
+    READLOCALNODEREQUEST = 8,
+    REQUESTLEADERTRANSFERRESPONSE = 9,
+    REQUESTSNAPSHOTREQUEST = 10,
+    SNAPSHOTOPTION = 12,
+    STOPNODERESPONSE = 13,
+    STOPREQUEST = 14,
+    STOPRESPONSE = 15,
+    SYSOPSTATE = 16,
+  }
+}
+
 export class StopNodeResponse extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): StopNodeResponse.AsObject;

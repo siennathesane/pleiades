@@ -16,18 +16,15 @@ import (
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/protocol"
 	"github.com/lni/dragonboat/v3/raftio"
-	"github.com/lni/dragonboat/v3/raftpb"
 	"github.com/rs/zerolog"
 )
 
 const (
-	RaftTransportProtocolVersion          protocol.ID = "/pleiades/raft-transport/0.0.1"
-	RaftSnapshotConnectionProtocolVersion protocol.ID = "/pleiades/raft-snapshot-connection/0.0.1"
+	RaftTransportProtocolVersion protocol.ID = "/pleiades/raft-transport/0.0.1"
 )
 
 var (
-	_ raftio.ITransport          = (*RaftTransport)(nil)
-	_ raftio.ISnapshotConnection = (*RaftSnapshotConnectionStream)(nil)
+	_ raftio.ITransport = (*RaftTransport)(nil)
 )
 
 type RaftTransport struct {
@@ -42,23 +39,27 @@ func (r *RaftTransport) Name() string {
 }
 
 func (r *RaftTransport) Start() error {
-	r.host.SetStreamHandler(RaftStreamProtocolVersion, r.streamHandler)
+	r.host.SetStreamHandler(RaftStreamProtocolVersion, r.connectionStreamHandler)
 	return nil
 }
 
-func (r *RaftTransport) streamHandler(stream network.Stream) {
-	streamer := RaftConnectionStream{
-		logger: r.logger.With().Str("peer", stream.Conn().RemotePeer().String()).Logger(),
+func (r *RaftTransport) connectionStreamHandler(stream network.Stream) {
+	streamer := &RaftConnectionStream{
+		logger:         r.logger.With().Str("peer", stream.Conn().RemotePeer().String()).Logger(),
 		messageHandler: r.messageHandler,
-		chunkHandler: r.chunkHandler,
-		stream: stream,
+		chunkHandler:   r.chunkHandler,
+		stream:         stream,
 	}
 
 	streamer.Serve()
 }
 
 func (r *RaftTransport) Stop() {
-	r.host.RemoveStreamHandler(RaftTransportProtocolVersion)
+
+	r.host.RemoveStreamHandler(RaftStreamProtocolVersion)
+	if err := r.host.Network().Close(); err != nil {
+		r.logger.Error().Err(err).Msg("failed to close network")
+	}
 }
 
 func (r *RaftTransport) GetConnection(ctx context.Context, target string) (raftio.IConnection, error) {
@@ -67,18 +68,6 @@ func (r *RaftTransport) GetConnection(ctx context.Context, target string) (rafti
 }
 
 func (r *RaftTransport) GetSnapshotConnection(ctx context.Context, target string) (raftio.ISnapshotConnection, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-type RaftSnapshotConnectionStream struct{}
-
-func (r *RaftSnapshotConnectionStream) Close() {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r *RaftSnapshotConnectionStream) SendChunk(chunk raftpb.Chunk) error {
 	//TODO implement me
 	panic("implement me")
 }

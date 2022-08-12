@@ -1,16 +1,36 @@
 syntax = "proto3";
 package database;
 
-// this is relative to the root of the repo
-import "api/v1/database/kv.proto";
-import "api/v1/database/raft_control.proto";
-
 option go_package = "./database";
 
 service SessionService {
   rpc NewSession(NewSessionRequest) returns (NewSessionResponse);
   rpc CloseSession(Session) returns (Session);
-  rpc ProposeSession(ProposeSessionRequest) returns (stream IndexState);
+//  rpc ProposeSession(ProposeSessionRequest) returns (stream IndexState);
+}
+
+message SessionPayload {
+  oneof Type {
+    NewSessionRequest NewSessionRequest = 1;
+    NewSessionResponse NewSessionResponse = 2;
+    CloseSessionRequest CloseSessionRequest = 3;
+    CloseSessionResponse CloseSessionResponse = 4;
+  }
+  enum MethodName {
+    NEW_SESSION = 0;
+    CLOSE_SESSION = 1;
+  }
+  MethodName Method = 5;
+}
+
+message CloseSessionRequest {
+  Session session = 1;
+  int64 timeout = 2;
+}
+
+message CloseSessionResponse {
+  Session session = 1;
+  int64 timeout = 2;
 }
 
 message ProposeSessionRequest {
@@ -32,13 +52,4 @@ message NewSessionRequest {
 
 message NewSessionResponse {
   uint64 session_id = 1;
-}
-
-message ProposeRequest {
-  Session session = 1;
-  KeyValue command = 2;
-}
-
-message ProposeResponse {
-  uint64 command_id = 1;
 }

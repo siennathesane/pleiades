@@ -26,6 +26,7 @@ var (
 		"nvm",
 		"krew",
 		"kubernetes-cli",
+		"graphviz",
 	}
 )
 

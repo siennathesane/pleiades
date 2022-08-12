@@ -2,8 +2,118 @@
 // file: api/v1/database/session.proto
 
 import * as jspb from "google-protobuf";
-import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
-import * as api_v1_database_raft_control_pb from "../../../api/v1/database/raft_control_pb";
+
+export class SessionPayload extends jspb.Message {
+  hasNewsessionrequest(): boolean;
+  clearNewsessionrequest(): void;
+  getNewsessionrequest(): NewSessionRequest | undefined;
+  setNewsessionrequest(value?: NewSessionRequest): void;
+
+  hasNewsessionresponse(): boolean;
+  clearNewsessionresponse(): void;
+  getNewsessionresponse(): NewSessionResponse | undefined;
+  setNewsessionresponse(value?: NewSessionResponse): void;
+
+  hasClosesessionrequest(): boolean;
+  clearClosesessionrequest(): void;
+  getClosesessionrequest(): CloseSessionRequest | undefined;
+  setClosesessionrequest(value?: CloseSessionRequest): void;
+
+  hasClosesessionresponse(): boolean;
+  clearClosesessionresponse(): void;
+  getClosesessionresponse(): CloseSessionResponse | undefined;
+  setClosesessionresponse(value?: CloseSessionResponse): void;
+
+  getMethod(): SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap];
+  setMethod(value: SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap]): void;
+
+  getTypeCase(): SessionPayload.TypeCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SessionPayload.AsObject;
+  static toObject(includeInstance: boolean, msg: SessionPayload): SessionPayload.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: SessionPayload, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SessionPayload;
+  static deserializeBinaryFromReader(message: SessionPayload, reader: jspb.BinaryReader): SessionPayload;
+}
+
+export namespace SessionPayload {
+  export type AsObject = {
+    newsessionrequest?: NewSessionRequest.AsObject,
+    newsessionresponse?: NewSessionResponse.AsObject,
+    closesessionrequest?: CloseSessionRequest.AsObject,
+    closesessionresponse?: CloseSessionResponse.AsObject,
+    method: SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap],
+  }
+
+  export interface MethodNameMap {
+    NEW_SESSION: 0;
+    CLOSE_SESSION: 1;
+  }
+
+  export const MethodName: MethodNameMap;
+
+  export enum TypeCase {
+    TYPE_NOT_SET = 0,
+    NEWSESSIONREQUEST = 1,
+    NEWSESSIONRESPONSE = 2,
+    CLOSESESSIONREQUEST = 3,
+    CLOSESESSIONRESPONSE = 4,
+  }
+}
+
+export class CloseSessionRequest extends jspb.Message {
+  hasSession(): boolean;
+  clearSession(): void;
+  getSession(): Session | undefined;
+  setSession(value?: Session): void;
+
+  getTimeout(): number;
+  setTimeout(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CloseSessionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CloseSessionRequest): CloseSessionRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CloseSessionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CloseSessionRequest;
+  static deserializeBinaryFromReader(message: CloseSessionRequest, reader: jspb.BinaryReader): CloseSessionRequest;
+}
+
+export namespace CloseSessionRequest {
+  export type AsObject = {
+    session?: Session.AsObject,
+    timeout: number,
+  }
+}
+
+export class CloseSessionResponse extends jspb.Message {
+  hasSession(): boolean;
+  clearSession(): void;
+  getSession(): Session | undefined;
+  setSession(value?: Session): void;
+
+  getTimeout(): number;
+  setTimeout(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CloseSessionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CloseSessionResponse): CloseSessionResponse.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CloseSessionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CloseSessionResponse;
+  static deserializeBinaryFromReader(message: CloseSessionResponse, reader: jspb.BinaryReader): CloseSessionResponse;
+}
+
+export namespace CloseSessionResponse {
+  export type AsObject = {
+    session?: Session.AsObject,
+    timeout: number,
+  }
+}
 
 export class ProposeSessionRequest extends jspb.Message {
   hasSession(): boolean;
@@ -104,54 +214,6 @@ export class NewSessionResponse extends jspb.Message {
 export namespace NewSessionResponse {
   export type AsObject = {
     sessionId: number,
-  }
-}
-
-export class ProposeRequest extends jspb.Message {
-  hasSession(): boolean;
-  clearSession(): void;
-  getSession(): Session | undefined;
-  setSession(value?: Session): void;
-
-  hasCommand(): boolean;
-  clearCommand(): void;
-  getCommand(): api_v1_database_kv_pb.KeyValue | undefined;
-  setCommand(value?: api_v1_database_kv_pb.KeyValue): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ProposeRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ProposeRequest): ProposeRequest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ProposeRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ProposeRequest;
-  static deserializeBinaryFromReader(message: ProposeRequest, reader: jspb.BinaryReader): ProposeRequest;
-}
-
-export namespace ProposeRequest {
-  export type AsObject = {
-    session?: Session.AsObject,
-    command?: api_v1_database_kv_pb.KeyValue.AsObject,
-  }
-}
-
-export class ProposeResponse extends jspb.Message {
-  getCommandId(): number;
-  setCommandId(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ProposeResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ProposeResponse): ProposeResponse.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: ProposeResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ProposeResponse;
-  static deserializeBinaryFromReader(message: ProposeResponse, reader: jspb.BinaryReader): ProposeResponse;
-}
-
-export namespace ProposeResponse {
-  export type AsObject = {
-    commandId: number,
   }
 }
 

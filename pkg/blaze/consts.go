@@ -17,6 +17,18 @@ import (
 const (
 	testServerPortStart int = 8000
 	testServerPortStop  int = 9000
+	headerSize int = 10
+)
+
+type StreamState uint32
+
+const (
+	Valid StreamState = 0
+	Invalid StreamState = 1
+	StreamStart StreamState = 2
+	StreamContinue StreamState = 3
+	StreamEnd StreamState = 4
+	InvalidMessageChecksum StreamState = 5
 )
 
 func testServerAddr() string {

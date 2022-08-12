@@ -16,6 +16,23 @@ syntax = "proto3";
 package database;
 option go_package = "./database";
 
+import "api/v1/database/session.proto";
+
+message EventPayload {
+  oneof Type {
+    KeyValueOperation KeyValueOperation = 1;
+  }
+  enum MethodName {
+    UNKNOWN = 0;
+  }
+  MethodName Method = 2;
+}
+
+message KeyValueOperation {
+  Session Session = 1;
+  Event Event = 2;
+}
+
 message KeyValue {
   // key is the key in bytes. An empty key is not allowed.
   bytes key = 1;
@@ -37,8 +54,9 @@ message KeyValue {
 
 message Event {
   enum EventType {
-    PUT = 0;
-    DELETE = 1;
+    GET = 0;
+    PUT = 1;
+    DELETE = 2;
   }
   // type is the kind of event. If type is a PUT, it indicates
   // new data has been stored to the key. If type is a DELETE,

@@ -10,11 +10,8 @@
 package blaze
 
 import (
-	"bytes"
-	"encoding/binary"
 	"hash/crc32"
 	"io"
-	"net"
 	"time"
 
 	"github.com/cockroachdb/errors"
@@ -27,10 +24,6 @@ import (
 
 const (
 	RaftStreamProtocolVersion protocol.ID = "/pleiades/raft-stream/0.0.1"
-
-	requestHeaderSize        = 18
-	raftType          uint16 = 100
-	snapshotType      uint16 = 200
 )
 
 var (
@@ -43,64 +36,12 @@ var (
 	errPoisonReceived   = errors.New("poison received")
 	MagicNumber         = [2]byte{0xAE, 0x7D}
 	PoisonNumber        = [2]byte{0x0, 0x0}
-	tlsHandshackTimeout = 10 * time.Second
 	magicNumberDuration = 1 * time.Second
 	headerDuration      = 2 * time.Second
 	readDuration        = 5 * time.Second
 	writeDuration       = 5 * time.Second
 	keepAlivePeriod     = 10 * time.Second
 )
-
-type requestHeader struct {
-	method uint16
-	size   uint64
-	crc    uint32
-}
-
-func (h *requestHeader) encode(buf []byte) []byte {
-	if len(buf) < requestHeaderSize {
-		panic("input buf too small")
-	}
-
-	// set the method type and size of payload
-	binary.LittleEndian.PutUint16(buf, h.method)
-	binary.LittleEndian.PutUint64(buf[2:], h.size)
-
-	binary.LittleEndian.PutUint32(buf[10:], 0)
-	binary.LittleEndian.PutUint32(buf[14:], h.crc)
-
-	v := crc32.ChecksumIEEE(buf[:requestHeaderSize])
-	binary.LittleEndian.PutUint32(buf[10:], v)
-
-	return buf[:requestHeaderSize]
-}
-
-func (h *requestHeader) decode(buf []byte) error {
-	if len(buf) < requestHeaderSize {
-		return errors.New("input buffer too small")
-	}
-
-	incoming := binary.LittleEndian.Uint32(buf[10:])
-	binary.LittleEndian.PutUint32(buf[10:], 0)
-
-	expected := crc32.ChecksumIEEE(buf[:requestHeaderSize])
-	if incoming != expected {
-		return errors.New("invalid crc checksum")
-	}
-
-	binary.LittleEndian.PutUint32(buf[10:], incoming)
-	method := binary.LittleEndian.Uint16(buf)
-
-	if method != raftType && method != snapshotType {
-		return errors.New("invalid method type")
-	}
-
-	h.method = method
-	h.size = binary.LittleEndian.Uint64(buf[2:])
-	h.crc = binary.LittleEndian.Uint32(buf[14:])
-
-	return nil
-}
 
 type RaftConnectionStream struct {
 	logger         zerolog.Logger
@@ -111,25 +52,33 @@ type RaftConnectionStream struct {
 
 func (r *RaftConnectionStream) Serve() {
 	for {
-		if err := r.VerifyMagicNumber(); err != nil {
-			if err == errPoisonReceived {
-				r.logger.Error().Err(err).Msg("poison received")
-				if err = r.Poison(); err != nil {
-					r.logger.Error().Err(err).Msg("failed to poison stream")
-				}
-				if err == ErrBadMessage {
-					return
-				}
-				operr, ok := err.(*net.OpError)
-				if ok && operr.Timeout() {
-					return
-				}
-			}
+		msg, err := NewMessageStream(r.stream, nil, r.logger)
+		if err != nil {
+			r.logger.Error().Err(err).Msg("failed to readAndHandle message")
+			return
 		}
 
-		if err := r.ReadMessage(); err != nil {
-			r.logger.Error().Err(err).Msg("failed to read message")
+		msgType, payload, err := msg.Read()
+		if err != nil {
+			r.logger.Error().Err(err).Msg("failed to readAndHandle message")
 			return
+		}
+
+		switch msgType{
+		case raftType:
+			buf := make([]byte, len(payload))
+			batch := raftpb.MessageBatch{}
+			if err := batch.Unmarshal(buf); err != nil {
+				r.logger.Error().Err(err).Msg("failed to unmarshal message")
+			}
+			r.messageHandler(batch)
+		case snapshotType:
+			buf := make([]byte, len(payload))
+			chunk := raftpb.Chunk{}
+			if err := chunk.Unmarshal(buf); err != nil {
+				r.logger.Error().Err(err).Msg("failed to unmarshal chunk")
+			}
+			r.chunkHandler(chunk)
 		}
 	}
 }
@@ -139,12 +88,12 @@ func (r *RaftConnectionStream) ReadMessage() error {
 
 	headerDeadline := time.Now().Add(headerDuration)
 	if err := r.stream.SetReadDeadline(headerDeadline); err != nil {
-		r.logger.Error().Err(err).Msg("failed to set read deadline for header")
+		r.logger.Error().Err(err).Msg("failed to set readAndHandle deadline for header")
 		return err
 	}
 
 	if _, err := io.ReadFull(r.stream, headerBuf); err != nil {
-		r.logger.Error().Err(err).Msg("failed to read header")
+		r.logger.Error().Err(err).Msg("failed to readAndHandle header")
 		return err
 	}
 
@@ -162,12 +111,12 @@ func (r *RaftConnectionStream) ReadMessage() error {
 	buf := make([]byte, header.size)
 	messageDeadline := time.Now().Add(readDuration)
 	if err := r.stream.SetReadDeadline(messageDeadline); err != nil {
-		r.logger.Error().Err(err).Msg("failed to set read deadline for message")
+		r.logger.Error().Err(err).Msg("failed to set readAndHandle deadline for message")
 		return err
 	}
 
 	if _, err := io.ReadFull(r.stream, buf); err != nil {
-		r.logger.Error().Err(err).Msg("failed to read message")
+		r.logger.Error().Err(err).Msg("failed to readAndHandle message")
 		return err
 	}
 
@@ -192,28 +141,6 @@ func (r *RaftConnectionStream) ReadMessage() error {
 			return err
 		}
 		r.chunkHandler(chunk)
-	}
-
-	return nil
-}
-
-func (r *RaftConnectionStream) VerifyMagicNumber() error {
-	readDeadline := time.Now().Add(magicNumberDuration)
-	if err := r.stream.SetReadDeadline(readDeadline); err != nil {
-		return err
-	}
-
-	magicLen := make([]byte, len(MagicNumber))
-	if _, err := io.ReadFull(r.stream, magicLen); err != nil {
-		return err
-	}
-
-	if !bytes.Equal(magicLen, PoisonNumber[:]) {
-		return errPoisonReceived
-	}
-
-	if !bytes.Equal(magicLen, MagicNumber[:]) {
-		return ErrBadMessage
 	}
 
 	return nil
