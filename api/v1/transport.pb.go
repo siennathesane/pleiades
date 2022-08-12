@@ -32,6 +32,7 @@ type State struct {
 	//   3: STREAM_CONTINUE
 	//   4: STREAM_END
 	//   5: INVALID_MESSAGE_CHECKSUM
+	//   6: SYSTEM_ERROR
 	State uint32 `protobuf:"fixed32,1,opt,name=State,proto3" json:"State,omitempty"`
 	// HeaderToFollow determines if there is a following message or not
 	//  0: False

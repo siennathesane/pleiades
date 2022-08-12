@@ -1,0 +1,15 @@
+syntax = "proto3";
+package database;
+option go_package = "./database";
+
+enum DBErrorType {
+  SESSION = 0;
+  KEY_VALUE = 1;
+  RAFT_CONTROL = 2;
+  RAFT_CLUSTER = 3;
+}
+
+message DBError {
+  DBErrorType Type = 1;
+  string Message = 2;
+}

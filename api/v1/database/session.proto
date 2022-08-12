@@ -2,6 +2,7 @@ syntax = "proto3";
 package database;
 
 option go_package = "./database";
+import "api/v1/database/errors.proto";
 
 service SessionService {
   rpc NewSession(NewSessionRequest) returns (NewSessionResponse);
@@ -15,12 +16,13 @@ message SessionPayload {
     NewSessionResponse NewSessionResponse = 2;
     CloseSessionRequest CloseSessionRequest = 3;
     CloseSessionResponse CloseSessionResponse = 4;
+    DBError Error = 5;
   }
   enum MethodName {
     NEW_SESSION = 0;
     CLOSE_SESSION = 1;
   }
-  MethodName Method = 5;
+  MethodName Method = 6;
 }
 
 message CloseSessionRequest {
