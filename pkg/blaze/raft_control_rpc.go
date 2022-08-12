@@ -11,21 +11,26 @@ package blaze
 
 import (
 	"context"
+	"hash/crc32"
+	"io"
 	"time"
 
+	transportv1 "github.com/mxplusb/pleiades/pkg/api/v1"
 	"github.com/mxplusb/pleiades/pkg/api/v1/database"
 	"github.com/cockroachdb/errors"
+	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/protocol"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 )
 
-var (
-	_ database.SRPCRaftControlServiceServer = (*RaftControlRPCServer)(nil)
-)
-
 const (
 	RaftControlProtocolVersion protocol.ID = "pleiades/raft-control/0.0.1"
+)
+
+var (
+	RaftControlRPCReadTimeout  time.Duration = 1 * time.Second
+	RaftControlRPCWriteTimeout time.Duration = 1 * time.Second
 )
 
 func NewRaftControlRPCServer(node INodeHost, logger zerolog.Logger) *RaftControlRPCServer {
@@ -36,9 +41,141 @@ func NewRaftControlRPCServer(node INodeHost, logger zerolog.Logger) *RaftControl
 }
 
 type RaftControlRPCServer struct {
-	database.SRPCRaftControlServiceUnimplementedServer
 	logger zerolog.Logger
 	node   INodeHost
+	stream network.Stream
+}
+
+func (n *RaftControlRPCServer) handleStream(stream network.Stream) {
+	n.stream = stream
+	n.readAndHandle()
+}
+
+func (n *RaftControlRPCServer) readAndHandle() {
+	for {
+		// verify the stream state
+		if err := VerifyStreamState(n.stream); err != nil {
+			n.logger.Error().Err(err).Msg("cannot readAndHandle stream state")
+			_ = SendStreamState(n.stream, Invalid, false)
+			continue
+		}
+
+		// get the header
+		if err := n.stream.SetReadDeadline(time.Now().Add(RaftControlRPCReadTimeout)); err != nil {
+			n.logger.Error().Err(err).Msg("cannot set read deadline")
+			_ = SendStreamState(n.stream, Invalid, false)
+		}
+
+		headerBuf := make([]byte, headerSize)
+		if _, err := io.ReadFull(n.stream, headerBuf); err != nil {
+			n.logger.Error().Err(err).Msg("cannot readAndHandle raft control header")
+			_ = SendStreamState(n.stream, Invalid, false)
+			continue
+		}
+
+		// marshall the header
+		header := &transportv1.Header{}
+		if err := header.UnmarshalVT(headerBuf); err != nil {
+			n.logger.Error().Err(err).Msg("cannot unmarshal header")
+			_ = SendStreamState(n.stream, Invalid, false)
+			continue
+		}
+
+		// prep the message buffer
+		msgBuf := make([]byte, header.Size)
+		if _, err := io.ReadFull(n.stream, msgBuf); err != nil {
+			n.logger.Error().Err(err).Msg("cannot readAndHandle message payload")
+			_ = SendStreamState(n.stream, Invalid, false)
+		}
+
+		// verify the message is intact
+		checked := crc32.ChecksumIEEE(msgBuf)
+		if checked != header.Checksum {
+			n.logger.Error().Msg("checksums do not match")
+			_ = SendStreamState(n.stream, InvalidMessageChecksum, false)
+		}
+
+		// unmarshal the payload
+		msg := &database.RaftControlPayload{}
+		if err := msg.UnmarshalVT(msgBuf); err != nil {
+			n.logger.Error().Err(err).Msg("cannot unmarshal payload")
+			_ = SendStreamState(n.stream, Invalid, false)
+		}
+
+		switch msg.Method {
+		case database.RaftControlPayload_ADD_NODE:
+			n.addNodeHandler(msg.GetModifyNodeRequest())
+		}
+	}
+}
+
+func (n *RaftControlRPCServer) writePayloads(payloadStream <-chan []byte, isStream bool) {
+	count := 0
+	for {
+		if payload, ok := <-payloadStream; ok {
+			// send the proper state
+			//goland:noinspection GoBoolExpressions
+			if count < 1 && isStream {
+				if err := SendStreamState(n.stream, StreamStart, true); err != nil {
+					n.logger.Error().Err(err).Msg("cannot send stream start state, unrecoverable")
+					return
+				}
+			} else if count > 1 && isStream {
+				if err := SendStreamState(n.stream, StreamContinue, true); err != nil {
+					n.logger.Error().Err(err).Msg("cannot send stream continue state, unrecoverable")
+					return
+				}
+			} else {
+				if err := SendStreamState(n.stream, Valid, true); err != nil {
+					n.logger.Error().Err(err).Msg("cannot send stream valid state, unrecoverable")
+					return
+				}
+			}
+
+			// set the header
+			header := transportv1.Header{
+				Size:     uint32(len(payload)),
+				Checksum: crc32.ChecksumIEEE(payload),
+			}
+			headerBuf, err := header.MarshalVT()
+			if err != nil {
+				n.logger.Error().Err(err).Msg("cannot marshal header")
+			}
+
+			// set the write deadline
+			deadline := time.Now().Add(RaftControlRPCWriteTimeout)
+			if err := n.stream.SetWriteDeadline(deadline); err != nil {
+				n.logger.Error().Err(err).Msg("cannot set write timeout, unrecoverable")
+			}
+
+			// write the header
+			if _, err := n.stream.Write(headerBuf); err != nil {
+				n.logger.Error().Err(err).Msg("cannot write header to stream, unrecoverable")
+				return
+			}
+
+			// set the write deadline
+			deadline = time.Now().Add(RaftControlRPCWriteTimeout)
+			if err := n.stream.SetWriteDeadline(deadline); err != nil {
+				n.logger.Error().Err(err).Msg("cannot set write timeout, unrecoverable")
+			}
+
+			// write the header
+			if _, err := n.stream.Write(payload); err != nil {
+				n.logger.Error().Err(err).Msg("cannot write header to stream, unrecoverable")
+				return
+			}
+
+			count++
+		} else if !ok {
+			if isStream {
+				_ = SendStreamState(n.stream, StreamEnd, false)
+			} else {
+				_ = SendStreamState(n.stream, Valid, false)
+			}
+			return
+		}
+	}
 }
 
 func (n *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest) (*database.GetLeaderIDResponse, error) {
@@ -64,7 +201,7 @@ func (n *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest)
 	return &database.IdResponse{Id: id}, nil
 }
 
-func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream database.SRPCRaftControlService_ReadIndexStream) error {
+func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	timeout := time.Duration(request.GetTimeout())
 	rs, err := n.node.ReadIndex(clusterId, timeout)
@@ -88,9 +225,7 @@ func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, str
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -111,7 +246,7 @@ func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *datab
 	var rs dragonboat.RequestState
 	data, err := n.node.ReadLocalNode(&rs, query)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("can't read from local node")
+		n.logger.Error().Err(err).Msg("can't readAndHandle from local node")
 		return nil, err
 	}
 
@@ -130,7 +265,34 @@ func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *datab
 	return kv, nil
 }
 
-func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddNodeStream) error {
+func (n *RaftControlRPCServer) addNodeHandler(request *database.ModifyNodeRequest) {
+	resultsChan := make(chan *database.IndexState, 2)
+	writerChan := make(chan []byte)
+
+	go func(idxState chan *database.IndexState, writerPayloads chan<- []byte) {
+		count := 0
+		for count < 3 {
+			if idx, ok := <- idxState; ok {
+				msg := &database.RaftControlPayload{
+					Types: &database.RaftControlPayload_IndexState{IndexState: idx},
+				}
+				buf, _ := msg.MarshalVT()
+				writerChan <- buf
+				count++
+			} else if !ok {
+				return
+			}
+			return
+		}
+	}(resultsChan, writerChan)
+	go n.writePayloads(writerChan, true)
+
+	if err := n.AddNode(request, resultsChan); err != nil {
+		n.logger.Error().Err(err).Msg("")
+	}
+}
+
+func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -158,9 +320,7 @@ func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stre
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -170,7 +330,7 @@ func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stre
 	return nil
 }
 
-func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddObserverStream) error {
+func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -198,9 +358,7 @@ func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, 
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -210,7 +368,7 @@ func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, 
 	return nil
 }
 
-func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_AddWitnessStream) error {
+func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -238,9 +396,7 @@ func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, s
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -262,12 +418,12 @@ func (n *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *d
 	}
 
 	select {
-	case <- state.ResultC():
+	case <-state.ResultC():
 		return &database.SysOpState{}, nil
 	}
 }
 
-func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream database.SRPCRaftControlService_RequestDeleteNodeStream) error {
+func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
@@ -294,9 +450,7 @@ func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeReq
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -317,7 +471,7 @@ func (n *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, reques
 	return &database.RequestLeaderTransferResponse{}, nil
 }
 
-func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream database.SRPCRaftControlService_RequestSnapshotStream) error {
+func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream chan<- *database.IndexState) error {
 	clusterId := request.GetClusterId()
 	snapOpts := request.GetOptions()
 	timeout := time.Duration(request.GetTimeout())
@@ -350,9 +504,7 @@ func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshot
 
 		count += 1
 
-		if err := errors.Wrap(stream.Send(indexState), "error sending index state"); err != nil {
-			return err
-		}
+		stream <- indexState
 
 		if n.node.NotifyOnCommit() && count == 2 {
 			n.logger.Debug().Msg("returned both results")
@@ -376,7 +528,7 @@ func (n *RaftControlRPCServer) StopNode(ctx context.Context, request *database.M
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 
-	return nil, errors.Wrap(n.node.StopNode(clusterId ,nodeId), "could not stop node")
+	return nil, errors.Wrap(n.node.StopNode(clusterId, nodeId), "could not stop node")
 }
 
 func (n *RaftControlRPCServer) requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {

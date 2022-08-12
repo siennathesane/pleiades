@@ -1,0 +1,303 @@
+@startuml
+namespace blaze {
+    class ClusterManager << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - nodeHost *dragonboat.NodeHost
+
+        + StartCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateStateMachineFunc, cfg config.Config) error
+        + StartConcurrentCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateConcurrentStateMachineFunc, cfg config.Config) error
+        + StartOnDiskCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateOnDiskStateMachineFunc, cfg config.Config) error
+        + StopCluster(clusterID uint64) error
+        + SyncGetClusterMembership(ctx context.Context, clusterID uint64) (*dragonboat.Membership, error)
+
+    }
+    interface ICluster  {
+        + StartCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateStateMachineFunc, cfg config.Config) error
+        + StartConcurrentCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateConcurrentStateMachineFunc, cfg config.Config) error
+        + StartOnDiskCluster(initialMembers <font color=blue>map</font>[uint64]dragonboat.Target, join bool, create statemachine.CreateOnDiskStateMachineFunc, cfg config.Config) error
+        + StopCluster(clusterID uint64) error
+        + SyncGetClusterMembership(ctx context.Context, clusterID uint64) (*dragonboat.Membership, error)
+
+    }
+    interface INodeConfig  {
+        + NodeHostConfig() config.NodeHostConfig
+        + HasNodeInfo(clusterID uint64, nodeID uint64) bool
+        + GetNodeHostInfo(opt dragonboat.NodeHostInfoOption) *dragonboat.NodeHostInfo
+
+    }
+    interface INodeHost  {
+        + NotifyOnCommit() bool
+        + GetLeaderID(clusterID uint64) (uint64, bool, error)
+        + GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
+        + ID() string
+        + NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error)
+        + RaftAddress() string
+        + ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + ReadLocalNode(rs *dragonboat.RequestState, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + RemoveData(clusterID uint64, nodeID uint64) error
+        + RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestAddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestCompaction(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error)
+        + RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error
+        + RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
+        + StaleRead(clusterID uint64, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + Stop() 
+        + StopNode(clusterID uint64, nodeID uint64) error
+        + SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
+        + SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error
+        + SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error)
+
+    }
+    interface IReadWriter  {
+        + Read() (T, error)
+        + Write() error
+
+    }
+    interface ISession  {
+        + GetNoOPSession(clusterID uint64) *client.Session
+        + SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
+        + SyncCloseSession(ctx context.Context, cs *client.Session) error
+        + ProposeSession(session *client.Session, timeout time.Duration) (*dragonboat.RequestState, error)
+
+    }
+    interface IStore  {
+        + SyncPropose(ctx context.Context, session *client.Session, cmd []byte) (statemachine.Result, error)
+        + SyncRead(ctx context.Context, clusterID uint64, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + Propose(session *client.Session, cmd []byte, timeout time.Duration) (*dragonboat.RequestState, error)
+
+    }
+    class MessageStream << (S,Aquamarine) >> {
+        - stream network.Stream
+        - logger zerolog.Logger
+        - header requestHeader
+        - body []byte
+
+        + VerifyMagicNumber() error
+        + Send(t uint16) error
+        + Read() (uint16, []byte, error)
+
+    }
+    class Node << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - nh *dragonboat.NodeHost
+        - started bool
+        - notifyOnCommit bool
+        - clusterManager ICluster
+        - sessionManager ISession
+        - storeManager IStore
+
+        - verifyStarted() (error, bool)
+
+        + NewOrGetClusterManager() (ICluster, error)
+        + NewOrGetSessionManager() (ISession, error)
+        + NewOrGetStoreManager() (IStore, error)
+        + NotifyOnCommit() bool
+        + GetLeaderID(clusterID uint64) (uint64, bool, error)
+        + GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
+        + ID() string
+        + NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error)
+        + RaftAddress() string
+        + ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + ReadLocalNode(rs *dragonboat.RequestState, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + RemoveData(clusterID uint64, nodeID uint64) error
+        + RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestAddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestCompaction(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error)
+        + RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+        + RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error
+        + RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
+        + StaleRead(clusterID uint64, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + Stop() 
+        + StopNode(clusterID uint64, nodeID uint64) error
+        + SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
+        + SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+        + SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error
+        + SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error)
+
+    }
+    class QuicTestKit << (S,Aquamarine) >> {
+        - t *testing.T
+        - logger zerolog.Logger
+        - testServerAddr string
+        - quicConfig *quic.Config
+        - listener quic.Listener
+        - dialConn quic.Connection
+        - certPool *x509.CertPool
+        - keyPair tls.Certificate
+        - tlsConf *tls.Config
+        - ctx context.Context
+
+        + Start() 
+        + Stop() 
+        + GenerateTlsConfig() (*tls.Config, error)
+        + GetListener() quic.Listener
+        + CloseListener() 
+        + GetConnection() quic.Connection
+        + NewConnectionStream() quic.Stream
+
+    }
+    class RaftConnectionStream << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - stream network.Stream
+        - messageHandler raftio.MessageHandler
+        - chunkHandler raftio.ChunkHandler
+
+        + Serve() 
+        + ReadMessage() error
+        + Poison() error
+        + Close() 
+        + SendMessageBatch(batch raftpb.MessageBatch) error
+
+    }
+    class RaftControlRPCServer << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - node INodeHost
+        - stream network.Stream
+
+        - handleStream(stream network.Stream) 
+        - readAndHandle() 
+        - writePayloads(payloadStream <font color=blue>chan</font> []byte, isStream bool) 
+        - addNodeHandler(request *database.ModifyNodeRequest) 
+        - requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode
+
+        + GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest) (*database.GetLeaderIDResponse, error)
+        + GetID(ctx context.Context, _ *database.IdRequest) (*database.IdResponse, error)
+        + ReadIndex(request *database.ReadIndexRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest) (*database.KeyValue, error)
+        + AddNode(request *database.ModifyNodeRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + AddObserver(request *database.ModifyNodeRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + AddWitness(request *database.ModifyNodeRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest) (*database.SysOpState, error)
+        + RequestDeleteNode(request *database.ModifyNodeRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest) (*database.RequestLeaderTransferResponse, error)
+        + RequestSnapshot(request *database.RequestSnapshotRequest, stream <font color=blue>chan</font> *database.IndexState) error
+        + Stop(ctx context.Context, request *database.StopRequest) (*database.StopResponse, error)
+        + StopNode(ctx context.Context, request *database.ModifyNodeRequest) (*database.StopNodeResponse, error)
+
+    }
+    class RaftSnapshotConnectionStream << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - stream network.Stream
+
+        + Close() 
+        + SendChunk(chunk raftpb.Chunk) error
+
+    }
+    class RaftTransport << (S,Aquamarine) >> {
+        - host host.Host
+        - logger zerolog.Logger
+        - messageHandler raftio.MessageHandler
+        - chunkHandler raftio.ChunkHandler
+
+        - connectionStreamHandler(stream network.Stream) 
+
+        + Name() string
+        + Start() error
+        + Stop() 
+        + GetConnection(ctx context.Context, target string) (raftio.IConnection, error)
+        + GetSnapshotConnection(ctx context.Context, target string) (raftio.ISnapshotConnection, error)
+
+    }
+    class Runtime << (S,Aquamarine) >> {
+        - addrs []multiaddr.Multiaddr
+        - ctx context.Context
+        - host host.Host
+        - listener transport.Listener
+        - logger zerolog.Logger
+        - mp go-mplex.Multiplex
+        - mux srpc.Mux
+        - peerId peer.ID
+        - privKey crypto.PrivKey
+        - srv *srpc.Server
+        - quicTr transport.Transport
+
+        - handleStream(stream network.Stream) 
+
+        + Run() error
+        + Stop() 
+
+    }
+    class Server << (S,Aquamarine) >> {
+        - listener quic.Listener
+        - logger zerolog.Logger
+        - closed bool
+        - mu sync.RWMutex
+        - registry *config.Registry
+
+        - handleConn(ctx context.Context) 
+        - handleStreams(conn quic.Connection, ctx context.Context) 
+        - receiveStream(ctx context.Context, inheritedLogger zerolog.Logger, stream quic.Stream) 
+
+        + Start(ctx context.Context) error
+        + Stop(ctx context.Context) error
+
+    }
+    class SessionManager << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - nh *dragonboat.NodeHost
+
+        + GetNoOPSession(clusterID uint64) *client.Session
+        + SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
+        + SyncCloseSession(ctx context.Context, cs *client.Session) error
+        + ProposeSession(session *client.Session, timeout time.Duration) (*dragonboat.RequestState, error)
+
+    }
+    class StoreManager << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - nodeHost *dragonboat.NodeHost
+
+        + SyncPropose(ctx context.Context, session *client.Session, cmd []byte) (statemachine.Result, error)
+        + SyncRead(ctx context.Context, clusterID uint64, query <font color=blue>interface</font>{}) (<font color=blue>interface</font>{}, error)
+        + Propose(session *client.Session, cmd []byte, timeout time.Duration) (*dragonboat.RequestState, error)
+
+    }
+    class StreamReceiver << (S,Aquamarine) >> {
+        - logger zerolog.Logger
+        - registry *config.Registry
+
+        + Receive(ctx context.Context, logger zerolog.Logger, stream quic.Stream) 
+
+    }
+    class TestStream << (S,Aquamarine) >> {
+        - buf *bytes.Buffer
+
+        + Read(p []byte) (int, error)
+        + CancelRead(code quic.StreamErrorCode) 
+        + SetReadDeadline(time time.Time) error
+        + StreamID() quic.StreamID
+        + Write(p []byte) (int, error)
+        + Close() error
+        + CancelWrite(code quic.StreamErrorCode) 
+        + Context() context.Context
+        + SetWriteDeadline(time time.Time) error
+        + SetDeadline(time time.Time) error
+
+    }
+    class blaze.StreamState << (T, #FF7700) >>  {
+    }
+    class requestHeader << (S,Aquamarine) >> {
+        - method uint16
+        - size uint64
+        - crc uint32
+
+        - encode(buf []byte) []byte
+        - decode(buf []byte) error
+
+    }
+}
+
+"blaze.ICluster" <|-- "blaze.ClusterManager"
+"blaze.INodeHost" <|-- "blaze.Node"
+"blaze.ISession" <|-- "blaze.SessionManager"
+"blaze.IStore" <|-- "blaze.StoreManager"
+
+"__builtin__.uint32" #.. "blaze.StreamState"
+@enduml

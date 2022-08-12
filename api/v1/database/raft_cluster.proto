@@ -9,6 +9,23 @@ service RaftClusterService {
   rpc GetClusterMembership(GetClusterMembershipRequest) returns (GetClusterMembershipResponse);
 }
 
+message RaftClusterPayload {
+  oneof Type {
+      GetClusterMembershipRequest GetClusterMembershipRequest = 1;
+      GetClusterMembershipResponse GetClusterMembershipResponse = 2;
+      StopClusterRequest StopClusterRequest = 3;
+      StopClusterResponse StopClusterResponse = 4;
+      StartClusterRequest StartClusterRequest = 5;
+      StartClusterResponse StartClusterResponse = 6;
+  }
+  enum MethodName {
+    START_CLUSTER = 0;
+    STOP_CLUSTER = 1;
+    GET_CLUSTER_MEMBERSHIP = 2;
+  }
+  MethodName Method = 7;
+}
+
 message GetClusterMembershipRequest {
   uint64 clusterId = 1;
 }

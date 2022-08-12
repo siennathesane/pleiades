@@ -1,0 +1,24 @@
+syntax = "proto3";
+package v1;
+
+option go_package = "./v1";
+
+message State {
+  // State is the current state of a given network stream.
+  //   0: VALID
+  //   1: INVALID
+  //   2: STREAM_START
+  //   3: STREAM_CONTINUE
+  //   4: STREAM_END
+  //   5: INVALID_MESSAGE_CHECKSUM
+  fixed32 State = 1;
+  // HeaderToFollow determines if there is a following message or not
+  //  0: False
+  //  1: True
+  fixed32 HeaderToFollow = 2;
+}
+
+message Header {
+  fixed32 Size = 1;
+  fixed32 Checksum = 2;
+}

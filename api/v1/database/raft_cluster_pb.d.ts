@@ -3,6 +3,81 @@
 
 import * as jspb from "google-protobuf";
 
+export class RaftClusterPayload extends jspb.Message {
+  hasGetclustermembershiprequest(): boolean;
+  clearGetclustermembershiprequest(): void;
+  getGetclustermembershiprequest(): GetClusterMembershipRequest | undefined;
+  setGetclustermembershiprequest(value?: GetClusterMembershipRequest): void;
+
+  hasGetclustermembershipresponse(): boolean;
+  clearGetclustermembershipresponse(): void;
+  getGetclustermembershipresponse(): GetClusterMembershipResponse | undefined;
+  setGetclustermembershipresponse(value?: GetClusterMembershipResponse): void;
+
+  hasStopclusterrequest(): boolean;
+  clearStopclusterrequest(): void;
+  getStopclusterrequest(): StopClusterRequest | undefined;
+  setStopclusterrequest(value?: StopClusterRequest): void;
+
+  hasStopclusterresponse(): boolean;
+  clearStopclusterresponse(): void;
+  getStopclusterresponse(): StopClusterResponse | undefined;
+  setStopclusterresponse(value?: StopClusterResponse): void;
+
+  hasStartclusterrequest(): boolean;
+  clearStartclusterrequest(): void;
+  getStartclusterrequest(): StartClusterRequest | undefined;
+  setStartclusterrequest(value?: StartClusterRequest): void;
+
+  hasStartclusterresponse(): boolean;
+  clearStartclusterresponse(): void;
+  getStartclusterresponse(): StartClusterResponse | undefined;
+  setStartclusterresponse(value?: StartClusterResponse): void;
+
+  getMethod(): RaftClusterPayload.MethodNameMap[keyof RaftClusterPayload.MethodNameMap];
+  setMethod(value: RaftClusterPayload.MethodNameMap[keyof RaftClusterPayload.MethodNameMap]): void;
+
+  getTypeCase(): RaftClusterPayload.TypeCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RaftClusterPayload.AsObject;
+  static toObject(includeInstance: boolean, msg: RaftClusterPayload): RaftClusterPayload.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: RaftClusterPayload, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RaftClusterPayload;
+  static deserializeBinaryFromReader(message: RaftClusterPayload, reader: jspb.BinaryReader): RaftClusterPayload;
+}
+
+export namespace RaftClusterPayload {
+  export type AsObject = {
+    getclustermembershiprequest?: GetClusterMembershipRequest.AsObject,
+    getclustermembershipresponse?: GetClusterMembershipResponse.AsObject,
+    stopclusterrequest?: StopClusterRequest.AsObject,
+    stopclusterresponse?: StopClusterResponse.AsObject,
+    startclusterrequest?: StartClusterRequest.AsObject,
+    startclusterresponse?: StartClusterResponse.AsObject,
+    method: RaftClusterPayload.MethodNameMap[keyof RaftClusterPayload.MethodNameMap],
+  }
+
+  export interface MethodNameMap {
+    START_CLUSTER: 0;
+    STOP_CLUSTER: 1;
+    GET_CLUSTER_MEMBERSHIP: 2;
+  }
+
+  export const MethodName: MethodNameMap;
+
+  export enum TypeCase {
+    TYPE_NOT_SET = 0,
+    GETCLUSTERMEMBERSHIPREQUEST = 1,
+    GETCLUSTERMEMBERSHIPRESPONSE = 2,
+    STOPCLUSTERREQUEST = 3,
+    STOPCLUSTERRESPONSE = 4,
+    STARTCLUSTERREQUEST = 5,
+    STARTCLUSTERRESPONSE = 6,
+  }
+}
+
 export class GetClusterMembershipRequest extends jspb.Message {
   getClusterid(): number;
   setClusterid(value: number): void;
