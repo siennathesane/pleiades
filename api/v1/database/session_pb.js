@@ -15,6 +15,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = (function() { return this || window || global || self || Function('return this')(); }).call(null);
 
+var api_v1_database_errors_pb = require('../../../api/v1/database/errors_pb.js');
+goog.object.extend(proto, api_v1_database_errors_pb);
 goog.exportSymbol('proto.database.CloseSessionRequest', null, global);
 goog.exportSymbol('proto.database.CloseSessionResponse', null, global);
 goog.exportSymbol('proto.database.NewSessionRequest', null, global);
@@ -180,7 +182,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.database.SessionPayload.oneofGroups_ = [[1,2,3,4]];
+proto.database.SessionPayload.oneofGroups_ = [[1,2,3,4,5]];
 
 /**
  * @enum {number}
@@ -190,7 +192,8 @@ proto.database.SessionPayload.TypeCase = {
   NEWSESSIONREQUEST: 1,
   NEWSESSIONRESPONSE: 2,
   CLOSESESSIONREQUEST: 3,
-  CLOSESESSIONRESPONSE: 4
+  CLOSESESSIONRESPONSE: 4,
+  ERROR: 5
 };
 
 /**
@@ -235,7 +238,8 @@ proto.database.SessionPayload.toObject = function(includeInstance, msg) {
     newsessionresponse: (f = msg.getNewsessionresponse()) && proto.database.NewSessionResponse.toObject(includeInstance, f),
     closesessionrequest: (f = msg.getClosesessionrequest()) && proto.database.CloseSessionRequest.toObject(includeInstance, f),
     closesessionresponse: (f = msg.getClosesessionresponse()) && proto.database.CloseSessionResponse.toObject(includeInstance, f),
-    method: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    error: (f = msg.getError()) && api_v1_database_errors_pb.DBError.toObject(includeInstance, f),
+    method: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -293,6 +297,11 @@ proto.database.SessionPayload.deserializeBinaryFromReader = function(msg, reader
       msg.setClosesessionresponse(value);
       break;
     case 5:
+      var value = new api_v1_database_errors_pb.DBError;
+      reader.readMessage(value,api_v1_database_errors_pb.DBError.deserializeBinaryFromReader);
+      msg.setError(value);
+      break;
+    case 6:
       var value = /** @type {!proto.database.SessionPayload.MethodName} */ (reader.readEnum());
       msg.setMethod(value);
       break;
@@ -357,10 +366,18 @@ proto.database.SessionPayload.serializeBinaryToWriter = function(message, writer
       proto.database.CloseSessionResponse.serializeBinaryToWriter
     );
   }
+  f = message.getError();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      api_v1_database_errors_pb.DBError.serializeBinaryToWriter
+    );
+  }
   f = message.getMethod();
   if (f !== 0.0) {
     writer.writeEnum(
-      5,
+      6,
       f
     );
   }
@@ -524,11 +541,48 @@ proto.database.SessionPayload.prototype.hasClosesessionresponse = function() {
 
 
 /**
- * optional MethodName Method = 5;
+ * optional DBError Error = 5;
+ * @return {?proto.database.DBError}
+ */
+proto.database.SessionPayload.prototype.getError = function() {
+  return /** @type{?proto.database.DBError} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_errors_pb.DBError, 5));
+};
+
+
+/**
+ * @param {?proto.database.DBError|undefined} value
+ * @return {!proto.database.SessionPayload} returns this
+*/
+proto.database.SessionPayload.prototype.setError = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 5, proto.database.SessionPayload.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.SessionPayload} returns this
+ */
+proto.database.SessionPayload.prototype.clearError = function() {
+  return this.setError(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.SessionPayload.prototype.hasError = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional MethodName Method = 6;
  * @return {!proto.database.SessionPayload.MethodName}
  */
 proto.database.SessionPayload.prototype.getMethod = function() {
-  return /** @type {!proto.database.SessionPayload.MethodName} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {!proto.database.SessionPayload.MethodName} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -537,7 +591,7 @@ proto.database.SessionPayload.prototype.getMethod = function() {
  * @return {!proto.database.SessionPayload} returns this
  */
 proto.database.SessionPayload.prototype.setMethod = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 

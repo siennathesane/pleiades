@@ -2,6 +2,7 @@
 // file: api/v1/database/session.proto
 
 import * as jspb from "google-protobuf";
+import * as api_v1_database_errors_pb from "../../../api/v1/database/errors_pb";
 
 export class SessionPayload extends jspb.Message {
   hasNewsessionrequest(): boolean;
@@ -24,6 +25,11 @@ export class SessionPayload extends jspb.Message {
   getClosesessionresponse(): CloseSessionResponse | undefined;
   setClosesessionresponse(value?: CloseSessionResponse): void;
 
+  hasError(): boolean;
+  clearError(): void;
+  getError(): api_v1_database_errors_pb.DBError | undefined;
+  setError(value?: api_v1_database_errors_pb.DBError): void;
+
   getMethod(): SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap];
   setMethod(value: SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap]): void;
 
@@ -44,6 +50,7 @@ export namespace SessionPayload {
     newsessionresponse?: NewSessionResponse.AsObject,
     closesessionrequest?: CloseSessionRequest.AsObject,
     closesessionresponse?: CloseSessionResponse.AsObject,
+    error?: api_v1_database_errors_pb.DBError.AsObject,
     method: SessionPayload.MethodNameMap[keyof SessionPayload.MethodNameMap],
   }
 
@@ -60,6 +67,7 @@ export namespace SessionPayload {
     NEWSESSIONRESPONSE = 2,
     CLOSESESSIONREQUEST = 3,
     CLOSESESSIONRESPONSE = 4,
+    ERROR = 5,
   }
 }
 

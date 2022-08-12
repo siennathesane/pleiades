@@ -25,7 +25,7 @@ import (
 )
 
 const (
-	RaftControlProtocolVersion protocol.ID = "pleiades/raft-control/0.0.1"
+	RaftControlProtocolVersion protocol.ID = "/pleiades/raft-control/0.0.1"
 )
 
 var (
@@ -221,18 +221,19 @@ func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, str
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
 		stream <- indexState
 
-		if n.node.NotifyOnCommit() && count == 2 {
+		if n.node.NotifyOnCommit() || count == 2 {
 			n.logger.Debug().Msg("returned both results")
+			return nil
+		} else {
 			return nil
 		}
 	}
-	return nil
 }
 
 func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest) (*database.KeyValue, error) {
@@ -269,6 +270,9 @@ func (n *RaftControlRPCServer) addNodeHandler(request *database.ModifyNodeReques
 	resultsChan := make(chan *database.IndexState, 2)
 	writerChan := make(chan []byte)
 
+	defer close(resultsChan)
+	defer close(writerChan)
+
 	go func(idxState chan *database.IndexState, writerPayloads chan<- []byte) {
 		count := 0
 		for count < 3 {
@@ -288,7 +292,7 @@ func (n *RaftControlRPCServer) addNodeHandler(request *database.ModifyNodeReques
 	go n.writePayloads(writerChan, true)
 
 	if err := n.AddNode(request, resultsChan); err != nil {
-		n.logger.Error().Err(err).Msg("")
+		n.logger.Error().Err(err).Msg("failed to add node")
 	}
 }
 
@@ -316,7 +320,7 @@ func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stre
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
@@ -354,7 +358,7 @@ func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, 
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
@@ -392,7 +396,7 @@ func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, s
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
@@ -446,7 +450,7 @@ func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeReq
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
@@ -500,7 +504,7 @@ func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshot
 			Data:  results.Data,
 		}
 		indexState.SnapshotIndex = response.SnapshotIndex()
-		indexState.Status = n.requestStateCodeToResultCode(response)
+		indexState.Status = requestStateCodeToResultCode(response)
 
 		count += 1
 
@@ -531,7 +535,7 @@ func (n *RaftControlRPCServer) StopNode(ctx context.Context, request *database.M
 	return nil, errors.Wrap(n.node.StopNode(clusterId, nodeId), "could not stop node")
 }
 
-func (n *RaftControlRPCServer) requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {
+func requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {
 	switch {
 	case result.Aborted():
 		return database.IndexState_Aborted
