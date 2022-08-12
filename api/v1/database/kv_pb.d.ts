@@ -2,6 +2,73 @@
 // file: api/v1/database/kv.proto
 
 import * as jspb from "google-protobuf";
+import * as api_v1_database_session_pb from "../../../api/v1/database/session_pb";
+
+export class EventPayload extends jspb.Message {
+  hasKeyvalueoperation(): boolean;
+  clearKeyvalueoperation(): void;
+  getKeyvalueoperation(): KeyValueOperation | undefined;
+  setKeyvalueoperation(value?: KeyValueOperation): void;
+
+  getMethod(): EventPayload.MethodNameMap[keyof EventPayload.MethodNameMap];
+  setMethod(value: EventPayload.MethodNameMap[keyof EventPayload.MethodNameMap]): void;
+
+  getTypeCase(): EventPayload.TypeCase;
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): EventPayload.AsObject;
+  static toObject(includeInstance: boolean, msg: EventPayload): EventPayload.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: EventPayload, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): EventPayload;
+  static deserializeBinaryFromReader(message: EventPayload, reader: jspb.BinaryReader): EventPayload;
+}
+
+export namespace EventPayload {
+  export type AsObject = {
+    keyvalueoperation?: KeyValueOperation.AsObject,
+    method: EventPayload.MethodNameMap[keyof EventPayload.MethodNameMap],
+  }
+
+  export interface MethodNameMap {
+    UNKNOWN: 0;
+  }
+
+  export const MethodName: MethodNameMap;
+
+  export enum TypeCase {
+    TYPE_NOT_SET = 0,
+    KEYVALUEOPERATION = 1,
+  }
+}
+
+export class KeyValueOperation extends jspb.Message {
+  hasSession(): boolean;
+  clearSession(): void;
+  getSession(): api_v1_database_session_pb.Session | undefined;
+  setSession(value?: api_v1_database_session_pb.Session): void;
+
+  hasEvent(): boolean;
+  clearEvent(): void;
+  getEvent(): Event | undefined;
+  setEvent(value?: Event): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): KeyValueOperation.AsObject;
+  static toObject(includeInstance: boolean, msg: KeyValueOperation): KeyValueOperation.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: KeyValueOperation, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KeyValueOperation;
+  static deserializeBinaryFromReader(message: KeyValueOperation, reader: jspb.BinaryReader): KeyValueOperation;
+}
+
+export namespace KeyValueOperation {
+  export type AsObject = {
+    session?: api_v1_database_session_pb.Session.AsObject,
+    event?: Event.AsObject,
+  }
+}
 
 export class KeyValue extends jspb.Message {
   getKey(): Uint8Array | string;
@@ -79,8 +146,9 @@ export namespace Event {
   }
 
   export interface EventTypeMap {
-    PUT: 0;
-    DELETE: 1;
+    GET: 0;
+    PUT: 1;
+    DELETE: 2;
   }
 
   export const EventType: EventTypeMap;

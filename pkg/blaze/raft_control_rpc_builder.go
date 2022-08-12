@@ -10,7 +10,6 @@
 package blaze
 
 import (
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
 	"github.com/mxplusb/pleiades/pkg/conf"
 	"github.com/aperturerobotics/starpc/srpc"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -32,12 +31,7 @@ func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogg
 		return err
 	}
 
-	nodeHostRpc := NewRaftControlRPCServer(node, l)
-
-	if err := database.SRPCRegisterRaftControlService(mux, nodeHostRpc); err != nil {
-		l.Error().Err(err).Msg("failed to register raft control service")
-		return err
-	}
+	_ = NewRaftControlRPCServer(node, l)
 
 	return nil
 }

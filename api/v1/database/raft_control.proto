@@ -6,61 +6,40 @@ import "api/v1/database/kv.proto";
 
 option go_package = "./database";
 
-// RaftControlService represents the Raft control plane for a given host
-service RaftControlService {
-  // GetLeaderID returns the leader node ID of the specified Raft cluster based on local node's knowledge.
-  rpc GetLeaderID(GetLeaderIDRequest) returns (GetLeaderIDResponse);
-  // ID returns the string representation of the NodeHost ID value. The NodeHost ID is assigned to each NodeHost on its initial creation and it can be used to uniquely identify the NodeHost instance for its entire life cycle. When the system is running in the AddressByNodeHost mode, it is used as the target value when calling the StartCluster, RequestAddNode, RequestAddObserver, RequestAddWitness methods.
-  rpc GetID(IdRequest) returns (IdResponse);
-  rpc ReadIndex(ReadIndexRequest) returns (stream IndexState);
-  rpc ReadLocalNode(ReadLocalNodeRequest) returns (KeyValue);
-  rpc AddNode(ModifyNodeRequest) returns (stream IndexState);
-  rpc AddObserver(ModifyNodeRequest) returns (stream IndexState);
-  rpc AddWitness(ModifyNodeRequest) returns (stream IndexState);
-  // RequestCompaction requests a compaction operation to be asynchronously
-  // executed in the background to reclaim disk spaces used by Raft Log entries
-  // that have already been marked as removed. This includes Raft Log entries
-  // that have already been included in created snapshots and Raft Log entries
-  // that belong to nodes already permanently removed.
-  //
-  // By default, compaction is automatically issued after each snapshot is
-  // captured. RequestCompaction can be used to manually trigger such compaction
-  // when auto compaction is disabled by the DisableAutoCompactions option in
-  // config.Config.
-  //
-  // The returned SysOpState instance can be used to get notified when the
-  // requested compaction is completed. ErrRejected is returned when there is
-  // nothing to be reclaimed.
-  rpc RequestCompaction(ModifyNodeRequest) returns (SysOpState);
-
-  // RequestDeleteNode is a Raft cluster membership change method for requesting
-  // the specified node to be removed from the specified Raft cluster. It starts
-  // an asynchronous request to remove the node from the Raft cluster membership
-  // list. Applications can wait on the stream of the returned
-  // IndexState instance to get notified for the outcome.
-  //
-  // It is not guaranteed that deleted node will automatically close itself and
-  // be removed from its managing NodeHost instance. It is application's
-  // responsibility to call RemoveCluster on the right NodeHost instance to
-  // actually have the cluster node removed from its managing NodeHost instance.
-  //
-  // Once a node is successfully deleted from a Raft cluster, it will not be
-  // allowed to be added back to the cluster with the same node identity.
-  //
-  // When the raft cluster is created with the OrderedConfigChange config flag
-  // set as false, the configChangeIndex parameter is ignored. Otherwise, it
-  // should be set to the most recent Config Change Index value returned by the
-  // RaftClusterService.GetClusterMembership method. The requested delete node
-  // operation will be rejected if other membership change has been applied since
-  // that earlier call to the RaftClusterService.GetClusterMembership method.
-  rpc RequestDeleteNode(ModifyNodeRequest) returns (stream IndexState);
-  rpc RequestLeaderTransfer(ModifyNodeRequest) returns (RequestLeaderTransferResponse);
-  rpc RequestSnapshot(RequestSnapshotRequest) returns (stream IndexState);
-  rpc Stop(StopRequest) returns (StopResponse);
-  //  StopNode removes the specified Raft cluster node from the NodeHost and stops that running Raft node.
-  //
-  //  Note: this is not the membership change operation to remove the node from the Raft cluster.
-  rpc StopNode(ModifyNodeRequest) returns (StopNodeResponse);
+message RaftControlPayload {
+  oneof Types {
+    GetLeaderIDRequest GetLeaderIdRequest = 1;
+    GetLeaderIDResponse GetLeaderIdResponse = 2;
+    IdRequest IdRequest = 3;
+    IdResponse IdResponse = 4;
+    IndexState IndexState = 5;
+    ModifyNodeRequest ModifyNodeRequest = 6;
+    ReadIndexRequest ReadIndexRequest = 7;
+    ReadLocalNodeRequest ReadLocalNodeRequest = 8;
+    RequestLeaderTransferResponse RequestLeaderTransferResponse = 9;
+    RequestSnapshotRequest RequestSnapshotRequest = 10;
+    SnapshotOption SnapshotOption = 12;
+    StopNodeResponse StopNodeResponse = 13;
+    StopRequest StopRequest = 14;
+    StopResponse StopResponse = 15;
+    SysOpState SysOpState = 16;
+  }
+  enum MethodName {
+      ADD_NODE = 0;
+      ADD_OBSERVER = 1;
+      ADD_WITNESS = 2;
+      GET_ID = 3;
+      GET_LEADER_ID = 4;
+      READ_INDEX = 5;
+      READ_LOCAL_NODE = 6;
+      REQUEST_COMPACTION = 7;
+      REQUEST_DELETE_NODE = 8;
+      REQUEST_LEADER_TRANSFER = 9;
+      REQUEST_SNAPSHOT = 10;
+      STOP = 11;
+      STOP_NODE = 12;
+  }
+  MethodName Method = 17;
 }
 
 message StopNodeResponse {}

@@ -5,5 +5,4 @@ packages:
   cliflags:
     repo: gitlab.com/anthropos-labs/cliflags
   pleiades:
-    repo: git@gitlab.com:anthropos-labs/pleiades.git
- 
+    repo: gitlab.com/anthropos-labs/pleiades
