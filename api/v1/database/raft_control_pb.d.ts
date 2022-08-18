@@ -3,6 +3,7 @@
 
 import * as jspb from "google-protobuf";
 import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
+import * as api_v1_errors_pb from "../../../api/v1/errors_pb";
 
 export class RaftControlPayload extends jspb.Message {
   hasGetleaderidrequest(): boolean;
@@ -80,6 +81,11 @@ export class RaftControlPayload extends jspb.Message {
   getSysopstate(): SysOpState | undefined;
   setSysopstate(value?: SysOpState): void;
 
+  hasError(): boolean;
+  clearError(): void;
+  getError(): api_v1_errors_pb.DBError | undefined;
+  setError(value?: api_v1_errors_pb.DBError): void;
+
   getMethod(): RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap];
   setMethod(value: RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap]): void;
 
@@ -111,6 +117,7 @@ export namespace RaftControlPayload {
     stoprequest?: StopRequest.AsObject,
     stopresponse?: StopResponse.AsObject,
     sysopstate?: SysOpState.AsObject,
+    error?: api_v1_errors_pb.DBError.AsObject,
     method: RaftControlPayload.MethodNameMap[keyof RaftControlPayload.MethodNameMap],
   }
 
@@ -149,6 +156,7 @@ export namespace RaftControlPayload {
     STOPREQUEST = 14,
     STOPRESPONSE = 15,
     SYSOPSTATE = 16,
+    ERROR = 18,
   }
 }
 

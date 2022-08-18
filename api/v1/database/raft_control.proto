@@ -3,6 +3,7 @@ package database;
 
 // this is relative to the root of the repo
 import "api/v1/database/kv.proto";
+import "api/v1/errors.proto";
 
 option go_package = "./database";
 
@@ -23,6 +24,7 @@ message RaftControlPayload {
     StopRequest StopRequest = 14;
     StopResponse StopResponse = 15;
     SysOpState SysOpState = 16;
+    DBError Error = 18;
   }
   enum MethodName {
       ADD_NODE = 0;
