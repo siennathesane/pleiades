@@ -1,4 +1,4 @@
-// source: api/v1/database/errors.proto
+// source: api/v1/errors.proto
 /**
  * @fileoverview
  * @enhanceable

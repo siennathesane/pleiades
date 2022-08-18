@@ -2,7 +2,7 @@ syntax = "proto3";
 package database;
 
 option go_package = "./database";
-import "api/v1/database/errors.proto";
+import "api/v1/errors.proto";
 
 service SessionService {
   rpc NewSession(NewSessionRequest) returns (NewSessionResponse);

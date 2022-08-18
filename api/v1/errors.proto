@@ -1,6 +1,6 @@
 syntax = "proto3";
 package database;
-option go_package = "./database";
+option go_package = "github.com/mxplusb/pleiades/api/v1";
 
 enum DBErrorType {
   SESSION = 0;
