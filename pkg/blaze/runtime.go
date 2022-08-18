@@ -44,11 +44,12 @@ func NewRuntime(ctx context.Context, conf *conf.NodeHostConfig, clogger conf.Log
 		addrs:  make([]multiaddr.Multiaddr, 0),
 	}
 
-	err := RegisterRaftControlRpcServer(mux, conf, clogger)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to register node host rpc server")
-		return nil, err
-	}
+	var err error
+	//err := RegisterRaftControlRpcServer(mux, conf, clogger)
+	//if err != nil {
+	//	l.Error().Err(err).Msg("failed to register node host rpc server")
+	//	return nil, err
+	//}
 
 	listenSplit := strings.Split(conf.ListenAddress, ":")
 	if len(listenSplit) != 2 {

@@ -11,30 +11,29 @@ package blaze
 
 import (
 	"github.com/mxplusb/pleiades/pkg/conf"
-	"github.com/aperturerobotics/starpc/srpc"
 	dconfig "github.com/lni/dragonboat/v3/config"
 )
 
-func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.Logger) error {
-	logger := clogger.GetLogger()
-	l := logger.With().Str("service", "node-host").Logger()
-
-	translatedConf, err := buildNodeHostConfig(*conf)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to build node host config")
-		return err
-	}
-
-	node, err := NewRaftControlNode(translatedConf, clogger)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to build node")
-		return err
-	}
-
-	_ = NewRaftControlRPCServer(node, l)
-
-	return nil
-}
+//func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.Logger) error {
+//	logger := clogger.GetLogger()
+//	l := logger.With().Str("service", "node-host").Logger()
+//
+//	translatedConf, err := buildNodeHostConfig(*conf)
+//	if err != nil {
+//		l.Error().Err(err).Msg("failed to build node host config")
+//		return err
+//	}
+//
+//	node, err := NewRaftControlNode(translatedConf, clogger)
+//	if err != nil {
+//		l.Error().Err(err).Msg("failed to build node")
+//		return err
+//	}
+//
+//	_ = NewRaftControlRPCServer(node, l)
+//
+//	return nil
+//}
 
 func buildNodeHostConfig(conf conf.NodeHostConfig) (dconfig.NodeHostConfig, error) {
 	dconf := dconfig.NodeHostConfig{

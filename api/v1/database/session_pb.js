@@ -15,8 +15,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = (function() { return this || window || global || self || Function('return this')(); }).call(null);
 
-var api_v1_database_errors_pb = require('../../../api/v1/database/errors_pb.js');
-goog.object.extend(proto, api_v1_database_errors_pb);
+var api_v1_errors_pb = require('../../../api/v1/errors_pb.js');
+goog.object.extend(proto, api_v1_errors_pb);
 goog.exportSymbol('proto.database.CloseSessionRequest', null, global);
 goog.exportSymbol('proto.database.CloseSessionResponse', null, global);
 goog.exportSymbol('proto.database.NewSessionRequest', null, global);
@@ -238,7 +238,7 @@ proto.database.SessionPayload.toObject = function(includeInstance, msg) {
     newsessionresponse: (f = msg.getNewsessionresponse()) && proto.database.NewSessionResponse.toObject(includeInstance, f),
     closesessionrequest: (f = msg.getClosesessionrequest()) && proto.database.CloseSessionRequest.toObject(includeInstance, f),
     closesessionresponse: (f = msg.getClosesessionresponse()) && proto.database.CloseSessionResponse.toObject(includeInstance, f),
-    error: (f = msg.getError()) && api_v1_database_errors_pb.DBError.toObject(includeInstance, f),
+    error: (f = msg.getError()) && api_v1_errors_pb.DBError.toObject(includeInstance, f),
     method: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
@@ -297,8 +297,8 @@ proto.database.SessionPayload.deserializeBinaryFromReader = function(msg, reader
       msg.setClosesessionresponse(value);
       break;
     case 5:
-      var value = new api_v1_database_errors_pb.DBError;
-      reader.readMessage(value,api_v1_database_errors_pb.DBError.deserializeBinaryFromReader);
+      var value = new api_v1_errors_pb.DBError;
+      reader.readMessage(value,api_v1_errors_pb.DBError.deserializeBinaryFromReader);
       msg.setError(value);
       break;
     case 6:
@@ -371,7 +371,7 @@ proto.database.SessionPayload.serializeBinaryToWriter = function(message, writer
     writer.writeMessage(
       5,
       f,
-      api_v1_database_errors_pb.DBError.serializeBinaryToWriter
+      api_v1_errors_pb.DBError.serializeBinaryToWriter
     );
   }
   f = message.getMethod();
@@ -546,7 +546,7 @@ proto.database.SessionPayload.prototype.hasClosesessionresponse = function() {
  */
 proto.database.SessionPayload.prototype.getError = function() {
   return /** @type{?proto.database.DBError} */ (
-    jspb.Message.getWrapperField(this, api_v1_database_errors_pb.DBError, 5));
+    jspb.Message.getWrapperField(this, api_v1_errors_pb.DBError, 5));
 };
 
 

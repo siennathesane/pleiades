@@ -27,9 +27,10 @@ const (
 	Invalid StreamState = 1
 	StreamStart StreamState = 2
 	StreamContinue StreamState = 3
-	StreamEnd StreamState = 4
-	InvalidMessageChecksum StreamState = 5
-	SystemError StreamState = 6
+	StreamNoLongerValid StreamState = 4
+	StreamEnd StreamState = 5
+	InvalidMessageChecksum StreamState = 6
+	SystemError StreamState = 7
 )
 
 func testServerAddr() string {

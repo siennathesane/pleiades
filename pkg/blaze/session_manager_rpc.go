@@ -186,8 +186,8 @@ func (s *SessionManagerRPCService) newSessionHandler(request *database.NewSessio
 		s.logger.Error().Err(err).Msg("error proposing client session")
 
 		payload.Type = &database.SessionPayload_Error{
-			Error: &database.DBError{
-				Type: database.DBErrorType_SESSION,
+			Error: &transportv1.DBError{
+				Type: transportv1.DBErrorType_SESSION,
 				Message: err.Error(),
 			},
 		}

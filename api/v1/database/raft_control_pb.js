@@ -17,6 +17,8 @@ var global = (function() { return this || window || global || self || Function('
 
 var api_v1_database_kv_pb = require('../../../api/v1/database/kv_pb.js');
 goog.object.extend(proto, api_v1_database_kv_pb);
+var api_v1_errors_pb = require('../../../api/v1/errors_pb.js');
+goog.object.extend(proto, api_v1_errors_pb);
 goog.exportSymbol('proto.database.GetLeaderIDRequest', null, global);
 goog.exportSymbol('proto.database.GetLeaderIDResponse', null, global);
 goog.exportSymbol('proto.database.IdRequest', null, global);
@@ -403,7 +405,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.database.RaftControlPayload.oneofGroups_ = [[1,2,3,4,5,6,7,8,9,10,12,13,14,15,16]];
+proto.database.RaftControlPayload.oneofGroups_ = [[1,2,3,4,5,6,7,8,9,10,12,13,14,15,16,18]];
 
 /**
  * @enum {number}
@@ -424,7 +426,8 @@ proto.database.RaftControlPayload.TypesCase = {
   STOPNODERESPONSE: 13,
   STOPREQUEST: 14,
   STOPRESPONSE: 15,
-  SYSOPSTATE: 16
+  SYSOPSTATE: 16,
+  ERROR: 18
 };
 
 /**
@@ -480,6 +483,7 @@ proto.database.RaftControlPayload.toObject = function(includeInstance, msg) {
     stoprequest: (f = msg.getStoprequest()) && proto.database.StopRequest.toObject(includeInstance, f),
     stopresponse: (f = msg.getStopresponse()) && proto.database.StopResponse.toObject(includeInstance, f),
     sysopstate: (f = msg.getSysopstate()) && proto.database.SysOpState.toObject(includeInstance, f),
+    error: (f = msg.getError()) && api_v1_errors_pb.DBError.toObject(includeInstance, f),
     method: jspb.Message.getFieldWithDefault(msg, 17, 0)
   };
 
@@ -591,6 +595,11 @@ proto.database.RaftControlPayload.deserializeBinaryFromReader = function(msg, re
       var value = new proto.database.SysOpState;
       reader.readMessage(value,proto.database.SysOpState.deserializeBinaryFromReader);
       msg.setSysopstate(value);
+      break;
+    case 18:
+      var value = new api_v1_errors_pb.DBError;
+      reader.readMessage(value,api_v1_errors_pb.DBError.deserializeBinaryFromReader);
+      msg.setError(value);
       break;
     case 17:
       var value = /** @type {!proto.database.RaftControlPayload.MethodName} */ (reader.readEnum());
@@ -743,6 +752,14 @@ proto.database.RaftControlPayload.serializeBinaryToWriter = function(message, wr
       16,
       f,
       proto.database.SysOpState.serializeBinaryToWriter
+    );
+  }
+  f = message.getError();
+  if (f != null) {
+    writer.writeMessage(
+      18,
+      f,
+      api_v1_errors_pb.DBError.serializeBinaryToWriter
     );
   }
   f = message.getMethod();
@@ -1326,6 +1343,43 @@ proto.database.RaftControlPayload.prototype.clearSysopstate = function() {
  */
 proto.database.RaftControlPayload.prototype.hasSysopstate = function() {
   return jspb.Message.getField(this, 16) != null;
+};
+
+
+/**
+ * optional DBError Error = 18;
+ * @return {?proto.database.DBError}
+ */
+proto.database.RaftControlPayload.prototype.getError = function() {
+  return /** @type{?proto.database.DBError} */ (
+    jspb.Message.getWrapperField(this, api_v1_errors_pb.DBError, 18));
+};
+
+
+/**
+ * @param {?proto.database.DBError|undefined} value
+ * @return {!proto.database.RaftControlPayload} returns this
+*/
+proto.database.RaftControlPayload.prototype.setError = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 18, proto.database.RaftControlPayload.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.RaftControlPayload} returns this
+ */
+proto.database.RaftControlPayload.prototype.clearError = function() {
+  return this.setError(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.RaftControlPayload.prototype.hasError = function() {
+  return jspb.Message.getField(this, 18) != null;
 };
 
 

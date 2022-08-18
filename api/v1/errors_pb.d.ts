@@ -1,5 +1,5 @@
 // package: database
-// file: api/v1/database/errors.proto
+// file: api/v1/errors.proto
 
 import * as jspb from "google-protobuf";
 
