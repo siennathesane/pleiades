@@ -18,6 +18,8 @@ import (
 	"github.com/libp2p/go-libp2p-core/protocol"
 )
 
+var _ network.Stream = (*testStream)(nil)
+
 type testStream struct {
 	buf bytes.Buffer
 	allowRead, allowWrite bool

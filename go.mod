@@ -13,8 +13,9 @@ require (
 	github.com/libp2p/go-libp2p-core v0.19.1
 	github.com/libp2p/go-mplex v0.7.1-0.20220702225122-8cbdf39b21f5
 	github.com/lni/dragonboat/v3 v3.3.5
-	github.com/lucas-clemente/quic-go v0.28.0
+	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.13.0
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/multiformats/go-multiaddr v0.6.0
 	github.com/rs/zerolog v1.27.0
 	github.com/spf13/cobra v1.5.0
@@ -96,7 +97,7 @@ require (
 	github.com/libp2p/go-openssl v0.0.7 // indirect
 	github.com/libp2p/go-reuseport v0.2.0 // indirect
 	github.com/libp2p/go-yamux/v3 v3.1.2 // indirect
-	github.com/lni/goutils v1.3.0 // indirect
+	github.com/lucas-clemente/quic-go v0.28.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.2 // indirect
@@ -110,7 +111,6 @@ require (
 	github.com/mikioh/tcpinfo v0.0.0-20190314235526-30a79bb1804b // indirect
 	github.com/mikioh/tcpopt v0.0.0-20190314235656-172688c1accc // indirect
 	github.com/minio/sha256-simd v1.0.0 // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mr-tron/base58 v1.2.0 // indirect
 	github.com/multiformats/go-base32 v0.0.4 // indirect

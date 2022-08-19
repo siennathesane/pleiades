@@ -5,7 +5,7 @@ package database;
 import "api/v1/database/kv.proto";
 import "api/v1/errors.proto";
 
-option go_package = "./database";
+option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 
 message RaftControlPayload {
   oneof Types {

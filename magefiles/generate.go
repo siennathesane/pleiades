@@ -32,7 +32,7 @@ var (
 		"--plugin",
 		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-go", binDir),
 		"--plugin",
-		fmt.Sprintf("protoc-gen-go-starpc=%s/protoc-gen-go-starpc", binDir),
+		fmt.Sprintf("protoc-gen-go-vtproto=%s/protoc-gen-go-vtproto", binDir),
 		"--js_out=import_style=commonjs,binary:.",
 		"--ts_out=.",
 		"--ts_opt=esModuleInterop=true",
@@ -68,7 +68,7 @@ func (Gen) Setup() {
 		if err := sh.RunWithV(nil, "go",
 			"get",
 			"-v",
-			"github.com/planetscale/vtprotobuf/cmd/protoc-gen-go-vtproto"); err != nil {
+			"github.com/planetscale/vtprotobuf/cmd/protoc-gen-go-vtproto@0ae748f"); err != nil {
 			return err
 		}
 

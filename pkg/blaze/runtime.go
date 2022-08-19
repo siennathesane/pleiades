@@ -32,8 +32,7 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func NewRuntime(ctx context.Context, conf *conf.NodeHostConfig, clogger conf.Logger) (*Runtime, error) {
-	logger := clogger.GetLogger()
+func NewRuntime(ctx context.Context, conf *conf.NodeHostConfig, logger zerolog.Logger) (*Runtime, error) {
 	l := logger.With().Str("component", "runtime").Logger()
 	mux := srpc.NewMux()
 

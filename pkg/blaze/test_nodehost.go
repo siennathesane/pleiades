@@ -19,44 +19,82 @@ import (
 	"time"
 
 	"github.com/lni/dragonboat/v3"
-	"github.com/lni/dragonboat/v3/config"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	sm "github.com/lni/dragonboat/v3/statemachine"
 	"github.com/lni/goutils/vfs"
 )
 
-func buildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
+func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	rand.Seed(time.Now().UTC().UnixNano())
 	port := 1024 + rand.Intn(65535-1024)
 
-	cfg := config.Config{
-		NodeID:    1,
-		ClusterID: 1,
-		HeartbeatRTT: 10,
-		ElectionRTT: 100,
-	}
-
-	expertCfg := config.GetDefaultExpertConfig()
+	expertCfg := dconfig.GetDefaultExpertConfig()
 	expertCfg.LogDB.Shards = 4
 	expertCfg.FS = vfs.NewMem()
 
-	nhConf := config.NodeHostConfig{
+	return dconfig.NodeHostConfig{
 		WALDir:         t.TempDir(),
 		NodeHostDir:    t.TempDir(),
 		RTTMillisecond: 10,
 		RaftAddress:    fmt.Sprintf("localhost:%d", port),
 		Expert:         expertCfg,
+		NotifyCommit:   false,
 	}
+}
 
-	host, err := dragonboat.NewNodeHost(nhConf)
+func buildTestClusterConfig(t *testing.T) dconfig.Config {
+	rand.Seed(time.Now().UTC().UnixNano())
+	nodeId := rand.Intn(10_000)
+	clusterId := rand.Intn(10_000)
+
+	return dconfig.Config{
+		NodeID:       uint64(nodeId),
+		ClusterID:    uint64(clusterId),
+		HeartbeatRTT: 10,
+		ElectionRTT:  100,
+	}
+}
+
+func buildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
+	host, err := dragonboat.NewNodeHost(buildTestNodeHostConfig(t))
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
-	if err = host.StartCluster(nil, true, newTestStateMachine, cfg); err != nil {
+	if err = host.StartCluster(nil, true, newTestStateMachine, buildTestClusterConfig(t)); err != nil {
 		t.Fatalf(err.Error())
 	}
 
 	return host
+}
+
+func build3NodeTestCluster(t *testing.T) ([]dconfig.Config, []dconfig.NodeHostConfig, []*dragonboat.NodeHost) {
+	clusterConfigs := make([]dconfig.Config, 3)
+	nodeConfigs := make([]dconfig.NodeHostConfig, 3)
+	nodeHosts := make([]*dragonboat.NodeHost, 3)
+
+	initialMembers := make(map[uint64]dragonboat.Target)
+	for i := 0; i < 3; i++ {
+		clusterConfig := buildTestClusterConfig(t)
+		nodeConfig := buildTestNodeHostConfig(t)
+		clusterConfigs[i] = clusterConfig
+		nodeConfigs[i] = nodeConfig
+
+		host, err := dragonboat.NewNodeHost(nodeConfig)
+		if err != nil {
+			t.Fatalf(err.Error())
+		}
+		nodeHosts[i] = host
+		initialMembers[clusterConfig.NodeID] = host.RaftAddress()
+	}
+
+	for i := 0; i < len(nodeHosts); i++ {
+		if err := nodeHosts[i].StartCluster(initialMembers, false, newTestStateMachine, buildTestClusterConfig(t)); err != nil {
+			t.Fatalf(err.Error())
+		}
+	}
+
+	return clusterConfigs, nodeConfigs, nodeHosts
 }
 
 type testStateMachine struct {
