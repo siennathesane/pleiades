@@ -21,24 +21,18 @@ import (
 	"github.com/rs/zerolog/journald"
 )
 
-var _ dlog.ILogger = Logger{}
+var (
+	rootLogger  zlog.Logger
+	writers     []io.Writer
+	multiWriter = zlog.MultiLevelWriter(writers...)
+)
 
-type Logger struct {
-	logger zlog.Logger
-}
-
-func NewLogger(writers ...io.Writer) (Logger, error) {
-
-	l := Logger{}
-
+func init() {
 	if runtime.GOOS != "darwin" {
 		writers = append(writers, journald.NewJournalDWriter())
 	} else {
 		writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout})
 	}
-
-	// write to both console and journald for linux
-	multiWriter := zlog.MultiLevelWriter(writers...)
 
 	// adds `Lshortfile` equivalence
 	zlog.CallerMarshalFunc = func(file string, line int) string {
@@ -53,21 +47,29 @@ func NewLogger(writers ...io.Writer) (Logger, error) {
 		return file + ":" + strconv.Itoa(line)
 	}
 
-	l.logger = zlog.New(multiWriter).With().
+	rootLogger = zlog.New(multiWriter).With().
 		Str("sha", pkg.Sha).
 		Timestamp().
 		Caller().
 		Logger().
 		Level(zlog.InfoLevel)
-
-	return l, nil
 }
 
-func (l Logger) LoggerFactory(pkgName string) dlog.ILogger {
-	logz := l.logger.With().Str("pkg", pkgName).Logger()
-	return Logger{
+func NewRootLogger() zlog.Logger {
+	return rootLogger
+}
+
+func DragonboatLoggerFactory(pkgName string) dlog.ILogger {
+	logz := rootLogger.With().Str("pkg", pkgName).Logger()
+	return DragonboatLoggerAdapter{
 		logger: logz,
 	}
+}
+
+var _ dlog.ILogger = DragonboatLoggerAdapter{}
+
+type DragonboatLoggerAdapter struct {
+	logger zlog.Logger
 }
 
 var internalSeverityMap = map[dlog.LogLevel]zlog.Level{
@@ -86,34 +88,26 @@ var reverseInternalSeverityMap = map[zlog.Level]dlog.LogLevel{
 	zlog.DebugLevel: dlog.DEBUG,
 }
 
-func (l Logger) GetLogger() zlog.Logger {
-	return l.logger
-}
-
-func (l Logger) GetLevel() dlog.LogLevel {
-	return reverseInternalSeverityMap[l.logger.GetLevel()]
-}
-
-func (l Logger) SetLevel(logLevel dlog.LogLevel) {
+func (l DragonboatLoggerAdapter) SetLevel(logLevel dlog.LogLevel) {
 	l.logger = l.logger.Level(internalSeverityMap[logLevel])
 }
 
-func (l Logger) Debugf(format string, args ...interface{}) {
+func (l DragonboatLoggerAdapter) Debugf(format string, args ...interface{}) {
 	l.logger.Debug().Msgf(format, args...)
 }
 
-func (l Logger) Infof(format string, args ...interface{}) {
+func (l DragonboatLoggerAdapter) Infof(format string, args ...interface{}) {
 	l.logger.Info().Msgf(format, args...)
 }
 
-func (l Logger) Warningf(format string, args ...interface{}) {
+func (l DragonboatLoggerAdapter) Warningf(format string, args ...interface{}) {
 	l.logger.Warn().Msgf(format, args...)
 }
 
-func (l Logger) Errorf(format string, args ...interface{}) {
+func (l DragonboatLoggerAdapter) Errorf(format string, args ...interface{}) {
 	l.logger.Error().Stack().Msgf(format, args...)
 }
 
-func (l Logger) Panicf(format string, args ...interface{}) {
+func (l DragonboatLoggerAdapter) Panicf(format string, args ...interface{}) {
 	l.logger.Panic().Msgf(format, args...)
 }

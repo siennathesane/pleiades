@@ -14,9 +14,9 @@ import (
 	dconfig "github.com/lni/dragonboat/v3/config"
 )
 
-//func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.Logger) error {
+//func RegisterRaftControlRpcServer(mux srpc.Mux, conf *conf.NodeHostConfig, clogger conf.DragonboatLoggerAdapter) error {
 //	logger := clogger.GetLogger()
-//	l := logger.With().Str("service", "node-host").Logger()
+//	l := logger.With().Str("service", "node-host").DragonboatLoggerAdapter()
 //
 //	translatedConf, err := buildNodeHostConfig(*conf)
 //	if err != nil {
