@@ -6,7 +6,7 @@ import "api/v1/database/session.proto";
 import "api/v1/database/kv.proto";
 import "api/v1/database/raft_control.proto";
 
-option go_package = "./database";
+option go_package = "github.com/mxplusb/pleiades/api/v1/database";
 
 service KVStoreService {
   rpc Get(GetRequest) returns (GetResponse) {}

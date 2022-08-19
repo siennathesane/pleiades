@@ -84,7 +84,7 @@ func (n *RaftControlRPCServer) handleStream(stream network.Stream) {
 		if err := header.UnmarshalVT(headerBuf); err != nil {
 			n.logger.Error().Err(err).Msg("cannot unmarshal header")
 			_ = SendStreamState(stream, Invalid, false)
-			continue
+			return
 		}
 
 		// prep the message buffer
@@ -92,11 +92,12 @@ func (n *RaftControlRPCServer) handleStream(stream network.Stream) {
 		if _, err := io.ReadFull(stream, msgBuf); err != nil {
 			n.logger.Error().Err(err).Msg("cannot readAndHandle message payload")
 			_ = SendStreamState(stream, Invalid, false)
+			return
 		}
 
 		// verify the message is intact
 		checked := crc32.ChecksumIEEE(msgBuf)
-		if checked != header.Checksum {
+		if checked != header.GetChecksum() {
 			n.logger.Error().Msg("checksums do not match")
 			_ = SendStreamState(stream, InvalidMessageChecksum, false)
 		}
@@ -119,10 +120,10 @@ func (n *RaftControlRPCServer) handleStream(stream network.Stream) {
 			n.GetID(context.TODO(), nil, stream)
 		case database.RaftControlPayload_GET_LEADER_ID:
 			n.GetLeaderID(context.TODO(), msg.GetGetLeaderIdRequest(), stream)
-		case database.RaftControlPayload_READ_INDEX:
-			n.ReadIndex(msg.GetReadIndexRequest(), stream)
-		case database.RaftControlPayload_READ_LOCAL_NODE:
-			n.ReadLocalNode(context.TODO(), msg.GetReadLocalNodeRequest(), stream)
+		//case database.RaftControlPayload_READ_INDEX:
+		//	n.ReadIndex(msg.GetReadIndexRequest(), stream)
+		//case database.RaftControlPayload_READ_LOCAL_NODE:
+		//	n.ReadLocalNode(context.TODO(), msg.GetReadLocalNodeRequest(), stream)
 		case database.RaftControlPayload_REQUEST_COMPACTION:
 			n.RequestCompaction(context.TODO(), msg.GetModifyNodeRequest(), stream)
 		case database.RaftControlPayload_REQUEST_DELETE_NODE:
@@ -190,105 +191,105 @@ func (n *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest,
 	return
 }
 
-func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
+//func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream network.Stream) {
+//	// payload writer
+//	writerChan := make(chan []byte)
+//	defer close(writerChan)
+//
+//	go payloadWriter(writerChan, true, stream)
+//
+//	clusterId := request.GetClusterId()
+//	timeout := time.Duration(request.GetTimeout())
+//	rs, err := n.node.ReadIndex(clusterId, timeout)
+//	if err != nil {
+//		n.logger.Error().Err(err).Msg("error reading index")
+//		msg := &transportv1.DBError{
+//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+//			Message: errors.Wrap(err, "error reading index").Error(),
+//		}
+//		buf, _ := msg.MarshalVT()
+//		writerChan <- buf
+//		return
+//	}
+//
+//	for response := range rs.ResultC() {
+//		results := response.GetResult()
+//
+//		indexState := &database.IndexState{
+//			Results: &database.Result{
+//				Value: results.Value,
+//				Data:  results.Data,
+//			},
+//			SnapshotIndex: response.SnapshotIndex(),
+//			Status:        requestStateCodeToResultCode(response),
+//		}
+//
+//		buf, _ := indexState.MarshalVT()
+//		writerChan <- buf
+//	}
+//}
 
-	go payloadWriter(writerChan, true, stream)
-
-	clusterId := request.GetClusterId()
-	timeout := time.Duration(request.GetTimeout())
-	rs, err := n.node.ReadIndex(clusterId, timeout)
-	if err != nil {
-		n.logger.Error().Err(err).Msg("error reading index")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "error reading index").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
-}
-
-func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, false, stream)
-
-	ctx = n.logger.WithContext(ctx)
-
-	query, err := request.GetQuery().MarshalVT()
-	if err != nil {
-		n.logger.Error().Err(err).Msg("error marshalling query")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "error marshalling query").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	var rs dragonboat.RequestState
-	data, err := n.node.ReadLocalNode(&rs, query)
-	if err != nil {
-		n.logger.Error().Err(err).Msg("can't read from local node")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "can't read from local node").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	if data == nil {
-		err := errors.New("key not found")
-		n.logger.Error().Err(err).Msg("incorrect query parameters")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "incorrect query parameters").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	kv := &database.KeyValue{}
-	if err := kv.UnmarshalVT(data.([]byte)); err != nil {
-		n.logger.Error().Err(err).Msg("can't unmarshal key from local fsm")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "can't unmarshal key from local fsm").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	buf, _ := kv.MarshalVT()
-	writerChan <- buf
-}
+//func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest, stream network.Stream) {
+//	// payload writer
+//	writerChan := make(chan []byte)
+//	defer close(writerChan)
+//
+//	go payloadWriter(writerChan, false, stream)
+//
+//	ctx = n.logger.WithContext(ctx)
+//
+//	query, err := request.GetQuery().MarshalVT()
+//	if err != nil {
+//		n.logger.Error().Err(err).Msg("error marshalling query")
+//		msg := &transportv1.DBError{
+//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+//			Message: errors.Wrap(err, "error marshalling query").Error(),
+//		}
+//		buf, _ := msg.MarshalVT()
+//		writerChan <- buf
+//		return
+//	}
+//
+//	var rs dragonboat.RequestState
+//	data, err := n.node.ReadLocalNode(&rs, query)
+//	if err != nil {
+//		n.logger.Error().Err(err).Msg("can't read from local node")
+//		msg := &transportv1.DBError{
+//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+//			Message: errors.Wrap(err, "can't read from local node").Error(),
+//		}
+//		buf, _ := msg.MarshalVT()
+//		writerChan <- buf
+//		return
+//	}
+//
+//	if data == nil {
+//		err := errors.New("key not found")
+//		n.logger.Error().Err(err).Msg("incorrect query parameters")
+//		msg := &transportv1.DBError{
+//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+//			Message: errors.Wrap(err, "incorrect query parameters").Error(),
+//		}
+//		buf, _ := msg.MarshalVT()
+//		writerChan <- buf
+//		return
+//	}
+//
+//	kv := &database.KeyValue{}
+//	if err := kv.UnmarshalVT(data.([]byte)); err != nil {
+//		n.logger.Error().Err(err).Msg("can't unmarshal key from local fsm")
+//		msg := &transportv1.DBError{
+//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+//			Message: errors.Wrap(err, "can't unmarshal key from local fsm").Error(),
+//		}
+//		buf, _ := msg.MarshalVT()
+//		writerChan <- buf
+//		return
+//	}
+//
+//	buf, _ := kv.MarshalVT()
+//	writerChan <- buf
+//}
 
 func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream network.Stream) {
 	// payload writer

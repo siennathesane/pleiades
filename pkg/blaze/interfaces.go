@@ -20,6 +20,10 @@ import (
 )
 
 type ICluster interface {
+	NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error)
+	ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error)
+	ReadLocalNode(rs *dragonboat.RequestState, query interface{}) (interface{}, error)
+	StaleRead(clusterID uint64, query interface{}) (interface{}, error)
 	StartCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateStateMachineFunc, cfg config.Config) error
 	StartConcurrentCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateConcurrentStateMachineFunc, cfg config.Config) error
 	StartOnDiskCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateOnDiskStateMachineFunc, cfg config.Config) error
@@ -34,14 +38,11 @@ type INodeConfig interface {
 }
 
 type INodeHost interface {
-	NotifyOnCommit() bool
 	GetLeaderID(clusterID uint64) (uint64, bool, error)
 	GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
 	ID() string
-	NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error)
+	NotifyOnCommit() bool
 	RaftAddress() string
-	ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	ReadLocalNode(rs *dragonboat.RequestState, query interface{}) (interface{}, error)
 	RemoveData(clusterID uint64, nodeID uint64) error
 	RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
 	RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
@@ -50,7 +51,6 @@ type INodeHost interface {
 	RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
 	RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error
 	RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
-	StaleRead(clusterID uint64, query interface{}) (interface{}, error)
 	Stop()
 	StopNode(clusterID uint64, nodeID uint64) error
 	SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
@@ -63,13 +63,13 @@ type INodeHost interface {
 
 type ISession interface {
 	GetNoOPSession(clusterID uint64) *client.Session
-	SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
-	SyncCloseSession(ctx context.Context, cs *client.Session) error
 	ProposeSession(session *client.Session, timeout time.Duration) (*dragonboat.RequestState, error)
+	SyncCloseSession(ctx context.Context, cs *client.Session) error
+	SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
 }
 
 type IStore interface {
+	Propose(session *client.Session, cmd []byte, timeout time.Duration) (*dragonboat.RequestState, error)
 	SyncPropose(ctx context.Context, session *client.Session, cmd []byte) (statemachine.Result, error)
 	SyncRead(ctx context.Context, clusterID uint64, query interface{}) (interface{}, error)
-	Propose(session *client.Session, cmd []byte, timeout time.Duration) (*dragonboat.RequestState, error)
 }

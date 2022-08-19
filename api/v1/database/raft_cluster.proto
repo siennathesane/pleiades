@@ -1,7 +1,7 @@
 syntax = "proto3";
 package database;
 
-option go_package = "./database";
+option go_package = "github.com/mxplusb/pleiades/api/v1/database";
 
 service RaftClusterService {
   rpc StartCluster(StartClusterRequest) returns (StartClusterResponse);
