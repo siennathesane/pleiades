@@ -11,9 +11,8 @@ package blaze
 
 import (
 	"encoding/binary"
+	"hash/crc32"
 	"io"
-	"reflect"
-	"unsafe"
 
 	"github.com/cockroachdb/errors"
 )
@@ -24,7 +23,8 @@ const (
 )
 
 var (
-	ErrInvalidHeaders = errors.New("invalid header length")
+	ErrInvalidHeaders  = errors.New("invalid header length")
+	ErrInvalidChecksum = errors.New("invalid checksum")
 )
 
 type VersionByte byte
@@ -32,7 +32,7 @@ type VersionByte byte
 const (
 	CurrentVersion VersionByte = 0x01
 	Version1       VersionByte = 0x01
- )
+)
 
 var (
 	ErrUnsupportedVersion = errors.New("unsupported version")
@@ -98,6 +98,7 @@ const (
 	NoAuthorizationMethod AuthorizationMethodByte = 0xff
 )
 
+// NewFrame generates a new *Frame with zeroed out fields.
 func NewFrame() *Frame {
 	return &Frame{
 		state:                byte(InvalidByte),
@@ -112,6 +113,8 @@ func NewFrame() *Frame {
 		payloadSize:          [4]byte{0x00, 0x00, 0x00, 0x00},
 		authorization:        nil,
 		payload:              nil,
+		authorizationChecksum: [4]byte{0x00, 0x00, 0x00, 0x00},
+		payloadChecksum:       [4]byte{0x00, 0x00, 0x00, 0x00},
 	}
 }
 
@@ -149,13 +152,19 @@ type Frame struct {
 
 	// The payload field contains the application-level information
 	payload []byte
+
+	// the authorizationChecksum is a 32-bit CRC for the authorization field
+	authorizationChecksum [4]byte
+
+	// The payloadChecksum field is a 32-bit CRC for the payload
+	payloadChecksum [4]byte
 }
 
 // ReadFrom reads from io.Reader r to fill out a frame. This method overwrites the frame
 func (f *Frame) ReadFrom(r io.Reader) (n int64, err error) {
 	readThusFar := int64(0)
 
-	// header is 16 bytes
+	// header is 16 bytes, so read the first 16
 	headerBuf := make([]byte, 16)
 	read, err := io.ReadFull(r, headerBuf)
 	if err != nil {
@@ -202,6 +211,7 @@ func (f *Frame) ReadFrom(r io.Reader) (n int64, err error) {
 		readThusFar += int64(read)
 	}
 
+	// prepare and fetch the payload
 	payloadSize := binary.LittleEndian.Uint32(f.payloadSize[:])
 	if payloadSize == 0 {
 		return int64(read), errors.New("payload length is zero")
@@ -212,10 +222,44 @@ func (f *Frame) ReadFrom(r io.Reader) (n int64, err error) {
 	if err != nil {
 		return int64(read), err
 	}
-
 	readThusFar += int64(payloadSize)
 
+	// grab the auth checksum
+	read, err = io.ReadFull(r, f.authorizationChecksum[:])
+	if err != nil {
+		return int64(read), err
+	}
+	authChecksum := binary.LittleEndian.Uint32(f.authorizationChecksum[:])
+	if err := validateAuthChecksum(int32(authChecksum)); err != nil {
+		return int64(read), err
+	}
+	readThusFar += 4
+
+	// grab the payload checksum
+	read, err = io.ReadFull(r, f.payloadChecksum[:])
+	if err != nil {
+		return int64(read), err
+	}
+	payloadChecksum := binary.LittleEndian.Uint32(f.payloadChecksum[:])
+	if err := validatePayloadChecksum(payloadChecksum, f.payload); err != nil {
+		return int64(read), err
+	}
+	readThusFar += 4
+
 	return readThusFar, nil
+}
+
+func validatePayloadChecksum(checksum uint32, payload []byte) error {
+	incomingSum := crc32.ChecksumIEEE(payload)
+	if incomingSum != checksum {
+		return ErrInvalidChecksum
+	}
+	return nil
+}
+
+// auth is not currently implemented
+func validateAuthChecksum(checksum int32) error {
+	return nil
 }
 
 // auth is currently not implemented
@@ -281,10 +325,18 @@ func (f *Frame) Marshal() ([]byte, error) {
 	target[5] = f.method
 	target[6] = f.authorizationService
 	target[7] = f.authorizationMethod
+
+	// while authorization is unsupported
+	f.authorizationSize[0] = 0x00
+	f.authorizationSize[1] = 0x00
+	f.authorizationSize[2] = 0x00
+	f.authorizationSize[3] = 0x00
+
 	target[8] = f.authorizationSize[0]
 	target[9] = f.authorizationSize[1]
 	target[10] = f.authorizationSize[2]
 	target[11] = f.authorizationSize[3]
+
 	target[12] = f.payloadSize[0]
 	target[13] = f.payloadSize[1]
 	target[14] = f.payloadSize[2]
@@ -292,6 +344,27 @@ func (f *Frame) Marshal() ([]byte, error) {
 
 	target = append(target, f.authorization...)
 	target = append(target, f.payload...)
+
+	// this is while auth is still unsupported
+	f.authorizationChecksum[0] = 0x00
+	f.authorizationChecksum[1] = 0x00
+	f.authorizationChecksum[2] = 0x00
+	f.authorizationChecksum[3] = 0x00
+
+	target = append(target,
+		f.authorizationChecksum[0],
+		f.authorizationChecksum[1],
+		f.authorizationChecksum[2],
+		f.authorizationChecksum[3])
+
+	// just as an in case type thing
+	f.setPayloadChecksum()
+
+	target = append(target,
+		f.payloadChecksum[0],
+		f.payloadChecksum[1],
+		f.payloadChecksum[2],
+		f.payloadChecksum[3])
 
 	return target, nil
 }
@@ -325,21 +398,31 @@ func (f *Frame) GetMethod() MethodByte {
 
 func (f *Frame) WithPayload(payload []byte) *Frame {
 	f.payload = payload
-	size := unsafeCaseInt32ToBytes(int32(len(payload)))
+	size := uint32ToBytes(uint32(len(payload)))
 	f.payloadSize[0] = size[0]
 	f.payloadSize[1] = size[1]
 	f.payloadSize[2] = size[2]
 	f.payloadSize[3] = size[3]
+
+	f.setPayloadChecksum()
+
 	return f
+}
+
+func (f *Frame) setPayloadChecksum() {
+	checksumBytes := uint32ToBytes(crc32.ChecksumIEEE(f.payload))
+	f.payloadChecksum[0] = checksumBytes[0]
+	f.payloadChecksum[1] = checksumBytes[1]
+	f.payloadChecksum[2] = checksumBytes[2]
+	f.payloadChecksum[3] = checksumBytes[3]
 }
 
 func (f *Frame) GetPayload() []byte {
 	return f.payload
 }
 
-// https://stackoverflow.com/a/17539687/4949938
-// (sienna): not even gonna try to pretend I knew how to do this lol
-func unsafeCaseInt32ToBytes(val int32) []byte {
-	hdr := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(&val)), Len: bytesInInt32, Cap: bytesInInt32}
-	return *(*[]byte)(unsafe.Pointer(&hdr))
+func uint32ToBytes(val uint32) []byte {
+	target := make([]byte, 4)
+	binary.LittleEndian.PutUint32(target, val)
+	return target
 }

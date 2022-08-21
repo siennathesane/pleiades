@@ -12,6 +12,7 @@ package blaze
 import (
 	"bytes"
 	"encoding/binary"
+	"hash/crc32"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -27,18 +28,20 @@ type FrameTests struct {
 
 func (ft *FrameTests) TestNewFrame() {
 	known := &Frame{
-		state:                byte(InvalidByte),
-		version:              byte(Version1),
-		reserved0:            ReservedByte,
-		reserved1:            ReservedByte,
-		service:              byte(UnspecifiedService),
-		method:               0xff,
-		authorizationService: byte(NoAuthorizationService),
-		authorizationMethod:  byte(NoAuthorizationMethod),
-		authorizationSize:    [4]byte{0x00, 0x00, 0x00, 0x00},
-		payloadSize:          [4]byte{0x00, 0x00, 0x00, 0x00},
-		authorization:        nil,
-		payload:              nil,
+		state:                 byte(InvalidByte),
+		version:               byte(Version1),
+		reserved0:             ReservedByte,
+		reserved1:             ReservedByte,
+		service:               byte(UnspecifiedService),
+		method:                0xff,
+		authorizationService:  byte(NoAuthorizationService),
+		authorizationMethod:   byte(NoAuthorizationMethod),
+		authorizationSize:     [4]byte{0x00, 0x00, 0x00, 0x00},
+		payloadSize:           [4]byte{0x00, 0x00, 0x00, 0x00},
+		authorization:         nil,
+		payload:               nil,
+		authorizationChecksum: [4]byte{0x00, 0x00, 0x00, 0x00},
+		payloadChecksum:       [4]byte{0x00, 0x00, 0x00, 0x00},
 	}
 
 	target := NewFrame()
@@ -63,6 +66,7 @@ func (ft *FrameTests) TestWithMethod() {
 
 func (ft *FrameTests) TestWithPayload() {
 	testPayload := []byte("12345")
+	targetChecksum := crc32.ChecksumIEEE(testPayload)
 
 	var target *Frame
 	ft.Require().NotPanics(func() {
@@ -71,13 +75,17 @@ func (ft *FrameTests) TestWithPayload() {
 	payloadSize := binary.LittleEndian.Uint32(target.payloadSize[:])
 	ft.Require().Equal(len(testPayload), int(payloadSize), "the payload size must be equal to the known payload size")
 	ft.Require().Equal(testPayload, target.GetPayload(), "the target payload must equal the test payload")
+
+	payloadChecksum := binary.LittleEndian.Uint32(target.payloadChecksum[:])
+	ft.Require().Equal(targetChecksum, payloadChecksum, "the payload checksums must be equal")
 }
 
 func (ft *FrameTests) TestSerialization() {
 	testMethod := MethodByte(0x54)
 	payload := []byte("12345")
+	payloadChecksum := crc32.ChecksumIEEE(payload)
 
-	frameHeaders := 16 // 8 specific bytes + 4-byte int32 + 4-byte int32 = 16 bytes
+	frameHeaders := 24 // 8 header bytes + 4 uint32s = 24 bytes
 	totalFrameLength := len(payload) + frameHeaders
 
 	outgoing := NewFrame().WithState(ValidByte).WithService(RaftControlServiceByte).WithMethod(testMethod).WithPayload(payload)
@@ -85,6 +93,7 @@ func (ft *FrameTests) TestSerialization() {
 	ft.Require().Equal(RaftControlServiceByte, outgoing.GetService())
 	ft.Require().Equal(testMethod, outgoing.GetMethod())
 	ft.Require().Equal(payload, outgoing.GetPayload())
+	ft.Require().Equal(payloadChecksum, binary.LittleEndian.Uint32(outgoing.payloadChecksum[:]))
 
 	marshaled, err := outgoing.Marshal()
 	ft.Require().NoError(err)
