@@ -15,10 +15,10 @@ import (
 	"io"
 	"time"
 
-	transportv1 "github.com/mxplusb/pleiades/api/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/proto"
 )
 
 func NewMessageStream(stream network.Stream, msg []byte, logger zerolog.Logger) (*MessageStream, error) {
@@ -168,76 +168,28 @@ func (m *MessageStream) Read() (uint16, []byte, error) {
 	return header.method, buf, nil
 }
 
-func payloadWriter(payloadStream <-chan []byte, isStream bool, stream network.Stream) {
-	count := 0
-	for {
-		payload, open := <-payloadStream
-		if !open {
-			if isStream {
-				if count > 1 {
-					_ = SendStreamState(stream, StreamNoLongerValid, false)
-				}
-				_ = SendStreamState(stream, StreamEnd, false)
-			} else {
-				_ = SendStreamState(stream, Valid, false)
-			}
-			return
-		}
+func unmarshal[T proto.Message](payload []byte) (T, error) {
+	var t T
+	err := proto.Unmarshal(payload, t)
+	return t, err
+}
 
-		// send the proper state
-		if count < 1 && isStream {
-			if err := SendStreamState(stream, StreamStart, true); err != nil {
-				_ = stream.Reset()
-				return
-			}
-		} else if count > 1 && isStream {
-			if err := SendStreamState(stream, StreamContinue, true); err != nil {
-				_ = stream.Reset()
-				return
-			}
-		} else {
-			if err := SendStreamState(stream, Valid, true); err != nil {
-				_ = stream.Reset()
-				return
-			}
-		}
+func sendFrame(frame *Frame, logger zerolog.Logger, stream network.Stream) {
+	respBuf, err := frame.Marshal()
+	if err != nil {
+		// todo (sienna): add error handling
+		logger.Error().Err(err).Msg("error marshaling frame")
+	}
 
-		// set the header
-		header := transportv1.Header{
-			Size:     uint32(len(payload)),
-			Checksum: crc32.ChecksumIEEE(payload),
-		}
-		headerBuf, err := header.MarshalVT()
-		if err != nil {
-			if err := SendStreamState(stream, Valid, true); err != nil {
-				_ = stream.Reset()
-				return
-			}
-		}
+	// set the write deadline
+	deadline := time.Now().Add(RaftControlRPCWriteTimeout)
+	if err := stream.SetWriteDeadline(deadline); err != nil {
+		_ = stream.Reset()
+	}
 
-		// set the write deadline
-		deadline := time.Now().Add(RaftControlRPCWriteTimeout)
-		if err := stream.SetWriteDeadline(deadline); err != nil {
-			_ = stream.Reset()
-		}
-
-		// write the header
-		if _, err := stream.Write(headerBuf); err != nil {
-			_ = stream.Reset()
-		}
-
-		// set the write deadline
-		deadline = time.Now().Add(RaftControlRPCWriteTimeout)
-		if err := stream.SetWriteDeadline(deadline); err != nil {
-			_ = stream.Reset()
-		}
-
-		// write the payload
-		if _, err := stream.Write(payload); err != nil {
-			_ = stream.Reset()
-			return
-		}
-
-		count++
+	_, err = stream.Write(respBuf)
+	if err != nil {
+		// todo (sienna): add error handling
+		logger.Error().Err(err).Msg("error sending frame")
 	}
 }

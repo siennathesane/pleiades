@@ -12,13 +12,10 @@ package blaze
 import (
 	"context"
 	"fmt"
-	"hash/crc32"
-	"io"
 	"math/rand"
 	"testing"
 	"time"
 
-	transportv1 "github.com/mxplusb/pleiades/api/v1"
 	"github.com/mxplusb/pleiades/api/v1/database"
 	"github.com/mxplusb/pleiades/pkg/conf"
 	"github.com/libp2p/go-libp2p"
@@ -27,6 +24,7 @@ import (
 	"github.com/multiformats/go-multiaddr"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestRaftControlRPCServer(t *testing.T) {
@@ -62,7 +60,7 @@ func (r *RaftControlRPCServerTests) TestNewRaftControlRPCServer() {
 	testRpcServer := NewRaftControlRPCServer(node, r.rpcHost, r.logger)
 	r.Require().NotNil(testRpcServer, "the raft control rpc host must not me nil")
 
-	clientHost := randomTestHost()
+	clientHost := randomLibp2pTestHost()
 	clientHost.Peerstore().AddAddrs(r.rpcHost.ID(), r.rpcHost.Addrs(), peerstore.PermanentAddrTTL)
 
 	stream, err := clientHost.NewStream(context.Background(), r.rpcHost.ID(), RaftControlProtocolVersion)
@@ -79,18 +77,12 @@ func (r *RaftControlRPCServerTests) TestGetId() {
 	testRpcServer := NewRaftControlRPCServer(node, r.rpcHost, r.logger)
 	r.Require().NotNil(testRpcServer, "the raft control rpc host must not me nil")
 
-	clientHost := randomTestHost()
+	clientHost := randomLibp2pTestHost()
 	clientHost.Peerstore().AddAddrs(r.rpcHost.ID(), r.rpcHost.Addrs(), peerstore.PermanentAddrTTL)
 
 	stream, err := clientHost.NewStream(context.Background(), r.rpcHost.ID(), RaftControlProtocolVersion)
 	r.Require().NoError(err, "there must not be an error when opening a stream")
 	r.Require().NotNil(stream, "the stream must not be nil")
-
-	initialStateMsg := &transportv1.State{State: 0, HeaderToFollow: 1}
-	buf, _ := initialStateMsg.MarshalVT()
-
-	_, err = stream.Write(buf)
-	r.Require().NoError(err, "there must not be an error when writing the initial state to the stream")
 
 	idReqPayload := &database.RaftControlPayload{
 		Method: database.RaftControlPayload_GET_ID,
@@ -98,50 +90,26 @@ func (r *RaftControlRPCServerTests) TestGetId() {
 			IdRequest: &database.IdRequest{},
 		},
 	}
-	payloadBuf, _ := idReqPayload.MarshalVT()
+	payloadBuf, _ := proto.Marshal(idReqPayload)
 
-	initialHeader := &transportv1.Header{
-		Size: uint32(len(payloadBuf)),
-		Checksum: crc32.ChecksumIEEE(payloadBuf),
-	}
-	headerBuf, _ := initialHeader.MarshalVT()
+	outgoingFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(GetId).WithPayload(payloadBuf)
+	frameBuf, err := outgoingFrame.Marshal()
+	r.Require().NoError(err, "there must not be an error when marshalling the outgoingFrame")
+	r.Require().NotNil(frameBuf, "the outgoingFrame buffer must not be nil")
 
-	_, err = stream.Write(headerBuf)
-	r.Require().NoError(err, "there must not be an error when writing the header to the stream")
-
-	err = VerifyStreamState(stream)
-	r.Require().NoError(err, "there must not be an error when verifying the stream state after sending the header")
-
-	_, err = stream.Write(payloadBuf)
+	_, err = stream.Write(frameBuf)
 	r.Require().NoError(err, "there must not be an error when writing the payload to the stream")
 
-	err = VerifyStreamState(stream)
-	r.Require().NoError(err, "there must not be an error when verifying the stream state after sending the payload")
+	incomingFrame := NewFrame()
+	read, err := incomingFrame.ReadFrom(stream)
+	r.Require().NoError(err, "there must not be an error when reading the frame from the stream")
+	r.Require().NotEmpty(read, "there must be bytes read")
+	r.Require().NotNil(incomingFrame.GetPayload(), "the incoming frame payload must not be nil")
 
-	responseHeaderBuf := make([]byte, headerSize)
-	bytesRead, err := io.ReadFull(stream, responseHeaderBuf)
-	r.Require().NoError(err, "there must not be an error when reading the response header")
-	r.Require().Equal(len(headerBuf), bytesRead, "the response header must be 10 bytes")
+	respPayload := incomingFrame.GetPayload()
 
-	responseHeader := &transportv1.Header{}
-	err = responseHeader.UnmarshalVT(responseHeaderBuf)
-	r.Require().NoError(err, "there must not be an error when unmarshalling the header")
-	r.Require().NotEmpty(responseHeader.Size, "the length of the response must not be 0")
-	r.Require().NotEmpty(responseHeader.Checksum, "the checksum must not be 0")
-
-	msgBuf := make([]byte, responseHeader.Size)
-	msgBytes, err := io.ReadFull(stream, msgBuf)
-	r.Require().NoError(err, "there must not be an error when reading the response payload")
-	r.Require().Equal(int(responseHeader.Size), msgBytes, "the length of the payload must equal the response header size value")
-
-	responsePayload := &database.RaftControlPayload{}
-	err = responsePayload.UnmarshalVT(msgBuf)
+	idResponse := &database.IdResponse{}
+	err = proto.Unmarshal(respPayload, idResponse)
 	r.Require().NoError(err, "there must not be an error when unmarshalling the response payload")
-
-	switch resp := responsePayload.Types.(type) {
-	case *database.RaftControlPayload_Error:
-		r.Require().Nil(resp.Error.Message, "there should not be an error fetching the raft control node id")
-	case *database.RaftControlPayload_IdResponse:
-		r.Require().NotEmpty(resp.IdResponse.Id, "the id of the node must not be nil")
-	}
+	r.Require().Equal(node.nh.ID(), idResponse.GetId(), "the response ID value must equal the node value")
 }

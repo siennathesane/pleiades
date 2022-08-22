@@ -504,7 +504,7 @@ func (m *DeleteRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Payload", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field payload", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -627,7 +627,7 @@ func (m *PutRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Payload", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field payload", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
