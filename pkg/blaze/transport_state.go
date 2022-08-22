@@ -16,6 +16,7 @@ import (
 	v1 "github.com/mxplusb/pleiades/pkg/api/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/libp2p/go-libp2p-core/network"
+	"google.golang.org/protobuf/proto"
 )
 
 var (
@@ -38,7 +39,7 @@ func VerifyStreamState(stream network.Stream) error {
 	}
 
 	state := &v1.State{}
-	if err := state.UnmarshalVT(stateBuf); err != nil {
+	if err := proto.Unmarshal(stateBuf, state); err != nil {
 		return err
 	}
 
@@ -55,7 +56,7 @@ func SendStreamState(stream network.Stream, streamState StreamState, followthrou
 		return err
 	}
 
-	state := v1.State{State: uint32(streamState)}
+	state := &v1.State{State: uint32(streamState)}
 
 	// make sure we set the bits
 	if followthrough {
@@ -64,8 +65,8 @@ func SendStreamState(stream network.Stream, streamState StreamState, followthrou
 		state.HeaderToFollow = 0
 	}
 
-	buf, err := state.MarshalVT()
-	if err != nil {
+	buf := make([]byte, state.SizeVT())
+	if err := proto.Unmarshal(buf, state); err != nil {
 		return err
 	}
 

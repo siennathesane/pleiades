@@ -134,7 +134,7 @@ type EventPayload struct {
 	// Types that are assignable to Type:
 	//	*EventPayload_KeyValueOperation
 	Type   isEventPayload_Type     `protobuf_oneof:"Type"`
-	Method EventPayload_MethodName `protobuf:"varint,2,opt,name=Method,proto3,enum=database.EventPayload_MethodName" json:"Method,omitempty"`
+	Method EventPayload_MethodName `protobuf:"varint,2,opt,name=method,proto3,enum=database.EventPayload_MethodName" json:"method,omitempty"`
 }
 
 func (x *EventPayload) Reset() {
@@ -502,7 +502,7 @@ var file_api_v1_database_kv_proto_goTypes = []interface{}{
 }
 var file_api_v1_database_kv_proto_depIdxs = []int32{
 	3, // 0: database.EventPayload.KeyValueOperation:type_name -> database.KeyValueOperation
-	0, // 1: database.EventPayload.Method:type_name -> database.EventPayload.MethodName
+	0, // 1: database.EventPayload.method:type_name -> database.EventPayload.MethodName
 	6, // 2: database.KeyValueOperation.Session:type_name -> database.Session
 	5, // 3: database.KeyValueOperation.Event:type_name -> database.Event
 	1, // 4: database.Event.type:type_name -> database.Event.EventType

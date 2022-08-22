@@ -184,7 +184,7 @@ type RaftControlPayload struct {
 	//	*RaftControlPayload_SysOpState
 	//	*RaftControlPayload_Error
 	Types  isRaftControlPayload_Types    `protobuf_oneof:"Types"`
-	Method RaftControlPayload_MethodName `protobuf:"varint,17,opt,name=Method,proto3,enum=database.RaftControlPayload_MethodName" json:"Method,omitempty"`
+	Method RaftControlPayload_MethodName `protobuf:"varint,17,opt,name=method,proto3,enum=database.RaftControlPayload_MethodName" json:"method,omitempty"`
 }
 
 func (x *RaftControlPayload) Reset() {
@@ -1531,7 +1531,7 @@ var file_api_v1_database_raft_control_proto_depIdxs = []int32{
 	5,  // 13: database.RaftControlPayload.StopResponse:type_name -> database.StopResponse
 	9,  // 14: database.RaftControlPayload.SysOpState:type_name -> database.SysOpState
 	19, // 15: database.RaftControlPayload.Error:type_name -> database.DBError
-	0,  // 16: database.RaftControlPayload.Method:type_name -> database.RaftControlPayload.MethodName
+	0,  // 16: database.RaftControlPayload.method:type_name -> database.RaftControlPayload.MethodName
 	7,  // 17: database.RequestSnapshotRequest.options:type_name -> database.SnapshotOption
 	20, // 18: database.ReadLocalNodeRequest.query:type_name -> database.KeyValue
 	1,  // 19: database.IndexState.Status:type_name -> database.IndexState.ResultCode
