@@ -19,7 +19,7 @@ import (
 	"github.com/multiformats/go-multiaddr"
 )
 
-func randomTestHost() host.Host {
+func randomLibp2pTestHost() host.Host {
 	rand.Seed(time.Now().UTC().UnixNano())
 	port := 1024 + rand.Intn(65535-1024)
 	hostAddr := fmt.Sprintf("/ip4/127.0.0.1/udp/%d/quic", port)

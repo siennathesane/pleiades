@@ -11,8 +11,6 @@ package blaze
 
 import (
 	"context"
-	"hash/crc32"
-	"io"
 	"time"
 
 	transportv1 "github.com/mxplusb/pleiades/pkg/api/v1"
@@ -28,6 +26,19 @@ import (
 const (
 	RaftControlProtocolVersion protocol.ID = "/pleiades/raft-control/0.0.1"
 	RaftControlServiceName     string      = "raft-control.pleiades"
+
+	AddNode               MethodByte = 0x00
+	AddObserver           MethodByte = 0x01
+	AddWitness            MethodByte = 0x02
+	GetId                 MethodByte = 0x03
+	GetLeaderId           MethodByte = 0x04
+	RequestCompaction     MethodByte = 0x07
+	RequestDeleteNode     MethodByte = 0x08
+	RequestLeaderTransfer MethodByte = 0x09
+	RequestSnapshot       MethodByte = 0x10
+	Stop                  MethodByte = 0x11
+	StopNode              MethodByte = 0x12
+	Error                 MethodByte = 0xfe
 )
 
 var (
@@ -52,117 +63,241 @@ type RaftControlRPCServer struct {
 	host   host.Host
 }
 
-func (n *RaftControlRPCServer) handleStream(stream network.Stream) {
+func (r *RaftControlRPCServer) handleStream(stream network.Stream) {
 	if err := stream.Scope().SetService(RaftControlServiceName); err != nil {
 		_ = stream.Reset()
 	}
 
 	for {
-		// verify the stream state
-		if err := VerifyStreamState(stream); err != nil {
-			n.logger.Error().Err(err).Msg("cannot readAndHandle stream state")
-			_ = SendStreamState(stream, Invalid, false)
-			_ = stream.Reset()
-			return
+		frame := NewFrame()
+		_, err := frame.ReadFrom(stream)
+		if err != nil {
+			// todo (sienna): add error handling
+			r.logger.Error().Err(err).Msg("cannot read frame")
 		}
 
-		// get the header
-		if err := stream.SetReadDeadline(time.Now().Add(RaftControlRPCReadTimeout)); err != nil {
-			n.logger.Error().Err(err).Msg("cannot set read deadline")
-			_ = SendStreamState(stream, Invalid, false)
-		}
+		msgBuf := frame.GetPayload()
 
-		headerBuf := make([]byte, headerSize)
-		if _, err := io.ReadFull(stream, headerBuf); err != nil {
-			n.logger.Error().Err(err).Msg("cannot readAndHandle raft control header")
-			_ = SendStreamState(stream, Invalid, false)
-			continue
-		}
-
-		// marshall the header
-		header := &transportv1.Header{}
-		if err := header.UnmarshalVT(headerBuf); err != nil {
-			n.logger.Error().Err(err).Msg("cannot unmarshal header")
-			_ = SendStreamState(stream, Invalid, false)
-			return
-		}
-
-		// prep the message buffer
-		msgBuf := make([]byte, header.Size)
-		if _, err := io.ReadFull(stream, msgBuf); err != nil {
-			n.logger.Error().Err(err).Msg("cannot readAndHandle message payload")
-			_ = SendStreamState(stream, Invalid, false)
-			return
-		}
-
-		// verify the message is intact
-		checked := crc32.ChecksumIEEE(msgBuf)
-		if checked != header.GetChecksum() {
-			n.logger.Error().Msg("checksums do not match")
-			_ = SendStreamState(stream, InvalidMessageChecksum, false)
-		}
-
-		// unmarshal the payload
-		msg := &database.RaftControlPayload{}
-		if err := msg.UnmarshalVT(msgBuf); err != nil {
-			n.logger.Error().Err(err).Msg("cannot unmarshal payload")
-			_ = SendStreamState(stream, Invalid, false)
-		}
-
-		switch msg.Method {
-		case database.RaftControlPayload_ADD_NODE:
-			n.AddNode(msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_ADD_OBSERVER:
-			n.AddObserver(msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_ADD_WITNESS:
-			n.AddWitness(msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_GET_ID:
-			n.GetID(context.TODO(), nil, stream)
-		case database.RaftControlPayload_GET_LEADER_ID:
-			n.GetLeaderID(context.TODO(), msg.GetGetLeaderIdRequest(), stream)
-		//case database.RaftControlPayload_READ_INDEX:
-		//	n.ReadIndex(msg.GetReadIndexRequest(), stream)
-		//case database.RaftControlPayload_READ_LOCAL_NODE:
-		//	n.ReadLocalNode(context.TODO(), msg.GetReadLocalNodeRequest(), stream)
-		case database.RaftControlPayload_REQUEST_COMPACTION:
-			n.RequestCompaction(context.TODO(), msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_REQUEST_DELETE_NODE:
-			n.RequestDeleteNode(msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_REQUEST_LEADER_TRANSFER:
-			n.RequestLeaderTransfer(context.TODO(), msg.GetModifyNodeRequest(), stream)
-		case database.RaftControlPayload_REQUEST_SNAPSHOT:
-			n.RequestSnapshot(msg.GetRequestSnapshotRequest(), stream)
-		case database.RaftControlPayload_STOP:
-			n.Stop(context.TODO(), msg.GetStopRequest(), stream)
-		case database.RaftControlPayload_STOP_NODE:
-			n.StopNode(context.TODO(), msg.GetModifyNodeRequest(), stream)
+		switch frame.GetMethod() {
+		case AddNode:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.AddNode(msg, stream)
+		case AddObserver:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.AddObserver(msg, stream)
+		case AddWitness:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.AddWitness(msg, stream)
+		case GetId:
+			r.GetID(context.TODO(), nil, stream)
+		case GetLeaderId:
+			msg, err := unmarshal[*database.GetLeaderIDRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.GetLeaderID(context.TODO(), msg, stream)
+		case RequestCompaction:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.RequestCompaction(context.TODO(), msg, stream)
+		case RequestDeleteNode:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.RequestDeleteNode(msg, stream)
+		case RequestLeaderTransfer:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.RequestLeaderTransfer(context.TODO(), msg, stream)
+		case RequestSnapshot:
+			msg, err := unmarshal[*database.RequestSnapshotRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.RequestSnapshot(msg, stream)
+		case Stop:
+			msg, err := unmarshal[*database.StopRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.Stop(context.TODO(), msg, stream)
+		case StopNode:
+			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
+			if err != nil {
+				// todo (sienna): add error handling
+				r.logger.Error().Err(err).Msg("error unmarshaling message")
+			}
+			r.StopNode(context.TODO(), msg, stream)
 		}
 	}
 }
 
-func (n *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
+func (r *RaftControlRPCServer) handleRequestState(rs *dragonboat.RequestState, method MethodByte, stream network.Stream) {
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(method)
+	first := true
+	for response := range rs.ResultC() {
+		results := response.GetResult()
 
-	go payloadWriter(writerChan, false, stream)
+		indexState := &database.IndexState{
+			Results: &database.Result{
+				Value: results.Value,
+				Data:  results.Data,
+			},
+			SnapshotIndex: response.SnapshotIndex(),
+			Status:        requestStateCodeToResultCode(response),
+		}
 
-	ctx = n.logger.WithContext(ctx)
+		buf, _ := indexState.MarshalVT()
+		if first {
+			responseFrame = responseFrame.WithPayload(buf).WithState(StreamStartByte).WithMethod(method)
+		} else {
+			responseFrame = responseFrame.WithPayload(buf).WithState(StreamContinueByte).WithMethod(method)
+		}
+		sendFrame(responseFrame, r.logger, stream)
+
+		first = false
+	}
+
+	responseFrame = responseFrame.WithState(StreamEndByte).WithMethod(AddNode)
+	sendFrame(responseFrame, r.logger, stream)
+}
+
+func (r *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream network.Stream) {
+
 	clusterId := request.GetClusterId()
-	leaderId, ok, err := n.node.GetLeaderID(clusterId)
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddNode)
+
+	rs, err := r.node.RequestAddNode(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("can't add node")
+		msg := &transportv1.DBError{
+			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+			Message: errors.Wrap(err, "can't add node").Error(),
+		}
+		buf, _ := msg.MarshalVT()
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
+		return
+	}
+
+	r.handleRequestState(rs, AddNode, stream)
+}
+
+func (r *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, stream network.Stream) {
+
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddObserver)
+
+	rs, err := r.node.RequestAddObserver(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("can't add observer")
+		msg := &transportv1.DBError{
+			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+			Message: errors.Wrap(err, "can't add observer").Error(),
+		}
+		buf, _ := msg.MarshalVT()
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
+		return
+	}
+
+	r.handleRequestState(rs, AddObserver, stream)
+}
+
+func (r *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, stream network.Stream) {
+
+	clusterId := request.GetClusterId()
+	nodeId := request.GetNodeId()
+	timeout := time.Duration(request.GetTimeout())
+	target := request.GetTarget()
+	configChange := request.GetConfigChangeIndex()
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddWitness)
+
+	rs, err := r.node.RequestAddWitness(clusterId, nodeId, target, configChange, timeout)
+	if err != nil {
+		r.logger.Error().Err(err).Msg("can't add witness")
+		msg := &transportv1.DBError{
+			Type:    transportv1.DBErrorType_RAFT_CONTROL,
+			Message: errors.Wrap(err, "can't add witness").Error(),
+		}
+		buf, _ := msg.MarshalVT()
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
+		return
+	}
+
+	r.handleRequestState(rs, AddWitness, stream)
+}
+
+func (r *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest, stream network.Stream) {
+	ctx = r.logger.WithContext(ctx)
+	id := r.node.ID()
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(GetLeaderId)
+
+	msg := &database.IdResponse{Id: id}
+	buf, _ := msg.MarshalVT()
+	responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(GetId)
+	sendFrame(responseFrame, r.logger, stream)
+	return
+}
+
+func (r *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *database.GetLeaderIDRequest, stream network.Stream) {
+	ctx = r.logger.WithContext(ctx)
+	clusterId := request.GetClusterId()
+	leaderId, ok, err := r.node.GetLeaderID(clusterId)
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(GetLeaderId)
+
 	if !ok {
-		n.logger.Error().Err(err).Msg("leader information is not available")
+		r.logger.Error().Err(err).Msg("leader information is not available")
 		msg := &transportv1.DBError{Type: transportv1.DBErrorType_RAFT_CONTROL, Message: err.Error()}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
 	if err != nil && ok {
-		n.logger.Error().Err(err).Msg("failed to get leader information")
+		r.logger.Error().Err(err).Msg("failed to get leader information")
 		msg := &transportv1.DBError{Type: transportv1.DBErrorType_RAFT_CONTROL, Message: "leader information not available"}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
@@ -171,359 +306,110 @@ func (n *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *databas
 	}
 
 	buf, _ := msg.MarshalVT()
-	writerChan <- buf
+	responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(GetLeaderId)
+	sendFrame(responseFrame, r.logger, stream)
 	return
 }
 
-func (n *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, false, stream)
-
-	ctx = n.logger.WithContext(ctx)
-	id := n.node.ID()
-
-	msg := &database.IdResponse{Id: id}
-	buf, _ := msg.MarshalVT()
-	writerChan <- buf
-	return
-}
-
-//func (n *RaftControlRPCServer) ReadIndex(request *database.ReadIndexRequest, stream network.Stream) {
-//	// payload writer
-//	writerChan := make(chan []byte)
-//	defer close(writerChan)
-//
-//	go payloadWriter(writerChan, true, stream)
-//
-//	clusterId := request.GetClusterId()
-//	timeout := time.Duration(request.GetTimeout())
-//	rs, err := n.node.ReadIndex(clusterId, timeout)
-//	if err != nil {
-//		n.logger.Error().Err(err).Msg("error reading index")
-//		msg := &transportv1.DBError{
-//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-//			Message: errors.Wrap(err, "error reading index").Error(),
-//		}
-//		buf, _ := msg.MarshalVT()
-//		writerChan <- buf
-//		return
-//	}
-//
-//	for response := range rs.ResultC() {
-//		results := response.GetResult()
-//
-//		indexState := &database.IndexState{
-//			Results: &database.Result{
-//				Value: results.Value,
-//				Data:  results.Data,
-//			},
-//			SnapshotIndex: response.SnapshotIndex(),
-//			Status:        requestStateCodeToResultCode(response),
-//		}
-//
-//		buf, _ := indexState.MarshalVT()
-//		writerChan <- buf
-//	}
-//}
-
-//func (n *RaftControlRPCServer) ReadLocalNode(ctx context.Context, request *database.ReadLocalNodeRequest, stream network.Stream) {
-//	// payload writer
-//	writerChan := make(chan []byte)
-//	defer close(writerChan)
-//
-//	go payloadWriter(writerChan, false, stream)
-//
-//	ctx = n.logger.WithContext(ctx)
-//
-//	query, err := request.GetQuery().MarshalVT()
-//	if err != nil {
-//		n.logger.Error().Err(err).Msg("error marshalling query")
-//		msg := &transportv1.DBError{
-//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-//			Message: errors.Wrap(err, "error marshalling query").Error(),
-//		}
-//		buf, _ := msg.MarshalVT()
-//		writerChan <- buf
-//		return
-//	}
-//
-//	var rs dragonboat.RequestState
-//	data, err := n.node.ReadLocalNode(&rs, query)
-//	if err != nil {
-//		n.logger.Error().Err(err).Msg("can't read from local node")
-//		msg := &transportv1.DBError{
-//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-//			Message: errors.Wrap(err, "can't read from local node").Error(),
-//		}
-//		buf, _ := msg.MarshalVT()
-//		writerChan <- buf
-//		return
-//	}
-//
-//	if data == nil {
-//		err := errors.New("key not found")
-//		n.logger.Error().Err(err).Msg("incorrect query parameters")
-//		msg := &transportv1.DBError{
-//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-//			Message: errors.Wrap(err, "incorrect query parameters").Error(),
-//		}
-//		buf, _ := msg.MarshalVT()
-//		writerChan <- buf
-//		return
-//	}
-//
-//	kv := &database.KeyValue{}
-//	if err := kv.UnmarshalVT(data.([]byte)); err != nil {
-//		n.logger.Error().Err(err).Msg("can't unmarshal key from local fsm")
-//		msg := &transportv1.DBError{
-//			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-//			Message: errors.Wrap(err, "can't unmarshal key from local fsm").Error(),
-//		}
-//		buf, _ := msg.MarshalVT()
-//		writerChan <- buf
-//		return
-//	}
-//
-//	buf, _ := kv.MarshalVT()
-//	writerChan <- buf
-//}
-
-func (n *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
+func (r *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
+	ctx = r.logger.WithContext(ctx)
 
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
-	timeout := time.Duration(request.GetTimeout())
-	target := request.GetTarget()
-	configChange := request.GetConfigChangeIndex()
 
-	rs, err := n.node.RequestAddNode(clusterId, nodeId, target, configChange, timeout)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestCompaction)
+
+	state, err := r.node.RequestCompaction(clusterId, nodeId)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("can't add node")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "can't add node").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
-}
-
-func (n *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
-
-	clusterId := request.GetClusterId()
-	nodeId := request.GetNodeId()
-	timeout := time.Duration(request.GetTimeout())
-	target := request.GetTarget()
-	configChange := request.GetConfigChangeIndex()
-
-	rs, err := n.node.RequestAddObserver(clusterId, nodeId, target, configChange, timeout)
-	if err != nil {
-		n.logger.Error().Err(err).Msg("can't add observer")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "can't add observer").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
-}
-
-func (n *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
-
-	clusterId := request.GetClusterId()
-	nodeId := request.GetNodeId()
-	timeout := time.Duration(request.GetTimeout())
-	target := request.GetTarget()
-	configChange := request.GetConfigChangeIndex()
-
-	rs, err := n.node.RequestAddWitness(clusterId, nodeId, target, configChange, timeout)
-	if err != nil {
-		n.logger.Error().Err(err).Msg("can't add witness")
-		msg := &transportv1.DBError{
-			Type:    transportv1.DBErrorType_RAFT_CONTROL,
-			Message: errors.Wrap(err, "can't add witness").Error(),
-		}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
-		return
-	}
-
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
-}
-
-func (n *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
-
-	ctx = n.logger.WithContext(ctx)
-
-	clusterId := request.GetClusterId()
-	nodeId := request.GetNodeId()
-	state, err := n.node.RequestCompaction(clusterId, nodeId)
-	if err != nil {
-		n.logger.Error().Err(err).Msg("compaction can't be completed")
+		r.logger.Error().Err(err).Msg("compaction can't be completed")
 		msg := &transportv1.DBError{
 			Type:    transportv1.DBErrorType_RAFT_CONTROL,
 			Message: errors.Wrap(err, "compaction can't be completed").Error(),
 		}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
+	first := true
 	for range state.ResultC() {
-		msg := &database.SysOpState{}
-		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		resp := &database.SysOpState{}
+
+		buf, _ := resp.MarshalVT()
+		responseFrame = responseFrame.WithPayload(buf).WithMethod(RequestCompaction)
+		if first {
+			responseFrame = responseFrame.WithState(StreamStartByte)
+		} else {
+			responseFrame = responseFrame.WithState(StreamContinueByte)
+		}
+		sendFrame(responseFrame, r.logger, stream)
+
+		first = false
 	}
+
+	responseFrame = responseFrame.WithState(StreamEndByte).WithMethod(RequestCompaction)
+	sendFrame(responseFrame, r.logger, stream)
 }
 
-func (n *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
+func (r *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
 	configChange := request.GetConfigChangeIndex()
 
-	rs, err := n.node.RequestDeleteNode(clusterId, nodeId, configChange, timeout)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestDeleteNode)
+
+	rs, err := r.node.RequestDeleteNode(clusterId, nodeId, configChange, timeout)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("node can't be deleted")
+		r.logger.Error().Err(err).Msg("node can't be deleted")
 		msg := &transportv1.DBError{
 			Type:    transportv1.DBErrorType_RAFT_CONTROL,
 			Message: errors.Wrap(err, "node can't be deleted").Error(),
 		}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
+	r.handleRequestState(rs, RequestDeleteNode, stream)
 }
 
-func (n *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, false, stream)
+func (r *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	targetNodeId := request.GetNodeId()
-	err := n.node.RequestLeaderTransfer(clusterId, targetNodeId)
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestLeaderTransfer)
+
+	err := r.node.RequestLeaderTransfer(clusterId, targetNodeId)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("leader can't be transferred")
+		r.logger.Error().Err(err).Msg("leader can't be transferred")
 		msg := &transportv1.DBError{
 			Type:    transportv1.DBErrorType_RAFT_CONTROL,
 			Message: errors.Wrap(err, "leader can't be transferred").Error(),
 		}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
 	msg := &database.RequestLeaderTransferResponse{}
 	buf, _ := msg.MarshalVT()
-	writerChan <- buf
+	responseFrame = responseFrame.WithPayload(buf)
+	sendFrame(responseFrame, r.logger, stream)
 }
 
-func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
+func (r *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	snapOpts := request.GetOptions()
 	timeout := time.Duration(request.GetTimeout())
+
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestSnapshot)
 
 	opts := dragonboat.SnapshotOption{
 		CompactionOverhead:         snapOpts.CompactionOverhead,
@@ -532,64 +418,53 @@ func (n *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshot
 		OverrideCompactionOverhead: snapOpts.OverrideCompactionOverhead,
 	}
 
-	rs, err := n.node.RequestSnapshot(clusterId, opts, timeout)
+	rs, err := r.node.RequestSnapshot(clusterId, opts, timeout)
 	if err != nil {
-		n.logger.Error().Err(err).Msg("snapshot can't be created")
+		r.logger.Error().Err(err).Msg("snapshot can't be created")
 		msg := &transportv1.DBError{
 			Type:    transportv1.DBErrorType_RAFT_CONTROL,
 			Message: errors.Wrap(err, "snapshot can't be created").Error(),
 		}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame = responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
 		return
 	}
 
-	for response := range rs.ResultC() {
-		results := response.GetResult()
-
-		indexState := &database.IndexState{
-			Results: &database.Result{
-				Value: results.Value,
-				Data:  results.Data,
-			},
-			SnapshotIndex: response.SnapshotIndex(),
-			Status:        requestStateCodeToResultCode(response),
-		}
-
-		buf, _ := indexState.MarshalVT()
-		writerChan <- buf
-	}
+	r.handleRequestState(rs, RequestSnapshot, stream)
 }
 
-func (n *RaftControlRPCServer) Stop(ctx context.Context, request *database.StopRequest, stream network.Stream) {
-	ctx = n.logger.WithContext(ctx)
+func (r *RaftControlRPCServer) Stop(ctx context.Context, _ *database.StopRequest, stream network.Stream) {
+	ctx = r.logger.WithContext(ctx)
 
-	n.node.Stop()
+	r.node.Stop()
 
-	_ = SendStreamState(stream, Valid, false)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(Stop)
+	sendFrame(responseFrame, r.logger, stream)
 }
 
-func (n *RaftControlRPCServer) StopNode(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
-	// payload writer
-	writerChan := make(chan []byte)
-	defer close(writerChan)
-
-	go payloadWriter(writerChan, true, stream)
-
-	ctx = n.logger.WithContext(ctx)
+func (r *RaftControlRPCServer) StopNode(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
+	ctx = r.logger.WithContext(ctx)
 
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 
-	if err := n.node.StopNode(clusterId, nodeId); err != nil {
-		n.logger.Error().Err(err).Msg("can't stop node")
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(StopNode)
+
+	if err := r.node.StopNode(clusterId, nodeId); err != nil {
+		r.logger.Error().Err(err).Msg("can't stop node")
 		msg := &transportv1.DBError{
 			Type:    transportv1.DBErrorType_RAFT_CONTROL,
 			Message: errors.Wrap(err, "can't stop node").Error(),
 		}
 		buf, _ := msg.MarshalVT()
-		writerChan <- buf
+		responseFrame := responseFrame.WithPayload(buf).WithState(ValidByte).WithMethod(Error)
+		sendFrame(responseFrame, r.logger, stream)
+		return
 	}
+
+	responseFrame = responseFrame.WithMethod(StopNode)
+	sendFrame(responseFrame, r.logger, stream)
 }
 
 func requestStateCodeToResultCode(result dragonboat.RequestResult) database.IndexState_ResultCode {

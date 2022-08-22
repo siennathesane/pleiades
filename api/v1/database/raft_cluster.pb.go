@@ -82,7 +82,7 @@ type RaftClusterPayload struct {
 	//	*RaftClusterPayload_StartClusterRequest
 	//	*RaftClusterPayload_StartClusterResponse
 	Type   isRaftClusterPayload_Type     `protobuf_oneof:"Type"`
-	Method RaftClusterPayload_MethodName `protobuf:"varint,7,opt,name=Method,proto3,enum=database.RaftClusterPayload_MethodName" json:"Method,omitempty"`
+	Method RaftClusterPayload_MethodName `protobuf:"varint,7,opt,name=method,proto3,enum=database.RaftClusterPayload_MethodName" json:"method,omitempty"`
 }
 
 func (x *RaftClusterPayload) Reset() {
@@ -1127,7 +1127,7 @@ var file_api_v1_database_raft_cluster_proto_depIdxs = []int32{
 	7,  // 3: database.RaftClusterPayload.StopClusterResponse:type_name -> database.StopClusterResponse
 	8,  // 4: database.RaftClusterPayload.StartClusterRequest:type_name -> database.StartClusterRequest
 	9,  // 5: database.RaftClusterPayload.StartClusterResponse:type_name -> database.StartClusterResponse
-	0,  // 6: database.RaftClusterPayload.Method:type_name -> database.RaftClusterPayload.MethodName
+	0,  // 6: database.RaftClusterPayload.method:type_name -> database.RaftClusterPayload.MethodName
 	4,  // 7: database.GetClusterMembershipResponse.membership:type_name -> database.RaftMembership
 	11, // 8: database.RaftMembership.Nodes:type_name -> database.RaftMembership.NodesEntry
 	12, // 9: database.RaftMembership.Observers:type_name -> database.RaftMembership.ObserversEntry
