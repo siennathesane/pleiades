@@ -12,13 +12,10 @@ package conf
 import (
 	"io"
 	"os"
-	"runtime"
-	"strconv"
 
 	"github.com/mxplusb/pleiades/pkg"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	zlog "github.com/rs/zerolog"
-	"github.com/rs/zerolog/journald"
 )
 
 var (
@@ -28,24 +25,7 @@ var (
 )
 
 func init() {
-	if runtime.GOOS != "darwin" {
-		writers = append(writers, journald.NewJournalDWriter())
-	} else {
-		writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout})
-	}
-
-	// adds `Lshortfile` equivalence
-	zlog.CallerMarshalFunc = func(file string, line int) string {
-		short := file
-		for i := len(file) - 1; i > 0; i-- {
-			if file[i] == '/' {
-				short = file[i+1:]
-				break
-			}
-		}
-		file = short
-		return file + ":" + strconv.Itoa(line)
-	}
+	writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout})
 
 	rootLogger = zlog.New(multiWriter).With().
 		Str("sha", pkg.Sha).
