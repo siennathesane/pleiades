@@ -10,34 +10,24 @@
 package blaze
 
 import (
-	"encoding/binary"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"math/rand"
 	"testing"
 	"time"
 
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
-	sm "github.com/lni/dragonboat/v3/statemachine"
-	"github.com/lni/goutils/vfs"
 )
 
 func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	rand.Seed(time.Now().UTC().UnixNano())
 	port := 1024 + rand.Intn(65535-1024)
 
-	expertCfg := dconfig.GetDefaultExpertConfig()
-	expertCfg.LogDB.Shards = 4
-	expertCfg.FS = vfs.NewMem()
-
 	return dconfig.NodeHostConfig{
 		WALDir:         t.TempDir(),
 		NodeHostDir:    t.TempDir(),
 		RTTMillisecond: 10,
 		RaftAddress:    fmt.Sprintf("localhost:%d", port),
-		Expert:         expertCfg,
 		NotifyCommit:   false,
 	}
 }
@@ -96,52 +86,3 @@ func build3NodeTestCluster(t *testing.T) ([]dconfig.Config, []dconfig.NodeHostCo
 
 	return clusterConfigs, nodeConfigs, nodeHosts
 }
-
-type testStateMachine struct {
-	ShardID   uint64
-	ReplicaID uint64
-	Count     uint64
-}
-
-func newTestStateMachine(shardID uint64,
-	replicaID uint64) sm.IStateMachine {
-	return &testStateMachine{
-		ShardID:   shardID,
-		ReplicaID: replicaID,
-		Count:     0,
-	}
-}
-
-func (s *testStateMachine) Lookup(query interface{}) (interface{}, error) {
-	result := make([]byte, 8)
-	binary.LittleEndian.PutUint64(result, s.Count)
-	return result, nil
-}
-
-func (s *testStateMachine) Update(data []byte) (sm.Result, error) {
-	s.Count++
-	fmt.Printf("from testStateMachine.Update(), msg: %s, count:%d\n",
-		string(data), s.Count)
-	return sm.Result{Value: uint64(len(data))}, nil
-}
-
-func (s *testStateMachine) SaveSnapshot(w io.Writer, fc sm.ISnapshotFileCollection, done <-chan struct{}) error {
-	data := make([]byte, 8)
-	binary.LittleEndian.PutUint64(data, s.Count)
-	_, err := w.Write(data)
-	return err
-}
-
-func (s *testStateMachine) RecoverFromSnapshot(r io.Reader,
-	files []sm.SnapshotFile,
-	done <-chan struct{}) error {
-	data, err := ioutil.ReadAll(r)
-	if err != nil {
-		return err
-	}
-	v := binary.LittleEndian.Uint64(data)
-	s.Count = v
-	return nil
-}
-
-func (s *testStateMachine) Close() error { return nil }

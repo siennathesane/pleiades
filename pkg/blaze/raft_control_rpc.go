@@ -83,21 +83,21 @@ func (r *RaftControlRPCServer) handleStream(stream network.Stream) {
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
-				r.logger.Error().Err(err).Msg("error unmarshaling message")
+				r.logger.Error().Err(err).Msg("error unmarshalling message")
 			}
 			r.AddNode(msg, stream)
 		case AddObserver:
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
-				r.logger.Error().Err(err).Msg("error unmarshaling message")
+				r.logger.Error().Err(err).Msg("error unmarshalling message")
 			}
 			r.AddObserver(msg, stream)
 		case AddWitness:
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
-				r.logger.Error().Err(err).Msg("error unmarshaling message")
+				r.logger.Error().Err(err).Msg("error unmarshalling message")
 			}
 			r.AddWitness(msg, stream)
 		case GetId:
