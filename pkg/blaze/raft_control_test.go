@@ -36,7 +36,143 @@ func (rct *RaftControlTests) SetupSuite() {
 	rct.logger = utils.NewTestLogger(rct.T())
 }
 
+func (rct *RaftControlTests) TestAddWitness() {
+	if testing.Short() {
+		rct.T().Skipf("skipping due to short tests")
+	}
+
+	firstNodeHostConfig := buildTestNodeHostConfig(rct.T())
+	firstNode, err := NewRaftControlNode(firstNodeHostConfig, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the first node")
+	rct.Require().NotNil(firstNode, "firstNode must not be nil")
+
+	testClusterId := uint64(0)
+	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	testClusterId = firstNodeClusterConfig.ClusterID
+	nodeClusters := make(map[uint64]string)
+	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
+
+	err = firstNode.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
+	time.Sleep(5000 * time.Millisecond)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	cs, err := firstNode.nh.SyncGetSession(ctx, testClusterId)
+	rct.Require().NoError(err, "there must not be an error when fetching the client session from the first node")
+	rct.Require().NotNil(cs, "the first node's client session must not be nil")
+	cancel()
+
+	for i := 0; i < 5; i++ {
+		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+		_, err := firstNode.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		rct.Require().NoError(err, "there must not be an error when proposing a new message")
+
+		cs.ProposalCompleted()
+	}
+
+	secondNodeHostConfig := buildTestNodeHostConfig(rct.T())
+	secondNode, err := NewRaftControlNode(secondNodeHostConfig, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the second node")
+	rct.Require().NotNil(secondNode, "secondNode must not be nil")
+
+	secondNodeClusterConfig := dconfig.Config{
+		NodeID:       uint64(rand.Intn(10_000)),
+		ClusterID:    testClusterId,
+		HeartbeatRTT: 10,
+		ElectionRTT:  100,
+		IsWitness: true,
+	}
+
+	rs, err := firstNode.RequestAddWitness(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rct.Require().NoError(err, "there must not be an error when requesting to add an observer")
+
+	select {
+	case r := <-rs.ResultC():
+		rct.Require().True(r.Completed(), "the request must have completed successfully")
+	}
+
+	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
+	time.Sleep(5000 * time.Millisecond)
+
+	membershipCtx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	membership, err := firstNode.nh.SyncGetClusterMembership(membershipCtx,testClusterId)
+	rct.Require().NoError(err, "there must not be an error when getting cluster membership")
+	rct.Require().NotNil(membership, "the membership list must not be nil")
+	rct.Require().NotNil(1, len(membership.Witnesses), "there must be at least one witness")
+}
+
+func (rct *RaftControlTests) TestAddObserver() {
+	if testing.Short() {
+		rct.T().Skipf("skipping due to short tests")
+	}
+
+	firstNodeHostConfig := buildTestNodeHostConfig(rct.T())
+	firstNode, err := NewRaftControlNode(firstNodeHostConfig, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the first node")
+	rct.Require().NotNil(firstNode, "firstNode must not be nil")
+
+	testClusterId := uint64(0)
+	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	testClusterId = firstNodeClusterConfig.ClusterID
+	nodeClusters := make(map[uint64]string)
+	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
+
+	err = firstNode.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
+	time.Sleep(5000 * time.Millisecond)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	cs, err := firstNode.nh.SyncGetSession(ctx, testClusterId)
+	rct.Require().NoError(err, "there must not be an error when fetching the client session from the first node")
+	rct.Require().NotNil(cs, "the first node's client session must not be nil")
+	cancel()
+
+	for i := 0; i < 5; i++ {
+		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+		_, err := firstNode.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		rct.Require().NoError(err, "there must not be an error when proposing a new message")
+
+		cs.ProposalCompleted()
+	}
+
+	secondNodeHostConfig := buildTestNodeHostConfig(rct.T())
+	secondNode, err := NewRaftControlNode(secondNodeHostConfig, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the second node")
+	rct.Require().NotNil(secondNode, "secondNode must not be nil")
+
+	secondNodeClusterConfig := dconfig.Config{
+		NodeID:       uint64(rand.Intn(10_000)),
+		ClusterID:    testClusterId,
+		HeartbeatRTT: 10,
+		ElectionRTT:  100,
+		IsObserver: true,
+	}
+
+	rs, err := firstNode.RequestAddObserver(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rct.Require().NoError(err, "there must not be an error when requesting to add an observer")
+
+	select {
+	case r := <-rs.ResultC():
+		rct.Require().True(r.Completed(), "the request must have completed successfully")
+	}
+
+	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
+	time.Sleep(5000 * time.Millisecond)
+
+	membershipCtx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	membership, err := firstNode.nh.SyncGetClusterMembership(membershipCtx,testClusterId)
+	rct.Require().NoError(err, "there must not be an error when getting cluster membership")
+	rct.Require().NotNil(membership, "the membership list must not be nil")
+	rct.Require().NotNil(1, len(membership.Observers), "there must be at least one observer")
+}
+
 func (rct *RaftControlTests) TestAddNode() {
+	if testing.Short() {
+		rct.T().Skipf("skipping due to short tests")
+	}
+
 	firstNodeHostConfig := buildTestNodeHostConfig(rct.T())
 	firstNode, err := NewRaftControlNode(firstNodeHostConfig, rct.logger)
 	rct.Require().NoError(err, "there must not be an error when starting the first node")
@@ -94,6 +230,7 @@ func (rct *RaftControlTests) TestAddNode() {
 	membership, err := firstNode.nh.SyncGetClusterMembership(membershipCtx,testClusterId)
 	rct.Require().NoError(err, "there must not be an error when getting cluster membership")
 	rct.Require().NotNil(membership, "the membership list must not be nil")
+	rct.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 }
 
 func (rct *RaftControlTests) TestRaftAddress() {
