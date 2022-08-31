@@ -41,7 +41,6 @@ type INodeHost interface {
 	GetLeaderID(clusterID uint64) (uint64, bool, error)
 	GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
 	ID() string
-	NotifyOnCommit() bool
 	RaftAddress() string
 	RemoveData(clusterID uint64, nodeID uint64) error
 	RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
@@ -53,12 +52,13 @@ type INodeHost interface {
 	RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
 	Stop()
 	StopNode(clusterID uint64, nodeID uint64) error
-	SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
-	SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error
-	SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error)
+	// todo (sienna): add these back later if we need them
+	//SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
+	//SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+	//SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+	//SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
+	//SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error
+	//SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error)
 }
 
 type ISession interface {
