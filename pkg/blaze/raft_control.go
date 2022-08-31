@@ -10,7 +10,6 @@
 package blaze
 
 import (
-	"context"
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/conf"
@@ -50,10 +49,6 @@ func NewRaftControlNode(nodeHostConfig dconfig.NodeHostConfig, logger zerolog.Lo
 
 	node := &Node{logger: l, nh: nh}
 
-	if nodeHostConfig.NotifyCommit {
-		node.notifyOnCommit = true
-	}
-
 	return node, nil
 }
 
@@ -79,10 +74,6 @@ func (n *Node) NewOrGetStoreManager() (IStore, error) {
 		n.storeManager = newStoreManager(n.logger, n.nh)
 	}
 	return n.storeManager, nil
-}
-
-func (n *Node) NotifyOnCommit() bool {
-	return n.notifyOnCommit
 }
 
 func (n *Node) GetLeaderID(clusterID uint64) (uint64, bool, error) {
@@ -141,26 +132,26 @@ func (n *Node) StopNode(clusterID uint64, nodeID uint64) error {
 	return n.nh.StopNode(clusterID, nodeID)
 }
 
-func (n *Node) SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error {
-	return n.nh.SyncRemoveData(ctx, clusterID, nodeID)
-}
-
-func (n *Node) SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-	return n.nh.SyncRequestAddNode(ctx, clusterID, nodeID, target, configChangeIndex)
-}
-
-func (n *Node) SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-	return n.nh.SyncRequestAddObserver(ctx, clusterID, nodeID, target, configChangeIndex)
-}
-
-func (n *Node) SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-	return n.nh.SyncRequestAddWitness(ctx, clusterID, nodeID, target, configChangeIndex)
-}
-
-func (n *Node) SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error {
-	return n.nh.SyncRequestDeleteNode(ctx, clusterID, nodeID, configChangeIndex)
-}
-
-func (n *Node) SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error) {
-	return n.nh.SyncRequestSnapshot(ctx, clusterID, opt)
-}
+//func (n *Node) SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error {
+//	return n.nh.SyncRemoveData(ctx, clusterID, nodeID)
+//}
+//
+//func (n *Node) SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
+//	return n.nh.SyncRequestAddNode(ctx, clusterID, nodeID, target, configChangeIndex)
+//}
+//
+//func (n *Node) SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
+//	return n.nh.SyncRequestAddObserver(ctx, clusterID, nodeID, target, configChangeIndex)
+//}
+//
+//func (n *Node) SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
+//	return n.nh.SyncRequestAddWitness(ctx, clusterID, nodeID, target, configChangeIndex)
+//}
+//
+//func (n *Node) SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error {
+//	return n.nh.SyncRequestDeleteNode(ctx, clusterID, nodeID, configChangeIndex)
+//}
+//
+//func (n *Node) SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error) {
+//	return n.nh.SyncRequestSnapshot(ctx, clusterID, opt)
+//}
