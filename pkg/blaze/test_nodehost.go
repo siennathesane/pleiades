@@ -17,11 +17,17 @@ import (
 
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
+	"github.com/lni/goutils/vfs"
 )
 
 func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	rand.Seed(time.Now().UTC().UnixNano())
 	port := 1024 + rand.Intn(65535-1024)
+
+	// this is needed or you'll hit the ulimit for the temp dirs.
+	expertConf := dconfig.ExpertConfig{
+		FS: vfs.NewMem(),
+	}
 
 	return dconfig.NodeHostConfig{
 		WALDir:         t.TempDir(),
@@ -29,6 +35,7 @@ func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 		RTTMillisecond: 10,
 		RaftAddress:    fmt.Sprintf("localhost:%d", port),
 		NotifyCommit:   false,
+		Expert: expertConf,
 	}
 }
 
