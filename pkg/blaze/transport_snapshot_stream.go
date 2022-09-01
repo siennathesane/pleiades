@@ -44,18 +44,5 @@ func (r *RaftSnapshotConnectionStream) Close() {
 }
 
 func (r *RaftSnapshotConnectionStream) SendChunk(chunk raftpb.Chunk) error {
-	size := chunk.Size()
-	buf := make([]byte, size)
-	_, err := chunk.MarshalTo(buf)
-	if err != nil {
-		r.logger.Error().Err(err).Msg("failed to marshal chunk")
-		return err
-	}
-	msg, err := NewMessageStream(r.stream, buf, r.logger)
-	if err != nil {
-		r.logger.Error().Err(err).Msg("failed to create message stream")
-		return err
-	}
-
-	return msg.Send(snapshotType)
+	return nil
 }
