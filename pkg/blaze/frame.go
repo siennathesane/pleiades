@@ -13,8 +13,12 @@ import (
 	"encoding/binary"
 	"hash/crc32"
 	"io"
+	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/libp2p/go-libp2p-core/network"
+	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -425,4 +429,30 @@ func uint32ToBytes(val uint32) []byte {
 	target := make([]byte, 4)
 	binary.LittleEndian.PutUint32(target, val)
 	return target
+}
+
+func unmarshal[T proto.Message](payload []byte) (T, error) {
+	var t T
+	err := proto.Unmarshal(payload, t)
+	return t, err
+}
+
+func sendFrame(frame *Frame, logger zerolog.Logger, stream network.Stream) {
+	respBuf, err := frame.Marshal()
+	if err != nil {
+		// todo (sienna): add error handling
+		logger.Error().Err(err).Msg("error marshaling frame")
+	}
+
+	// set the write deadline
+	deadline := time.Now().Add(RaftControlRPCWriteTimeout)
+	if err := stream.SetWriteDeadline(deadline); err != nil {
+		_ = stream.Reset()
+	}
+
+	_, err = stream.Write(respBuf)
+	if err != nil {
+		// todo (sienna): add error handling
+		logger.Error().Err(err).Msg("error sending frame")
+	}
 }

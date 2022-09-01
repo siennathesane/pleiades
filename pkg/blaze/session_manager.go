@@ -11,7 +11,6 @@ package blaze
 
 import (
 	"context"
-	"time"
 
 	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
@@ -32,19 +31,14 @@ type SessionManager struct {
 	nh     *dragonboat.NodeHost
 }
 
-func (s *SessionManager) GetNoOPSession(clusterID uint64) *client.Session {
+func (s *SessionManager) GetNoOpSession(clusterID uint64) *client.Session {
 	return s.nh.GetNoOPSession(clusterID)
 }
 
-func (s *SessionManager) SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error) {
+func (s *SessionManager) GetSession(ctx context.Context, clusterID uint64) (*client.Session, error) {
 	return s.nh.SyncGetSession(ctx, clusterID)
 }
 
-func (s *SessionManager) SyncCloseSession(ctx context.Context, cs *client.Session) error {
+func (s *SessionManager) CloseSession(ctx context.Context, cs *client.Session) error {
 	return s.nh.SyncCloseSession(ctx, cs)
 }
-
-func (s *SessionManager) ProposeSession(session *client.Session, timeout time.Duration) (*dragonboat.RequestState, error) {
-	return s.nh.ProposeSession(session, timeout)
-}
-
