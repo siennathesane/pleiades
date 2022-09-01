@@ -27,18 +27,18 @@ const (
 	RaftControlProtocolVersion protocol.ID = "/pleiades/raft-control/0.0.1"
 	RaftControlServiceName     string      = "raft-control.pleiades"
 
-	AddNode               MethodByte = 0x00
-	AddObserver           MethodByte = 0x01
-	AddWitness            MethodByte = 0x02
-	GetId                 MethodByte = 0x03
-	GetLeaderId           MethodByte = 0x04
-	RequestCompaction     MethodByte = 0x07
-	RequestDeleteNode     MethodByte = 0x08
-	RequestLeaderTransfer MethodByte = 0x09
-	RequestSnapshot       MethodByte = 0x10
-	Stop                  MethodByte = 0x11
-	StopNode              MethodByte = 0x12
-	Error                 MethodByte = 0xfe
+	AddNode        MethodByte = 0x00
+	AddObserver    MethodByte = 0x01
+	AddWitness     MethodByte = 0x02
+	GetId          MethodByte = 0x03
+	GetLeaderId    MethodByte = 0x04
+	Compact        MethodByte = 0x07
+	DeleteNode     MethodByte = 0x08
+	LeaderTransfer MethodByte = 0x09
+	Snapshot       MethodByte = 0x10
+	Stop           MethodByte = 0x11
+	StopNode       MethodByte = 0x12
+	Error          MethodByte = 0xfe
 )
 
 var (
@@ -109,34 +109,34 @@ func (r *RaftControlRPCServer) handleStream(stream network.Stream) {
 				r.logger.Error().Err(err).Msg("error unmarshaling message")
 			}
 			r.GetLeaderID(context.TODO(), msg, stream)
-		case RequestCompaction:
+		case Compact:
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
 				r.logger.Error().Err(err).Msg("error unmarshaling message")
 			}
-			r.RequestCompaction(context.TODO(), msg, stream)
-		case RequestDeleteNode:
+			r.Compact(context.TODO(), msg, stream)
+		case DeleteNode:
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
 				r.logger.Error().Err(err).Msg("error unmarshaling message")
 			}
-			r.RequestDeleteNode(msg, stream)
-		case RequestLeaderTransfer:
+			r.DeleteNode(msg, stream)
+		case LeaderTransfer:
 			msg, err := unmarshal[*database.ModifyNodeRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
 				r.logger.Error().Err(err).Msg("error unmarshaling message")
 			}
-			r.RequestLeaderTransfer(context.TODO(), msg, stream)
-		case RequestSnapshot:
+			r.LeaderTransfer(context.TODO(), msg, stream)
+		case Snapshot:
 			msg, err := unmarshal[*database.RequestSnapshotRequest](msgBuf)
 			if err != nil {
 				// todo (sienna): add error handling
 				r.logger.Error().Err(err).Msg("error unmarshaling message")
 			}
-			r.RequestSnapshot(msg, stream)
+			r.Snapshot(msg, stream)
 		case Stop:
 			msg, err := unmarshal[*database.StopRequest](msgBuf)
 			if err != nil {
@@ -311,13 +311,13 @@ func (r *RaftControlRPCServer) GetLeaderID(ctx context.Context, request *databas
 	return
 }
 
-func (r *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
+func (r *RaftControlRPCServer) Compact(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
 	ctx = r.logger.WithContext(ctx)
 
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 
-	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestCompaction)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(Compact)
 
 	state, err := r.node.RequestCompaction(clusterId, nodeId)
 	if err != nil {
@@ -337,7 +337,7 @@ func (r *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *d
 		resp := &database.SysOpState{}
 
 		buf, _ := resp.MarshalVT()
-		responseFrame = responseFrame.WithPayload(buf).WithMethod(RequestCompaction)
+		responseFrame = responseFrame.WithPayload(buf).WithMethod(Compact)
 		if first {
 			responseFrame = responseFrame.WithState(StreamStartByte)
 		} else {
@@ -348,18 +348,18 @@ func (r *RaftControlRPCServer) RequestCompaction(ctx context.Context, request *d
 		first = false
 	}
 
-	responseFrame = responseFrame.WithState(StreamEndByte).WithMethod(RequestCompaction)
+	responseFrame = responseFrame.WithState(StreamEndByte).WithMethod(Compact)
 	sendFrame(responseFrame, r.logger, stream)
 }
 
-func (r *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeRequest, stream network.Stream) {
+func (r *RaftControlRPCServer) DeleteNode(request *database.ModifyNodeRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	nodeId := request.GetNodeId()
 	timeout := time.Duration(request.GetTimeout())
 	configChange := request.GetConfigChangeIndex()
 
-	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestDeleteNode)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(DeleteNode)
 
 	rs, err := r.node.RequestDeleteNode(clusterId, nodeId, configChange, timeout)
 	if err != nil {
@@ -374,15 +374,15 @@ func (r *RaftControlRPCServer) RequestDeleteNode(request *database.ModifyNodeReq
 		return
 	}
 
-	r.handleRequestState(rs, RequestDeleteNode, stream)
+	r.handleRequestState(rs, DeleteNode, stream)
 }
 
-func (r *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
+func (r *RaftControlRPCServer) LeaderTransfer(ctx context.Context, request *database.ModifyNodeRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	targetNodeId := request.GetNodeId()
 
-	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestLeaderTransfer)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(LeaderTransfer)
 
 	err := r.node.RequestLeaderTransfer(clusterId, targetNodeId)
 	if err != nil {
@@ -403,13 +403,13 @@ func (r *RaftControlRPCServer) RequestLeaderTransfer(ctx context.Context, reques
 	sendFrame(responseFrame, r.logger, stream)
 }
 
-func (r *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshotRequest, stream network.Stream) {
+func (r *RaftControlRPCServer) Snapshot(request *database.RequestSnapshotRequest, stream network.Stream) {
 
 	clusterId := request.GetClusterId()
 	snapOpts := request.GetOptions()
 	timeout := time.Duration(request.GetTimeout())
 
-	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(RequestSnapshot)
+	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(Snapshot)
 
 	opts := dragonboat.SnapshotOption{
 		CompactionOverhead:         snapOpts.CompactionOverhead,
@@ -431,7 +431,7 @@ func (r *RaftControlRPCServer) RequestSnapshot(request *database.RequestSnapshot
 		return
 	}
 
-	r.handleRequestState(rs, RequestSnapshot, stream)
+	r.handleRequestState(rs, Snapshot, stream)
 }
 
 func (r *RaftControlRPCServer) Stop(ctx context.Context, _ *database.StopRequest, stream network.Stream) {

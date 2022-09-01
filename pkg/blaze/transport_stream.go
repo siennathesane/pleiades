@@ -51,36 +51,36 @@ type RaftConnectionStream struct {
 }
 
 func (r *RaftConnectionStream) Serve() {
-	for {
-		msg, err := NewMessageStream(r.stream, nil, r.logger)
-		if err != nil {
-			r.logger.Error().Err(err).Msg("failed to readAndHandle message")
-			return
-		}
-
-		msgType, payload, err := msg.Read()
-		if err != nil {
-			r.logger.Error().Err(err).Msg("failed to readAndHandle message")
-			return
-		}
-
-		switch msgType{
-		case raftType:
-			buf := make([]byte, len(payload))
-			batch := raftpb.MessageBatch{}
-			if err := batch.Unmarshal(buf); err != nil {
-				r.logger.Error().Err(err).Msg("failed to unmarshal message")
-			}
-			r.messageHandler(batch)
-		case snapshotType:
-			buf := make([]byte, len(payload))
-			chunk := raftpb.Chunk{}
-			if err := chunk.Unmarshal(buf); err != nil {
-				r.logger.Error().Err(err).Msg("failed to unmarshal chunk")
-			}
-			r.chunkHandler(chunk)
-		}
-	}
+	//for {
+	//	msg, err := NewMessageStream(r.stream, nil, r.logger)
+	//	if err != nil {
+	//		r.logger.Error().Err(err).Msg("failed to readAndHandle message")
+	//		return
+	//	}
+	//
+	//	msgType, payload, err := msg.Read()
+	//	if err != nil {
+	//		r.logger.Error().Err(err).Msg("failed to readAndHandle message")
+	//		return
+	//	}
+	//
+	//	switch msgType{
+	//	case raftType:
+	//		buf := make([]byte, len(payload))
+	//		batch := raftpb.MessageBatch{}
+	//		if err := batch.Unmarshal(buf); err != nil {
+	//			r.logger.Error().Err(err).Msg("failed to unmarshal message")
+	//		}
+	//		r.messageHandler(batch)
+	//	case snapshotType:
+	//		buf := make([]byte, len(payload))
+	//		chunk := raftpb.Chunk{}
+	//		if err := chunk.Unmarshal(buf); err != nil {
+	//			r.logger.Error().Err(err).Msg("failed to unmarshal chunk")
+	//		}
+	//		r.chunkHandler(chunk)
+	//	}
+	//}
 }
 
 func (r *RaftConnectionStream) ReadMessage() error {

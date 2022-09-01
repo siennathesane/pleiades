@@ -62,10 +62,9 @@ type INodeHost interface {
 }
 
 type ISession interface {
-	GetNoOPSession(clusterID uint64) *client.Session
-	ProposeSession(session *client.Session, timeout time.Duration) (*dragonboat.RequestState, error)
-	SyncCloseSession(ctx context.Context, cs *client.Session) error
-	SyncGetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
+	GetNoOpSession(clusterID uint64) *client.Session
+	CloseSession(ctx context.Context, cs *client.Session) error
+	GetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
 }
 
 type IStore interface {

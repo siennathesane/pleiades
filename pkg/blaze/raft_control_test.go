@@ -36,6 +36,28 @@ func (rct *RaftControlTests) SetupSuite() {
 	rct.logger = utils.NewTestLogger(rct.T())
 }
 
+func (rct *RaftControlTests) TestNewOrGetClusterManager() {
+	nhc := buildTestNodeHostConfig(rct.T())
+	node, err := NewRaftControlNode(nhc, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the first node")
+	rct.Require().NotNil(node, "node must not be nil")
+
+	cm, err := node.NewOrGetClusterManager()
+	rct.Require().NoError(err, "there must not be an error when getting the cluster manager")
+	rct.Require().NotNil(cm, "the cluster manager must not be nil")
+}
+
+func (rct *RaftControlTests) TestNewOrGetSessionManager() {
+	nhc := buildTestNodeHostConfig(rct.T())
+	node, err := NewRaftControlNode(nhc, rct.logger)
+	rct.Require().NoError(err, "there must not be an error when starting the first node")
+	rct.Require().NotNil(node, "node must not be nil")
+
+	sm, err := node.NewOrGetSessionManager()
+	rct.Require().NoError(err, "there must not be an error when getting the session manager")
+	rct.Require().NotNil(sm, "the session manager must not be nil")
+}
+
 func (rct *RaftControlTests) TestRequestLeaderTransfer() {
 	if testing.Short() {
 		rct.T().Skipf("skipping")
