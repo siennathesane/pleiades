@@ -32,7 +32,7 @@ type Node struct {
 	nh     *dragonboat.NodeHost
 
 	notifyOnCommit bool
-	clusterManager ICluster
+	clusterManager IShard
 	sessionManager ISession
 	storeManager   IStore
 }
@@ -52,10 +52,10 @@ func NewRaftControlNode(nodeHostConfig dconfig.NodeHostConfig, logger zerolog.Lo
 	return node, nil
 }
 
-// NewOrGetClusterManager creates a new ICluster instance or gets the existing one.
-func (n *Node) NewOrGetClusterManager() (ICluster, error) {
+// NewOrGetClusterManager creates a new IShard instance or gets the existing one.
+func (n *Node) NewOrGetClusterManager() (IShard, error) {
 	if n.clusterManager == nil {
-		n.clusterManager = newClusterManager(n.logger, n.nh)
+		n.clusterManager = newClusterManager(n.nh,n.logger)
 	}
 	return n.clusterManager, nil
 }
@@ -63,7 +63,7 @@ func (n *Node) NewOrGetClusterManager() (ICluster, error) {
 // NewOrGetSessionManager creates a new ISession instance or gets the existing one.
 func (n *Node) NewOrGetSessionManager() (ISession, error) {
 	if n.sessionManager == nil {
-		n.sessionManager = newSessionManager(n.logger, n.nh)
+		n.sessionManager = newSessionManager(n.nh, n.logger)
 	}
 	return n.sessionManager, nil
 }
@@ -96,31 +96,31 @@ func (n *Node) RemoveData(clusterID uint64, nodeID uint64) error {
 	return n.nh.RemoveData(clusterID, nodeID)
 }
 
-func (n *Node) RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+func (n *Node) AddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
 	return n.nh.RequestAddNode(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
-func (n *Node) RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+func (n *Node) AddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
 	return n.nh.RequestAddObserver(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
-func (n *Node) RequestAddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+func (n *Node) AddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
 	return n.nh.RequestAddWitness(clusterID, nodeID, target, configChangeIndex, timeout)
 }
 
-func (n *Node) RequestCompaction(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error) {
+func (n *Node) Compact(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error) {
 	return n.nh.RequestCompaction(clusterID, nodeID)
 }
 
-func (n *Node) RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
+func (n *Node) DeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error) {
 	return n.nh.RequestDeleteNode(clusterID, nodeID, configChangeIndex, timeout)
 }
 
-func (n *Node) RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error {
+func (n *Node) LeaderTransfer(clusterID uint64, targetNodeID uint64) error {
 	return n.nh.RequestLeaderTransfer(clusterID, targetNodeID)
 }
 
-func (n *Node) RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error) {
+func (n *Node) Snapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error) {
 	return n.nh.RequestSnapshot(clusterID, opt, timeout)
 }
 
@@ -131,27 +131,3 @@ func (n *Node) Stop() {
 func (n *Node) StopNode(clusterID uint64, nodeID uint64) error {
 	return n.nh.StopNode(clusterID, nodeID)
 }
-
-//func (n *Node) SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error {
-//	return n.nh.SyncRemoveData(ctx, clusterID, nodeID)
-//}
-//
-//func (n *Node) SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-//	return n.nh.SyncRequestAddNode(ctx, clusterID, nodeID, target, configChangeIndex)
-//}
-//
-//func (n *Node) SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-//	return n.nh.SyncRequestAddObserver(ctx, clusterID, nodeID, target, configChangeIndex)
-//}
-//
-//func (n *Node) SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error {
-//	return n.nh.SyncRequestAddWitness(ctx, clusterID, nodeID, target, configChangeIndex)
-//}
-//
-//func (n *Node) SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error {
-//	return n.nh.SyncRequestDeleteNode(ctx, clusterID, nodeID, configChangeIndex)
-//}
-//
-//func (n *Node) SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error) {
-//	return n.nh.SyncRequestSnapshot(ctx, clusterID, opt)
-//}
