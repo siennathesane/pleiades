@@ -15,6 +15,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	dragonboat "github.com/lni/dragonboat/v3"
+	"github.com/multiformats/go-multiaddr"
 	"github.com/rs/zerolog"
 )
 
@@ -32,8 +33,8 @@ const (
 
 type OperationResult struct {
 	Status ResultCode
-	Index uint64
-	Data []byte
+	Index  uint64
+	Data   []byte
 }
 
 // MembershipEntry is the struct used to describe Raft cluster membership query
@@ -78,14 +79,14 @@ func requestResultAdapter(req dragonboat.RequestResult) ResultCode {
 }
 
 var (
-	_ IShard = (*ClusterManager)(nil)
+	_ IShardManager = (*ClusterManager)(nil)
 
-	defaultTimeout = 3000*time.Millisecond
+	defaultTimeout = 3000 * time.Millisecond
 
 	ErrNoConfigChangeId = errors.New("no config change id")
 )
 
-func newClusterManager(nodeHost *dragonboat.NodeHost,logger zerolog.Logger) *ClusterManager {
+func newClusterManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *ClusterManager {
 	l := logger.With().Str("component", "cluster-manager").Logger()
 	return &ClusterManager{l, nodeHost}
 }
@@ -97,6 +98,8 @@ type ClusterManager struct {
 
 func (c *ClusterManager) NewShard(cfg IClusterConfig) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+	l.Info().Msg("creating new shard")
+
 	clusterConfig := cfg.Adapt()
 
 	members := make(map[uint64]string)
@@ -128,8 +131,9 @@ func (c *ClusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	return &OperationResult{}, nil
 }
 
-func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration) (error) {
+func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+	l.Info().Msg("deleting replica")
 
 	if timeout == 0 {
 		l.Debug().Msg("using default timeout")
@@ -153,13 +157,14 @@ func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 	err = c.nh.SyncRequestDeleteNode(ctx, cfg.ShardId(), cfg.ReplicaId(), members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to delete replica")
-		return  err
+		return err
 	}
 	return nil
 }
 
 func (c *ClusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
 	l := c.logger.With().Uint64("shard", shardId).Logger()
+	l.Debug().Msg("getting shard members")
 
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(defaultTimeout))
 	defer cancel()
@@ -188,8 +193,9 @@ func (c *ClusterManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *ClusterManager) AddReplica(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error) {
+func (c *ClusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+	l.Info().Msg("adding replica")
 
 	if timeout == 0 {
 		l.Debug().Msg("using default timeout")
@@ -201,16 +207,60 @@ func (c *ClusterManager) AddReplica(cfg IClusterConfig, timeout time.Duration) (
 	members, err := c.GetShardMembers(cfg.ShardId())
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
-		return nil, err
+		return err
 	}
 
-	c.nh.SyncRequestAddNode(ctx, cfg.ShardId(), cfg.ReplicaId(), )
+	err = c.nh.SyncRequestAddNode(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	if err != nil {
+		l.Error().Err(err).Msg("failed to add replica")
+	}
+	return err
 }
 
-func (c *ClusterManager) AddShardObserver(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error) {
-	return c.nh.RequestAddObserver(clusterID, nodeID, target, configChangeIndex, timeout)
+func (c *ClusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+	l.Info().Msg("adding shard observer")
+
+	if timeout == 0 {
+		l.Debug().Msg("using default timeout")
+		timeout = defaultTimeout
+	}
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
+	defer cancel()
+
+	members, err := c.GetShardMembers(cfg.ShardId())
+	if err != nil {
+		l.Error().Err(err).Msg("failed to get shard members")
+		return err
+	}
+
+	err = c.nh.SyncRequestAddObserver(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	if err != nil {
+		l.Error().Err(err).Msg("failed to add shard observer")
+	}
+	return err
 }
 
-func (c *ClusterManager) AddShardWitness(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error) {
-	return c.nh.RequestAddWitness(clusterID, nodeID, target, configChangeIndex, timeout)
+func (c *ClusterManager) AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+	l.Info().Msg("adding shard observer")
+
+	if timeout == 0 {
+		l.Debug().Msg("using default timeout")
+		timeout = defaultTimeout
+	}
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
+	defer cancel()
+
+	members, err := c.GetShardMembers(cfg.ShardId())
+	if err != nil {
+		l.Error().Err(err).Msg("failed to get shard members")
+		return err
+	}
+
+	err = c.nh.SyncRequestAddWitness(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	if err != nil {
+		l.Error().Err(err).Msg("failed to add shard observer")
+	}
+	return err
 }

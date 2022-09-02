@@ -15,6 +15,7 @@ import (
 	"github.com/libp2p/go-libp2p-core/host"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/protocol"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/lni/dragonboat/v3/raftio"
 	"github.com/rs/zerolog"
 )
@@ -25,7 +26,30 @@ const (
 
 var (
 	_ raftio.ITransport = (*RaftTransport)(nil)
+	_ dconfig.TransportFactory = (*RaftTransportFactory)(nil)
 )
+
+func NewRaftTransportFactory(host host.Host, logger zerolog.Logger) *RaftTransportFactory {
+	return &RaftTransportFactory{
+		host:   host,
+		logger: logger,
+	}
+}
+
+type RaftTransportFactory struct {
+	host   host.Host
+	logger zerolog.Logger
+}
+
+func (r *RaftTransportFactory) Create(config dconfig.NodeHostConfig, handler raftio.MessageHandler, handler2 raftio.ChunkHandler) raftio.ITransport {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r *RaftTransportFactory) Validate(s string) bool {
+	//TODO implement me
+	panic("implement me")
+}
 
 type RaftTransport struct {
 	host           host.Host
