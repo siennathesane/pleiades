@@ -32,7 +32,7 @@ var (
 
 type SessionManagerRPCService struct {
 	logger         zerolog.Logger
-	sessionManager ISession
+	sessionManager ITransactionManager
 	stream         network.Stream
 }
 

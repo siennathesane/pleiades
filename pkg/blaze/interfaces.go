@@ -15,15 +15,15 @@ import (
 
 	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
-	"github.com/lni/dragonboat/v3/config"
 	"github.com/lni/dragonboat/v3/statemachine"
+	"github.com/multiformats/go-multiaddr"
 )
 
-type IShard interface {
-	AddReplica(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
-	AddShardObserver(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
-	AddShardWitness(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
-	DeleteReplica(cfg IClusterConfig, timeout time.Duration) ( error)
+type IShardManager interface {
+	AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
+	AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
+	AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
+	DeleteReplica(cfg IClusterConfig, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	NewShard(cfg IClusterConfig) error
@@ -31,11 +31,11 @@ type IShard interface {
 	StopReplica(shardId uint64) (*OperationResult, error)
 }
 
-type INodeConfig interface {
-	NodeHostConfig() config.NodeHostConfig
-	HasNodeInfo(clusterID uint64, nodeID uint64) bool
-	GetNodeHostInfo(opt dragonboat.NodeHostInfoOption) *dragonboat.NodeHostInfo
-}
+//type INodeConfig interface {
+//	NodeHostConfig() config.NodeHostConfig
+//	HasNodeInfo(clusterID uint64, nodeID uint64) bool
+//	GetNodeHostInfo(opt dragonboat.NodeHostInfoOption) *dragonboat.NodeHostInfo
+//}
 
 type INodeHost interface {
 	Compact(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error)
@@ -48,7 +48,7 @@ type INodeHost interface {
 	StopNode(clusterID uint64, nodeID uint64) error
 }
 
-type ISession interface {
+type ITransactionManager interface {
 	GetNoOpSession(clusterID uint64) *client.Session
 	CloseSession(ctx context.Context, cs *client.Session) error
 	GetSession(ctx context.Context, clusterID uint64) (*client.Session, error)

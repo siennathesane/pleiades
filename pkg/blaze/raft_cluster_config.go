@@ -26,7 +26,7 @@ type Config struct {
 	replicaId uint64
 	// shardId is the unique value used to identify a Raft cluster.
 	shardId uint64
-	// stateMachine dictates
+	// stateMachine dictates the type of state machine
 	stateMachine StateMachineType
 }
 

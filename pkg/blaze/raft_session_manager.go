@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	_ ISession = (*SessionManager)(nil)
+	_ ITransactionManager = (*SessionManager)(nil)
 )
 
 func newSessionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *SessionManager {
