@@ -84,7 +84,7 @@ AddressByNodeHostID indicates that NodeHost instances should be addressed
 by their NodeHostID values. This feature is usually used when only dynamic
 addresses are available. When enabled, NodeHostID values should be used
 as the target parameter when calling NodeHost's StartCluster,
-RequestAddNode, RequestAddObserver and RequestAddWitness methods.
+AddNode, AddObserver and AddWitness methods.
 
 Enabling AddressByNodeHostID also enables the internal gossip service,
 NodeHostConfig.Gossip must be configured to control the behaviors of the

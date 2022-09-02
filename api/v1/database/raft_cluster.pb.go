@@ -691,7 +691,7 @@ type RaftConfig struct {
 	// and compacted after generating a snapshot.
 	//
 	// Once automatic snapshotting is disabled by setting the SnapshotEntries
-	// field to 0, users can still use NodeHost's RequestSnapshot or
+	// field to 0, users can still use NodeHost's Snapshot or
 	// SyncRequestSnapshot methods to manually request snapshots.
 	SnapshotEntries uint64 `protobuf:"varint,6,opt,name=SnapshotEntries,proto3" json:"SnapshotEntries,omitempty"`
 	// CompactionOverhead defines the number of most recent entries to keep after
@@ -736,7 +736,7 @@ type RaftConfig struct {
 	// log entry storage spaces. By default, compaction request is issued every
 	// time when a snapshot is created, this helps to reclaim disk spaces as
 	// soon as possible at the cost of immediate higher IO overhead. Users can
-	// disable such auto compactions and use NodeHost.RequestCompaction to
+	// disable such auto compactions and use NodeHost.Compact to
 	// manually request such compactions when necessary.
 	DisableAutoCompactions bool `protobuf:"varint,12,opt,name=DisableAutoCompactions,proto3" json:"DisableAutoCompactions,omitempty"`
 	// IsObserver indicates whether this is an observer Raft node without voting
@@ -1137,10 +1137,10 @@ var file_api_v1_database_raft_cluster_proto_depIdxs = []int32{
 	10, // 13: database.StartClusterRequest.raftConfig:type_name -> database.RaftConfig
 	5,  // 14: database.RaftMembership.RemovedEntry.value:type_name -> database.NilVal
 	8,  // 15: database.RaftClusterService.StartCluster:input_type -> database.StartClusterRequest
-	6,  // 16: database.RaftClusterService.StopCluster:input_type -> database.StopClusterRequest
+	6,  // 16: database.RaftClusterService.StopReplica:input_type -> database.StopClusterRequest
 	2,  // 17: database.RaftClusterService.GetClusterMembership:input_type -> database.GetClusterMembershipRequest
 	9,  // 18: database.RaftClusterService.StartCluster:output_type -> database.StartClusterResponse
-	7,  // 19: database.RaftClusterService.StopCluster:output_type -> database.StopClusterResponse
+	7,  // 19: database.RaftClusterService.StopReplica:output_type -> database.StopClusterResponse
 	3,  // 20: database.RaftClusterService.GetClusterMembership:output_type -> database.GetClusterMembershipResponse
 	18, // [18:21] is the sub-list for method output_type
 	15, // [15:18] is the sub-list for method input_type

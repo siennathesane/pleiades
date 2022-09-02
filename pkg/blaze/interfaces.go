@@ -19,16 +19,16 @@ import (
 	"github.com/lni/dragonboat/v3/statemachine"
 )
 
-type ICluster interface {
-	NAReadLocalNode(rs *dragonboat.RequestState, query []byte) ([]byte, error)
-	ReadIndex(clusterID uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	ReadLocalNode(rs *dragonboat.RequestState, query interface{}) (interface{}, error)
-	StaleRead(clusterID uint64, query interface{}) (interface{}, error)
-	StartCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateStateMachineFunc, cfg config.Config) error
-	StartConcurrentCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateConcurrentStateMachineFunc, cfg config.Config) error
-	StartOnDiskCluster(initialMembers map[uint64]dragonboat.Target, join bool, create statemachine.CreateOnDiskStateMachineFunc, cfg config.Config) error
-	StopCluster(clusterID uint64) error
-	SyncGetClusterMembership(ctx context.Context, clusterID uint64) (*dragonboat.Membership, error)
+type IShard interface {
+	AddReplica(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
+	AddShardObserver(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
+	AddShardWitness(cfg IClusterConfig, timeout time.Duration) (*OperationResult, error)
+	DeleteReplica(cfg IClusterConfig, timeout time.Duration) ( error)
+	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
+	GetShardMembers(shardId uint64) (*MembershipEntry, error)
+	NewShard(cfg IClusterConfig) error
+	RemoveData(shardId, replicaId uint64) error
+	StopReplica(shardId uint64) (*OperationResult, error)
 }
 
 type INodeConfig interface {
@@ -38,27 +38,14 @@ type INodeConfig interface {
 }
 
 type INodeHost interface {
-	GetLeaderID(clusterID uint64) (uint64, bool, error)
+	Compact(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error)
 	GetNodeUser(clusterID uint64) (dragonboat.INodeUser, error)
 	ID() string
+	LeaderTransfer(clusterID uint64, targetNodeID uint64) error
 	RaftAddress() string
-	RemoveData(clusterID uint64, nodeID uint64) error
-	RequestAddNode(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	RequestAddObserver(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	RequestAddWitness(clusterID uint64, nodeID uint64, target dragonboat.Target, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	RequestCompaction(clusterID uint64, nodeID uint64) (*dragonboat.SysOpState, error)
-	RequestDeleteNode(clusterID uint64, nodeID uint64, configChangeIndex uint64, timeout time.Duration) (*dragonboat.RequestState, error)
-	RequestLeaderTransfer(clusterID uint64, targetNodeID uint64) error
-	RequestSnapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
+	Snapshot(clusterID uint64, opt dragonboat.SnapshotOption, timeout time.Duration) (*dragonboat.RequestState, error)
 	Stop()
 	StopNode(clusterID uint64, nodeID uint64) error
-	// todo (sienna): add these back later if we need them
-	//SyncRemoveData(ctx context.Context, clusterID uint64, nodeID uint64) error
-	//SyncRequestAddNode(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	//SyncRequestAddObserver(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	//SyncRequestAddWitness(ctx context.Context, clusterID uint64, nodeID uint64, target string, configChangeIndex uint64) error
-	//SyncRequestDeleteNode(ctx context.Context, clusterID uint64, nodeID uint64, configChangeIndex uint64) error
-	//SyncRequestSnapshot(ctx context.Context, clusterID uint64, opt dragonboat.SnapshotOption) (uint64, error)
 }
 
 type ISession interface {
