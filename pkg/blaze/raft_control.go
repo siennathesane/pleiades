@@ -32,8 +32,8 @@ type Node struct {
 	nh     *dragonboat.NodeHost
 
 	notifyOnCommit bool
-	clusterManager IShard
-	sessionManager ISession
+	clusterManager IShardManager
+	sessionManager ITransactionManager
 	storeManager   IStore
 }
 
@@ -52,16 +52,16 @@ func NewRaftControlNode(nodeHostConfig dconfig.NodeHostConfig, logger zerolog.Lo
 	return node, nil
 }
 
-// NewOrGetClusterManager creates a new IShard instance or gets the existing one.
-func (n *Node) NewOrGetClusterManager() (IShard, error) {
+// NewOrGetClusterManager creates a new IShardManager instance or gets the existing one.
+func (n *Node) NewOrGetClusterManager() (IShardManager, error) {
 	if n.clusterManager == nil {
 		n.clusterManager = newClusterManager(n.nh,n.logger)
 	}
 	return n.clusterManager, nil
 }
 
-// NewOrGetSessionManager creates a new ISession instance or gets the existing one.
-func (n *Node) NewOrGetSessionManager() (ISession, error) {
+// NewOrGetSessionManager creates a new ITransactionManager instance or gets the existing one.
+func (n *Node) NewOrGetSessionManager() (ITransactionManager, error) {
 	if n.sessionManager == nil {
 		n.sessionManager = newSessionManager(n.nh, n.logger)
 	}
