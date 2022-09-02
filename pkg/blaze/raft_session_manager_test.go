@@ -57,7 +57,7 @@ func (smt *SessionManagerTests) SetupSuite() {
 }
 
 func (smt *SessionManagerTests) TestGetNoOpSession() {
-	sm := newSessionManager(smt.logger, smt.node.nh)
+	sm := newSessionManager(smt.node.nh, smt.logger)
 
 	cs := sm.GetNoOpSession(smt.clusterId)
 	smt.Require().NotNil(cs, "the client session must not be nil")
@@ -72,7 +72,7 @@ func (smt *SessionManagerTests) TestGetNoOpSession() {
 }
 
 func (smt *SessionManagerTests) TestGetSession() {
-	sm := newSessionManager(smt.logger, smt.node.nh)
+	sm := newSessionManager(smt.node.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	cs, err := sm.GetSession(ctx, smt.clusterId)
@@ -89,7 +89,7 @@ func (smt *SessionManagerTests) TestGetSession() {
 }
 
 func (smt *SessionManagerTests) TestCloseSession() {
-	sm := newSessionManager(smt.logger, smt.node.nh)
+	sm := newSessionManager(smt.node.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	cs, err := sm.GetSession(ctx, smt.clusterId)

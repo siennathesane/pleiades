@@ -104,7 +104,7 @@ func (rct *RaftControlTests) TestRequestLeaderTransfer() {
 		ElectionRTT:  100,
 	}
 
-	rs, err := firstNode.RequestAddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add a node")
 
 	select {
@@ -122,7 +122,7 @@ func (rct *RaftControlTests) TestRequestLeaderTransfer() {
 	rct.Require().NotNil(membership, "the membership list must not be nil")
 	rct.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 
-	err = firstNode.RequestLeaderTransfer(testClusterId, secondNodeClusterConfig.NodeID)
+	err = firstNode.LeaderTransfer(testClusterId, secondNodeClusterConfig.NodeID)
 	time.Sleep(3000*time.Millisecond)
 
 	leader, ok, err := secondNode.GetLeaderID(testClusterId)
@@ -177,7 +177,7 @@ func (rct *RaftControlTests) TestRemoveData() {
 		ElectionRTT:  100,
 	}
 
-	rs, err := firstNode.RequestAddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add a node")
 
 	select {
@@ -195,7 +195,7 @@ func (rct *RaftControlTests) TestRemoveData() {
 	rct.Require().NotNil(membership, "the membership list must not be nil")
 	rct.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 
-	rs, err = firstNode.RequestDeleteNode(testClusterId, secondNodeClusterConfig.NodeID, 0, 3000*time.Millisecond)
+	rs, err = firstNode.DeleteNode(testClusterId, secondNodeClusterConfig.NodeID, 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to delete a node")
 	rct.Require().NotNil(rs, "the request state must not be nil")
 
@@ -254,7 +254,7 @@ func (rct *RaftControlTests) TestRemoveNode() {
 		ElectionRTT:  100,
 	}
 
-	rs, err := firstNode.RequestAddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add a node")
 
 	select {
@@ -272,7 +272,7 @@ func (rct *RaftControlTests) TestRemoveNode() {
 	rct.Require().NotNil(membership, "the membership list must not be nil")
 	rct.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 
-	rs, err = firstNode.RequestDeleteNode(testClusterId, secondNodeClusterConfig.NodeID, 0, 3000*time.Millisecond)
+	rs, err = firstNode.DeleteNode(testClusterId, secondNodeClusterConfig.NodeID, 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to delete a node")
 	rct.Require().NotNil(rs, "the request state must not be nil")
 
@@ -368,7 +368,7 @@ func (rct *RaftControlTests) TestAddWitness() {
 		IsWitness: true,
 	}
 
-	rs, err := firstNode.RequestAddWitness(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddWitness(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
 	select {
@@ -434,7 +434,7 @@ func (rct *RaftControlTests) TestAddObserver() {
 		IsObserver: true,
 	}
 
-	rs, err := firstNode.RequestAddObserver(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddObserver(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
 	select {
@@ -499,7 +499,7 @@ func (rct *RaftControlTests) TestAddNode() {
 		ElectionRTT:  100,
 	}
 
-	rs, err := firstNode.RequestAddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add a node")
 
 	select {
@@ -611,7 +611,7 @@ func (rct *RaftControlTests) TestGetLeaderId() {
 		ElectionRTT:  100,
 	}
 
-	rs, err := firstNode.RequestAddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
+	rs, err := firstNode.AddNode(testClusterId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), 0, 3000*time.Millisecond)
 	rct.Require().NoError(err, "there must not be an error when requesting to add a node")
 
 	select {

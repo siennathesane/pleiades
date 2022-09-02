@@ -195,7 +195,7 @@ func (r *RaftControlRPCServer) AddNode(request *database.ModifyNodeRequest, stre
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddNode)
 
-	rs, err := r.node.RequestAddNode(clusterId, nodeId, target, configChange, timeout)
+	rs, err := r.node.AddNode(clusterId, nodeId, target, configChange, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add node")
 		msg := &transportv1.DBError{
@@ -221,7 +221,7 @@ func (r *RaftControlRPCServer) AddObserver(request *database.ModifyNodeRequest, 
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddObserver)
 
-	rs, err := r.node.RequestAddObserver(clusterId, nodeId, target, configChange, timeout)
+	rs, err := r.node.AddObserver(clusterId, nodeId, target, configChange, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add observer")
 		msg := &transportv1.DBError{
@@ -247,7 +247,7 @@ func (r *RaftControlRPCServer) AddWitness(request *database.ModifyNodeRequest, s
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(AddWitness)
 
-	rs, err := r.node.RequestAddWitness(clusterId, nodeId, target, configChange, timeout)
+	rs, err := r.node.AddWitness(clusterId, nodeId, target, configChange, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add witness")
 		msg := &transportv1.DBError{
@@ -319,7 +319,7 @@ func (r *RaftControlRPCServer) Compact(ctx context.Context, request *database.Mo
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(Compact)
 
-	state, err := r.node.RequestCompaction(clusterId, nodeId)
+	state, err := r.node.Compact(clusterId, nodeId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("compaction can't be completed")
 		msg := &transportv1.DBError{
@@ -361,7 +361,7 @@ func (r *RaftControlRPCServer) DeleteNode(request *database.ModifyNodeRequest, s
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(DeleteNode)
 
-	rs, err := r.node.RequestDeleteNode(clusterId, nodeId, configChange, timeout)
+	rs, err := r.node.DeleteNode(clusterId, nodeId, configChange, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("node can't be deleted")
 		msg := &transportv1.DBError{
@@ -384,7 +384,7 @@ func (r *RaftControlRPCServer) LeaderTransfer(ctx context.Context, request *data
 
 	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(LeaderTransfer)
 
-	err := r.node.RequestLeaderTransfer(clusterId, targetNodeId)
+	err := r.node.LeaderTransfer(clusterId, targetNodeId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("leader can't be transferred")
 		msg := &transportv1.DBError{
@@ -418,7 +418,7 @@ func (r *RaftControlRPCServer) Snapshot(request *database.RequestSnapshotRequest
 		OverrideCompactionOverhead: snapOpts.OverrideCompactionOverhead,
 	}
 
-	rs, err := r.node.RequestSnapshot(clusterId, opts, timeout)
+	rs, err := r.node.Snapshot(clusterId, opts, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("snapshot can't be created")
 		msg := &transportv1.DBError{
