@@ -14,25 +14,25 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	dragonboat "github.com/lni/dragonboat/v3"
+	"github.com/lni/dragonboat/v3"
 	"github.com/multiformats/go-multiaddr"
 	"github.com/rs/zerolog"
 )
 
-type ResultCode int
+type resultCode int
 
 const (
-	Timeout ResultCode = iota
-	Completed
-	Terminated
-	Rejected
-	Dropped
-	Aborted
-	Committed
+	timeoutResultCode resultCode = iota
+	completedResultCode
+	terminatedResultCode
+	rejectedResultCode
+	droppedResultCode
+	abortedResultCode
+	committedResultCode
 )
 
 type OperationResult struct {
-	Status ResultCode
+	Status resultCode
 	Index  uint64
 	Data   []byte
 }
@@ -57,46 +57,46 @@ type MembershipEntry struct {
 	Removed map[uint64]struct{}
 }
 
-func requestResultAdapter(req dragonboat.RequestResult) ResultCode {
+func requestResultAdapter(req dragonboat.RequestResult) resultCode {
 	switch {
 	case req.Timeout():
-		return Timeout
+		return timeoutResultCode
 	case req.Committed():
-		return Committed
+		return committedResultCode
 	case req.Completed():
-		return Completed
+		return completedResultCode
 	case req.Terminated():
-		return Terminated
+		return terminatedResultCode
 	case req.Aborted():
-		return Aborted
+		return abortedResultCode
 	case req.Rejected():
-		return Rejected
+		return rejectedResultCode
 	case req.Dropped():
-		return Dropped
+		return droppedResultCode
 	default:
-		return Dropped
+		return droppedResultCode
 	}
 }
 
 var (
-	_ IShardManager = (*ClusterManager)(nil)
+	_ IShardManager = (*clusterManager)(nil)
 
 	defaultTimeout = 3000 * time.Millisecond
 
-	ErrNoConfigChangeId = errors.New("no config change id")
+	errNoConfigChangeId = errors.New("no config change id")
 )
 
-func newClusterManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *ClusterManager {
+func newClusterManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *clusterManager {
 	l := logger.With().Str("component", "cluster-manager").Logger()
-	return &ClusterManager{l, nodeHost}
+	return &clusterManager{l, nodeHost}
 }
 
-type ClusterManager struct {
+type clusterManager struct {
 	logger zerolog.Logger
 	nh     *dragonboat.NodeHost
 }
 
-func (c *ClusterManager) NewShard(cfg IClusterConfig) error {
+func (c *clusterManager) NewShard(cfg IClusterConfig) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("creating new shard")
 
@@ -116,12 +116,12 @@ func (c *ClusterManager) NewShard(cfg IClusterConfig) error {
 	return ErrUnsupportedStateMachine
 }
 
-func (c *ClusterManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
+func (c *clusterManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("getting leader id")
 	return c.nh.GetLeaderID(shardId)
 }
 
-func (c *ClusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
+func (c *clusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("stopping replica")
 	err := c.nh.StopCluster(shardId)
 	if err != nil {
@@ -131,7 +131,7 @@ func (c *ClusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	return &OperationResult{}, nil
 }
 
-func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration) error {
+func (c *clusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("deleting replica")
 
@@ -150,8 +150,8 @@ func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 	}
 
 	if members.ConfigChangeId == 0 {
-		l.Error().Err(ErrNoConfigChangeId).Msg("failed to get config change id from shard members")
-		return ErrNoConfigChangeId
+		l.Error().Err(errNoConfigChangeId).Msg("failed to get config change id from shard members")
+		return errNoConfigChangeId
 	}
 
 	err = c.nh.SyncRequestDeleteNode(ctx, cfg.ShardId(), cfg.ReplicaId(), members.ConfigChangeId)
@@ -162,7 +162,7 @@ func (c *ClusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 	return nil
 }
 
-func (c *ClusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
+func (c *clusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
 	l := c.logger.With().Uint64("shard", shardId).Logger()
 	l.Debug().Msg("getting shard members")
 
@@ -183,7 +183,7 @@ func (c *ClusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, erro
 	}, nil
 }
 
-func (c *ClusterManager) RemoveData(shardId, replicaId uint64) error {
+func (c *clusterManager) RemoveData(shardId, replicaId uint64) error {
 	c.logger.Info().Uint64("shard", shardId).Uint64("replica", replicaId).Msg("removing data")
 
 	err := c.nh.RemoveData(shardId, replicaId)
@@ -193,7 +193,7 @@ func (c *ClusterManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *ClusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding replica")
 
@@ -217,7 +217,7 @@ func (c *ClusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multia
 	return err
 }
 
-func (c *ClusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -241,7 +241,7 @@ func (c *ClusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.
 	return err
 }
 
-func (c *ClusterManager) AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding shard observer")
 
