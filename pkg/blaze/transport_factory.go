@@ -22,10 +22,11 @@ import (
 
 const (
 	RaftTransportProtocolVersion protocol.ID = "/pleiades/raft-transport/0.0.1"
+	RaftTransportService string = "raft-transport.pleiades"
 )
 
 var (
-	_ raftio.ITransport = (*RaftTransport)(nil)
+	_ raftio.ITransport = (*raftTransport)(nil)
 	_ dconfig.TransportFactory = (*RaftTransportFactory)(nil)
 )
 
@@ -51,47 +52,56 @@ func (r *RaftTransportFactory) Validate(s string) bool {
 	panic("implement me")
 }
 
-type RaftTransport struct {
+type raftTransport struct {
 	host           host.Host
 	logger         zerolog.Logger
 	messageHandler raftio.MessageHandler
 	chunkHandler   raftio.ChunkHandler
 }
 
-func (r *RaftTransport) Name() string {
+func (r *raftTransport) Name() string {
 	return string(RaftTransportProtocolVersion)
 }
 
-func (r *RaftTransport) Start() error {
+func (r *raftTransport) Start() error {
 	r.host.SetStreamHandler(RaftStreamProtocolVersion, r.connectionStreamHandler)
 	return nil
 }
 
-func (r *RaftTransport) connectionStreamHandler(stream network.Stream) {
-	streamer := &RaftConnectionStream{
-		logger:         r.logger.With().Str("peer", stream.Conn().RemotePeer().String()).Logger(),
-		messageHandler: r.messageHandler,
-		chunkHandler:   r.chunkHandler,
-		stream:         stream,
+func (r *raftTransport) connectionStreamHandler(stream network.Stream) {
+	if err := stream.Scope().SetService(RaftTransportService); err != nil {
+		_ = stream.Reset()
 	}
 
-	streamer.Serve()
+	for {
+		frame := NewFrame()
+		_, err := frame.ReadFrom(stream)
+		if err != nil {
+			// todo (sienna): add error handling
+			r.logger.Error().Err(err).Msg("cannot read frame")
+		}
+
+		msgBuf, err := frame.GetPayload()
+		if err != nil {
+			// todo (sienna): add error handling
+			r.logger.Error().Err(err).Msg("cannot get payload")
+		}
+	}
 }
 
-func (r *RaftTransport) Stop() {
-
+func (r *raftTransport) Stop() {
 	r.host.RemoveStreamHandler(RaftStreamProtocolVersion)
 	if err := r.host.Network().Close(); err != nil {
 		r.logger.Error().Err(err).Msg("failed to close network")
 	}
 }
 
-func (r *RaftTransport) GetConnection(ctx context.Context, target string) (raftio.IConnection, error) {
+func (r *raftTransport) GetConnection(ctx context.Context, target string) (raftio.IConnection, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (r *RaftTransport) GetSnapshotConnection(ctx context.Context, target string) (raftio.ISnapshotConnection, error) {
+func (r *raftTransport) GetSnapshotConnection(ctx context.Context, target string) (raftio.ISnapshotConnection, error) {
 	//TODO implement me
 	panic("implement me")
 }
