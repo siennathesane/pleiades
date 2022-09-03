@@ -1,19 +1,19 @@
 /*
-// * Copyright (c) 2022 Sienna Lloyd
-// *
-// * Licensed under the PolyForm Strict License 1.0.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License here:
-// *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
-// */
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
+ */
 
 package blaze
 
 import (
 	"time"
 
-	"github.com/libp2p/go-libp2p-core/host"
-	"github.com/libp2p/go-libp2p-core/protocol"
+	"github.com/libp2p/go-libp2p/core/host"
+	"github.com/libp2p/go-libp2p/core/protocol"
 	"github.com/rs/zerolog"
 )
 
