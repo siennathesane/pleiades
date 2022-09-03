@@ -66,6 +66,9 @@ func (r *RaftTransportTestSuite) TestGetConnection() {
 		r.Require().NoError(err, "failed to close host")
 	}(testRemoteHost)
 
+	peerId := testRemoteHost.ID()
+	r.Assert().NotNil(peerId)
+
 	conn, err := transport.GetConnection(context.Background(), validHostAddr)
 	r.Require().Nil(err, "there must not be an error when getting a new transport connection")
 	r.Require().NotNil(conn ,"the transport connection must not be nil")

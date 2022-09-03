@@ -19,8 +19,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/database"
-	"capnproto.org/go/capnp/v3"
+	db "github.com/mxplusb/pleiades/api/v1/database"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
@@ -189,33 +188,24 @@ func (bfsm *TestBBoltFsm) TestBBoltStateMachineUpdate() {
 		ResourceId:   "test-bucket",
 	}
 
-	var testKvps []database.KeyValue
+	var testKvps []db.KeyValue
 
 	for i := 0; i < 3; i++ {
-		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-		bfsm.Require().NoError(err, "there must not be an error creating a new message")
-
-		kvp, err := database.NewRootKeyValue(seg)
-		bfsm.Require().NoError(err, "there must not be an error creating a new key value")
-
-		err = kvp.SetKey([]byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the key")
-
-		kvp.SetCreateRevision(0)
-		kvp.SetModifyRevision(0)
-		kvp.SetVersion(1)
-
-		err = kvp.SetValue([]byte(fmt.Sprintf("test-value-%d", i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the value")
-
-		kvp.SetLease(0)
+		kvp := db.KeyValue{
+			Key: []byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)),
+			Value: []byte(fmt.Sprintf("test-value-%d", i)),
+			CreateRevision: 0,
+			ModRevision: 0,
+			Version: 1,
+			Lease: 0,
+		}
 
 		testKvps = append(testKvps, kvp)
 	}
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		marshalled, err := testKvps[idx].Message().Marshal()
+		marshalled, err := testKvps[idx].MarshalVT()
 		bfsm.Require().NoError(err, "there must not be an error marshalling the message")
 
 		testUpdates = append(testUpdates, statemachine.Entry{
@@ -284,33 +274,24 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		ResourceId:   "test-bucket",
 	}
 
-	var testKvps []database.KeyValue
+	var testKvps []db.KeyValue
 
 	for i := 0; i < 3; i++ {
-		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-		bfsm.Require().NoError(err, "there must not be an error creating a new message")
-
-		kvp, err := database.NewRootKeyValue(seg)
-		bfsm.Require().NoError(err, "there must not be an error creating a new key value")
-
-		err = kvp.SetKey([]byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the key")
-
-		kvp.SetCreateRevision(0)
-		kvp.SetModifyRevision(0)
-		kvp.SetVersion(1)
-
-		err = kvp.SetValue([]byte(fmt.Sprintf("test-value-%d", i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the value")
-
-		kvp.SetLease(0)
+		kvp := db.KeyValue{
+			Key: []byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)),
+			Value: []byte(fmt.Sprintf("test-value-%d", i)),
+			CreateRevision: 0,
+			ModRevision: 0,
+			Version: 1,
+			Lease: 0,
+		}
 
 		testKvps = append(testKvps, kvp)
 	}
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		payload, err := testKvps[idx].Message().Marshal()
+		payload, err := testKvps[idx].MarshalVT()
 		bfsm.Require().NoError(err, "there must not be an error encoding the message")
 
 		testUpdates = append(testUpdates, statemachine.Entry{
@@ -343,12 +324,12 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 	bfsm.Require().NoError(err, "there must not be an error when recovering from a snapshot")
 
 	dbPath := fsm.dbPath(true)
-	db, err := bbolt.Open(dbPath, os.FileMode(dbFileModeVal), nil)
+	bdb, err := bbolt.Open(dbPath, os.FileMode(dbFileModeVal), nil)
 	bfsm.Require().NoError(err)
 
-	// todo (sienna): fix this to ensure the kvp is stored, not just the value
+	// todo (sienna): fix this to ensure the finalKvp is stored, not just the value
 	var target []byte
-	bfsm.Require().NoError(db.Update(func(tx *bbolt.Tx) error {
+	bfsm.Require().NoError(bdb.Update(func(tx *bbolt.Tx) error {
 		// rootPrn.ToFsmRootPath("test-bucket") + "/" + "test-key-2"
 		bucketHierarchy := strings.Split(rootPrn.ToFsmRootPath("test-bucket")+"/"+"test-key-2", "/")[1:]
 		parentBucketName := bucketHierarchy[0]
@@ -363,29 +344,21 @@ func (bfsm *TestBBoltFsm) TestSnapshotLifecycle() {
 		return nil
 	}))
 
-	msg, err := capnp.NewDecoder(bytes.NewReader(target)).Decode()
-	bfsm.Require().NoError(err, "there must not be an error decoding the message")
+	finalKvp := db.KeyValue{}
+	err = finalKvp.UnmarshalVT(target)
+	bfsm.Require().NoError(err, "there must not be an error unmarshalling the key")
 
-	finalKvp, err := database.ReadRootKeyValue(msg)
-	bfsm.Require().NoError(err, "there must not be an error reading the key value")
-
-	testKey, err := testKvps[len(testKvps)-1].Key()
-	bfsm.Require().NoError(err, "there must not be an error getting the key")
-
-	returnedKey, err := finalKvp.Key()
-	bfsm.Require().NoError(err, "there must not be an error getting the key")
+	testKey := testKvps[len(testKvps)-1].Key
+	returnedKey := finalKvp.Key
 
 	bfsm.Require().Equal(testKey, returnedKey, "the serialized result must match the initial value")
-	bfsm.Require().Equal(testKvps[len(testKvps)-1].Version(), finalKvp.Version(), "the serialized result must match the initial value")
-	bfsm.Require().Equal(testKvps[len(testKvps)-1].ModifyRevision(), finalKvp.ModifyRevision(), "the serialized result must match the initial value")
-	bfsm.Require().Equal(testKvps[len(testKvps)-1].Lease(), finalKvp.Lease(), "the serialized result must match the initial value")
-	bfsm.Require().Equal(testKvps[len(testKvps)-1].CreateRevision(), finalKvp.CreateRevision(), "the serialized result must match the initial value")
+	bfsm.Require().Equal(testKvps[len(testKvps)-1].Version, finalKvp.Version, "the serialized result must match the initial value")
+	bfsm.Require().Equal(testKvps[len(testKvps)-1].ModRevision, finalKvp.ModRevision, "the serialized result must match the initial value")
+	bfsm.Require().Equal(testKvps[len(testKvps)-1].Lease, finalKvp.Lease, "the serialized result must match the initial value")
+	bfsm.Require().Equal(testKvps[len(testKvps)-1].CreateRevision, finalKvp.CreateRevision, "the serialized result must match the initial value")
 
-	testValue, err := testKvps[len(testKvps)-1].Value()
-	bfsm.Require().NoError(err, "there must not be an error getting the value")
-
-	returnedValue, err := finalKvp.Value()
-	bfsm.Require().NoError(err, "there must not be an error getting the value")
+	testValue := testKvps[len(testKvps)-1].Value
+	returnedValue := finalKvp.Value
 
 	bfsm.Require().Equal(testValue, returnedValue, "the serialized result must match the initial value")
 }
@@ -418,33 +391,24 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 		ResourceId:   "test-bucket",
 	}
 
-	var testKvps []database.KeyValue
+	var testKvps []db.KeyValue
 
 	for i := 0; i < 3; i++ {
-		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-		bfsm.Require().NoError(err, "there must not be an error creating a new message")
-
-		kvp, err := database.NewRootKeyValue(seg)
-		bfsm.Require().NoError(err, "there must not be an error creating a new key value")
-
-		err = kvp.SetKey([]byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the key")
-
-		kvp.SetCreateRevision(0)
-		kvp.SetModifyRevision(0)
-		kvp.SetVersion(1)
-
-		err = kvp.SetValue([]byte(fmt.Sprintf("test-value-%d", i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the value")
-
-		kvp.SetLease(0)
+		kvp := db.KeyValue{
+			Key: []byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)),
+			Value: []byte(fmt.Sprintf("test-value-%d", i)),
+			CreateRevision: 0,
+			ModRevision: 0,
+			Version: 1,
+			Lease: 0,
+		}
 
 		testKvps = append(testKvps, kvp)
 	}
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		marshalled, err := testKvps[idx].Message().Marshal()
+		marshalled, err := testKvps[idx].MarshalVT()
 		bfsm.Require().NoError(err, "there must not be an error marshalling the message")
 
 		testUpdates = append(testUpdates, statemachine.Entry{
@@ -467,27 +431,23 @@ func (bfsm *TestBBoltFsm) TestLookup() {
 	val, err := fsm.Lookup(testUpdates[len(testUpdates)-1].Cmd)
 	bfsm.Require().NoError(err, "there must not be an error when calling lookup")
 
-	var casted database.KeyValue
+	var casted db.KeyValue
 	bfsm.Require().NotPanics(func() {
-		casted = val.(database.KeyValue)
+		casted = val.(db.KeyValue)
 	}, "casting the lookup value must not panic")
 
-	expectedValue, err := testKvps[len(testUpdates)-1].Value()
-	bfsm.Require().NoError(err, "there must not be an error getting the expected value")
-	castedValue, err := casted.Value()
-	bfsm.Require().NoError(err, "there must not be an error getting the casted value")
+	expectedValue := testKvps[len(testUpdates)-1].Value
+	castedValue := casted.Value
 	bfsm.Require().Equal(expectedValue, castedValue, "the found value must be identical")
 
-	expectedKey, err := testKvps[len(testUpdates)-1].Key()
-	bfsm.Require().NoError(err, "there must not be an error getting the expected key")
-	castedKey, err := casted.Key()
-	bfsm.Require().NoError(err, "there must not be an error getting the casted key")
+	expectedKey := testKvps[len(testUpdates)-1].Key
+	castedKey := casted.Key
 	bfsm.Require().Equal(expectedKey, castedKey, "the found value must be identical")
 
-	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Lease(), casted.Lease(), "the found value must be identical")
-	bfsm.Require().Equal(testKvps[len(testUpdates)-1].CreateRevision(), casted.CreateRevision(), "the found value must be identical")
-	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Version(), casted.Version(), "the found value must be identical")
-	bfsm.Require().Equal(testKvps[len(testUpdates)-1].ModifyRevision(), casted.ModifyRevision(), "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Lease, casted.Lease, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].CreateRevision, casted.CreateRevision, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].Version, casted.Version, "the found value must be identical")
+	bfsm.Require().Equal(testKvps[len(testUpdates)-1].ModRevision, casted.ModRevision, "the found value must be identical")
 }
 
 func (bfsm *TestBBoltFsm) TestSync() {
@@ -518,33 +478,24 @@ func (bfsm *TestBBoltFsm) TestSync() {
 		ResourceId:   "test-bucket",
 	}
 
-	var testKvps []database.KeyValue
+	var testKvps []db.KeyValue
 
 	for i := 0; i < 3; i++ {
-		_, seg, err := capnp.NewMessage(capnp.SingleSegment(nil))
-		bfsm.Require().NoError(err, "there must not be an error creating a new message")
-
-		kvp, err := database.NewRootKeyValue(seg)
-		bfsm.Require().NoError(err, "there must not be an error creating a new key value")
-
-		err = kvp.SetKey([]byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the key")
-
-		kvp.SetCreateRevision(0)
-		kvp.SetModifyRevision(0)
-		kvp.SetVersion(1)
-
-		err = kvp.SetValue([]byte(fmt.Sprintf("test-value-%d", i)))
-		bfsm.Require().NoError(err, "there must not be an error setting the value")
-
-		kvp.SetLease(0)
+		kvp := db.KeyValue{
+			Key: []byte(fmt.Sprintf("%s/test-key-%d", rootPrn.ToFsmRootPath("test-bucket"), i)),
+			Value: []byte(fmt.Sprintf("test-value-%d", i)),
+			CreateRevision: 0,
+			ModRevision: 0,
+			Version: 1,
+			Lease: 0,
+		}
 
 		testKvps = append(testKvps, kvp)
 	}
 
 	testUpdates := make([]statemachine.Entry, 0)
 	for idx := range testKvps {
-		marshalled, err := testKvps[idx].Message().Marshal()
+		marshalled, err := testKvps[idx].MarshalVT()
 		bfsm.Require().NoError(err, "there must not be an error marshalling the message")
 
 		testUpdates = append(testUpdates, statemachine.Entry{
