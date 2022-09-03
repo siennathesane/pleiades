@@ -10,15 +10,12 @@
 package cmd
 
 import (
-	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"runtime"
 
 	"github.com/mxplusb/cliflags/gen/gpflag"
-	"github.com/mxplusb/pleiades/pkg/blaze"
 	"github.com/mxplusb/pleiades/pkg/conf"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
@@ -287,16 +284,9 @@ func init() {
 }
 
 func startServer() {
-	ctx, cancel := context.WithCancel(context.Background())
+	//ctx, cancel := context.WithCancel(context.Background())
 
-	logger, err := conf.NewLogger()
-	if err != nil {
-		err = fmt.Errorf("could not instantiate logger: %w", err)
-		fmt.Printf("%s", err)
-		os.Exit(1)
-	}
-
-	l := logger.GetLogger()
+	logger := conf.NewRootLogger()
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, os.Kill)
@@ -307,22 +297,5 @@ func startServer() {
 		done <- true
 	}(sigs, done)
 
-	server, err := blaze.NewRuntime(ctx, cfg, logger)
-	if err != nil {
-		l.Error().Err(err).Msg("could not instantiate runtime")
-		os.Exit(1)
-	}
-
-	if err := server.Run(); err != nil {
-		l.Error().Err(err).Msg("error with server")
-		os.Exit(1)
-	}
-
-	// wait until we get a signal
-	<-done
-
-	server.Stop()
-	cancel()
-
-	l.Info().Msg("goodbye")
+	logger.Info().Msg("goodbye")
 }

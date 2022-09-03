@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/api/v1/database"
-	"github.com/libp2p/go-libp2p-core/network"
-	"github.com/libp2p/go-libp2p-core/protocol"
+	"github.com/libp2p/go-libp2p/core/network"
+	"github.com/libp2p/go-libp2p/core/protocol"
 	"github.com/rs/zerolog"
 )
 
