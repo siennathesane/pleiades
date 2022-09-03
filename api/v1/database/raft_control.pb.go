@@ -709,7 +709,7 @@ func (x *SnapshotOption) GetOverrideCompactionOverhead() bool {
 	return false
 }
 
-// RequestLeaderTransferResponse is the response to a NodeHostService.RequestLeaderTransfer call
+// RequestLeaderTransferResponse is the response to a NodeHostService.LeaderTransfer call
 type RequestLeaderTransferResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
