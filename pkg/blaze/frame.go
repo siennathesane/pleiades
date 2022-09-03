@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	"github.com/libp2p/go-libp2p-core/network"
+	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/proto"
 )
@@ -70,6 +70,7 @@ const (
 	// 10-29: Raft Services
 	RaftControlServiceByte ServiceByte = 0x10
 	RaftClusterServiceByte ServiceByte = 0x11
+	RaftTransportService   ServiceByte = 0x12
 
 	// 30-49: Session Services
 	SessionServiceByte ServiceByte = 0x30
@@ -105,18 +106,18 @@ const (
 // NewFrame generates a new *Frame with zeroed out fields.
 func NewFrame() *Frame {
 	return &Frame{
-		state:                byte(InvalidByte),
-		version:              byte(Version1),
-		reserved0:            ReservedByte,
-		reserved1:            ReservedByte,
-		service:              byte(UnspecifiedService),
-		method:               0xff,
-		authorizationService: byte(NoAuthorizationService),
-		authorizationMethod:  byte(NoAuthorizationMethod),
-		authorizationSize:    [4]byte{0x00, 0x00, 0x00, 0x00},
-		payloadSize:          [4]byte{0x00, 0x00, 0x00, 0x00},
-		authorization:        nil,
-		payload:              nil,
+		state:                 byte(InvalidByte),
+		version:               byte(Version1),
+		reserved0:             ReservedByte,
+		reserved1:             ReservedByte,
+		service:               byte(UnspecifiedService),
+		method:                0xff,
+		authorizationService:  byte(NoAuthorizationService),
+		authorizationMethod:   byte(NoAuthorizationMethod),
+		authorizationSize:     [4]byte{0x00, 0x00, 0x00, 0x00},
+		payloadSize:           [4]byte{0x00, 0x00, 0x00, 0x00},
+		authorization:         nil,
+		payload:               nil,
 		authorizationChecksum: [4]byte{0x00, 0x00, 0x00, 0x00},
 		payloadChecksum:       [4]byte{0x00, 0x00, 0x00, 0x00},
 	}

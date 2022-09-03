@@ -18,10 +18,10 @@ import (
 )
 
 var (
-	_ ISession = (*SessionManager)(nil)
+	_ ITransactionManager = (*SessionManager)(nil)
 )
 
-func newSessionManager(logger zerolog.Logger, nh *dragonboat.NodeHost) *SessionManager {
+func newSessionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *SessionManager {
 	l := logger.With().Str("component", "session-manager").Logger()
 	return &SessionManager{l, nh}
 }
