@@ -10,7 +10,6 @@
 package fsm
 
 import (
-	"bytes"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -20,8 +19,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/mxplusb/pleiades/pkg/protocols/v1/database"
-	"capnproto.org/go/capnp/v3"
+	db "github.com/mxplusb/pleiades/api/v1/database"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"go.etcd.io/bbolt"
@@ -65,16 +63,14 @@ func (b *BBoltStateMachine) dbPath(withDb bool) string {
 // todo (sienna): leverage stopc at some point on bbolt.Open
 func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 
-	// create if not exist
-	_, err := os.Stat(b.dbPath(true))
-	if errors.Is(err, os.ErrNotExist) {
-		err = os.MkdirAll(b.dbPath(false), os.FileMode(dbDirModeVal))
-		if err != nil {
-			return uint64(0), err
-		}
+	dbPath := b.dbPath(true)
+	noDb := b.dbPath(false)
+	err := os.MkdirAll(noDb, os.FileMode(dbDirModeVal))
+	if err != nil {
+		return uint64(0), err
 	}
 
-	b.db, err = bbolt.Open(b.dbPath(true), os.FileMode(dbFileModeVal), b.Options)
+	b.db, err = bbolt.Open(dbPath, os.FileMode(dbFileModeVal), b.Options)
 	if err != nil {
 		return 0, err
 	}
@@ -130,17 +126,12 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		}
 
 		for idx := range entries {
-			msg, err := capnp.Unmarshal(entries[idx].Cmd)
-			if err != nil {
+			kvp := db.KeyValue{}
+			if err := kvp.UnmarshalVT(entries[idx].Cmd); err != nil {
 				return err
 			}
 
-			kvp, err := database.ReadRootKeyValue(msg)
-			if err != nil {
-				return err
-			}
-
-			key, _ := kvp.Key()
+			key := kvp.Key
 			if len(key) == 0 {
 			}
 
@@ -204,12 +195,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 }
 
 // prepBucket verifies the key signature. the string is the root bucket, the string slice is the rest of the bucket hierarchy, and the error is any parsing errs
-func prepBucket(kvp database.KeyValue) (string, []string, error) {
+func prepBucket(kvp db.KeyValue) (string, []string, error) {
 	// verify we're not trying to create an empty bucket and skip the first item
-	key, err := kvp.Key()
-	if err != nil {
-		return "", []string{}, err
-	}
+	key := string(kvp.Key)
 
 	if len(key) == 0 {
 		return "", []string{}, fmt.Errorf("key is empty")
@@ -261,30 +249,22 @@ func keyOp(parentBucket *bbolt.Bucket, bucketHierarchy []string, val []byte, ope
 }
 
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
-	var payload database.KeyValue
+	payload := db.KeyValue{}
 
 	b.mu.Lock()
 	err := b.db.Update(func(tx *bbolt.Tx) error {
-		msg, err := capnp.NewDecoder(bytes.NewBuffer(i.([]byte))).Decode()
-		if err != nil {
+		kvp := db.KeyValue{}
+		if err := kvp.UnmarshalVT(i.([]byte)); err != nil {
 			return err
 		}
 
-		payload, err = database.ReadRootKeyValue(msg)
-		if err != nil {
-			return err
-		}
-
-		key, err := payload.Key()
-		if err != nil {
-			return err
-		}
+		key := kvp.Key
 
 		if string(key) == "" {
 			return errors.New("cannot find an empty key")
 		}
 
-		parentBucketName, childBucketNames, err := prepBucket(payload)
+		parentBucketName, childBucketNames, err := prepBucket(kvp)
 		if err != nil {
 			return err
 		}
@@ -305,13 +285,7 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 			return nil
 		}
 
-		msg, err = capnp.NewDecoder(bytes.NewBuffer(target)).Decode()
-		if err != nil {
-			return err
-		}
-
-		payload, err = database.ReadRootKeyValue(msg)
-		if err != nil {
+		if err := payload.UnmarshalVT(target); err != nil {
 			return err
 		}
 
@@ -319,6 +293,8 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 	})
 	b.mu.Unlock()
 
+	// todo (sienna): figure this out, it will vail `go vet`
+	//goland:noinspection ALL
 	return payload, err
 }
 
