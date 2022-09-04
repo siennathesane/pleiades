@@ -55,6 +55,13 @@ func (Install) Godeps() error {
 		return nil
 	})
 
+	mg.Deps(func() error {
+		if err := sh.RunWithV(nil, "go", "install", "gotest.tools/gotestsum@latest"); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	err := sh.RunWithV(nil, "go", "get", "-v", "./...")
 	if err != nil {
 		return err
