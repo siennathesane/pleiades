@@ -56,6 +56,13 @@ func (Install) Godeps() error {
 	})
 
 	mg.Deps(func() error {
+		if err := sh.RunWithV(nil, "go", "install", "github.com/boumenot/gocover-cobertura@latest"); err != nil {
+			return err
+		}
+		return nil
+	})
+
+	mg.Deps(func() error {
 		if err := sh.RunWithV(nil, "go", "install", "gotest.tools/gotestsum@latest"); err != nil {
 			return err
 		}
