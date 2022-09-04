@@ -47,6 +47,14 @@ func (Install) Homebrew(path string) error {
 // fetch the go dependencies
 func (Install) Godeps() error {
 	fmt.Println("installing go dependencies")
+
+	mg.Deps(func() error {
+		if err := sh.RunWithV(nil, "go", "install", "github.com/nomad-software/vend@latest"); err != nil {
+			return err
+		}
+		return nil
+	})
+
 	err := sh.RunWithV(nil, "go", "get", "-v", "./...")
 	if err != nil {
 		return err
@@ -77,13 +85,6 @@ func (Install) Tools() error {
 
 	mg.Deps(func() error {
 		if err := sh.RunWithV(nil, "go", "install", "github.com/spf13/cobra-cli@latest"); err != nil {
-			return err
-		}
-		return nil
-	})
-
-	mg.Deps(func() error {
-		if err := sh.RunWithV(nil, "go", "install", "github.com/nomad-software/vend@latest"); err != nil {
 			return err
 		}
 		return nil
