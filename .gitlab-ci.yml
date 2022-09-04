@@ -9,10 +9,6 @@ stages:
   - build
   - test
 
-cache:
-  paths:
-    - /go/pkg/mod
-
 before_script:
   - ci/scripts/install-mage.sh
 
@@ -45,11 +41,13 @@ test:
   stage: test
   image: "golang:$GO_VERSION"
   script:
-    - go test ./... -coverprofile=coverage.txt -covermode count
+    - go test ./... -coverprofile=coverage.txt -covermode atomic
+    - gotestsum --junitfile report.xml --format testname
     - go get github.com/boumenot/gocover-cobertura
     - go run github.com/boumenot/gocover-cobertura < coverage.txt > coverage.xml
   artifacts:
     reports:
+      junit: report.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
