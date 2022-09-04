@@ -11,19 +11,19 @@ stages:
 
 before_script:
   - ci/scripts/install-mage.sh
+  - mage install:godeps
 
 build:
   stage: build
   image: "golang:$GO_VERSION"
   script:
     - |
-      mage install:godeps
       mage build:compile
   artifacts:
     paths:
       - "build/pleiades"
     name: "pleiades"
-    expire_in: "3 days"
+    expire_in: "5 days"
   rules:
     - if: '$BUILD_DISABLED'
       when: never
@@ -41,10 +41,9 @@ test:
   stage: test
   image: "golang:$GO_VERSION"
   script:
-    - go test ./... -coverprofile=coverage.txt -covermode atomic
+    - go test -v ./... -coverprofile=coverage.txt -covermode atomic
     - gotestsum --junitfile report.xml --format testname
-    - go get github.com/boumenot/gocover-cobertura
-    - go run github.com/boumenot/gocover-cobertura < coverage.txt > coverage.xml
+    - gocover-cobertura < coverage.txt > coverage.xml
   artifacts:
     reports:
       junit: report.xml
