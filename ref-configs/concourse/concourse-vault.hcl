@@ -1,3 +1,0 @@
-path "concourse/*" {
-  capabilities = ["read"]
-}
