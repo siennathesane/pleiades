@@ -9,4 +9,8 @@
 #  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
 #
 
-mage "${MAGE_COMMAND}"
+wget https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-64bit.tar.gz
+
+tar zxvf mage_${MAGE_VERSION}_Linux-64bit.tar.gz
+
+mv mage /usr/local/bin/mage
