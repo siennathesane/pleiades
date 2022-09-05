@@ -51,27 +51,3 @@ export namespace Header {
   }
 }
 
-export class HeaderTest extends jspb.Message {
-  getSize(): number;
-  setSize(value: number): void;
-
-  getChecksum(): number;
-  setChecksum(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): HeaderTest.AsObject;
-  static toObject(includeInstance: boolean, msg: HeaderTest): HeaderTest.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: HeaderTest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): HeaderTest;
-  static deserializeBinaryFromReader(message: HeaderTest, reader: jspb.BinaryReader): HeaderTest;
-}
-
-export namespace HeaderTest {
-  export type AsObject = {
-    size: number,
-    checksum: number,
-  }
-}
-
