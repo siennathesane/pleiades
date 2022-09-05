@@ -16,7 +16,7 @@ message AddReplicaRequest {
   // stateMachine dictates the type of state machine
   StateMachineType type = 3;
   string hostname = 4;
-  int32 timeout = 5;
+  int64 timeout = 5;
 }
 
 message AddReplicaReply {}
@@ -29,7 +29,7 @@ message AddShardObserverRequest {
   // stateMachine dictates the type of state machine
   StateMachineType type = 3;
   string hostname = 4;
-  int32 timeout = 5;
+  int64 timeout = 5;
 }
 
 message AddShardObserverReply {}
@@ -42,7 +42,7 @@ message AddShardWitnessRequest {
   // stateMachine dictates the type of state machine
   StateMachineType type = 3;
   string hostname = 4;
-  int32 timeout = 5;
+  int64 timeout = 5;
 }
 
 message AddShardWitnessReply {}
@@ -76,7 +76,7 @@ message NewShardRequest {
     // stateMachine dictates the type of state machine
     StateMachineType type = 3;
     string hostname = 4;
-    int32 timeout = 5;
+    int64 timeout = 5;
 }
 
 message NewShardReply {}

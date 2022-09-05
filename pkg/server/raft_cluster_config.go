@@ -20,6 +20,8 @@ type IClusterConfig interface {
 	ShardId() uint64
 }
 
+var _ IClusterConfig = (*Config)(nil)
+
 // Config is used to configure Raft nodes.
 type Config struct {
 	// replicaId is a non-zero value used to identify a node within a Raft cluster.

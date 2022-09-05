@@ -502,7 +502,7 @@ proto.raft.AddReplicaRequest.deserializeBinaryFromReader = function(msg, reader)
       msg.setHostname(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
     default:
@@ -564,7 +564,7 @@ proto.raft.AddReplicaRequest.serializeBinaryToWriter = function(message, writer)
   }
   f = message.getTimeout();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       5,
       f
     );
@@ -645,7 +645,7 @@ proto.raft.AddReplicaRequest.prototype.setHostname = function(value) {
 
 
 /**
- * optional int32 timeout = 5;
+ * optional int64 timeout = 5;
  * @return {number}
  */
 proto.raft.AddReplicaRequest.prototype.getTimeout = function() {
@@ -853,7 +853,7 @@ proto.raft.AddShardObserverRequest.deserializeBinaryFromReader = function(msg, r
       msg.setHostname(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
     default:
@@ -915,7 +915,7 @@ proto.raft.AddShardObserverRequest.serializeBinaryToWriter = function(message, w
   }
   f = message.getTimeout();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       5,
       f
     );
@@ -996,7 +996,7 @@ proto.raft.AddShardObserverRequest.prototype.setHostname = function(value) {
 
 
 /**
- * optional int32 timeout = 5;
+ * optional int64 timeout = 5;
  * @return {number}
  */
 proto.raft.AddShardObserverRequest.prototype.getTimeout = function() {
@@ -1204,7 +1204,7 @@ proto.raft.AddShardWitnessRequest.deserializeBinaryFromReader = function(msg, re
       msg.setHostname(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
     default:
@@ -1266,7 +1266,7 @@ proto.raft.AddShardWitnessRequest.serializeBinaryToWriter = function(message, wr
   }
   f = message.getTimeout();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       5,
       f
     );
@@ -1347,7 +1347,7 @@ proto.raft.AddShardWitnessRequest.prototype.setHostname = function(value) {
 
 
 /**
- * optional int32 timeout = 5;
+ * optional int64 timeout = 5;
  * @return {number}
  */
 proto.raft.AddShardWitnessRequest.prototype.getTimeout = function() {
@@ -2278,7 +2278,7 @@ proto.raft.NewShardRequest.deserializeBinaryFromReader = function(msg, reader) {
       msg.setHostname(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readInt32());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
     default:
@@ -2340,7 +2340,7 @@ proto.raft.NewShardRequest.serializeBinaryToWriter = function(message, writer) {
   }
   f = message.getTimeout();
   if (f !== 0) {
-    writer.writeInt32(
+    writer.writeInt64(
       5,
       f
     );
@@ -2421,7 +2421,7 @@ proto.raft.NewShardRequest.prototype.setHostname = function(value) {
 
 
 /**
- * optional int32 timeout = 5;
+ * optional int64 timeout = 5;
  * @return {number}
  */
 proto.raft.NewShardRequest.prototype.getTimeout = function() {
