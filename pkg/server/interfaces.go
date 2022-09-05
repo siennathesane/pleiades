@@ -16,13 +16,12 @@ import (
 	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
 	"github.com/lni/dragonboat/v3/statemachine"
-	"github.com/multiformats/go-multiaddr"
 )
 
 type IShardManager interface {
-	AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
-	AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
-	AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error
+	AddReplica(cfg IClusterConfig, newHost string, timeout time.Duration) error
+	AddShardObserver(cfg IClusterConfig, newHost string, timeout time.Duration) error
+	AddShardWitness(cfg IClusterConfig, newHost string, timeout time.Duration) error
 	DeleteReplica(cfg IClusterConfig, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
