@@ -79,7 +79,7 @@ type SessionPayload struct {
 	//	*SessionPayload_CloseSessionResponse
 	//	*SessionPayload_Error
 	Type   isSessionPayload_Type     `protobuf_oneof:"Type"`
-	Method SessionPayload_MethodName `protobuf:"varint,6,opt,name=method,proto3,enum=database.SessionPayload_MethodName" json:"method,omitempty"`
+	Method SessionPayload_MethodName `protobuf:"varint,6,opt,name=Method,proto3,enum=database.SessionPayload_MethodName" json:"Method,omitempty"`
 }
 
 func (x *SessionPayload) Reset() {
@@ -654,7 +654,7 @@ var file_api_v1_database_session_proto_depIdxs = []int32{
 	2,  // 2: database.SessionPayload.CloseSessionRequest:type_name -> database.CloseSessionRequest
 	3,  // 3: database.SessionPayload.CloseSessionResponse:type_name -> database.CloseSessionResponse
 	8,  // 4: database.SessionPayload.Error:type_name -> database.DBError
-	0,  // 5: database.SessionPayload.method:type_name -> database.SessionPayload.MethodName
+	0,  // 5: database.SessionPayload.Method:type_name -> database.SessionPayload.MethodName
 	5,  // 6: database.CloseSessionRequest.session:type_name -> database.Session
 	5,  // 7: database.CloseSessionResponse.session:type_name -> database.Session
 	5,  // 8: database.ProposeSessionRequest.session:type_name -> database.Session

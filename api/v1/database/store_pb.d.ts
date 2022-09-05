@@ -4,7 +4,6 @@
 import * as jspb from "google-protobuf";
 import * as api_v1_database_session_pb from "../../../api/v1/database/session_pb";
 import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
-import * as api_v1_database_raft_control_pb from "../../../api/v1/database/raft_control_pb";
 
 export class DeleteResponse extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -75,6 +74,22 @@ export namespace PutRequest {
   export type AsObject = {
     payload?: api_v1_database_kv_pb.KeyValue.AsObject,
     session?: api_v1_database_session_pb.Session.AsObject,
+  }
+}
+
+export class PutReply extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): PutReply.AsObject;
+  static toObject(includeInstance: boolean, msg: PutReply): PutReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: PutReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PutReply;
+  static deserializeBinaryFromReader(message: PutReply, reader: jspb.BinaryReader): PutReply;
+}
+
+export namespace PutReply {
+  export type AsObject = {
   }
 }
 
