@@ -15,7 +15,6 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
-	"github.com/multiformats/go-multiaddr"
 	"github.com/rs/zerolog"
 )
 
@@ -193,7 +192,7 @@ func (c *clusterManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding replica")
 
@@ -210,14 +209,14 @@ func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost multiaddr.Multia
 		return err
 	}
 
-	err = c.nh.SyncRequestAddNode(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	err = c.nh.SyncRequestAddNode(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add replica")
 	}
 	return err
 }
 
-func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -234,14 +233,14 @@ func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost multiaddr.
 		return err
 	}
 
-	err = c.nh.SyncRequestAddObserver(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	err = c.nh.SyncRequestAddObserver(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 	}
 	return err
 }
 
-func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost multiaddr.Multiaddr, timeout time.Duration) error {
+func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -258,7 +257,7 @@ func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost multiaddr.M
 		return err
 	}
 
-	err = c.nh.SyncRequestAddWitness(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost.String(), members.ConfigChangeId)
+	err = c.nh.SyncRequestAddWitness(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 	}
