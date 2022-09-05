@@ -33,11 +33,11 @@ func (Test) All() error {
 	return sh.RunWithV(nil, "go", "test", "-v", "./...")
 }
 
-// run blaze server tests
+// run server server tests
 func (Test) Blaze() error {
 	mg.Deps(verifyVendor)
-	fmt.Println("running blaze tests")
-	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/blaze/...")
+	fmt.Println("running server tests")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/server/...")
 }
 
 // run config tests
