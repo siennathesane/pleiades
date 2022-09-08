@@ -19,13 +19,13 @@ import (
 )
 
 type IShardManager interface {
-	AddReplica(cfg IClusterConfig, newHost string, timeout time.Duration) error
-	AddShardObserver(cfg IClusterConfig, newHost string, timeout time.Duration) error
-	AddShardWitness(cfg IClusterConfig, newHost string, timeout time.Duration) error
-	DeleteReplica(cfg IClusterConfig, timeout time.Duration) error
+	AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddShardObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddShardWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	DeleteReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
-	NewShard(cfg IClusterConfig) error
+	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
 	RemoveData(shardId, replicaId uint64) error
 	StopReplica(shardId uint64) (*OperationResult, error)
 }
