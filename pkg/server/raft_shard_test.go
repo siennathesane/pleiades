@@ -23,8 +23,6 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-// todo (sienna): remove the dependency on NewRaftControlNode. it's a shortcut but it needs to be a bit less integrated
-
 func TestShardManager(t *testing.T) {
 	suite.Run(t, new(shardManagerTestSuite))
 }
@@ -140,8 +138,7 @@ func (smts *shardManagerTestSuite) TestAddShardObserver() {
 		cs.ProposalCompleted()
 	}
 
-	secondNodeHostConfig := buildTestNodeHostConfig(smts.T())
-	secondNode, err := NewRaftControlNode(secondNodeHostConfig, smts.logger)
+	secondNode := buildTestNodeHost(smts.T())
 	smts.Require().NoError(err, "there must not be an error when starting the second node")
 	smts.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -156,7 +153,7 @@ func (smts *shardManagerTestSuite) TestAddShardObserver() {
 	err = shardManager.AddShardObserver(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
-	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
 	smts.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(smts.extendedDefaultTimeout)
 
@@ -200,8 +197,7 @@ func (smts *shardManagerTestSuite) TestAddShardWitness() {
 		cs.ProposalCompleted()
 	}
 
-	secondNodeHostConfig := buildTestNodeHostConfig(smts.T())
-	secondNode, err := NewRaftControlNode(secondNodeHostConfig, smts.logger)
+	secondNode := buildTestNodeHost(smts.T())
 	smts.Require().NoError(err, "there must not be an error when starting the second node")
 	smts.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -216,7 +212,7 @@ func (smts *shardManagerTestSuite) TestAddShardWitness() {
 	err = shardManager.AddShardWitness(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
-	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
 	smts.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(smts.extendedDefaultTimeout)
 
@@ -482,8 +478,7 @@ func (smts *shardManagerTestSuite) TestRemoveData() {
 		cs.ProposalCompleted()
 	}
 
-	secondNodeHostConfig := buildTestNodeHostConfig(smts.T())
-	secondNode, err := NewRaftControlNode(secondNodeHostConfig, smts.logger)
+	secondNode := buildTestNodeHost(smts.T())
 	smts.Require().NoError(err, "there must not be an error when starting the second node")
 	smts.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -500,7 +495,7 @@ func (smts *shardManagerTestSuite) TestRemoveData() {
 	err = shardManager.nh.SyncRequestAddNode(ctx, testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()),0)
 	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
 
-	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
 	smts.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(smts.extendedDefaultTimeout)
 
@@ -551,8 +546,7 @@ func (smts *shardManagerTestSuite) TestRemoveReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondNodeHostConfig := buildTestNodeHostConfig(smts.T())
-	secondNode, err := NewRaftControlNode(secondNodeHostConfig, smts.logger)
+	secondNode := buildTestNodeHost(smts.T())
 	smts.Require().NoError(err, "there must not be an error when starting the second node")
 	smts.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -569,7 +563,7 @@ func (smts *shardManagerTestSuite) TestRemoveReplica() {
 	err = shardManager.nh.SyncRequestAddNode(ctx, testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()),0)
 	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
 
-	err = secondNode.nh.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
 	smts.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(smts.extendedDefaultTimeout)
 
