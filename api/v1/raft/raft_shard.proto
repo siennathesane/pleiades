@@ -13,8 +13,6 @@ message AddReplicaRequest {
   uint64 replicaId = 1;
   // shardId is the unique value used to identify a Raft cluster.
   uint64 shardId = 2;
-  // stateMachine dictates the type of state machine
-  StateMachineType type = 3;
   string hostname = 4;
   int64 timeout = 5;
 }
@@ -26,10 +24,8 @@ message AddShardObserverRequest {
   uint64 replicaId = 1;
   // shardId is the unique value used to identify a Raft cluster.
   uint64 shardId = 2;
-  // stateMachine dictates the type of state machine
-  StateMachineType type = 3;
-  string hostname = 4;
-  int64 timeout = 5;
+  string hostname = 3;
+  int64 timeout = 4;
 }
 
 message AddShardObserverReply {}
@@ -39,10 +35,8 @@ message AddShardWitnessRequest {
   uint64 replicaId = 1;
   // shardId is the unique value used to identify a Raft cluster.
   uint64 shardId = 2;
-  // stateMachine dictates the type of state machine
-  StateMachineType type = 3;
-  string hostname = 4;
-  int64 timeout = 5;
+  string hostname = 3;
+  int64 timeout = 4;
 }
 
 message AddShardWitnessReply {}
@@ -63,7 +57,10 @@ message GetLeaderIdRequest {
   int64 timeout = 3;
 }
 
-message GetLeaderIdReply {}
+message GetLeaderIdReply {
+  uint64 leader = 1;
+  bool available = 2;
+}
 
 message GetShardMembersRequest {
   uint64 shardId = 1;

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package server;
 
-import "api/v1/raft/raft_control.proto";
+import "api/v1/raft/raft_shard.proto";
 import "api/v1/raft/raft_host.proto";
 option go_package = "github.com/mxplusb/pleiades/pkg/server";
 
@@ -9,11 +9,11 @@ service ShardManager {
   rpc AddReplica(raft.AddReplicaRequest) returns (raft.AddReplicaReply);
   rpc AddShardObserver(raft.AddShardObserverRequest) returns (raft.AddShardObserverReply);
   rpc AddShardWitness(raft.AddShardWitnessRequest) returns (raft.AddShardWitnessReply);
-  rpc DeleteReplica(raft.DeleteReplicaRequest) returns (raft.DeleteReplicaReply);
   rpc GetLeaderId(raft.GetLeaderIdRequest) returns (raft.GetLeaderIdReply);
   rpc GetShardMembers(raft.GetShardMembersRequest) returns (raft.GetShardMembersReply);
   rpc NewShard(raft.NewShardRequest) returns (raft.NewShardReply);
   rpc RemoveData(raft.RemoveDataRequest) returns (raft.RemoveDataReply);
+  rpc RemoveReplica(raft.DeleteReplicaRequest) returns (raft.DeleteReplicaReply);
   rpc StopReplica(raft.StopReplicaRequest) returns (raft.StopReplicaReply);
 }
 

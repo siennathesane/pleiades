@@ -1,4 +1,4 @@
-// source: api/v1/raft/raft_control.proto
+// source: api/v1/raft/raft_shard.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -446,7 +446,6 @@ proto.raft.AddReplicaRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     replicaid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     shardid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0),
     hostname: jspb.Message.getFieldWithDefault(msg, 4, ""),
     timeout: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
@@ -492,10 +491,6 @@ proto.raft.AddReplicaRequest.deserializeBinaryFromReader = function(msg, reader)
     case 2:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setShardid(value);
-      break;
-    case 3:
-      var value = /** @type {!proto.raft.StateMachineType} */ (reader.readEnum());
-      msg.setType(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
@@ -545,13 +540,6 @@ proto.raft.AddReplicaRequest.serializeBinaryToWriter = function(message, writer)
   if (f !== 0) {
     writer.writeUint64(
       2,
-      f
-    );
-  }
-  f = message.getType();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      3,
       f
     );
   }
@@ -605,24 +593,6 @@ proto.raft.AddReplicaRequest.prototype.getShardid = function() {
  */
 proto.raft.AddReplicaRequest.prototype.setShardid = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
-};
-
-
-/**
- * optional StateMachineType type = 3;
- * @return {!proto.raft.StateMachineType}
- */
-proto.raft.AddReplicaRequest.prototype.getType = function() {
-  return /** @type {!proto.raft.StateMachineType} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
-};
-
-
-/**
- * @param {!proto.raft.StateMachineType} value
- * @return {!proto.raft.AddReplicaRequest} returns this
- */
-proto.raft.AddReplicaRequest.prototype.setType = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -797,9 +767,8 @@ proto.raft.AddShardObserverRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     replicaid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     shardid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    hostname: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    timeout: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    hostname: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    timeout: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -845,14 +814,10 @@ proto.raft.AddShardObserverRequest.deserializeBinaryFromReader = function(msg, r
       msg.setShardid(value);
       break;
     case 3:
-      var value = /** @type {!proto.raft.StateMachineType} */ (reader.readEnum());
-      msg.setType(value);
-      break;
-    case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setHostname(value);
       break;
-    case 5:
+    case 4:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
@@ -899,24 +864,17 @@ proto.raft.AddShardObserverRequest.serializeBinaryToWriter = function(message, w
       f
     );
   }
-  f = message.getType();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      3,
-      f
-    );
-  }
   f = message.getHostname();
   if (f.length > 0) {
     writer.writeString(
-      4,
+      3,
       f
     );
   }
   f = message.getTimeout();
   if (f !== 0) {
     writer.writeInt64(
-      5,
+      4,
       f
     );
   }
@@ -960,29 +918,11 @@ proto.raft.AddShardObserverRequest.prototype.setShardid = function(value) {
 
 
 /**
- * optional StateMachineType type = 3;
- * @return {!proto.raft.StateMachineType}
- */
-proto.raft.AddShardObserverRequest.prototype.getType = function() {
-  return /** @type {!proto.raft.StateMachineType} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
-};
-
-
-/**
- * @param {!proto.raft.StateMachineType} value
- * @return {!proto.raft.AddShardObserverRequest} returns this
- */
-proto.raft.AddShardObserverRequest.prototype.setType = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
-};
-
-
-/**
- * optional string hostname = 4;
+ * optional string hostname = 3;
  * @return {string}
  */
 proto.raft.AddShardObserverRequest.prototype.getHostname = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
@@ -991,16 +931,16 @@ proto.raft.AddShardObserverRequest.prototype.getHostname = function() {
  * @return {!proto.raft.AddShardObserverRequest} returns this
  */
 proto.raft.AddShardObserverRequest.prototype.setHostname = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional int64 timeout = 5;
+ * optional int64 timeout = 4;
  * @return {number}
  */
 proto.raft.AddShardObserverRequest.prototype.getTimeout = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
@@ -1009,7 +949,7 @@ proto.raft.AddShardObserverRequest.prototype.getTimeout = function() {
  * @return {!proto.raft.AddShardObserverRequest} returns this
  */
 proto.raft.AddShardObserverRequest.prototype.setTimeout = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -1148,9 +1088,8 @@ proto.raft.AddShardWitnessRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     replicaid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     shardid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    type: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    hostname: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    timeout: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    hostname: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    timeout: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -1196,14 +1135,10 @@ proto.raft.AddShardWitnessRequest.deserializeBinaryFromReader = function(msg, re
       msg.setShardid(value);
       break;
     case 3:
-      var value = /** @type {!proto.raft.StateMachineType} */ (reader.readEnum());
-      msg.setType(value);
-      break;
-    case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setHostname(value);
       break;
-    case 5:
+    case 4:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setTimeout(value);
       break;
@@ -1250,24 +1185,17 @@ proto.raft.AddShardWitnessRequest.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getType();
-  if (f !== 0.0) {
-    writer.writeEnum(
-      3,
-      f
-    );
-  }
   f = message.getHostname();
   if (f.length > 0) {
     writer.writeString(
-      4,
+      3,
       f
     );
   }
   f = message.getTimeout();
   if (f !== 0) {
     writer.writeInt64(
-      5,
+      4,
       f
     );
   }
@@ -1311,29 +1239,11 @@ proto.raft.AddShardWitnessRequest.prototype.setShardid = function(value) {
 
 
 /**
- * optional StateMachineType type = 3;
- * @return {!proto.raft.StateMachineType}
- */
-proto.raft.AddShardWitnessRequest.prototype.getType = function() {
-  return /** @type {!proto.raft.StateMachineType} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
-};
-
-
-/**
- * @param {!proto.raft.StateMachineType} value
- * @return {!proto.raft.AddShardWitnessRequest} returns this
- */
-proto.raft.AddShardWitnessRequest.prototype.setType = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
-};
-
-
-/**
- * optional string hostname = 4;
+ * optional string hostname = 3;
  * @return {string}
  */
 proto.raft.AddShardWitnessRequest.prototype.getHostname = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
@@ -1342,16 +1252,16 @@ proto.raft.AddShardWitnessRequest.prototype.getHostname = function() {
  * @return {!proto.raft.AddShardWitnessRequest} returns this
  */
 proto.raft.AddShardWitnessRequest.prototype.setHostname = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * optional int64 timeout = 5;
+ * optional int64 timeout = 4;
  * @return {number}
  */
 proto.raft.AddShardWitnessRequest.prototype.getTimeout = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
@@ -1360,7 +1270,7 @@ proto.raft.AddShardWitnessRequest.prototype.getTimeout = function() {
  * @return {!proto.raft.AddShardWitnessRequest} returns this
  */
 proto.raft.AddShardWitnessRequest.prototype.setTimeout = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -1978,7 +1888,8 @@ proto.raft.GetLeaderIdReply.prototype.toObject = function(opt_includeInstance) {
  */
 proto.raft.GetLeaderIdReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    leader: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    available: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
   if (includeInstance) {
@@ -2015,6 +1926,14 @@ proto.raft.GetLeaderIdReply.deserializeBinaryFromReader = function(msg, reader) 
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setLeader(value);
+      break;
+    case 2:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setAvailable(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2044,6 +1963,56 @@ proto.raft.GetLeaderIdReply.prototype.serializeBinary = function() {
  */
 proto.raft.GetLeaderIdReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getLeader();
+  if (f !== 0) {
+    writer.writeUint64(
+      1,
+      f
+    );
+  }
+  f = message.getAvailable();
+  if (f) {
+    writer.writeBool(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint64 leader = 1;
+ * @return {number}
+ */
+proto.raft.GetLeaderIdReply.prototype.getLeader = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.raft.GetLeaderIdReply} returns this
+ */
+proto.raft.GetLeaderIdReply.prototype.setLeader = function(value) {
+  return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional bool available = 2;
+ * @return {boolean}
+ */
+proto.raft.GetLeaderIdReply.prototype.getAvailable = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.raft.GetLeaderIdReply} returns this
+ */
+proto.raft.GetLeaderIdReply.prototype.setAvailable = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 2, value);
 };
 
 
