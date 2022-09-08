@@ -87,7 +87,7 @@ var (
 )
 
 func newShardManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *shardManager {
-	l := logger.With().Str("component", "cluster-manager").Logger()
+	l := logger.With().Str("component", "shard-manager").Logger()
 	return &shardManager{l, nodeHost}
 }
 
