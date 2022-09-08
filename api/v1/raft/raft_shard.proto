@@ -1,0 +1,101 @@
+syntax = "proto3";
+package raft;
+
+option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/raft";
+
+enum StateMachineType {
+  TEST = 0;
+  KV = 1;
+}
+
+message AddReplicaRequest {
+  // replicaId is a non-zero value used to identify a node within a Raft cluster.
+  uint64 replicaId = 1;
+  // shardId is the unique value used to identify a Raft cluster.
+  uint64 shardId = 2;
+  string hostname = 4;
+  int64 timeout = 5;
+}
+
+message AddReplicaReply {}
+
+message AddReplicaObserverRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+  string hostname = 3;
+  int64 timeout = 4;
+}
+
+message AddReplicaObserverReply {}
+
+message AddReplicaWitnessRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+  string hostname = 3;
+  int64 timeout = 4;
+}
+
+message AddReplicaWitnessReply {}
+
+message DeleteReplicaRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+  int64 timeout = 3;
+}
+
+message DeleteReplicaReply {}
+
+message GetLeaderIdRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+  int64 timeout = 3;
+}
+
+message GetLeaderIdReply {
+  uint64 leader = 1;
+  bool available = 2;
+}
+
+message GetShardMembersRequest {
+  uint64 shardId = 1;
+}
+
+message GetShardMembersReply {
+  uint64 configChangeId = 1;
+  map<uint64, string> replicas = 2;
+  map<uint64, string> observers = 3;
+  map<uint64, string> witnesses = 4;
+  map<uint64, string> removed = 5;
+}
+
+message NewShardRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+  StateMachineType type = 3;
+  string hostname = 4;
+  int64 timeout = 5;
+}
+
+message NewShardReply {}
+
+message RemoveDataRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
+}
+
+message RemoveDataReply {}
+
+message StartReplicaRequest {
+  uint64 shardId  = 1;
+  uint64 replicaId = 2;
+  StateMachineType type = 3;
+}
+
+message StartReplicaReply {}
+
+message StopReplicaRequest {
+  // shardId is the unique value used to identify a Raft cluster.
+  uint64 shardId = 1;
+}
+
+message StopReplicaReply {}
