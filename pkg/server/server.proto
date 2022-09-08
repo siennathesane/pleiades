@@ -7,13 +7,15 @@ option go_package = "github.com/mxplusb/pleiades/pkg/server";
 
 service ShardManager {
   rpc AddReplica(raft.AddReplicaRequest) returns (raft.AddReplicaReply);
-  rpc AddShardObserver(raft.AddShardObserverRequest) returns (raft.AddShardObserverReply);
-  rpc AddShardWitness(raft.AddShardWitnessRequest) returns (raft.AddShardWitnessReply);
+  rpc AddReplicaObserver(raft.AddReplicaObserverRequest) returns (raft.AddReplicaObserverReply);
+  rpc AddReplicaWitness(raft.AddReplicaWitnessRequest) returns (raft.AddReplicaWitnessReply);
   rpc GetLeaderId(raft.GetLeaderIdRequest) returns (raft.GetLeaderIdReply);
   rpc GetShardMembers(raft.GetShardMembersRequest) returns (raft.GetShardMembersReply);
   rpc NewShard(raft.NewShardRequest) returns (raft.NewShardReply);
   rpc RemoveData(raft.RemoveDataRequest) returns (raft.RemoveDataReply);
   rpc RemoveReplica(raft.DeleteReplicaRequest) returns (raft.DeleteReplicaReply);
+  rpc StartReplica(raft.StartReplicaRequest) returns (raft.StartReplicaReply);
+  rpc StartReplicaObserver(raft.StartReplicaRequest) returns (raft.StartReplicaReply);
   rpc StopReplica(raft.StopReplicaRequest) returns (raft.StopReplicaReply);
 }
 

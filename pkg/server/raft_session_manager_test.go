@@ -46,7 +46,7 @@ func (smt *SessionManagerTests) SetupSuite() {
 	smt.Require().NotNil(node, "node must not be nil")
 	smt.node = node
 
-	clusterConfig := buildTestClusterConfig(smt.T())
+	clusterConfig := buildTestShardConfig(smt.T())
 	smt.clusterId = clusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[clusterConfig.NodeID] = node.RaftAddress()

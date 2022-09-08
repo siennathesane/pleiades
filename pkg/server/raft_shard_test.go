@@ -56,7 +56,7 @@ func (smts *shardManagerTestSuite) TestAddReplica() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -115,7 +115,7 @@ func (smts *shardManagerTestSuite) TestAddShardObserver() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -150,7 +150,7 @@ func (smts *shardManagerTestSuite) TestAddShardObserver() {
 		IsObserver:    true,
 	}
 
-	err = shardManager.AddShardObserver(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
+	err = shardManager.AddReplicaObserver(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
 	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
@@ -174,7 +174,7 @@ func (smts *shardManagerTestSuite) TestAddShardWitness() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -209,7 +209,7 @@ func (smts *shardManagerTestSuite) TestAddShardWitness() {
 		IsWitness:    true,
 	}
 
-	err = shardManager.AddShardWitness(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
+	err = shardManager.AddReplicaWitness(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
 	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
@@ -233,7 +233,7 @@ func (smts *shardManagerTestSuite) TestDeleteReplica() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -299,7 +299,7 @@ func (smts *shardManagerTestSuite) TestGetLeaderId() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -355,7 +355,7 @@ func (smts *shardManagerTestSuite) TestGetShardMembers() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -417,7 +417,7 @@ func (smts *shardManagerTestSuite) TestNewShard() {
 	shardManager := newShardManager(firstTestHost, smts.logger)
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId := firstNodeClusterConfig.ClusterID
 
 	err := shardManager.NewShard(testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, smts.defaultTimeout)
@@ -455,7 +455,7 @@ func (smts *shardManagerTestSuite) TestRemoveData() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -523,7 +523,7 @@ func (smts *shardManagerTestSuite) TestRemoveReplica() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
@@ -667,7 +667,7 @@ func (smts *shardManagerTestSuite) TestStartObserverReplica() {
 
 	secondTestReplicaId := rand.Uint64()
 
-	err = firstShardManager.AddShardObserver(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), smts.defaultTimeout)
+	err = firstShardManager.AddReplicaObserver(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
 	time.Sleep(smts.extendedDefaultTimeout)
 
@@ -716,7 +716,7 @@ func (smts *shardManagerTestSuite) TestStartWitnessReplica() {
 
 	secondTestReplicaId := rand.Uint64()
 
-	err = firstShardManager.AddShardWitness(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), smts.defaultTimeout)
+	err = firstShardManager.AddReplicaWitness(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
 	time.Sleep(smts.extendedDefaultTimeout)
 
@@ -742,7 +742,7 @@ func (smts *shardManagerTestSuite) TestStopReplica() {
 	smts.Require().NotNil(shardManager, "shardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(smts.T())
+	firstNodeClusterConfig := buildTestShardConfig(smts.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()

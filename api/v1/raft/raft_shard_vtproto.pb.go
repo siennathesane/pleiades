@@ -47,16 +47,16 @@ func (this *AddReplicaReply) EqualVT(that *AddReplicaReply) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *AddShardObserverRequest) EqualVT(that *AddShardObserverRequest) bool {
+func (this *AddReplicaObserverRequest) EqualVT(that *AddReplicaObserverRequest) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	if this.Hostname != that.Hostname {
@@ -68,7 +68,7 @@ func (this *AddShardObserverRequest) EqualVT(that *AddShardObserverRequest) bool
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *AddShardObserverReply) EqualVT(that *AddShardObserverReply) bool {
+func (this *AddReplicaObserverReply) EqualVT(that *AddReplicaObserverReply) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
@@ -77,16 +77,16 @@ func (this *AddShardObserverReply) EqualVT(that *AddShardObserverReply) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *AddShardWitnessRequest) EqualVT(that *AddShardWitnessRequest) bool {
+func (this *AddReplicaWitnessRequest) EqualVT(that *AddReplicaWitnessRequest) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	if this.Hostname != that.Hostname {
@@ -98,7 +98,7 @@ func (this *AddShardWitnessRequest) EqualVT(that *AddShardWitnessRequest) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *AddShardWitnessReply) EqualVT(that *AddShardWitnessReply) bool {
+func (this *AddReplicaWitnessReply) EqualVT(that *AddReplicaWitnessReply) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
@@ -113,10 +113,10 @@ func (this *DeleteReplicaRequest) EqualVT(that *DeleteReplicaRequest) bool {
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	if this.Timeout != that.Timeout {
@@ -140,10 +140,10 @@ func (this *GetLeaderIdRequest) EqualVT(that *GetLeaderIdRequest) bool {
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	if this.Timeout != that.Timeout {
@@ -245,10 +245,10 @@ func (this *NewShardRequest) EqualVT(that *NewShardRequest) bool {
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	if this.Type != that.Type {
@@ -278,16 +278,43 @@ func (this *RemoveDataRequest) EqualVT(that *RemoveDataRequest) bool {
 	} else if that == nil {
 		return false
 	}
-	if this.ReplicaId != that.ReplicaId {
+	if this.ShardId != that.ShardId {
 		return false
 	}
-	if this.ShardId != that.ShardId {
+	if this.ReplicaId != that.ReplicaId {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
 func (this *RemoveDataReply) EqualVT(that *RemoveDataReply) bool {
+	if this == nil {
+		return that == nil
+	} else if that == nil {
+		return false
+	}
+	return string(this.unknownFields) == string(that.unknownFields)
+}
+
+func (this *StartReplicaRequest) EqualVT(that *StartReplicaRequest) bool {
+	if this == nil {
+		return that == nil
+	} else if that == nil {
+		return false
+	}
+	if this.ShardId != that.ShardId {
+		return false
+	}
+	if this.ReplicaId != that.ReplicaId {
+		return false
+	}
+	if this.Type != that.Type {
+		return false
+	}
+	return string(this.unknownFields) == string(that.unknownFields)
+}
+
+func (this *StartReplicaReply) EqualVT(that *StartReplicaReply) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
@@ -405,7 +432,7 @@ func (m *AddReplicaReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *AddShardObserverRequest) MarshalVT() (dAtA []byte, err error) {
+func (m *AddReplicaObserverRequest) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -418,12 +445,12 @@ func (m *AddShardObserverRequest) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *AddShardObserverRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *AddReplicaObserverRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *AddShardObserverRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *AddReplicaObserverRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -447,20 +474,20 @@ func (m *AddShardObserverRequest) MarshalToSizedBufferVT(dAtA []byte) (int, erro
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *AddShardObserverReply) MarshalVT() (dAtA []byte, err error) {
+func (m *AddReplicaObserverReply) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -473,12 +500,12 @@ func (m *AddShardObserverReply) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *AddShardObserverReply) MarshalToVT(dAtA []byte) (int, error) {
+func (m *AddReplicaObserverReply) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *AddShardObserverReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *AddReplicaObserverReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -493,7 +520,7 @@ func (m *AddShardObserverReply) MarshalToSizedBufferVT(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *AddShardWitnessRequest) MarshalVT() (dAtA []byte, err error) {
+func (m *AddReplicaWitnessRequest) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -506,12 +533,12 @@ func (m *AddShardWitnessRequest) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *AddShardWitnessRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *AddReplicaWitnessRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *AddShardWitnessRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *AddReplicaWitnessRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -535,20 +562,20 @@ func (m *AddShardWitnessRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *AddShardWitnessReply) MarshalVT() (dAtA []byte, err error) {
+func (m *AddReplicaWitnessReply) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -561,12 +588,12 @@ func (m *AddShardWitnessReply) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *AddShardWitnessReply) MarshalToVT(dAtA []byte) (int, error) {
+func (m *AddReplicaWitnessReply) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *AddShardWitnessReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *AddReplicaWitnessReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -616,13 +643,13 @@ func (m *DeleteReplicaRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) 
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -697,13 +724,13 @@ func (m *GetLeaderIdRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -949,13 +976,13 @@ func (m *NewShardRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1025,13 +1052,13 @@ func (m *RemoveDataRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.ShardId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ReplicaId != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1057,6 +1084,87 @@ func (m *RemoveDataReply) MarshalToVT(dAtA []byte) (int, error) {
 }
 
 func (m *RemoveDataReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *StartReplicaRequest) MarshalVT() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVT(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StartReplicaRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *StartReplicaRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	if m == nil {
+		return 0, nil
+	}
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.unknownFields != nil {
+		i -= len(m.unknownFields)
+		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.Type != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.Type))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.ShardId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ShardId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *StartReplicaReply) MarshalVT() (dAtA []byte, err error) {
+	if m == nil {
+		return nil, nil
+	}
+	size := m.SizeVT()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBufferVT(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StartReplicaReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *StartReplicaReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -1175,17 +1283,17 @@ func (m *AddReplicaReply) SizeVT() (n int) {
 	return n
 }
 
-func (m *AddShardObserverRequest) SizeVT() (n int) {
+func (m *AddReplicaObserverRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	l = len(m.Hostname)
 	if l > 0 {
@@ -1198,7 +1306,7 @@ func (m *AddShardObserverRequest) SizeVT() (n int) {
 	return n
 }
 
-func (m *AddShardObserverReply) SizeVT() (n int) {
+func (m *AddReplicaObserverReply) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1208,17 +1316,17 @@ func (m *AddShardObserverReply) SizeVT() (n int) {
 	return n
 }
 
-func (m *AddShardWitnessRequest) SizeVT() (n int) {
+func (m *AddReplicaWitnessRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	l = len(m.Hostname)
 	if l > 0 {
@@ -1231,7 +1339,7 @@ func (m *AddShardWitnessRequest) SizeVT() (n int) {
 	return n
 }
 
-func (m *AddShardWitnessReply) SizeVT() (n int) {
+func (m *AddReplicaWitnessReply) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1247,11 +1355,11 @@ func (m *DeleteReplicaRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	if m.Timeout != 0 {
 		n += 1 + sov(uint64(m.Timeout))
@@ -1276,11 +1384,11 @@ func (m *GetLeaderIdRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	if m.Timeout != 0 {
 		n += 1 + sov(uint64(m.Timeout))
@@ -1369,11 +1477,11 @@ func (m *NewShardRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	if m.Type != 0 {
 		n += 1 + sov(uint64(m.Type))
@@ -1405,17 +1513,46 @@ func (m *RemoveDataRequest) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ReplicaId != 0 {
-		n += 1 + sov(uint64(m.ReplicaId))
-	}
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	n += len(m.unknownFields)
 	return n
 }
 
 func (m *RemoveDataReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	n += len(m.unknownFields)
+	return n
+}
+
+func (m *StartReplicaRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ShardId != 0 {
+		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
+	}
+	if m.Type != 0 {
+		n += 1 + sov(uint64(m.Type))
+	}
+	n += len(m.unknownFields)
+	return n
+}
+
+func (m *StartReplicaReply) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1639,7 +1776,7 @@ func (m *AddReplicaReply) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *AddShardObserverRequest) UnmarshalVT(dAtA []byte) error {
+func (m *AddReplicaObserverRequest) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1662,32 +1799,13 @@ func (m *AddShardObserverRequest) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: AddShardObserverRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: AddReplicaObserverRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AddShardObserverRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: AddReplicaObserverRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
@@ -1702,6 +1820,25 @@ func (m *AddShardObserverRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1779,7 +1916,7 @@ func (m *AddShardObserverRequest) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *AddShardObserverReply) UnmarshalVT(dAtA []byte) error {
+func (m *AddReplicaObserverReply) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1802,10 +1939,10 @@ func (m *AddShardObserverReply) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: AddShardObserverReply: wiretype end group for non-group")
+			return fmt.Errorf("proto: AddReplicaObserverReply: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AddShardObserverReply: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: AddReplicaObserverReply: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -1830,7 +1967,7 @@ func (m *AddShardObserverReply) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *AddShardWitnessRequest) UnmarshalVT(dAtA []byte) error {
+func (m *AddReplicaWitnessRequest) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1853,32 +1990,13 @@ func (m *AddShardWitnessRequest) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: AddShardWitnessRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: AddReplicaWitnessRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AddShardWitnessRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: AddReplicaWitnessRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
@@ -1893,6 +2011,25 @@ func (m *AddShardWitnessRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1970,7 +2107,7 @@ func (m *AddShardWitnessRequest) UnmarshalVT(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *AddShardWitnessReply) UnmarshalVT(dAtA []byte) error {
+func (m *AddReplicaWitnessReply) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1993,10 +2130,10 @@ func (m *AddShardWitnessReply) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: AddShardWitnessReply: wiretype end group for non-group")
+			return fmt.Errorf("proto: AddReplicaWitnessReply: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: AddShardWitnessReply: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: AddReplicaWitnessReply: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -2052,25 +2189,6 @@ func (m *DeleteReplicaRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
 			m.ShardId = 0
@@ -2084,6 +2202,25 @@ func (m *DeleteReplicaRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2211,25 +2348,6 @@ func (m *GetLeaderIdRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
 			m.ShardId = 0
@@ -2243,6 +2361,25 @@ func (m *GetLeaderIdRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3001,25 +3138,6 @@ func (m *NewShardRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
 			m.ShardId = 0
@@ -3033,6 +3151,25 @@ func (m *NewShardRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3211,25 +3348,6 @@ func (m *RemoveDataRequest) UnmarshalVT(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
-			}
-			m.ReplicaId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ReplicaId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
 			}
 			m.ShardId = 0
@@ -3243,6 +3361,25 @@ func (m *RemoveDataRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3296,6 +3433,165 @@ func (m *RemoveDataReply) UnmarshalVT(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: RemoveDataReply: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *StartReplicaRequest) UnmarshalVT(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StartReplicaRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StartReplicaRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ShardId", wireType)
+			}
+			m.ShardId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= StateMachineType(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skip(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLength
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.unknownFields = append(m.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *StartReplicaReply) UnmarshalVT(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StartReplicaReply: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StartReplicaReply: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

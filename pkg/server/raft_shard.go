@@ -120,7 +120,7 @@ func (c *shardManager) AddReplica(shardId uint64, replicaId uint64, newHost stri
 	return err
 }
 
-func (c *shardManager) AddShardObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+func (c *shardManager) AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -144,7 +144,7 @@ func (c *shardManager) AddShardObserver(shardId uint64, replicaId uint64, newHos
 	return err
 }
 
-func (c *shardManager) AddShardWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+func (c *shardManager) AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -236,24 +236,6 @@ func (c *shardManager) StartReplicaObserver(shardId uint64, replicaId uint64, st
 
 	clusterConfig := newDConfig(shardId, replicaId)
 	clusterConfig.IsObserver = true
-
-	switch stateMachineType {
-	case testStateMachineType:
-		l.Info().Msg("creating test state machine")
-		return c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
-	}
-
-	l.Error().Msg("unknown state machine type")
-	return ErrUnsupportedStateMachine
-}
-
-func (c *shardManager) StartReplicaWitness(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error {
-	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
-	l.Info().Msg("starting replica witness")
-
-	clusterConfig := newDConfig(shardId, replicaId)
-	clusterConfig.IsWitness = true
-	clusterConfig.SnapshotEntries = 0
 
 	switch stateMachineType {
 	case testStateMachineType:
