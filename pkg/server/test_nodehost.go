@@ -32,7 +32,7 @@ func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	return dconfig.NodeHostConfig{
 		WALDir:         t.TempDir(),
 		NodeHostDir:    t.TempDir(),
-		RTTMillisecond: 10,
+		RTTMillisecond: 1,
 		RaftAddress:    fmt.Sprintf("localhost:%d", port),
 		NotifyCommit:   false,
 		Expert: expertConf,
@@ -55,10 +55,6 @@ func buildTestClusterConfig(t *testing.T) dconfig.Config {
 func buildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
 	host, err := dragonboat.NewNodeHost(buildTestNodeHostConfig(t))
 	if err != nil {
-		t.Fatalf(err.Error())
-	}
-
-	if err = host.StartCluster(nil, true, newTestStateMachine, buildTestClusterConfig(t)); err != nil {
 		t.Fatalf(err.Error())
 	}
 

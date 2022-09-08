@@ -15,6 +15,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
 )
 
@@ -78,34 +79,34 @@ func requestResultAdapter(req dragonboat.RequestResult) resultCode {
 }
 
 var (
-	_ IShardManager = (*clusterManager)(nil)
+	_ IShardManager = (*shardManager)(nil)
 
 	defaultTimeout = 3000 * time.Millisecond
 
 	errNoConfigChangeId = errors.New("no config change id")
 )
 
-func newClusterManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *clusterManager {
+func newShardManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *shardManager {
 	l := logger.With().Str("component", "cluster-manager").Logger()
-	return &clusterManager{l, nodeHost}
+	return &shardManager{l, nodeHost}
 }
 
-type clusterManager struct {
+type shardManager struct {
 	logger zerolog.Logger
 	nh     *dragonboat.NodeHost
 }
 
-func (c *clusterManager) NewShard(cfg IClusterConfig) error {
-	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+func (c *shardManager) NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("creating new shard")
 
-	clusterConfig := cfg.Adapt()
+	clusterConfig := newDConfig(shardId, replicaId)
 
 	members := make(map[uint64]string)
-	members[clusterConfig.ClusterID] = c.nh.RaftAddress()
+	members[replicaId] = c.nh.RaftAddress()
 	l.Debug().Str("raft-address", c.nh.RaftAddress()).Msg("adding self to members")
 
-	switch cfg.StateMachineType() {
+	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("creating test state machine")
 		return c.nh.StartCluster(members, false, newTestStateMachine, clusterConfig)
@@ -115,12 +116,12 @@ func (c *clusterManager) NewShard(cfg IClusterConfig) error {
 	return ErrUnsupportedStateMachine
 }
 
-func (c *clusterManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
+func (c *shardManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("getting leader id")
 	return c.nh.GetLeaderID(shardId)
 }
 
-func (c *clusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
+func (c *shardManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("stopping replica")
 	err := c.nh.StopCluster(shardId)
 	if err != nil {
@@ -130,8 +131,8 @@ func (c *clusterManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	return &OperationResult{}, nil
 }
 
-func (c *clusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration) error {
-	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+func (c *shardManager) DeleteReplica(shardId uint64, replicaId uint64, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("deleting replica")
 
 	if timeout == 0 {
@@ -142,7 +143,7 @@ func (c *clusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(cfg.ShardId())
+	members, err := c.GetShardMembers(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
 		return err
@@ -153,7 +154,7 @@ func (c *clusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 		return errNoConfigChangeId
 	}
 
-	err = c.nh.SyncRequestDeleteNode(ctx, cfg.ShardId(), cfg.ReplicaId(), members.ConfigChangeId)
+	err = c.nh.SyncRequestDeleteNode(ctx, shardId, replicaId, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to delete replica")
 		return err
@@ -161,7 +162,7 @@ func (c *clusterManager) DeleteReplica(cfg IClusterConfig, timeout time.Duration
 	return nil
 }
 
-func (c *clusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
+func (c *shardManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
 	l := c.logger.With().Uint64("shard", shardId).Logger()
 	l.Debug().Msg("getting shard members")
 
@@ -182,7 +183,7 @@ func (c *clusterManager) GetShardMembers(shardId uint64) (*MembershipEntry, erro
 	}, nil
 }
 
-func (c *clusterManager) RemoveData(shardId, replicaId uint64) error {
+func (c *shardManager) RemoveData(shardId, replicaId uint64) error {
 	c.logger.Info().Uint64("shard", shardId).Uint64("replica", replicaId).Msg("removing data")
 
 	err := c.nh.RemoveData(shardId, replicaId)
@@ -192,8 +193,8 @@ func (c *clusterManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost string, timeout time.Duration) error {
-	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+func (c *shardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding replica")
 
 	if timeout == 0 {
@@ -203,21 +204,21 @@ func (c *clusterManager) AddReplica(cfg IClusterConfig, newHost string, timeout 
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(cfg.ShardId())
+	members, err := c.GetShardMembers(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
 		return err
 	}
 
-	err = c.nh.SyncRequestAddNode(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
+	err = c.nh.SyncRequestAddNode(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add replica")
 	}
 	return err
 }
 
-func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost string, timeout time.Duration) error {
-	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+func (c *shardManager) AddShardObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
 	if timeout == 0 {
@@ -227,21 +228,21 @@ func (c *clusterManager) AddShardObserver(cfg IClusterConfig, newHost string, ti
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(cfg.ShardId())
+	members, err := c.GetShardMembers(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
 		return err
 	}
 
-	err = c.nh.SyncRequestAddObserver(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
+	err = c.nh.SyncRequestAddObserver(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 	}
 	return err
 }
 
-func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost string, timeout time.Duration) error {
-	l := c.logger.With().Uint64("shard", cfg.ShardId()).Uint64("replica", cfg.ReplicaId()).Logger()
+func (c *shardManager) AddShardWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
 	if timeout == 0 {
@@ -251,15 +252,41 @@ func (c *clusterManager) AddShardWitness(cfg IClusterConfig, newHost string, tim
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(cfg.ShardId())
+	members, err := c.GetShardMembers(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
 		return err
 	}
 
-	err = c.nh.SyncRequestAddWitness(ctx, cfg.ShardId(), cfg.ReplicaId(), newHost, members.ConfigChangeId)
+	err = c.nh.SyncRequestAddWitness(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 	}
 	return err
+}
+
+func newDConfig(shardId, replicaId uint64) dconfig.Config {
+	// nb (sienna): if you change this outside of a major version rollout,
+	// it will create inconsistencies across all clusters. don't change this
+	// without running it through me. the inconsistencies this will create
+	// will affect anything built on top of all state machines, which is a huge
+	// business risk that requires my sign-off. it can be changed if there's a
+	// need, but ensure I sign off on it first. 🙂
+	return dconfig.Config{
+		NodeID:                  replicaId,
+		ClusterID:               shardId,
+		CheckQuorum:             true,
+		ElectionRTT:             100,
+		HeartbeatRTT:            10,
+		SnapshotEntries:         1000,
+		CompactionOverhead:      500,
+		OrderedConfigChange:     true,
+		MaxInMemLogSize:         0,
+		SnapshotCompressionType: 0,
+		EntryCompressionType:    0,
+		DisableAutoCompactions:  false,
+		IsObserver:              false,
+		IsWitness:               false,
+		Quiesce:                 false,
+	}
 }

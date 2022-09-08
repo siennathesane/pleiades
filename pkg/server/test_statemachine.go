@@ -1,26 +1,22 @@
-// Copyright 2017,2018 Lei Ni (nilei81@gmail.com).
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/*
+ * Copyright (c) 2022 Sienna Lloyd
+ *
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License here:
+ *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
+ */
 
 package server
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"os"
 
 	sm "github.com/lni/dragonboat/v3/statemachine"
+	"github.com/rs/zerolog"
 )
 
 // testStateMachine is the IStateMachine implementation used in the
@@ -31,6 +27,7 @@ type testStateMachine struct {
 	ClusterID uint64
 	NodeID    uint64
 	Count     uint64
+	logger  zerolog.Logger
 }
 
 // NewExampleStateMachine creates and return a new testStateMachine object.
@@ -40,6 +37,7 @@ func newTestStateMachine(clusterID uint64,
 		ClusterID: clusterID,
 		NodeID:    nodeID,
 		Count:     0,
+		logger: zerolog.New(os.Stdout).With().Uint64("shard", clusterID).Uint64("replica", nodeID).Logger(),
 	}
 }
 
@@ -58,8 +56,7 @@ func (s *testStateMachine) Update(data []byte) (sm.Result, error) {
 	// incoming update request. we also increase the counter by one to remember
 	// how many updates we have applied
 	s.Count++
-	fmt.Printf("from testStateMachine.Update(), msg: %s, count:%d\n",
-		string(data), s.Count)
+	s.logger.Debug().Uint64("count", s.Count).Str("payload", string(data)).Msg("testStateMachine.Update() called")
 	return sm.Result{Value: uint64(len(data))}, nil
 }
 

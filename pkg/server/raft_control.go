@@ -55,7 +55,7 @@ func NewRaftControlNode(nodeHostConfig dconfig.NodeHostConfig, logger zerolog.Lo
 // NewOrGetClusterManager creates a new IShardManager instance or gets the existing one.
 func (n *Node) NewOrGetClusterManager() (IShardManager, error) {
 	if n.clusterManager == nil {
-		n.clusterManager = newClusterManager(n.nh,n.logger)
+		n.clusterManager = newShardManager(n.nh,n.logger)
 	}
 	return n.clusterManager, nil
 }

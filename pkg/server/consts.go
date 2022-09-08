@@ -9,31 +9,7 @@
 
 package server
 
-import (
-	"fmt"
-	"math/rand"
-)
-
 const (
-	testServerPortStart int = 8000
-	testServerPortStop  int = 9000
-	headerSize int = 10
+	systemShardStart = 1
+	systemShardStop = 100
 )
-
-type StreamState uint32
-
-const (
-	Valid StreamState = 0
-	Invalid StreamState = 1
-	StreamStart StreamState = 2
-	StreamContinue StreamState = 3
-	StreamNoLongerValid StreamState = 4
-	StreamEnd StreamState = 5
-	InvalidMessageChecksum StreamState = 6
-	SystemError StreamState = 7
-)
-
-func testServerAddr() string {
-	testPort := rand.Intn(testServerPortStop-testServerPortStart) + testServerPortStart
-	return fmt.Sprintf("localhost:%d", testPort)
-}
