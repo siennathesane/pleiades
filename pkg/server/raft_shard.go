@@ -131,7 +131,7 @@ func (c *shardManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	return &OperationResult{}, nil
 }
 
-func (c *shardManager) DeleteReplica(shardId uint64, replicaId uint64, timeout time.Duration) error {
+func (c *shardManager) RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("deleting replica")
 

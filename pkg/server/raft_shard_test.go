@@ -279,7 +279,7 @@ func (smts *shardManagerTestSuite) TestDeleteReplica() {
 	smts.Require().NotNil(membership, "the membership list must not be nil")
 	smts.Require().Equal(2, len(membership.Nodes), "there must be two replicas")
 
-	err = shardManager.DeleteReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
+	err = shardManager.RemoveReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when deleting a replica")
 
 	membershipCtx, _ = context.WithTimeout(context.Background(), smts.defaultTimeout)
@@ -505,7 +505,7 @@ func (smts *shardManagerTestSuite) TestRemoveData() {
 	smts.Require().NotNil(membership, "the membership list must not be nil")
 	smts.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 
-	err = shardManager.DeleteReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
+	err = shardManager.RemoveReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to delete a node")
 
 	// the actually tested API
@@ -574,7 +574,7 @@ func (smts *shardManagerTestSuite) TestRemoveReplica() {
 	smts.Require().Equal(2, len(membership.Nodes), "there must be at least one node")
 
 	// the actually tested API
-	err = shardManager.DeleteReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
+	err = shardManager.RemoveReplica(testShardId, secondNodeClusterConfig.NodeID, smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when requesting to delete a replica")
 
 	membershipCtx, _ = context.WithTimeout(context.Background(), smts.defaultTimeout)

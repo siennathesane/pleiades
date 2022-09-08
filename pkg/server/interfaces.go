@@ -22,11 +22,11 @@ type IShardManager interface {
 	AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	AddShardObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	AddShardWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
-	DeleteReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
 	RemoveData(shardId, replicaId uint64) error
+	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
 	StopReplica(shardId uint64) (*OperationResult, error)
 }
 
