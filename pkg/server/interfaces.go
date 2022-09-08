@@ -20,8 +20,8 @@ import (
 
 type IShardManager interface {
 	AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
-	AddShardObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
-	AddShardWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
@@ -29,7 +29,6 @@ type IShardManager interface {
 	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
 	StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
 	StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
-	StartReplicaWitness(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
 	StopReplica(shardId uint64) (*OperationResult, error)
 }
 

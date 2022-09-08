@@ -39,7 +39,7 @@ func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	}
 }
 
-func buildTestClusterConfig(t *testing.T) dconfig.Config {
+func buildTestShardConfig(t *testing.T) dconfig.Config {
 	rand.Seed(time.Now().UTC().UnixNano())
 	nodeId := rand.Intn(10_000)
 	clusterId := rand.Intn(10_000)
@@ -68,7 +68,7 @@ func build3NodeTestCluster(t *testing.T) ([]dconfig.Config, []dconfig.NodeHostCo
 
 	initialMembers := make(map[uint64]dragonboat.Target)
 	for i := 0; i < 3; i++ {
-		clusterConfig := buildTestClusterConfig(t)
+		clusterConfig := buildTestShardConfig(t)
 		nodeConfig := buildTestNodeHostConfig(t)
 		clusterConfigs[i] = clusterConfig
 		nodeConfigs[i] = nodeConfig
@@ -82,7 +82,7 @@ func build3NodeTestCluster(t *testing.T) ([]dconfig.Config, []dconfig.NodeHostCo
 	}
 
 	for i := 0; i < len(nodeHosts); i++ {
-		if err := nodeHosts[i].StartCluster(initialMembers, false, newTestStateMachine, buildTestClusterConfig(t)); err != nil {
+		if err := nodeHosts[i].StartCluster(initialMembers, false, newTestStateMachine, buildTestShardConfig(t)); err != nil {
 			t.Fatalf(err.Error())
 		}
 	}

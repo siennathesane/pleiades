@@ -51,12 +51,12 @@ export namespace AddReplicaReply {
   }
 }
 
-export class AddShardObserverRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
+export class AddReplicaObserverRequest extends jspb.Message {
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   getHostname(): string;
   setHostname(value: string): void;
@@ -65,46 +65,46 @@ export class AddShardObserverRequest extends jspb.Message {
   setTimeout(value: number): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): AddShardObserverRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: AddShardObserverRequest): AddShardObserverRequest.AsObject;
+  toObject(includeInstance?: boolean): AddReplicaObserverRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AddReplicaObserverRequest): AddReplicaObserverRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: AddShardObserverRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): AddShardObserverRequest;
-  static deserializeBinaryFromReader(message: AddShardObserverRequest, reader: jspb.BinaryReader): AddShardObserverRequest;
+  static serializeBinaryToWriter(message: AddReplicaObserverRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddReplicaObserverRequest;
+  static deserializeBinaryFromReader(message: AddReplicaObserverRequest, reader: jspb.BinaryReader): AddReplicaObserverRequest;
 }
 
-export namespace AddShardObserverRequest {
+export namespace AddReplicaObserverRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
     hostname: string,
     timeout: number,
   }
 }
 
-export class AddShardObserverReply extends jspb.Message {
+export class AddReplicaObserverReply extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): AddShardObserverReply.AsObject;
-  static toObject(includeInstance: boolean, msg: AddShardObserverReply): AddShardObserverReply.AsObject;
+  toObject(includeInstance?: boolean): AddReplicaObserverReply.AsObject;
+  static toObject(includeInstance: boolean, msg: AddReplicaObserverReply): AddReplicaObserverReply.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: AddShardObserverReply, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): AddShardObserverReply;
-  static deserializeBinaryFromReader(message: AddShardObserverReply, reader: jspb.BinaryReader): AddShardObserverReply;
+  static serializeBinaryToWriter(message: AddReplicaObserverReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddReplicaObserverReply;
+  static deserializeBinaryFromReader(message: AddReplicaObserverReply, reader: jspb.BinaryReader): AddReplicaObserverReply;
 }
 
-export namespace AddShardObserverReply {
+export namespace AddReplicaObserverReply {
   export type AsObject = {
   }
 }
 
-export class AddShardWitnessRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
+export class AddReplicaWitnessRequest extends jspb.Message {
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   getHostname(): string;
   setHostname(value: string): void;
@@ -113,46 +113,46 @@ export class AddShardWitnessRequest extends jspb.Message {
   setTimeout(value: number): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): AddShardWitnessRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: AddShardWitnessRequest): AddShardWitnessRequest.AsObject;
+  toObject(includeInstance?: boolean): AddReplicaWitnessRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AddReplicaWitnessRequest): AddReplicaWitnessRequest.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: AddShardWitnessRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): AddShardWitnessRequest;
-  static deserializeBinaryFromReader(message: AddShardWitnessRequest, reader: jspb.BinaryReader): AddShardWitnessRequest;
+  static serializeBinaryToWriter(message: AddReplicaWitnessRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddReplicaWitnessRequest;
+  static deserializeBinaryFromReader(message: AddReplicaWitnessRequest, reader: jspb.BinaryReader): AddReplicaWitnessRequest;
 }
 
-export namespace AddShardWitnessRequest {
+export namespace AddReplicaWitnessRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
     hostname: string,
     timeout: number,
   }
 }
 
-export class AddShardWitnessReply extends jspb.Message {
+export class AddReplicaWitnessReply extends jspb.Message {
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): AddShardWitnessReply.AsObject;
-  static toObject(includeInstance: boolean, msg: AddShardWitnessReply): AddShardWitnessReply.AsObject;
+  toObject(includeInstance?: boolean): AddReplicaWitnessReply.AsObject;
+  static toObject(includeInstance: boolean, msg: AddReplicaWitnessReply): AddReplicaWitnessReply.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: AddShardWitnessReply, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): AddShardWitnessReply;
-  static deserializeBinaryFromReader(message: AddShardWitnessReply, reader: jspb.BinaryReader): AddShardWitnessReply;
+  static serializeBinaryToWriter(message: AddReplicaWitnessReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddReplicaWitnessReply;
+  static deserializeBinaryFromReader(message: AddReplicaWitnessReply, reader: jspb.BinaryReader): AddReplicaWitnessReply;
 }
 
-export namespace AddShardWitnessReply {
+export namespace AddReplicaWitnessReply {
   export type AsObject = {
   }
 }
 
 export class DeleteReplicaRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   getTimeout(): number;
   setTimeout(value: number): void;
@@ -169,8 +169,8 @@ export class DeleteReplicaRequest extends jspb.Message {
 
 export namespace DeleteReplicaRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
     timeout: number,
   }
 }
@@ -192,11 +192,11 @@ export namespace DeleteReplicaReply {
 }
 
 export class GetLeaderIdRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   getTimeout(): number;
   setTimeout(value: number): void;
@@ -213,8 +213,8 @@ export class GetLeaderIdRequest extends jspb.Message {
 
 export namespace GetLeaderIdRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
     timeout: number,
   }
 }
@@ -296,11 +296,11 @@ export namespace GetShardMembersReply {
 }
 
 export class NewShardRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   getType(): StateMachineTypeMap[keyof StateMachineTypeMap];
   setType(value: StateMachineTypeMap[keyof StateMachineTypeMap]): void;
@@ -323,8 +323,8 @@ export class NewShardRequest extends jspb.Message {
 
 export namespace NewShardRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
     type: StateMachineTypeMap[keyof StateMachineTypeMap],
     hostname: string,
     timeout: number,
@@ -348,11 +348,11 @@ export namespace NewShardReply {
 }
 
 export class RemoveDataRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
   getShardid(): number;
   setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RemoveDataRequest.AsObject;
@@ -366,8 +366,8 @@ export class RemoveDataRequest extends jspb.Message {
 
 export namespace RemoveDataRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
+    replicaid: number,
   }
 }
 
@@ -383,6 +383,50 @@ export class RemoveDataReply extends jspb.Message {
 }
 
 export namespace RemoveDataReply {
+  export type AsObject = {
+  }
+}
+
+export class StartReplicaRequest extends jspb.Message {
+  getShardid(): number;
+  setShardid(value: number): void;
+
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
+
+  getType(): StateMachineTypeMap[keyof StateMachineTypeMap];
+  setType(value: StateMachineTypeMap[keyof StateMachineTypeMap]): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): StartReplicaRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: StartReplicaRequest): StartReplicaRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: StartReplicaRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): StartReplicaRequest;
+  static deserializeBinaryFromReader(message: StartReplicaRequest, reader: jspb.BinaryReader): StartReplicaRequest;
+}
+
+export namespace StartReplicaRequest {
+  export type AsObject = {
+    shardid: number,
+    replicaid: number,
+    type: StateMachineTypeMap[keyof StateMachineTypeMap],
+  }
+}
+
+export class StartReplicaReply extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): StartReplicaReply.AsObject;
+  static toObject(includeInstance: boolean, msg: StartReplicaReply): StartReplicaReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: StartReplicaReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): StartReplicaReply;
+  static deserializeBinaryFromReader(message: StartReplicaReply, reader: jspb.BinaryReader): StartReplicaReply;
+}
+
+export namespace StartReplicaReply {
   export type AsObject = {
   }
 }
