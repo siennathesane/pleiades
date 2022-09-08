@@ -9,13 +9,15 @@ stages:
   - build
   - test
 
-before_script:
-  - ci/scripts/install-mage.sh
-  - mage install:godeps
+.before_script_template: &build-test-scripts
+  before_script:
+    - ci/scripts/install-mage.sh
+    - mage install:godeps
 
 build:
   stage: build
   image: "golang:$GO_VERSION"
+  <<: *build-test-scripts
   script:
     - |
       mage build:compile
@@ -40,6 +42,7 @@ code_quality:
 test:
   stage: test
   image: "golang:$GO_VERSION"
+  <<: *build-test-scripts
   script:
     - go test -v ./... -coverprofile=coverage.txt -covermode atomic
     - gotestsum --junitfile report.xml --format testname
