@@ -40,34 +40,34 @@ func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raft.Add
 	return &raft.AddReplicaReply{}, err
 }
 
-func (r *raftShardGrpcAdapter) AddShardObserver(ctx context.Context, request *raft.AddShardObserverRequest) (*raft.AddShardObserverReply, error) {
+func (r *raftShardGrpcAdapter) AddReplicaObserver(ctx context.Context, request *raft.AddReplicaObserverRequest) (*raft.AddReplicaObserverReply, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.AddShardObserver(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
+	err := r.clusterManager.AddReplicaObserver(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add shard observer")
 		return nil, err
 	}
-	return &raft.AddShardObserverReply{}, err
+	return &raft.AddReplicaObserverReply{}, err
 }
 
-func (r *raftShardGrpcAdapter) AddShardWitness(ctx context.Context, request *raft.AddShardWitnessRequest) (*raft.AddShardWitnessReply, error) {
+func (r *raftShardGrpcAdapter) AddReplicaWitness(ctx context.Context, request *raft.AddReplicaWitnessRequest) (*raft.AddReplicaWitnessReply, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.AddShardWitness(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
+	err := r.clusterManager.AddReplicaWitness(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add shard witness")
 		return nil, err
 	}
-	return &raft.AddShardWitnessReply{}, err
+	return &raft.AddReplicaWitnessReply{}, err
 }
 
 func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raft.GetLeaderIdRequest) (*raft.GetLeaderIdReply, error) {
@@ -162,6 +162,46 @@ func (r *raftShardGrpcAdapter) RemoveReplica(ctx context.Context, request *raft.
 		return nil, err
 	}
 	return &raft.DeleteReplicaReply{}, err
+}
+
+func (r *raftShardGrpcAdapter) StartReplica(ctx context.Context, request *raft.StartReplicaRequest) (*raft.StartReplicaReply, error) {
+	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
+		return nil, err
+	}
+
+	var t StateMachineType
+	switch request.GetType() {
+	case raft.StateMachineType_TEST:
+		t = testStateMachineType
+	case raft.StateMachineType_KV:
+		t = BBoltStateMachineType
+	default:
+		return nil, ErrUnsupportedStateMachine
+	}
+
+	err := r.clusterManager.StartReplica(request.GetShardId(), request.GetReplicaId(), t)
+
+	return &raft.StartReplicaReply{}, err
+}
+
+func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request *raft.StartReplicaRequest) (*raft.StartReplicaReply, error) {
+	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
+		return nil, err
+	}
+
+	var t StateMachineType
+	switch request.GetType() {
+	case raft.StateMachineType_TEST:
+		t = testStateMachineType
+	case raft.StateMachineType_KV:
+		t = BBoltStateMachineType
+	default:
+		return nil, ErrUnsupportedStateMachine
+	}
+
+	err := r.clusterManager.StartReplicaObserver(request.GetShardId(), request.GetReplicaId(), t)
+
+	return &raft.StartReplicaReply{}, err
 }
 
 func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raft.StopReplicaRequest) (*raft.StopReplicaReply, error) {

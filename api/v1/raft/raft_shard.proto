@@ -19,41 +19,35 @@ message AddReplicaRequest {
 
 message AddReplicaReply {}
 
-message AddShardObserverRequest {
-  // replicaId is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replicaId = 1;
-  // shardId is the unique value used to identify a Raft cluster.
-  uint64 shardId = 2;
+message AddReplicaObserverRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
   string hostname = 3;
   int64 timeout = 4;
 }
 
-message AddShardObserverReply {}
+message AddReplicaObserverReply {}
 
-message AddShardWitnessRequest {
-  // replicaId is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replicaId = 1;
-  // shardId is the unique value used to identify a Raft cluster.
-  uint64 shardId = 2;
+message AddReplicaWitnessRequest {
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
   string hostname = 3;
   int64 timeout = 4;
 }
 
-message AddShardWitnessReply {}
+message AddReplicaWitnessReply {}
 
 message DeleteReplicaRequest {
-  // replicaId is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replicaId = 1;
-  // shardId is the unique value used to identify a Raft cluster.
-  uint64 shardId = 2;
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
   int64 timeout = 3;
 }
 
 message DeleteReplicaReply {}
 
 message GetLeaderIdRequest {
-  uint64 replicaId = 1;
-  uint64 shardId = 2;
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
   int64 timeout = 3;
 }
 
@@ -75,11 +69,8 @@ message GetShardMembersReply {
 }
 
 message NewShardRequest {
-  // replicaId is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replicaId = 1;
-  // shardId is the unique value used to identify a Raft cluster.
-  uint64 shardId = 2;
-  // stateMachine dictates the type of state machine
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
   StateMachineType type = 3;
   string hostname = 4;
   int64 timeout = 5;
@@ -88,13 +79,19 @@ message NewShardRequest {
 message NewShardReply {}
 
 message RemoveDataRequest {
-  // replicaId is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replicaId = 1;
-  // shardId is the unique value used to identify a Raft cluster.
-  uint64 shardId = 2;
+  uint64 shardId = 1;
+  uint64 replicaId = 2;
 }
 
 message RemoveDataReply {}
+
+message StartReplicaRequest {
+  uint64 shardId  = 1;
+  uint64 replicaId = 2;
+  StateMachineType type = 3;
+}
+
+message StartReplicaReply {}
 
 message StopReplicaRequest {
   // shardId is the unique value used to identify a Raft cluster.

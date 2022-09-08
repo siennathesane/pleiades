@@ -69,7 +69,7 @@ func (rct *RaftControlTests) TestRequestLeaderTransfer() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -142,7 +142,7 @@ func (rct *RaftControlTests) TestRemoveData() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -219,7 +219,7 @@ func (rct *RaftControlTests) TestRemoveNode() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -332,7 +332,7 @@ func (rct *RaftControlTests) TestAddWitness() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -398,7 +398,7 @@ func (rct *RaftControlTests) TestAddObserver() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -464,7 +464,7 @@ func (rct *RaftControlTests) TestAddNode() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()
@@ -523,7 +523,7 @@ func (rct *RaftControlTests) TestRaftAddress() {
 	rct.Require().NoError(err, "there must not be an error when starting a new control node")
 	rct.Require().NotNil(node, "the node must not be nil")
 
-	clusterConfig := buildTestClusterConfig(rct.T())
+	clusterConfig := buildTestShardConfig(rct.T())
 
 	err = node.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
 	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
@@ -538,7 +538,7 @@ func (rct *RaftControlTests) TestId() {
 	rct.Require().NoError(err, "there must not be an error when starting a new control node")
 	rct.Require().NotNil(node, "the node must not be nil")
 
-	clusterConfig := buildTestClusterConfig(rct.T())
+	clusterConfig := buildTestShardConfig(rct.T())
 
 	err = node.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
 	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
@@ -553,7 +553,7 @@ func (rct *RaftControlTests) TestGetNodeUser() {
 	rct.Require().NoError(err, "there must not be an error when starting a new control node")
 	rct.Require().NotNil(node, "the node must not be nil")
 
-	clusterConfig := buildTestClusterConfig(rct.T())
+	clusterConfig := buildTestShardConfig(rct.T())
 
 	err = node.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
 	rct.Require().NoError(err, "there must not be an error when starting the test state machine")
@@ -576,7 +576,7 @@ func (rct *RaftControlTests) TestGetLeaderId() {
 	rct.Require().NotNil(firstNode, "firstNode must not be nil")
 
 	testClusterId := uint64(0)
-	firstNodeClusterConfig := buildTestClusterConfig(rct.T())
+	firstNodeClusterConfig := buildTestShardConfig(rct.T())
 	testClusterId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = firstNode.RaftAddress()

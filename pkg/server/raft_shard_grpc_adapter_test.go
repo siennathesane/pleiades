@@ -44,6 +44,7 @@ type RaftShardGrpcAdapterTestSuite struct {
 	extendedDefaultTimeout time.Duration
 }
 
+// SetupTest represents a remote Pleiades host
 func (r *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	r.logger = utils.NewTestLogger(r.T())
 
@@ -54,7 +55,7 @@ func (r *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	r.srv = grpc.NewServer()
 
 	r.testShardId = rand.Uint64()
-	r.testClusterConfig = buildTestClusterConfig(r.T())
+	r.testClusterConfig = buildTestShardConfig(r.T())
 	r.defaultTimeout = 3000 * time.Millisecond
 	r.extendedDefaultTimeout = 5000 * time.Millisecond
 
@@ -106,7 +107,7 @@ func (r *RaftShardGrpcAdapterTestSuite) TearDownTest() {
 func (r *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 
 	client := NewShardManagerClient(r.conn)
@@ -130,15 +131,15 @@ func (r *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 	r.Require().Equal(2, len(members.Nodes), "there must be two replicas in the cluster")
 }
 
-func (r *RaftShardGrpcAdapterTestSuite) TestAddShardObserver() {
+func (r *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 	clusterConfig.IsObserver = true
 
 	client := NewShardManagerClient(r.conn)
-	_, err := client.AddShardObserver(context.Background(), &raft.AddShardObserverRequest{
+	_, err := client.AddReplicaObserver(context.Background(), &raft.AddReplicaObserverRequest{
 		ReplicaId: clusterConfig.NodeID,
 		ShardId:   r.testShardId,
 		Hostname:  testNodeHost.RaftAddress(),
@@ -158,15 +159,15 @@ func (r *RaftShardGrpcAdapterTestSuite) TestAddShardObserver() {
 	r.Require().Equal(1, len(members.Observers), "there must be one observer in the shard")
 }
 
-func (r *RaftShardGrpcAdapterTestSuite) TestAddShardWitness() {
+func (r *RaftShardGrpcAdapterTestSuite) TestAddReplicaWitness() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 	clusterConfig.IsWitness = true
 
 	client := NewShardManagerClient(r.conn)
-	_, err := client.AddShardWitness(context.Background(), &raft.AddShardWitnessRequest{
+	_, err := client.AddReplicaWitness(context.Background(), &raft.AddReplicaWitnessRequest{
 		ReplicaId: clusterConfig.NodeID,
 		ShardId:   r.testShardId,
 		Hostname:  testNodeHost.RaftAddress(),
@@ -204,7 +205,7 @@ func (r *RaftShardGrpcAdapterTestSuite) TestGetLeaderId() {
 func (r *RaftShardGrpcAdapterTestSuite) TestGetShardMembers() {
 	client := NewShardManagerClient(r.conn)
 	resp, err := client.GetShardMembers(context.Background(), &raft.GetShardMembersRequest{
-		ShardId:   r.testShardId,
+		ShardId: r.testShardId,
 	})
 	r.Require().NoError(err, "there must not be an error when getting the leader id")
 	r.Require().NotNil(resp, "the response must not be nil")
@@ -218,11 +219,11 @@ func (r *RaftShardGrpcAdapterTestSuite) TestGetShardMembers() {
 func (r *RaftShardGrpcAdapterTestSuite) TestNewShard() {
 	client := NewShardManagerClient(r.conn)
 	_, err := client.NewShard(context.Background(), &raft.NewShardRequest{
-		ShardId:   r.testShardId+1,
+		ShardId:   r.testShardId + 1,
 		ReplicaId: r.testClusterConfig.NodeID,
-		Type: raft.StateMachineType_TEST,
-		Hostname: r.testShardManager.nh.RaftAddress(),
-		Timeout: int64(r.defaultTimeout),
+		Type:      raft.StateMachineType_TEST,
+		Hostname:  r.testShardManager.nh.RaftAddress(),
+		Timeout:   int64(r.defaultTimeout),
 	})
 	r.Require().NoError(err, "there must not be an error when creating a new test shard on an existing node")
 }
@@ -230,7 +231,7 @@ func (r *RaftShardGrpcAdapterTestSuite) TestNewShard() {
 func (r *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 
 	client := NewShardManagerClient(r.conn)
@@ -268,7 +269,7 @@ func (r *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 func (r *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 
 	client := NewShardManagerClient(r.conn)
@@ -291,11 +292,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 	r.Require().NotNil(members, "the members response must not be nil")
 	r.Require().Equal(2, len(members.Nodes), "there must be two replicas in the cluster")
 
-	//_, err = client.StopReplica(context.Background(), &raft.StopReplicaRequest{
-	//	ShardId: r.testShardId,
-	//})
-	//r.Require().NoError(err, "there must not be an error when stopping the replica")
-
 	_, err = client.RemoveReplica(context.Background(), &raft.DeleteReplicaRequest{
 		ReplicaId: clusterConfig.NodeID,
 		ShardId:   r.testShardId,
@@ -310,10 +306,148 @@ func (r *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 	r.Require().Equal(1, len(members.Nodes), "there must be one replica in the cluster after deletion")
 }
 
+func (r *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
+
+	currentTestShard := rand.Uint64()
+
+	// generate a new "local" shard manager
+	localNodeHost := buildTestNodeHost(r.T())
+	shardConfig := buildTestShardConfig(r.T())
+	shardConfig.ClusterID = currentTestShard
+	localShardManager := newShardManager(localNodeHost, r.logger)
+
+	// and then wire it to a server.
+	listener := bufconn.Listen(1024*1024)
+	ctx := context.Background()
+	srv := grpc.NewServer()
+	adapter := &raftShardGrpcAdapter{
+		logger:         r.logger,
+		clusterManager: localShardManager,
+	}
+	RegisterShardManagerServer(srv, adapter)
+	go func() {
+		if err := srv.Serve(listener); err != nil {
+			panic(err)
+		}
+	}()
+	conn, _ := grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+		return listener.Dial()
+	}), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+
+	// the "remote" host is creating a new shard
+	remoteClient := NewShardManagerClient(r.conn)
+	_, err := remoteClient.NewShard(context.Background(), &raft.NewShardRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: r.testClusterConfig.NodeID,
+		Type:      raft.StateMachineType_TEST,
+		Hostname:  r.testShardManager.nh.RaftAddress(), // remote host address (itself)
+		Timeout:   int64(r.defaultTimeout),
+	})
+	r.Require().NoError(err, "there must not be an error when creating a new test shard on an existing node")
+	time.Sleep(r.extendedDefaultTimeout)
+
+	// the grpc side of the "local" host
+	localClient := NewShardManagerClient(conn)
+
+	// we're telling the remote host to add our "local" host as a replica
+	_, err = remoteClient.AddReplica(context.Background(), &raft.AddReplicaRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: shardConfig.NodeID,
+		Hostname:  localNodeHost.RaftAddress(), // local host address
+		Timeout:   int64(r.defaultTimeout),
+	})
+	r.Require().NoError(err, "there must not be an error when adding a new replica")
+
+	// now tell the "local" host to start the replica
+	_, err = localClient.StartReplica(context.Background(), &raft.StartReplicaRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: shardConfig.NodeID,
+		Type:      raft.StateMachineType_TEST,
+	})
+	r.Require().NoError(err, "there must not be an error when starting a replica")
+	time.Sleep(r.extendedDefaultTimeout)
+
+	// fetch the members from the "local" perspective, to make sure everything is okay.
+	ctx, _ = context.WithTimeout(context.Background(), r.defaultTimeout)
+	members, err := localShardManager.nh.SyncGetClusterMembership(ctx, currentTestShard)
+	r.Require().NoError(err, "there must not be an error when fetching shard members")
+	r.Require().NotNil(members, "the members response must not be nil")
+	r.Require().Equal(2, len(members.Nodes), "there must be two replicas in the cluster")
+}
+
+func (r *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
+	currentTestShard := rand.Uint64()
+
+	// generate a new "local" shard manager
+	localNodeHost := buildTestNodeHost(r.T())
+	shardConfig := buildTestShardConfig(r.T())
+	shardConfig.ClusterID = currentTestShard
+	localShardManager := newShardManager(localNodeHost, r.logger)
+
+	// and then wire it to a server.
+	listener := bufconn.Listen(1024*1024)
+	ctx := context.Background()
+	srv := grpc.NewServer()
+	adapter := &raftShardGrpcAdapter{
+		logger:         r.logger,
+		clusterManager: localShardManager,
+	}
+	RegisterShardManagerServer(srv, adapter)
+	go func() {
+		if err := srv.Serve(listener); err != nil {
+			panic(err)
+		}
+	}()
+	conn, _ := grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+		return listener.Dial()
+	}), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+
+	// the "remote" host is creating a new shard
+	remoteClient := NewShardManagerClient(r.conn)
+	_, err := remoteClient.NewShard(context.Background(), &raft.NewShardRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: r.testClusterConfig.NodeID,
+		Type:      raft.StateMachineType_TEST,
+		Hostname:  r.testShardManager.nh.RaftAddress(), // remote host address (itself)
+		Timeout:   int64(r.defaultTimeout),
+	})
+	r.Require().NoError(err, "there must not be an error when creating a new test shard on an existing node")
+	time.Sleep(r.extendedDefaultTimeout)
+
+	// the grpc side of the "local" host
+	localClient := NewShardManagerClient(conn)
+
+	// we're telling the remote host to add our "local" host as a replica
+	_, err = remoteClient.AddReplicaObserver(context.Background(), &raft.AddReplicaObserverRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: shardConfig.NodeID,
+		Hostname:  localNodeHost.RaftAddress(), // local host address
+		Timeout:   int64(r.defaultTimeout),
+	})
+	r.Require().NoError(err, "there must not be an error when adding a new replica")
+	time.Sleep(r.extendedDefaultTimeout)
+
+	// now tell the "local" host to start the replica
+	_, err = localClient.StartReplicaObserver(context.Background(), &raft.StartReplicaRequest{
+		ShardId:   currentTestShard,
+		ReplicaId: shardConfig.NodeID,
+		Type:      raft.StateMachineType_TEST,
+	})
+	r.Require().NoError(err, "there must not be an error when starting a replica")
+	time.Sleep(r.extendedDefaultTimeout)
+
+	// fetch the members from the "local" perspective, to make sure everything is okay.
+	ctx, _ = context.WithTimeout(context.Background(), r.defaultTimeout)
+	members, err := localShardManager.nh.SyncGetClusterMembership(ctx, currentTestShard)
+	r.Require().NoError(err, "there must not be an error when fetching shard members")
+	r.Require().NotNil(members, "the members response must not be nil")
+	r.Require().Equal(1, len(members.Observers), "there must be one observer in the shard")
+}
+
 func (r *RaftShardGrpcAdapterTestSuite) TestStopReplica() {
 	testNodeHost := buildTestNodeHost(r.T())
 
-	clusterConfig := buildTestClusterConfig(r.T())
+	clusterConfig := buildTestShardConfig(r.T())
 	clusterConfig.ClusterID = r.testShardId
 
 	client := NewShardManagerClient(r.conn)
