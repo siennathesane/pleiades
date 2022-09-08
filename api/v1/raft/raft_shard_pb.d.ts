@@ -1,5 +1,5 @@
 // package: raft
-// file: api/v1/raft/raft_control.proto
+// file: api/v1/raft/raft_shard.proto
 
 import * as jspb from "google-protobuf";
 
@@ -9,9 +9,6 @@ export class AddReplicaRequest extends jspb.Message {
 
   getShardid(): number;
   setShardid(value: number): void;
-
-  getType(): StateMachineTypeMap[keyof StateMachineTypeMap];
-  setType(value: StateMachineTypeMap[keyof StateMachineTypeMap]): void;
 
   getHostname(): string;
   setHostname(value: string): void;
@@ -33,7 +30,6 @@ export namespace AddReplicaRequest {
   export type AsObject = {
     replicaid: number,
     shardid: number,
-    type: StateMachineTypeMap[keyof StateMachineTypeMap],
     hostname: string,
     timeout: number,
   }
@@ -62,9 +58,6 @@ export class AddShardObserverRequest extends jspb.Message {
   getShardid(): number;
   setShardid(value: number): void;
 
-  getType(): StateMachineTypeMap[keyof StateMachineTypeMap];
-  setType(value: StateMachineTypeMap[keyof StateMachineTypeMap]): void;
-
   getHostname(): string;
   setHostname(value: string): void;
 
@@ -85,7 +78,6 @@ export namespace AddShardObserverRequest {
   export type AsObject = {
     replicaid: number,
     shardid: number,
-    type: StateMachineTypeMap[keyof StateMachineTypeMap],
     hostname: string,
     timeout: number,
   }
@@ -114,9 +106,6 @@ export class AddShardWitnessRequest extends jspb.Message {
   getShardid(): number;
   setShardid(value: number): void;
 
-  getType(): StateMachineTypeMap[keyof StateMachineTypeMap];
-  setType(value: StateMachineTypeMap[keyof StateMachineTypeMap]): void;
-
   getHostname(): string;
   setHostname(value: string): void;
 
@@ -137,7 +126,6 @@ export namespace AddShardWitnessRequest {
   export type AsObject = {
     replicaid: number,
     shardid: number,
-    type: StateMachineTypeMap[keyof StateMachineTypeMap],
     hostname: string,
     timeout: number,
   }
@@ -232,6 +220,12 @@ export namespace GetLeaderIdRequest {
 }
 
 export class GetLeaderIdReply extends jspb.Message {
+  getLeader(): number;
+  setLeader(value: number): void;
+
+  getAvailable(): boolean;
+  setAvailable(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLeaderIdReply.AsObject;
   static toObject(includeInstance: boolean, msg: GetLeaderIdReply): GetLeaderIdReply.AsObject;
@@ -244,6 +238,8 @@ export class GetLeaderIdReply extends jspb.Message {
 
 export namespace GetLeaderIdReply {
   export type AsObject = {
+    leader: number,
+    available: boolean,
   }
 }
 

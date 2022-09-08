@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v3.20.1
-// source: api/v1/raft/raft_control.proto
+// source: api/v1/raft/raft_shard.proto
 
 package raft
 
@@ -50,11 +50,11 @@ func (x StateMachineType) String() string {
 }
 
 func (StateMachineType) Descriptor() protoreflect.EnumDescriptor {
-	return file_api_v1_raft_raft_control_proto_enumTypes[0].Descriptor()
+	return file_api_v1_raft_raft_shard_proto_enumTypes[0].Descriptor()
 }
 
 func (StateMachineType) Type() protoreflect.EnumType {
-	return &file_api_v1_raft_raft_control_proto_enumTypes[0]
+	return &file_api_v1_raft_raft_shard_proto_enumTypes[0]
 }
 
 func (x StateMachineType) Number() protoreflect.EnumNumber {
@@ -63,7 +63,7 @@ func (x StateMachineType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StateMachineType.Descriptor instead.
 func (StateMachineType) EnumDescriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{0}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{0}
 }
 
 type AddReplicaRequest struct {
@@ -74,17 +74,15 @@ type AddReplicaRequest struct {
 	// replicaId is a non-zero value used to identify a node within a Raft cluster.
 	ReplicaId uint64 `protobuf:"varint,1,opt,name=replicaId,proto3" json:"replicaId,omitempty"`
 	// shardId is the unique value used to identify a Raft cluster.
-	ShardId uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
-	// stateMachine dictates the type of state machine
-	Type     StateMachineType `protobuf:"varint,3,opt,name=type,proto3,enum=raft.StateMachineType" json:"type,omitempty"`
-	Hostname string           `protobuf:"bytes,4,opt,name=hostname,proto3" json:"hostname,omitempty"`
-	Timeout  int64            `protobuf:"varint,5,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	ShardId  uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
+	Hostname string `protobuf:"bytes,4,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Timeout  int64  `protobuf:"varint,5,opt,name=timeout,proto3" json:"timeout,omitempty"`
 }
 
 func (x *AddReplicaRequest) Reset() {
 	*x = AddReplicaRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[0]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -97,7 +95,7 @@ func (x *AddReplicaRequest) String() string {
 func (*AddReplicaRequest) ProtoMessage() {}
 
 func (x *AddReplicaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[0]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -110,7 +108,7 @@ func (x *AddReplicaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddReplicaRequest.ProtoReflect.Descriptor instead.
 func (*AddReplicaRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{0}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *AddReplicaRequest) GetReplicaId() uint64 {
@@ -125,13 +123,6 @@ func (x *AddReplicaRequest) GetShardId() uint64 {
 		return x.ShardId
 	}
 	return 0
-}
-
-func (x *AddReplicaRequest) GetType() StateMachineType {
-	if x != nil {
-		return x.Type
-	}
-	return StateMachineType_TEST
 }
 
 func (x *AddReplicaRequest) GetHostname() string {
@@ -157,7 +148,7 @@ type AddReplicaReply struct {
 func (x *AddReplicaReply) Reset() {
 	*x = AddReplicaReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[1]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -170,7 +161,7 @@ func (x *AddReplicaReply) String() string {
 func (*AddReplicaReply) ProtoMessage() {}
 
 func (x *AddReplicaReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[1]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -183,7 +174,7 @@ func (x *AddReplicaReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddReplicaReply.ProtoReflect.Descriptor instead.
 func (*AddReplicaReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{1}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{1}
 }
 
 type AddShardObserverRequest struct {
@@ -194,17 +185,15 @@ type AddShardObserverRequest struct {
 	// replicaId is a non-zero value used to identify a node within a Raft cluster.
 	ReplicaId uint64 `protobuf:"varint,1,opt,name=replicaId,proto3" json:"replicaId,omitempty"`
 	// shardId is the unique value used to identify a Raft cluster.
-	ShardId uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
-	// stateMachine dictates the type of state machine
-	Type     StateMachineType `protobuf:"varint,3,opt,name=type,proto3,enum=raft.StateMachineType" json:"type,omitempty"`
-	Hostname string           `protobuf:"bytes,4,opt,name=hostname,proto3" json:"hostname,omitempty"`
-	Timeout  int64            `protobuf:"varint,5,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	ShardId  uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
+	Hostname string `protobuf:"bytes,3,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Timeout  int64  `protobuf:"varint,4,opt,name=timeout,proto3" json:"timeout,omitempty"`
 }
 
 func (x *AddShardObserverRequest) Reset() {
 	*x = AddShardObserverRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[2]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -217,7 +206,7 @@ func (x *AddShardObserverRequest) String() string {
 func (*AddShardObserverRequest) ProtoMessage() {}
 
 func (x *AddShardObserverRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[2]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -230,7 +219,7 @@ func (x *AddShardObserverRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddShardObserverRequest.ProtoReflect.Descriptor instead.
 func (*AddShardObserverRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{2}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AddShardObserverRequest) GetReplicaId() uint64 {
@@ -245,13 +234,6 @@ func (x *AddShardObserverRequest) GetShardId() uint64 {
 		return x.ShardId
 	}
 	return 0
-}
-
-func (x *AddShardObserverRequest) GetType() StateMachineType {
-	if x != nil {
-		return x.Type
-	}
-	return StateMachineType_TEST
 }
 
 func (x *AddShardObserverRequest) GetHostname() string {
@@ -277,7 +259,7 @@ type AddShardObserverReply struct {
 func (x *AddShardObserverReply) Reset() {
 	*x = AddShardObserverReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[3]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -290,7 +272,7 @@ func (x *AddShardObserverReply) String() string {
 func (*AddShardObserverReply) ProtoMessage() {}
 
 func (x *AddShardObserverReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[3]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -303,7 +285,7 @@ func (x *AddShardObserverReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddShardObserverReply.ProtoReflect.Descriptor instead.
 func (*AddShardObserverReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{3}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{3}
 }
 
 type AddShardWitnessRequest struct {
@@ -314,17 +296,15 @@ type AddShardWitnessRequest struct {
 	// replicaId is a non-zero value used to identify a node within a Raft cluster.
 	ReplicaId uint64 `protobuf:"varint,1,opt,name=replicaId,proto3" json:"replicaId,omitempty"`
 	// shardId is the unique value used to identify a Raft cluster.
-	ShardId uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
-	// stateMachine dictates the type of state machine
-	Type     StateMachineType `protobuf:"varint,3,opt,name=type,proto3,enum=raft.StateMachineType" json:"type,omitempty"`
-	Hostname string           `protobuf:"bytes,4,opt,name=hostname,proto3" json:"hostname,omitempty"`
-	Timeout  int64            `protobuf:"varint,5,opt,name=timeout,proto3" json:"timeout,omitempty"`
+	ShardId  uint64 `protobuf:"varint,2,opt,name=shardId,proto3" json:"shardId,omitempty"`
+	Hostname string `protobuf:"bytes,3,opt,name=hostname,proto3" json:"hostname,omitempty"`
+	Timeout  int64  `protobuf:"varint,4,opt,name=timeout,proto3" json:"timeout,omitempty"`
 }
 
 func (x *AddShardWitnessRequest) Reset() {
 	*x = AddShardWitnessRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[4]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -337,7 +317,7 @@ func (x *AddShardWitnessRequest) String() string {
 func (*AddShardWitnessRequest) ProtoMessage() {}
 
 func (x *AddShardWitnessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[4]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -350,7 +330,7 @@ func (x *AddShardWitnessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddShardWitnessRequest.ProtoReflect.Descriptor instead.
 func (*AddShardWitnessRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{4}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *AddShardWitnessRequest) GetReplicaId() uint64 {
@@ -365,13 +345,6 @@ func (x *AddShardWitnessRequest) GetShardId() uint64 {
 		return x.ShardId
 	}
 	return 0
-}
-
-func (x *AddShardWitnessRequest) GetType() StateMachineType {
-	if x != nil {
-		return x.Type
-	}
-	return StateMachineType_TEST
 }
 
 func (x *AddShardWitnessRequest) GetHostname() string {
@@ -397,7 +370,7 @@ type AddShardWitnessReply struct {
 func (x *AddShardWitnessReply) Reset() {
 	*x = AddShardWitnessReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[5]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -410,7 +383,7 @@ func (x *AddShardWitnessReply) String() string {
 func (*AddShardWitnessReply) ProtoMessage() {}
 
 func (x *AddShardWitnessReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[5]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -423,7 +396,7 @@ func (x *AddShardWitnessReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddShardWitnessReply.ProtoReflect.Descriptor instead.
 func (*AddShardWitnessReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{5}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{5}
 }
 
 type DeleteReplicaRequest struct {
@@ -441,7 +414,7 @@ type DeleteReplicaRequest struct {
 func (x *DeleteReplicaRequest) Reset() {
 	*x = DeleteReplicaRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[6]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -454,7 +427,7 @@ func (x *DeleteReplicaRequest) String() string {
 func (*DeleteReplicaRequest) ProtoMessage() {}
 
 func (x *DeleteReplicaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[6]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +440,7 @@ func (x *DeleteReplicaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteReplicaRequest.ProtoReflect.Descriptor instead.
 func (*DeleteReplicaRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{6}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeleteReplicaRequest) GetReplicaId() uint64 {
@@ -500,7 +473,7 @@ type DeleteReplicaReply struct {
 func (x *DeleteReplicaReply) Reset() {
 	*x = DeleteReplicaReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[7]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -513,7 +486,7 @@ func (x *DeleteReplicaReply) String() string {
 func (*DeleteReplicaReply) ProtoMessage() {}
 
 func (x *DeleteReplicaReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[7]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -526,7 +499,7 @@ func (x *DeleteReplicaReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteReplicaReply.ProtoReflect.Descriptor instead.
 func (*DeleteReplicaReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{7}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{7}
 }
 
 type GetLeaderIdRequest struct {
@@ -542,7 +515,7 @@ type GetLeaderIdRequest struct {
 func (x *GetLeaderIdRequest) Reset() {
 	*x = GetLeaderIdRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[8]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -555,7 +528,7 @@ func (x *GetLeaderIdRequest) String() string {
 func (*GetLeaderIdRequest) ProtoMessage() {}
 
 func (x *GetLeaderIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[8]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -568,7 +541,7 @@ func (x *GetLeaderIdRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLeaderIdRequest.ProtoReflect.Descriptor instead.
 func (*GetLeaderIdRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{8}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetLeaderIdRequest) GetReplicaId() uint64 {
@@ -596,12 +569,15 @@ type GetLeaderIdReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Leader    uint64 `protobuf:"varint,1,opt,name=leader,proto3" json:"leader,omitempty"`
+	Available bool   `protobuf:"varint,2,opt,name=available,proto3" json:"available,omitempty"`
 }
 
 func (x *GetLeaderIdReply) Reset() {
 	*x = GetLeaderIdReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[9]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -614,7 +590,7 @@ func (x *GetLeaderIdReply) String() string {
 func (*GetLeaderIdReply) ProtoMessage() {}
 
 func (x *GetLeaderIdReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[9]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -627,7 +603,21 @@ func (x *GetLeaderIdReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLeaderIdReply.ProtoReflect.Descriptor instead.
 func (*GetLeaderIdReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{9}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetLeaderIdReply) GetLeader() uint64 {
+	if x != nil {
+		return x.Leader
+	}
+	return 0
+}
+
+func (x *GetLeaderIdReply) GetAvailable() bool {
+	if x != nil {
+		return x.Available
+	}
+	return false
 }
 
 type GetShardMembersRequest struct {
@@ -641,7 +631,7 @@ type GetShardMembersRequest struct {
 func (x *GetShardMembersRequest) Reset() {
 	*x = GetShardMembersRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[10]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -654,7 +644,7 @@ func (x *GetShardMembersRequest) String() string {
 func (*GetShardMembersRequest) ProtoMessage() {}
 
 func (x *GetShardMembersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[10]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -667,7 +657,7 @@ func (x *GetShardMembersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetShardMembersRequest.ProtoReflect.Descriptor instead.
 func (*GetShardMembersRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{10}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetShardMembersRequest) GetShardId() uint64 {
@@ -692,7 +682,7 @@ type GetShardMembersReply struct {
 func (x *GetShardMembersReply) Reset() {
 	*x = GetShardMembersReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[11]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -705,7 +695,7 @@ func (x *GetShardMembersReply) String() string {
 func (*GetShardMembersReply) ProtoMessage() {}
 
 func (x *GetShardMembersReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[11]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -718,7 +708,7 @@ func (x *GetShardMembersReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetShardMembersReply.ProtoReflect.Descriptor instead.
 func (*GetShardMembersReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{11}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetShardMembersReply) GetConfigChangeId() uint64 {
@@ -774,7 +764,7 @@ type NewShardRequest struct {
 func (x *NewShardRequest) Reset() {
 	*x = NewShardRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[12]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -787,7 +777,7 @@ func (x *NewShardRequest) String() string {
 func (*NewShardRequest) ProtoMessage() {}
 
 func (x *NewShardRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[12]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -800,7 +790,7 @@ func (x *NewShardRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NewShardRequest.ProtoReflect.Descriptor instead.
 func (*NewShardRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{12}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *NewShardRequest) GetReplicaId() uint64 {
@@ -847,7 +837,7 @@ type NewShardReply struct {
 func (x *NewShardReply) Reset() {
 	*x = NewShardReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[13]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -860,7 +850,7 @@ func (x *NewShardReply) String() string {
 func (*NewShardReply) ProtoMessage() {}
 
 func (x *NewShardReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[13]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -873,7 +863,7 @@ func (x *NewShardReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NewShardReply.ProtoReflect.Descriptor instead.
 func (*NewShardReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{13}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{13}
 }
 
 type RemoveDataRequest struct {
@@ -890,7 +880,7 @@ type RemoveDataRequest struct {
 func (x *RemoveDataRequest) Reset() {
 	*x = RemoveDataRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[14]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -903,7 +893,7 @@ func (x *RemoveDataRequest) String() string {
 func (*RemoveDataRequest) ProtoMessage() {}
 
 func (x *RemoveDataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[14]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -916,7 +906,7 @@ func (x *RemoveDataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveDataRequest.ProtoReflect.Descriptor instead.
 func (*RemoveDataRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{14}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *RemoveDataRequest) GetReplicaId() uint64 {
@@ -942,7 +932,7 @@ type RemoveDataReply struct {
 func (x *RemoveDataReply) Reset() {
 	*x = RemoveDataReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[15]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -955,7 +945,7 @@ func (x *RemoveDataReply) String() string {
 func (*RemoveDataReply) ProtoMessage() {}
 
 func (x *RemoveDataReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[15]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -968,7 +958,7 @@ func (x *RemoveDataReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveDataReply.ProtoReflect.Descriptor instead.
 func (*RemoveDataReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{15}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{15}
 }
 
 type StopReplicaRequest struct {
@@ -983,7 +973,7 @@ type StopReplicaRequest struct {
 func (x *StopReplicaRequest) Reset() {
 	*x = StopReplicaRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[16]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -996,7 +986,7 @@ func (x *StopReplicaRequest) String() string {
 func (*StopReplicaRequest) ProtoMessage() {}
 
 func (x *StopReplicaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[16]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1009,7 +999,7 @@ func (x *StopReplicaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopReplicaRequest.ProtoReflect.Descriptor instead.
 func (*StopReplicaRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{16}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *StopReplicaRequest) GetShardId() uint64 {
@@ -1028,7 +1018,7 @@ type StopReplicaReply struct {
 func (x *StopReplicaReply) Reset() {
 	*x = StopReplicaReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_raft_raft_control_proto_msgTypes[17]
+		mi := &file_api_v1_raft_raft_shard_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1041,7 +1031,7 @@ func (x *StopReplicaReply) String() string {
 func (*StopReplicaReply) ProtoMessage() {}
 
 func (x *StopReplicaReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_raft_raft_control_proto_msgTypes[17]
+	mi := &file_api_v1_raft_raft_shard_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1054,69 +1044,64 @@ func (x *StopReplicaReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopReplicaReply.ProtoReflect.Descriptor instead.
 func (*StopReplicaReply) Descriptor() ([]byte, []int) {
-	return file_api_v1_raft_raft_control_proto_rawDescGZIP(), []int{17}
+	return file_api_v1_raft_raft_shard_proto_rawDescGZIP(), []int{17}
 }
 
-var File_api_v1_raft_raft_control_proto protoreflect.FileDescriptor
+var File_api_v1_raft_raft_shard_proto protoreflect.FileDescriptor
 
-var file_api_v1_raft_raft_control_proto_rawDesc = []byte{
-	0x0a, 0x1e, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x61, 0x66, 0x74, 0x2f, 0x72, 0x61,
-	0x66, 0x74, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x12, 0x04, 0x72, 0x61, 0x66, 0x74, 0x22, 0xad, 0x01, 0x0a, 0x11, 0x41, 0x64, 0x64, 0x52, 0x65,
-	0x70, 0x6c, 0x69, 0x63, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09,
-	0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52,
-	0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68,
-	0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61,
-	0x72, 0x64, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x0e, 0x32, 0x16, 0x2e, 0x72, 0x61, 0x66, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x4d,
-	0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x12, 0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07,
-	0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74,
-	0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x52, 0x65, 0x70,
-	0x6c, 0x69, 0x63, 0x61, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0xb3, 0x01, 0x0a, 0x17, 0x41, 0x64,
-	0x64, 0x53, 0x68, 0x61, 0x72, 0x64, 0x4f, 0x62, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x52, 0x65,
+var file_api_v1_raft_raft_shard_proto_rawDesc = []byte{
+	0x0a, 0x1c, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x72, 0x61, 0x66, 0x74, 0x2f, 0x72, 0x61,
+	0x66, 0x74, 0x5f, 0x73, 0x68, 0x61, 0x72, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04,
+	0x72, 0x61, 0x66, 0x74, 0x22, 0x81, 0x01, 0x0a, 0x11, 0x41, 0x64, 0x64, 0x52, 0x65, 0x70, 0x6c,
+	0x69, 0x63, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65,
+	0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72,
+	0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72,
+	0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64,
+	0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18,
+	0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x41, 0x64, 0x64, 0x52,
+	0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x87, 0x01, 0x0a, 0x17,
+	0x41, 0x64, 0x64, 0x53, 0x68, 0x61, 0x72, 0x64, 0x4f, 0x62, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69,
+	0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65, 0x70, 0x6c,
+	0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12,
+	0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x74,
+	0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74, 0x69,
+	0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x17, 0x0a, 0x15, 0x41, 0x64, 0x64, 0x53, 0x68, 0x61, 0x72,
+	0x64, 0x4f, 0x62, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x86,
+	0x01, 0x0a, 0x16, 0x41, 0x64, 0x64, 0x53, 0x68, 0x61, 0x72, 0x64, 0x57, 0x69, 0x74, 0x6e, 0x65,
+	0x73, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x70,
+	0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65,
+	0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64,
+	0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49,
+	0x64, 0x12, 0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a,
+	0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07,
+	0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x16, 0x0a, 0x14, 0x41, 0x64, 0x64, 0x53, 0x68,
+	0x61, 0x72, 0x64, 0x57, 0x69, 0x74, 0x6e, 0x65, 0x73, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x68, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69,
+	0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65, 0x70, 0x6c,
+	0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12,
+	0x18, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x66, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x4c, 0x65, 0x61, 0x64, 0x65, 0x72, 0x49, 0x64, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61,
 	0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63,
 	0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12, 0x2a, 0x0a,
-	0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x16, 0x2e, 0x72, 0x61,
-	0x66, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x54,
-	0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73,
-	0x74, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x68, 0x6f, 0x73,
-	0x74, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74,
-	0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22,
-	0x17, 0x0a, 0x15, 0x41, 0x64, 0x64, 0x53, 0x68, 0x61, 0x72, 0x64, 0x4f, 0x62, 0x73, 0x65, 0x72,
-	0x76, 0x65, 0x72, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0xb2, 0x01, 0x0a, 0x16, 0x41, 0x64, 0x64,
-	0x53, 0x68, 0x61, 0x72, 0x64, 0x57, 0x69, 0x74, 0x6e, 0x65, 0x73, 0x73, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49,
-	0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x04, 0x74,
-	0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x16, 0x2e, 0x72, 0x61, 0x66, 0x74,
-	0x2e, 0x53, 0x74, 0x61, 0x74, 0x65, 0x4d, 0x61, 0x63, 0x68, 0x69, 0x6e, 0x65, 0x54, 0x79, 0x70,
-	0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e,
-	0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x68, 0x6f, 0x73, 0x74, 0x6e,
-	0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x05,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x16, 0x0a,
-	0x14, 0x41, 0x64, 0x64, 0x53, 0x68, 0x61, 0x72, 0x64, 0x57, 0x69, 0x74, 0x6e, 0x65, 0x73, 0x73,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x68, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52,
-	0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a,
-	0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04,
-	0x52, 0x09, 0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73,
-	0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68,
-	0x61, 0x72, 0x64, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22,
-	0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x66, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x4c, 0x65, 0x61, 0x64,
-	0x65, 0x72, 0x49, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x72,
-	0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
-	0x72, 0x65, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x68, 0x61,
-	0x72, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72,
-	0x64, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x12, 0x0a,
-	0x10, 0x47, 0x65, 0x74, 0x4c, 0x65, 0x61, 0x64, 0x65, 0x72, 0x49, 0x64, 0x52, 0x65, 0x70, 0x6c,
-	0x79, 0x22, 0x32, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x53, 0x68, 0x61, 0x72, 0x64, 0x4d, 0x65, 0x6d,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x12, 0x18, 0x0a,
+	0x07, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07,
+	0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x22, 0x48, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x4c, 0x65,
+	0x61, 0x64, 0x65, 0x72, 0x49, 0x64, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x6c,
+	0x65, 0x61, 0x64, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x06, 0x6c, 0x65, 0x61,
+	0x64, 0x65, 0x72, 0x12, 0x1c, 0x0a, 0x09, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c,
+	0x65, 0x22, 0x32, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x53, 0x68, 0x61, 0x72, 0x64, 0x4d, 0x65, 0x6d,
 	0x62, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x73,
 	0x68, 0x61, 0x72, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x07, 0x73, 0x68,
 	0x61, 0x72, 0x64, 0x49, 0x64, 0x22, 0xce, 0x04, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x53, 0x68, 0x61,
@@ -1187,20 +1172,20 @@ var file_api_v1_raft_raft_control_proto_rawDesc = []byte{
 }
 
 var (
-	file_api_v1_raft_raft_control_proto_rawDescOnce sync.Once
-	file_api_v1_raft_raft_control_proto_rawDescData = file_api_v1_raft_raft_control_proto_rawDesc
+	file_api_v1_raft_raft_shard_proto_rawDescOnce sync.Once
+	file_api_v1_raft_raft_shard_proto_rawDescData = file_api_v1_raft_raft_shard_proto_rawDesc
 )
 
-func file_api_v1_raft_raft_control_proto_rawDescGZIP() []byte {
-	file_api_v1_raft_raft_control_proto_rawDescOnce.Do(func() {
-		file_api_v1_raft_raft_control_proto_rawDescData = protoimpl.X.CompressGZIP(file_api_v1_raft_raft_control_proto_rawDescData)
+func file_api_v1_raft_raft_shard_proto_rawDescGZIP() []byte {
+	file_api_v1_raft_raft_shard_proto_rawDescOnce.Do(func() {
+		file_api_v1_raft_raft_shard_proto_rawDescData = protoimpl.X.CompressGZIP(file_api_v1_raft_raft_shard_proto_rawDescData)
 	})
-	return file_api_v1_raft_raft_control_proto_rawDescData
+	return file_api_v1_raft_raft_shard_proto_rawDescData
 }
 
-var file_api_v1_raft_raft_control_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_api_v1_raft_raft_control_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
-var file_api_v1_raft_raft_control_proto_goTypes = []interface{}{
+var file_api_v1_raft_raft_shard_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_v1_raft_raft_shard_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_api_v1_raft_raft_shard_proto_goTypes = []interface{}{
 	(StateMachineType)(0),           // 0: raft.StateMachineType
 	(*AddReplicaRequest)(nil),       // 1: raft.AddReplicaRequest
 	(*AddReplicaReply)(nil),         // 2: raft.AddReplicaReply
@@ -1225,29 +1210,26 @@ var file_api_v1_raft_raft_control_proto_goTypes = []interface{}{
 	nil,                             // 21: raft.GetShardMembersReply.WitnessesEntry
 	nil,                             // 22: raft.GetShardMembersReply.RemovedEntry
 }
-var file_api_v1_raft_raft_control_proto_depIdxs = []int32{
-	0,  // 0: raft.AddReplicaRequest.type:type_name -> raft.StateMachineType
-	0,  // 1: raft.AddShardObserverRequest.type:type_name -> raft.StateMachineType
-	0,  // 2: raft.AddShardWitnessRequest.type:type_name -> raft.StateMachineType
-	19, // 3: raft.GetShardMembersReply.replicas:type_name -> raft.GetShardMembersReply.ReplicasEntry
-	20, // 4: raft.GetShardMembersReply.observers:type_name -> raft.GetShardMembersReply.ObserversEntry
-	21, // 5: raft.GetShardMembersReply.witnesses:type_name -> raft.GetShardMembersReply.WitnessesEntry
-	22, // 6: raft.GetShardMembersReply.removed:type_name -> raft.GetShardMembersReply.RemovedEntry
-	0,  // 7: raft.NewShardRequest.type:type_name -> raft.StateMachineType
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+var file_api_v1_raft_raft_shard_proto_depIdxs = []int32{
+	19, // 0: raft.GetShardMembersReply.replicas:type_name -> raft.GetShardMembersReply.ReplicasEntry
+	20, // 1: raft.GetShardMembersReply.observers:type_name -> raft.GetShardMembersReply.ObserversEntry
+	21, // 2: raft.GetShardMembersReply.witnesses:type_name -> raft.GetShardMembersReply.WitnessesEntry
+	22, // 3: raft.GetShardMembersReply.removed:type_name -> raft.GetShardMembersReply.RemovedEntry
+	0,  // 4: raft.NewShardRequest.type:type_name -> raft.StateMachineType
+	5,  // [5:5] is the sub-list for method output_type
+	5,  // [5:5] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
-func init() { file_api_v1_raft_raft_control_proto_init() }
-func file_api_v1_raft_raft_control_proto_init() {
-	if File_api_v1_raft_raft_control_proto != nil {
+func init() { file_api_v1_raft_raft_shard_proto_init() }
+func file_api_v1_raft_raft_shard_proto_init() {
+	if File_api_v1_raft_raft_shard_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_api_v1_raft_raft_control_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddReplicaRequest); i {
 			case 0:
 				return &v.state
@@ -1259,7 +1241,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddReplicaReply); i {
 			case 0:
 				return &v.state
@@ -1271,7 +1253,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddShardObserverRequest); i {
 			case 0:
 				return &v.state
@@ -1283,7 +1265,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddShardObserverReply); i {
 			case 0:
 				return &v.state
@@ -1295,7 +1277,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddShardWitnessRequest); i {
 			case 0:
 				return &v.state
@@ -1307,7 +1289,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AddShardWitnessReply); i {
 			case 0:
 				return &v.state
@@ -1319,7 +1301,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteReplicaRequest); i {
 			case 0:
 				return &v.state
@@ -1331,7 +1313,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeleteReplicaReply); i {
 			case 0:
 				return &v.state
@@ -1343,7 +1325,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetLeaderIdRequest); i {
 			case 0:
 				return &v.state
@@ -1355,7 +1337,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetLeaderIdReply); i {
 			case 0:
 				return &v.state
@@ -1367,7 +1349,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetShardMembersRequest); i {
 			case 0:
 				return &v.state
@@ -1379,7 +1361,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetShardMembersReply); i {
 			case 0:
 				return &v.state
@@ -1391,7 +1373,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NewShardRequest); i {
 			case 0:
 				return &v.state
@@ -1403,7 +1385,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*NewShardReply); i {
 			case 0:
 				return &v.state
@@ -1415,7 +1397,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RemoveDataRequest); i {
 			case 0:
 				return &v.state
@@ -1427,7 +1409,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*RemoveDataReply); i {
 			case 0:
 				return &v.state
@@ -1439,7 +1421,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*StopReplicaRequest); i {
 			case 0:
 				return &v.state
@@ -1451,7 +1433,7 @@ func file_api_v1_raft_raft_control_proto_init() {
 				return nil
 			}
 		}
-		file_api_v1_raft_raft_control_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+		file_api_v1_raft_raft_shard_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*StopReplicaReply); i {
 			case 0:
 				return &v.state
@@ -1468,19 +1450,19 @@ func file_api_v1_raft_raft_control_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_api_v1_raft_raft_control_proto_rawDesc,
+			RawDescriptor: file_api_v1_raft_raft_shard_proto_rawDesc,
 			NumEnums:      1,
 			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_api_v1_raft_raft_control_proto_goTypes,
-		DependencyIndexes: file_api_v1_raft_raft_control_proto_depIdxs,
-		EnumInfos:         file_api_v1_raft_raft_control_proto_enumTypes,
-		MessageInfos:      file_api_v1_raft_raft_control_proto_msgTypes,
+		GoTypes:           file_api_v1_raft_raft_shard_proto_goTypes,
+		DependencyIndexes: file_api_v1_raft_raft_shard_proto_depIdxs,
+		EnumInfos:         file_api_v1_raft_raft_shard_proto_enumTypes,
+		MessageInfos:      file_api_v1_raft_raft_shard_proto_msgTypes,
 	}.Build()
-	File_api_v1_raft_raft_control_proto = out.File
-	file_api_v1_raft_raft_control_proto_rawDesc = nil
-	file_api_v1_raft_raft_control_proto_goTypes = nil
-	file_api_v1_raft_raft_control_proto_depIdxs = nil
+	File_api_v1_raft_raft_shard_proto = out.File
+	file_api_v1_raft_raft_shard_proto_rawDesc = nil
+	file_api_v1_raft_raft_shard_proto_goTypes = nil
+	file_api_v1_raft_raft_shard_proto_depIdxs = nil
 }
