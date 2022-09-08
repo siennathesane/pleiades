@@ -166,6 +166,9 @@ export class DeleteReplicaRequest extends jspb.Message {
   getShardid(): number;
   setShardid(value: number): void;
 
+  getTimeout(): number;
+  setTimeout(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteReplicaRequest.AsObject;
   static toObject(includeInstance: boolean, msg: DeleteReplicaRequest): DeleteReplicaRequest.AsObject;
@@ -180,6 +183,7 @@ export namespace DeleteReplicaRequest {
   export type AsObject = {
     replicaid: number,
     shardid: number,
+    timeout: number,
   }
 }
 
@@ -200,8 +204,14 @@ export namespace DeleteReplicaReply {
 }
 
 export class GetLeaderIdRequest extends jspb.Message {
+  getReplicaid(): number;
+  setReplicaid(value: number): void;
+
   getShardid(): number;
   setShardid(value: number): void;
+
+  getTimeout(): number;
+  setTimeout(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLeaderIdRequest.AsObject;
@@ -215,7 +225,9 @@ export class GetLeaderIdRequest extends jspb.Message {
 
 export namespace GetLeaderIdRequest {
   export type AsObject = {
+    replicaid: number,
     shardid: number,
+    timeout: number,
   }
 }
 
@@ -256,6 +268,17 @@ export namespace GetShardMembersRequest {
 }
 
 export class GetShardMembersReply extends jspb.Message {
+  getConfigchangeid(): number;
+  setConfigchangeid(value: number): void;
+
+  getReplicasMap(): jspb.Map<number, string>;
+  clearReplicasMap(): void;
+  getObserversMap(): jspb.Map<number, string>;
+  clearObserversMap(): void;
+  getWitnessesMap(): jspb.Map<number, string>;
+  clearWitnessesMap(): void;
+  getRemovedMap(): jspb.Map<number, string>;
+  clearRemovedMap(): void;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetShardMembersReply.AsObject;
   static toObject(includeInstance: boolean, msg: GetShardMembersReply): GetShardMembersReply.AsObject;
@@ -268,6 +291,11 @@ export class GetShardMembersReply extends jspb.Message {
 
 export namespace GetShardMembersReply {
   export type AsObject = {
+    configchangeid: number,
+    replicasMap: Array<[number, string]>,
+    observersMap: Array<[number, string]>,
+    witnessesMap: Array<[number, string]>,
+    removedMap: Array<[number, string]>,
   }
 }
 
@@ -364,9 +392,6 @@ export namespace RemoveDataReply {
 }
 
 export class StopReplicaRequest extends jspb.Message {
-  getReplicaid(): number;
-  setReplicaid(value: number): void;
-
   getShardid(): number;
   setShardid(value: number): void;
 
@@ -382,7 +407,6 @@ export class StopReplicaRequest extends jspb.Message {
 
 export namespace StopReplicaRequest {
   export type AsObject = {
-    replicaid: number,
     shardid: number,
   }
 }

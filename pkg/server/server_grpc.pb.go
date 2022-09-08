@@ -24,8 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShardManagerClient interface {
 	AddReplica(ctx context.Context, in *raft.AddReplicaRequest, opts ...grpc.CallOption) (*raft.AddReplicaReply, error)
-	AddShardObserver(ctx context.Context, in *raft.AddShardObserverRequest, opts ...grpc.CallOption) (*raft.AddShardObserverRequest, error)
-	AddShardWitness(ctx context.Context, in *raft.AddShardWitnessRequest, opts ...grpc.CallOption) (*raft.AddShardWitnessRequest, error)
+	AddShardObserver(ctx context.Context, in *raft.AddShardObserverRequest, opts ...grpc.CallOption) (*raft.AddShardObserverReply, error)
+	AddShardWitness(ctx context.Context, in *raft.AddShardWitnessRequest, opts ...grpc.CallOption) (*raft.AddShardWitnessReply, error)
 	DeleteReplica(ctx context.Context, in *raft.DeleteReplicaRequest, opts ...grpc.CallOption) (*raft.DeleteReplicaReply, error)
 	GetLeaderId(ctx context.Context, in *raft.GetLeaderIdRequest, opts ...grpc.CallOption) (*raft.GetLeaderIdReply, error)
 	GetShardMembers(ctx context.Context, in *raft.GetShardMembersRequest, opts ...grpc.CallOption) (*raft.GetShardMembersReply, error)
@@ -51,8 +51,8 @@ func (c *shardManagerClient) AddReplica(ctx context.Context, in *raft.AddReplica
 	return out, nil
 }
 
-func (c *shardManagerClient) AddShardObserver(ctx context.Context, in *raft.AddShardObserverRequest, opts ...grpc.CallOption) (*raft.AddShardObserverRequest, error) {
-	out := new(raft.AddShardObserverRequest)
+func (c *shardManagerClient) AddShardObserver(ctx context.Context, in *raft.AddShardObserverRequest, opts ...grpc.CallOption) (*raft.AddShardObserverReply, error) {
+	out := new(raft.AddShardObserverReply)
 	err := c.cc.Invoke(ctx, "/server.ShardManager/AddShardObserver", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -60,8 +60,8 @@ func (c *shardManagerClient) AddShardObserver(ctx context.Context, in *raft.AddS
 	return out, nil
 }
 
-func (c *shardManagerClient) AddShardWitness(ctx context.Context, in *raft.AddShardWitnessRequest, opts ...grpc.CallOption) (*raft.AddShardWitnessRequest, error) {
-	out := new(raft.AddShardWitnessRequest)
+func (c *shardManagerClient) AddShardWitness(ctx context.Context, in *raft.AddShardWitnessRequest, opts ...grpc.CallOption) (*raft.AddShardWitnessReply, error) {
+	out := new(raft.AddShardWitnessReply)
 	err := c.cc.Invoke(ctx, "/server.ShardManager/AddShardWitness", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -128,8 +128,8 @@ func (c *shardManagerClient) StopReplica(ctx context.Context, in *raft.StopRepli
 // for forward compatibility
 type ShardManagerServer interface {
 	AddReplica(context.Context, *raft.AddReplicaRequest) (*raft.AddReplicaReply, error)
-	AddShardObserver(context.Context, *raft.AddShardObserverRequest) (*raft.AddShardObserverRequest, error)
-	AddShardWitness(context.Context, *raft.AddShardWitnessRequest) (*raft.AddShardWitnessRequest, error)
+	AddShardObserver(context.Context, *raft.AddShardObserverRequest) (*raft.AddShardObserverReply, error)
+	AddShardWitness(context.Context, *raft.AddShardWitnessRequest) (*raft.AddShardWitnessReply, error)
 	DeleteReplica(context.Context, *raft.DeleteReplicaRequest) (*raft.DeleteReplicaReply, error)
 	GetLeaderId(context.Context, *raft.GetLeaderIdRequest) (*raft.GetLeaderIdReply, error)
 	GetShardMembers(context.Context, *raft.GetShardMembersRequest) (*raft.GetShardMembersReply, error)
@@ -146,10 +146,10 @@ type UnimplementedShardManagerServer struct {
 func (UnimplementedShardManagerServer) AddReplica(context.Context, *raft.AddReplicaRequest) (*raft.AddReplicaReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddReplica not implemented")
 }
-func (UnimplementedShardManagerServer) AddShardObserver(context.Context, *raft.AddShardObserverRequest) (*raft.AddShardObserverRequest, error) {
+func (UnimplementedShardManagerServer) AddShardObserver(context.Context, *raft.AddShardObserverRequest) (*raft.AddShardObserverReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddShardObserver not implemented")
 }
-func (UnimplementedShardManagerServer) AddShardWitness(context.Context, *raft.AddShardWitnessRequest) (*raft.AddShardWitnessRequest, error) {
+func (UnimplementedShardManagerServer) AddShardWitness(context.Context, *raft.AddShardWitnessRequest) (*raft.AddShardWitnessReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddShardWitness not implemented")
 }
 func (UnimplementedShardManagerServer) DeleteReplica(context.Context, *raft.DeleteReplicaRequest) (*raft.DeleteReplicaReply, error) {
