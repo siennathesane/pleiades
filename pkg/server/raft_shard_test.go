@@ -682,56 +682,6 @@ func (smts *shardManagerTestSuite) TestStartObserverReplica() {
 	smts.Require().Equal(1, len(membership.Observers), "there must be at two nodes")
 }
 
-func (smts *shardManagerTestSuite) TestStartWitnessReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestStartObserverReplica")
-	}
-
-	firstTestHost := buildTestNodeHost(smts.T())
-	firstShardManager := newShardManager(firstTestHost, smts.logger)
-	smts.Require().NotNil(firstShardManager, "firstShardManager must not be nil")
-
-	testShardId := rand.Uint64()
-	firstTestReplicaId := rand.Uint64()
-	err := firstShardManager.NewShard(testShardId, firstTestReplicaId, testStateMachineType, smts.defaultTimeout)
-	smts.Require().NoError(err, "there must not be an error when creating a new shard")
-	time.Sleep(smts.defaultTimeout)
-
-	ctx, cancel := context.WithTimeout(context.Background(), smts.defaultTimeout)
-	cs, err := firstShardManager.nh.SyncGetSession(ctx, testShardId)
-	smts.Require().NoError(err, "there must not be an error when fetching the client session from the first node")
-	smts.Require().NotNil(cs, "the first node's client session must not be nil")
-	cancel()
-
-	proposeContext, _ := context.WithTimeout(context.Background(), smts.defaultTimeout)
-	for i := 0; i < 5; i++ {
-		_, err := firstShardManager.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
-		smts.Require().NoError(err, "there must not be an error when proposing a new message")
-		cs.ProposalCompleted()
-	}
-
-	secondTestHost := buildTestNodeHost(smts.T())
-	secondShardManager := newShardManager(secondTestHost, smts.logger)
-	smts.Require().NotNil(secondShardManager, "firstShardManager must not be nil")
-
-	secondTestReplicaId := rand.Uint64()
-
-	err = firstShardManager.AddReplicaWitness(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), smts.defaultTimeout)
-	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
-	time.Sleep(smts.extendedDefaultTimeout)
-
-	err = secondShardManager.StartReplicaWitness(testShardId, secondTestReplicaId, testStateMachineType)
-	smts.Require().NoError(err, "there must not be an error when requesting to add a node")
-	time.Sleep(smts.extendedDefaultTimeout)
-
-	membershipCtx, _ := context.WithTimeout(context.Background(), smts.defaultTimeout)
-	membership, err := firstShardManager.nh.SyncGetClusterMembership(membershipCtx, testShardId)
-	smts.Require().NoError(err, "there must not be an error when getting cluster membership")
-	smts.Require().NotNil(membership, "the membership list must not be nil")
-	smts.Require().Equal(1, len(membership.Witnesses), "there must be at two nodes")
-}
-
-
 func (smts *shardManagerTestSuite) TestStopReplica() {
 	if testing.Short() {
 		smts.T().Skipf("skipping TestGet")
