@@ -27,6 +27,9 @@ type IShardManager interface {
 	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
 	RemoveData(shardId, replicaId uint64) error
 	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
+	StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
+	StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
+	StartReplicaWitness(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
 	StopReplica(shardId uint64) (*OperationResult, error)
 }
 
