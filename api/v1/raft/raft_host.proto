@@ -1,0 +1,43 @@
+syntax = "proto3";
+package raft;
+
+option go_package = "github.com/mxplusb/pleiades/api/v1/raft";
+
+message CompactRequest {
+  // replicaId is a non-zero value used to identify a node within a Raft cluster.
+  uint64 replicaId = 1;
+  // shardId is the unique value used to identify a Raft cluster.
+  uint64 shardId = 2;
+}
+
+message CompactReply {}
+
+message LeaderTransferRequest {
+  // shardId is the unique value used to identify a Raft cluster.
+  uint64 shardId = 1;
+  string targetNodeId = 2;
+}
+
+message LeaderTransferReply {}
+
+message SnapshotRequest {
+  // shardId is the unique value used to identify a Raft cluster.
+  uint64 shardId = 1;
+  int64 timeout = 2;
+}
+
+message SnapshotReply {}
+
+message StopRequest {}
+
+message StopReply {}
+
+message GetHostConfigRequest {}
+
+message GetHostConfigReply {
+
+}
+
+message GetClusterMembershipRequest {
+  uint64 clusterId = 1;
+}

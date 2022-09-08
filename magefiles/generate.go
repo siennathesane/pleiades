@@ -50,6 +50,17 @@ var (
 		"--go-vtproto_opt=features=marshal+unmarshal+size+equal+pool",
 		"--go-vtproto_opt=paths=source_relative",
 	}
+
+	grpcFlags = []string{
+		"-I",
+		".",
+		"--plugin",
+		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-go", binDir),
+		"--go_opt=paths=source_relative",
+		"--go_out=.",
+		"--go-grpc_out=.",
+		"--go-grpc_opt=paths=source_relative",
+	}
 )
 
 type Gen mg.Namespace
@@ -99,6 +110,24 @@ func (Gen) Setup() {
 	})
 
 	mg.Deps(func() error {
+		fmt.Println("installing golang grpc generator")
+
+		if err := sh.RunWithV(nil, "go",
+			"get",
+			"-v",
+			"google.golang.org/grpc/cmd/protoc-gen-go-grpc"); err != nil {
+			return err
+		}
+
+		return sh.RunWithV(nil, "go",
+			"build",
+			"-v",
+			"-o",
+			fmt.Sprintf("%s/protoc-gen-go-grpc", binDir),
+			"google.golang.org/grpc/cmd/protoc-gen-go-grpc")
+	})
+
+	mg.Deps(func() error {
 		fmt.Println("installing node protobuf compiler")
 		return sh.RunWithV(nil, "npm", "install")
 	})
@@ -107,7 +136,7 @@ func (Gen) Setup() {
 // generate all schemas
 func (Gen) All() error {
 
-	mg.SerialDeps(Gen.Net, Gen.Database)
+	mg.SerialDeps(Gen.Raft, Gen.Database)
 	return nil
 }
 
@@ -137,17 +166,26 @@ func (Gen) Database() error {
 	return nil
 }
 
-// compiles the network schemas and generates the go code
-func (Gen) Net() error {
+// compiles the raft schemas and generates the go code
+func (Gen) Raft() error {
 
-	fmt.Println("generating network protocols")
+	fmt.Println("generating raft protocols")
 
-	transportPbFiles, err := filepath.Glob("api/v1/*.proto")
+	raftPbFiles, err := filepath.Glob("api/v1/raft/*.proto")
 	if err != nil {
 		return err
 	}
-	localProtoFlags := append(goProtoFlags, transportPbFiles...)
+	localProtoFlags := append(goProtoFlags, raftPbFiles...)
 	if err := sh.RunWithV(nil, "protoc", localProtoFlags...); err != nil {
+		return err
+	}
+
+	raftRpcFiles, err := filepath.Glob("pkg/server/*.proto")
+	if err != nil {
+		return err
+	}
+	localGrpcFlags := append(grpcFlags, raftRpcFiles...)
+	if err := sh.RunWithV(nil, "protoc", localGrpcFlags...); err != nil {
 		return err
 	}
 
