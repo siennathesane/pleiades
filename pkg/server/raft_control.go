@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	_ INodeHost = (*Node)(nil)
+	//_ IHost = (*Node)(nil)
 )
 
 func init() {
