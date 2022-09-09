@@ -2,7 +2,7 @@ syntax = "proto3";
 package database;
 
 // this is relative to the root of the repo
-import "api/v1/database/session.proto";
+import "api/v1/database/transactions.proto";
 import "api/v1/database/kv.proto";
 
 option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
@@ -11,19 +11,18 @@ message DeleteResponse { }
 
 message DeleteRequest {
   KeyValue payload = 1;
-  Session session = 2;
+  Transaction session = 2;
 }
 
 message PutRequest {
   KeyValue payload = 1;
-  Session session = 2;
+  Transaction session = 2;
 }
 
 message PutReply {}
 
 message GetRequest {
   string key = 1;
-  Session session = 2;
   uint64 clusterId = 3;
 }
 
