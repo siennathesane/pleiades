@@ -28,6 +28,9 @@ import (
 )
 
 func TestRaftShardGrpcAdapter(t *testing.T) {
+	if testing.Short() {
+		t.Skipf("skipping shard grpc tests")
+	}
 	suite.Run(t, new(RaftShardGrpcAdapterTestSuite))
 }
 
@@ -105,9 +108,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TearDownTest() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 
@@ -136,9 +136,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 
@@ -168,9 +165,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestAddReplicaWitness() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 
@@ -241,9 +235,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestNewShard() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 
@@ -283,9 +274,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 
@@ -327,9 +315,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	currentTestShard := rand.Uint64()
 
@@ -399,9 +384,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	currentTestShard := rand.Uint64()
 
@@ -472,9 +454,6 @@ func (r *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
 }
 
 func (r *RaftShardGrpcAdapterTestSuite) TestStopReplica() {
-	if testing.Short() {
-		r.T().Skipf("skipping")
-	}
 
 	testNodeHost := buildTestNodeHost(r.T())
 

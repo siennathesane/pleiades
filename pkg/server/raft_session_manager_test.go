@@ -22,6 +22,9 @@ import (
 )
 
 func TestSessionManager(t *testing.T) {
+	if testing.Short() {
+		t.Skipf("skipping session manager tests")
+	}
 	suite.Run(t, new(SessionManagerTests))
 }
 
@@ -35,9 +38,6 @@ type SessionManagerTests struct {
 // we need to ensure that we use a single cluster the entire time to emulate multiple
 // sessions in a single cluster. it's a bit... hand-wavey, but like, it works, so fuck it
 func (smt *SessionManagerTests) SetupSuite() {
-	if testing.Short() {
-		smt.T().Skipf("skipping")
-	}
 
 	smt.logger = utils.NewTestLogger(smt.T())
 

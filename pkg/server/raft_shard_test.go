@@ -24,6 +24,9 @@ import (
 )
 
 func TestShardManager(t *testing.T) {
+	if testing.Short() {
+		t.Skipf("skipping shard manager tests")
+	}
 	suite.Run(t, new(shardManagerTestSuite))
 }
 
@@ -35,9 +38,6 @@ type shardManagerTestSuite struct {
 }
 
 func (smts *shardManagerTestSuite) SetupSuite() {
-	if testing.Short() {
-		smts.T().Skipf("skipping")
-	}
 
 	smts.logger = utils.NewTestLogger(smts.T())
 
@@ -46,9 +46,6 @@ func (smts *shardManagerTestSuite) SetupSuite() {
 }
 
 func (smts *shardManagerTestSuite) TestAddReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestRemoveData")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -105,9 +102,6 @@ func (smts *shardManagerTestSuite) TestAddReplica() {
 }
 
 func (smts *shardManagerTestSuite) TestAddShardObserver() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestRemoveData")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -164,9 +158,6 @@ func (smts *shardManagerTestSuite) TestAddShardObserver() {
 }
 
 func (smts *shardManagerTestSuite) TestAddShardWitness() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestRemoveData")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -223,9 +214,6 @@ func (smts *shardManagerTestSuite) TestAddShardWitness() {
 }
 
 func (smts *shardManagerTestSuite) TestDeleteReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestDeleteReplica")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -289,9 +277,6 @@ func (smts *shardManagerTestSuite) TestDeleteReplica() {
 }
 
 func (smts *shardManagerTestSuite) TestGetLeaderId() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestGetLeaderId")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -345,9 +330,6 @@ func (smts *shardManagerTestSuite) TestGetLeaderId() {
 }
 
 func (smts *shardManagerTestSuite) TestGetShardMembers() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestGetShardMembers")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -408,9 +390,6 @@ func (smts *shardManagerTestSuite) TestGetShardMembers() {
 }
 
 func (smts *shardManagerTestSuite) TestNewShard() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestGetShardMembers")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -445,9 +424,6 @@ func (smts *shardManagerTestSuite) TestNewShard() {
 }
 
 func (smts *shardManagerTestSuite) TestRemoveData() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestRemoveData")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -513,9 +489,6 @@ func (smts *shardManagerTestSuite) TestRemoveData() {
 }
 
 func (smts *shardManagerTestSuite) TestRemoveReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestRemoveData")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
@@ -584,9 +557,6 @@ func (smts *shardManagerTestSuite) TestRemoveReplica() {
 }
 
 func (smts *shardManagerTestSuite) TestStartReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestStartReplica")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	firstShardManager := newShardManager(firstTestHost, smts.logger)
@@ -633,9 +603,6 @@ func (smts *shardManagerTestSuite) TestStartReplica() {
 }
 
 func (smts *shardManagerTestSuite) TestStartObserverReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestStartObserverReplica")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	firstShardManager := newShardManager(firstTestHost, smts.logger)
@@ -682,9 +649,6 @@ func (smts *shardManagerTestSuite) TestStartObserverReplica() {
 }
 
 func (smts *shardManagerTestSuite) TestStopReplica() {
-	if testing.Short() {
-		smts.T().Skipf("skipping TestGet")
-	}
 
 	firstTestHost := buildTestNodeHost(smts.T())
 	shardManager := newShardManager(firstTestHost, smts.logger)
