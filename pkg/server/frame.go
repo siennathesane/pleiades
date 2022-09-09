@@ -446,7 +446,7 @@ func sendFrame(frame *Frame, logger zerolog.Logger, stream network.Stream) {
 	}
 
 	// set the write deadline
-	deadline := time.Now().Add(RaftControlRPCWriteTimeout)
+	deadline := time.Now().Add(defaultTimeout)
 	if err := stream.SetWriteDeadline(deadline); err != nil {
 		_ = stream.Reset()
 	}

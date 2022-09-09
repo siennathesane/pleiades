@@ -22,7 +22,7 @@ service ShardManager {
 service RaftHost {
   rpc Compact(raft.CompactRequest) returns (raft.CompactReply);
   rpc GetHostConfig(raft.GetHostConfigRequest) returns (raft.GetHostConfigReply);
-  rpc LeaderTransfer(raft.LeaderTransferRequest) returns (raft.LeaderTransferReply);
+//  rpc LeaderTransfer(raft.LeaderTransferRequest) returns (raft.LeaderTransferReply);
   rpc Snapshot(raft.SnapshotRequest) returns (raft.SnapshotReply);
   rpc Stop(raft.StopRequest) returns (raft.StopReply);
 }
