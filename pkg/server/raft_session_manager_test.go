@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -28,7 +29,7 @@ type SessionManagerTests struct {
 	suite.Suite
 	logger zerolog.Logger
 	clusterId uint64
-	node *Node
+	nh *dragonboat.NodeHost
 }
 
 // we need to ensure that we use a single cluster the entire time to emulate multiple
@@ -40,30 +41,27 @@ func (smt *SessionManagerTests) SetupSuite() {
 
 	smt.logger = utils.NewTestLogger(smt.T())
 
-	nodeHostConfig := buildTestNodeHostConfig(smt.T())
-	node, err := NewRaftControlNode(nodeHostConfig, smt.logger)
-	smt.Require().NoError(err, "there must not be an error when starting the node")
-	smt.Require().NotNil(node, "node must not be nil")
-	smt.node = node
+	smt.nh = buildTestNodeHost(smt.T())
+	smt.Require().NotNil(smt.nh, "node must not be nil")
 
 	clusterConfig := buildTestShardConfig(smt.T())
 	smt.clusterId = clusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
-	nodeClusters[clusterConfig.NodeID] = node.RaftAddress()
+	nodeClusters[clusterConfig.NodeID] = smt.nh.RaftAddress()
 
-	err = node.nh.StartCluster(nodeClusters, false, newTestStateMachine, clusterConfig)
+	err := smt.nh.StartCluster(nodeClusters, false, newTestStateMachine, clusterConfig)
 	smt.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(5000 * time.Millisecond)
 }
 
 func (smt *SessionManagerTests) TestGetNoOpSession() {
-	sm := newSessionManager(smt.node.nh, smt.logger)
+	sm := newSessionManager(smt.nh, smt.logger)
 
 	cs := sm.GetNoOpSession(smt.clusterId)
 	smt.Require().NotNil(cs, "the client session must not be nil")
 
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	_, err := smt.node.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	_, err := smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
 	smt.Require().Panics(func() {
@@ -72,7 +70,7 @@ func (smt *SessionManagerTests) TestGetNoOpSession() {
 }
 
 func (smt *SessionManagerTests) TestGetSession() {
-	sm := newSessionManager(smt.node.nh, smt.logger)
+	sm := newSessionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	cs, err := sm.GetSession(ctx, smt.clusterId)
@@ -80,7 +78,7 @@ func (smt *SessionManagerTests) TestGetSession() {
 	smt.Require().NotNil(cs, "the client session must not be nil")
 
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	_, err = smt.node.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
 	smt.Require().NotPanics(func() {
@@ -89,7 +87,7 @@ func (smt *SessionManagerTests) TestGetSession() {
 }
 
 func (smt *SessionManagerTests) TestCloseSession() {
-	sm := newSessionManager(smt.node.nh, smt.logger)
+	sm := newSessionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	cs, err := sm.GetSession(ctx, smt.clusterId)
@@ -97,7 +95,7 @@ func (smt *SessionManagerTests) TestCloseSession() {
 	smt.Require().NotNil(cs, "the client session must not be nil")
 
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	_, err = smt.node.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
 	smt.Require().NotPanics(func() {
@@ -105,7 +103,7 @@ func (smt *SessionManagerTests) TestCloseSession() {
 	}, "finishing a proposal must not panic")
 
 	closeCtx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	err = smt.node.nh.SyncCloseSession(closeCtx, cs)
+	err = smt.nh.SyncCloseSession(closeCtx, cs)
 	smt.Require().NoError(err, "there must not be an error when closing the session")
 	smt.Require().Equal(client.SeriesIDForUnregister, cs.SeriesID, "the series id must be set for unregister")
 }

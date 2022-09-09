@@ -30,7 +30,6 @@ func TestShardManager(t *testing.T) {
 type shardManagerTestSuite struct {
 	suite.Suite
 	logger                 zerolog.Logger
-	node                   *Node
 	defaultTimeout         time.Duration
 	extendedDefaultTimeout time.Duration
 }
