@@ -562,7 +562,7 @@ func (rct *RaftControlTests) TestGetNodeUser() {
 	rct.Require().NoError(err, "there must not be an error when fetching a node user")
 	rct.Require().NotNil(nodeUser, "the node user must not be nil")
 
-	rct.Require().Equal(clusterConfig.ClusterID, nodeUser.ClusterID(), "the nodeUser.ClusterID must be equal to the configured cluster ID")
+	rct.Require().Equal(clusterConfig.ClusterID, nodeUser.ClusterID(), "the nodeUser.ShardId must be equal to the configured cluster Id")
 }
 
 func (rct *RaftControlTests) TestGetLeaderId() {
