@@ -34,7 +34,7 @@ func (Test) All() error {
 }
 
 // run server server tests
-func (Test) Blaze() error {
+func (Test) Server() error {
 	mg.Deps(verifyVendor)
 	fmt.Println("running server tests")
 	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/server/...")
@@ -59,11 +59,4 @@ func (Test) Routing() error {
 	mg.Deps(verifyVendor)
 	fmt.Println("running routing tests")
 	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/routing/...")
-}
-
-// run service tests
-func (Test) Services() error {
-	mg.Deps(verifyVendor)
-	fmt.Println("running service tests")
-	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/services/...")
 }
