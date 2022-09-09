@@ -4,13 +4,21 @@ package database;
 option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 
 message CloseTransactionRequest {
-  Transaction session = 1;
+  Transaction transaction = 1;
   int64 timeout = 2;
 }
 
 message CloseTransactionReply {
-  Transaction session = 1;
+  Transaction transaction = 1;
   int64 timeout = 2;
+}
+
+message CommitRequest {
+  Transaction transaction = 1;
+}
+
+message CommitReply {
+  Transaction transaction = 1;
 }
 
 message Transaction {
@@ -21,10 +29,10 @@ message Transaction {
 }
 
 message NewTransactionRequest {
-  uint64 cluster_id = 1;
+  uint64 shard_id = 1;
   uint64 client_id = 2;
 }
 
 message NewTransactionReply {
-  uint64 session_id = 1;
+  Transaction transaction = 1;
 }

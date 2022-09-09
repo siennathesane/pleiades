@@ -667,7 +667,8 @@ var RaftHost_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TransactionsClient interface {
 	NewTransaction(ctx context.Context, in *database.NewTransactionRequest, opts ...grpc.CallOption) (*database.NewTransactionReply, error)
-	CloseSession(ctx context.Context, in *database.CloseTransactionRequest, opts ...grpc.CallOption) (*database.CloseTransactionReply, error)
+	CloseTransaction(ctx context.Context, in *database.CloseTransactionRequest, opts ...grpc.CallOption) (*database.CloseTransactionReply, error)
+	Commit(ctx context.Context, in *database.CommitRequest, opts ...grpc.CallOption) (*database.CommitReply, error)
 }
 
 type transactionsClient struct {
@@ -687,9 +688,18 @@ func (c *transactionsClient) NewTransaction(ctx context.Context, in *database.Ne
 	return out, nil
 }
 
-func (c *transactionsClient) CloseSession(ctx context.Context, in *database.CloseTransactionRequest, opts ...grpc.CallOption) (*database.CloseTransactionReply, error) {
+func (c *transactionsClient) CloseTransaction(ctx context.Context, in *database.CloseTransactionRequest, opts ...grpc.CallOption) (*database.CloseTransactionReply, error) {
 	out := new(database.CloseTransactionReply)
-	err := c.cc.Invoke(ctx, "/server.Transactions/CloseSession", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/server.Transactions/CloseTransaction", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *transactionsClient) Commit(ctx context.Context, in *database.CommitRequest, opts ...grpc.CallOption) (*database.CommitReply, error) {
+	out := new(database.CommitReply)
+	err := c.cc.Invoke(ctx, "/server.Transactions/Commit", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -701,7 +711,8 @@ func (c *transactionsClient) CloseSession(ctx context.Context, in *database.Clos
 // for forward compatibility
 type TransactionsServer interface {
 	NewTransaction(context.Context, *database.NewTransactionRequest) (*database.NewTransactionReply, error)
-	CloseSession(context.Context, *database.CloseTransactionRequest) (*database.CloseTransactionReply, error)
+	CloseTransaction(context.Context, *database.CloseTransactionRequest) (*database.CloseTransactionReply, error)
+	Commit(context.Context, *database.CommitRequest) (*database.CommitReply, error)
 	mustEmbedUnimplementedTransactionsServer()
 }
 
@@ -712,8 +723,11 @@ type UnimplementedTransactionsServer struct {
 func (UnimplementedTransactionsServer) NewTransaction(context.Context, *database.NewTransactionRequest) (*database.NewTransactionReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NewTransaction not implemented")
 }
-func (UnimplementedTransactionsServer) CloseSession(context.Context, *database.CloseTransactionRequest) (*database.CloseTransactionReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CloseSession not implemented")
+func (UnimplementedTransactionsServer) CloseTransaction(context.Context, *database.CloseTransactionRequest) (*database.CloseTransactionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CloseTransaction not implemented")
+}
+func (UnimplementedTransactionsServer) Commit(context.Context, *database.CommitRequest) (*database.CommitReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Commit not implemented")
 }
 func (UnimplementedTransactionsServer) mustEmbedUnimplementedTransactionsServer() {}
 
@@ -746,20 +760,38 @@ func _Transactions_NewTransaction_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Transactions_CloseSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Transactions_CloseTransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(database.CloseTransactionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TransactionsServer).CloseSession(ctx, in)
+		return srv.(TransactionsServer).CloseTransaction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/server.Transactions/CloseSession",
+		FullMethod: "/server.Transactions/CloseTransaction",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransactionsServer).CloseSession(ctx, req.(*database.CloseTransactionRequest))
+		return srv.(TransactionsServer).CloseTransaction(ctx, req.(*database.CloseTransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Transactions_Commit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(database.CommitRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TransactionsServer).Commit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/server.Transactions/Commit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TransactionsServer).Commit(ctx, req.(*database.CommitRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -776,8 +808,12 @@ var Transactions_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Transactions_NewTransaction_Handler,
 		},
 		{
-			MethodName: "CloseSession",
-			Handler:    _Transactions_CloseSession_Handler,
+			MethodName: "CloseTransaction",
+			Handler:    _Transactions_CloseTransaction_Handler,
+		},
+		{
+			MethodName: "Commit",
+			Handler:    _Transactions_Commit_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

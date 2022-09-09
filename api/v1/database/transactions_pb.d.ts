@@ -4,10 +4,10 @@
 import * as jspb from "google-protobuf";
 
 export class CloseTransactionRequest extends jspb.Message {
-  hasSession(): boolean;
-  clearSession(): void;
-  getSession(): Transaction | undefined;
-  setSession(value?: Transaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
 
   getTimeout(): number;
   setTimeout(value: number): void;
@@ -24,16 +24,16 @@ export class CloseTransactionRequest extends jspb.Message {
 
 export namespace CloseTransactionRequest {
   export type AsObject = {
-    session?: Transaction.AsObject,
+    transaction?: Transaction.AsObject,
     timeout: number,
   }
 }
 
 export class CloseTransactionReply extends jspb.Message {
-  hasSession(): boolean;
-  clearSession(): void;
-  getSession(): Transaction | undefined;
-  setSession(value?: Transaction): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
 
   getTimeout(): number;
   setTimeout(value: number): void;
@@ -50,8 +50,52 @@ export class CloseTransactionReply extends jspb.Message {
 
 export namespace CloseTransactionReply {
   export type AsObject = {
-    session?: Transaction.AsObject,
+    transaction?: Transaction.AsObject,
     timeout: number,
+  }
+}
+
+export class CommitRequest extends jspb.Message {
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CommitRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CommitRequest): CommitRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CommitRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CommitRequest;
+  static deserializeBinaryFromReader(message: CommitRequest, reader: jspb.BinaryReader): CommitRequest;
+}
+
+export namespace CommitRequest {
+  export type AsObject = {
+    transaction?: Transaction.AsObject,
+  }
+}
+
+export class CommitReply extends jspb.Message {
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CommitReply.AsObject;
+  static toObject(includeInstance: boolean, msg: CommitReply): CommitReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: CommitReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CommitReply;
+  static deserializeBinaryFromReader(message: CommitReply, reader: jspb.BinaryReader): CommitReply;
+}
+
+export namespace CommitReply {
+  export type AsObject = {
+    transaction?: Transaction.AsObject,
   }
 }
 
@@ -88,8 +132,8 @@ export namespace Transaction {
 }
 
 export class NewTransactionRequest extends jspb.Message {
-  getClusterId(): number;
-  setClusterId(value: number): void;
+  getShardId(): number;
+  setShardId(value: number): void;
 
   getClientId(): number;
   setClientId(value: number): void;
@@ -106,14 +150,16 @@ export class NewTransactionRequest extends jspb.Message {
 
 export namespace NewTransactionRequest {
   export type AsObject = {
-    clusterId: number,
+    shardId: number,
     clientId: number,
   }
 }
 
 export class NewTransactionReply extends jspb.Message {
-  getSessionId(): number;
-  setSessionId(value: number): void;
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): Transaction | undefined;
+  setTransaction(value?: Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NewTransactionReply.AsObject;
@@ -127,7 +173,7 @@ export class NewTransactionReply extends jspb.Message {
 
 export namespace NewTransactionReply {
   export type AsObject = {
-    sessionId: number,
+    transaction?: Transaction.AsObject,
   }
 }
 
