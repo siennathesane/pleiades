@@ -19,5 +19,7 @@ const (
 )
 
 var (
+	errNilTransaction = errors.New("cannot close an empty transaction")
+	errUnupportedTransaction = errors.New("unsupported transaction type")
 	ErrSystemShardRange = errors.New("shardId is within system shard range")
 )

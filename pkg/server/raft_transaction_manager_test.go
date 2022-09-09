@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func TestSessionManager(t *testing.T) {
+func TestTransactionManager(t *testing.T) {
 	if testing.Short() {
 		t.Skipf("skipping session manager tests")
 	}
@@ -59,22 +59,18 @@ func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
 	transaction := sm.GetNoOpTransaction(smt.shardId)
 	smt.Require().NotNil(transaction, "the client transaction must not be nil")
 
+	cs, ok := sm.sessionCache[transaction.GetClientId()]
+	smt.Require().True(ok, "the client session must exist in the cache")
+
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	_, err := smt.nh.SyncPropose(proposeContext, sm.transactionToSession(transaction), []byte("test-message"))
+	_, err := smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
 	smt.Require().Panics(func() {
-		cs := sm.transactionToSession(transaction)
 		cs.ProposalCompleted()
 	}, "finishing a noop proposal must panic")
 }
 
-// this test focuses primarily on ensuring that the transaction can be
-// referenced, dereferenced, and reconstituted in order to ensure that
-// transactions can be sent across the wire without losing their fidelity
-// ultimately this is to ensure that we build out the transaction
-// capabilities that we're not so functionally tied to dragonboat that
-// we can't implement higher-order logic
 func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 	sm := newSessionManager(smt.nh, smt.logger)
 
@@ -83,8 +79,9 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 	smt.Require().NoError(err, "there must not be an error when getting the session")
 	smt.Require().NotNil(transaction, "the client session must not be nil")
 
-	ogTransaction := *transaction
-	cs := sm.transactionToSession(transaction)
+	cs, ok := sm.sessionCache[transaction.GetClientId()]
+	smt.Require().True(ok, "the client session must exist in the cache")
+
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
@@ -92,10 +89,6 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 	smt.Require().NotPanics(func() {
 		cs.ProposalCompleted()
 	}, "finishing a proposal must not panic")
-
-	afterProposal := *sm.csToTransaction(cs)
-	smt.Require().True(ogTransaction.TransactionId < afterProposal.TransactionId, "the post-proposal transaction id must have incremented")
-	smt.logger.Printf("increase after a single transaction in a shard: %d", afterProposal.TransactionId - ogTransaction.TransactionId)
 }
 
 func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
@@ -106,8 +99,9 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 	smt.Require().NoError(err, "there must not be an error when getting the session")
 	smt.Require().NotNil(transaction, "the client session must not be nil")
 
-	ogTransaction := *transaction
-	cs := sm.transactionToSession(transaction)
+	cs, ok := sm.sessionCache[transaction.GetClientId()]
+	smt.Require().True(ok, "the client session must exist in the cache")
+
 	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
 	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
@@ -116,10 +110,28 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 		cs.ProposalCompleted()
 	}, "finishing a proposal must not panic")
 
-	afterProposal := *sm.csToTransaction(cs)
-	smt.Require().True(ogTransaction.TransactionId < afterProposal.TransactionId, "the post-proposal transaction id must have incremented")
-	smt.logger.Printf("increase after a single transaction in a shard: %d", afterProposal.TransactionId - ogTransaction.TransactionId)
-
-	err = sm.CloseTransaction(ctx, &afterProposal)
+	afterProposal := csToTransaction(*cs)
+	err = sm.CloseTransaction(ctx, afterProposal)
 	smt.Require().NoError(err, "there must not be an error when closing the transaction")
+}
+
+func (smt *TransactionManagerTestSuite) TestCommit() {
+	sm := newSessionManager(smt.nh, smt.logger)
+
+	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	transaction, err := sm.GetTransaction(ctx, smt.shardId)
+	smt.Require().NoError(err, "there must not be an error when getting the session")
+	smt.Require().NotNil(transaction, "the client session must not be nil")
+
+	cs, ok := sm.sessionCache[transaction.GetClientId()]
+	smt.Require().True(ok, "the client session must exist in the cache")
+
+	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	smt.Require().NoError(err, "there must not be an error when proposing a new message")
+
+	transactionResult := sm.Commit(proposeContext, transaction)
+
+	smt.Require().True(transaction.TransactionId < transactionResult.TransactionId, "the post-proposal transaction id must have incremented")
+	smt.logger.Printf("increase after a single transaction in a shard: %d", transactionResult.TransactionId - transaction.TransactionId)
 }

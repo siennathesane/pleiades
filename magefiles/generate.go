@@ -136,12 +136,12 @@ func (Gen) Setup() {
 // generate all schemas
 func (Gen) All() error {
 
-	mg.SerialDeps(Gen.Raft, Gen.Database)
+	mg.SerialDeps(Gen.Raft, Gen.DB, Gen.Server)
 	return nil
 }
 
 // compiles the database schemas and generates the go code
-func (Gen) Database() error {
+func (Gen) DB() error {
 
 	fmt.Println("generating database protocols")
 
@@ -180,6 +180,14 @@ func (Gen) Raft() error {
 		return err
 	}
 
+	return nil
+}
+
+// generates the server grpc code
+func (Gen) Server() error {
+
+	fmt.Println("generating server instances")
+
 	raftRpcFiles, err := filepath.Glob("pkg/server/*.proto")
 	if err != nil {
 		return err
@@ -191,4 +199,3 @@ func (Gen) Raft() error {
 
 	return nil
 }
-

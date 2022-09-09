@@ -54,7 +54,7 @@ type IHost interface {
 
 type ITransactionManager interface {
 	CloseTransaction(ctx context.Context, transaction *database.Transaction) error
-	Complete(ctx context.Context, transaction *database.Transaction) *database.Transaction
+	Commit(ctx context.Context, transaction *database.Transaction) *database.Transaction
 	GetNoOpTransaction(shardId uint64) *database.Transaction
 	GetTransaction(ctx context.Context, shardId uint64) (*database.Transaction, error)
 }

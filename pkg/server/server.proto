@@ -31,7 +31,8 @@ service RaftHost {
 
 service Transactions {
   rpc NewTransaction(database.NewTransactionRequest) returns (database.NewTransactionReply);
-  rpc CloseSession(database.CloseTransactionRequest) returns (database.CloseTransactionReply);
+  rpc CloseTransaction(database.CloseTransactionRequest) returns (database.CloseTransactionReply);
+  rpc Commit(database.CommitRequest) returns (database.CommitReply);
 }
 
 service KVStoreService {
