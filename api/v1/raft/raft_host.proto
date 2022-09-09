@@ -26,7 +26,9 @@ message SnapshotRequest {
   int64 timeout = 2;
 }
 
-message SnapshotReply {}
+message SnapshotReply {
+  uint64 snapshotIndexCaptured = 1;
+}
 
 message StopRequest {}
 
@@ -35,9 +37,25 @@ message StopReply {}
 message GetHostConfigRequest {}
 
 message GetHostConfigReply {
-
+  HostConfig Config = 1;
 }
 
 message GetClusterMembershipRequest {
   uint64 clusterId = 1;
+}
+
+message HostConfig {
+  uint64 deploymentId = 1;
+  string walDir = 2;
+  string hostDir = 3;
+  uint64 roundTripTimeInMilliseconds = 4;
+  string raftAddress = 5;
+  bool addressByHostID = 6;
+  string listenAddress = 7;
+  bool mutualTls = 8;
+  string caFile = 9;
+  string certFile = 10;
+  string keyFile = 11;
+  bool enableMetrics = 12;
+  bool notifyCommit = 13;
 }
