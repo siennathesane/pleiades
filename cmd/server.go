@@ -40,8 +40,8 @@ different DeploymentID values on your staging and dev environment. It is
 also recommended to use different DeploymentID values for different
 dragonboat based applications.
 
-When not set, the default value 0 will be used as the deployment ID and
-thus allowing all NodeHost instances with deployment ID 0 to communicate
+When not set, the default value 0 will be used as the deployment Id and
+thus allowing all NodeHost instances with deployment Id 0 to communicate
 with each other.
 	   
 WALDir is the directory used for storing the WAL of Raft entries. It is
@@ -163,7 +163,7 @@ are
 
 To use these machines, first enable the NodeHostConfig.AddressByNodeHostID
 field and start the NodeHost instances. The NodeHostID value of each
-NodeHost instance can be obtained by calling NodeHost.ID(). Let's say they
+NodeHost instance can be obtained by calling NodeHost.Id(). Let's say they
 are
 
 "nhid-xxxxx",
