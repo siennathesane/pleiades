@@ -108,6 +108,9 @@ export namespace SnapshotRequest {
 }
 
 export class SnapshotReply extends jspb.Message {
+  getSnapshotindexcaptured(): number;
+  setSnapshotindexcaptured(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SnapshotReply.AsObject;
   static toObject(includeInstance: boolean, msg: SnapshotReply): SnapshotReply.AsObject;
@@ -120,6 +123,7 @@ export class SnapshotReply extends jspb.Message {
 
 export namespace SnapshotReply {
   export type AsObject = {
+    snapshotindexcaptured: number,
   }
 }
 
@@ -172,6 +176,11 @@ export namespace GetHostConfigRequest {
 }
 
 export class GetHostConfigReply extends jspb.Message {
+  hasConfig(): boolean;
+  clearConfig(): void;
+  getConfig(): HostConfig | undefined;
+  setConfig(value?: HostConfig): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetHostConfigReply.AsObject;
   static toObject(includeInstance: boolean, msg: GetHostConfigReply): GetHostConfigReply.AsObject;
@@ -184,6 +193,7 @@ export class GetHostConfigReply extends jspb.Message {
 
 export namespace GetHostConfigReply {
   export type AsObject = {
+    config?: HostConfig.AsObject,
   }
 }
 
@@ -204,6 +214,74 @@ export class GetClusterMembershipRequest extends jspb.Message {
 export namespace GetClusterMembershipRequest {
   export type AsObject = {
     clusterid: number,
+  }
+}
+
+export class HostConfig extends jspb.Message {
+  getDeploymentid(): number;
+  setDeploymentid(value: number): void;
+
+  getWaldir(): string;
+  setWaldir(value: string): void;
+
+  getHostdir(): string;
+  setHostdir(value: string): void;
+
+  getRoundtriptimeinmilliseconds(): number;
+  setRoundtriptimeinmilliseconds(value: number): void;
+
+  getRaftaddress(): string;
+  setRaftaddress(value: string): void;
+
+  getAddressbyhostid(): boolean;
+  setAddressbyhostid(value: boolean): void;
+
+  getListenaddress(): string;
+  setListenaddress(value: string): void;
+
+  getMutualtls(): boolean;
+  setMutualtls(value: boolean): void;
+
+  getCafile(): string;
+  setCafile(value: string): void;
+
+  getCertfile(): string;
+  setCertfile(value: string): void;
+
+  getKeyfile(): string;
+  setKeyfile(value: string): void;
+
+  getEnablemetrics(): boolean;
+  setEnablemetrics(value: boolean): void;
+
+  getNotifycommit(): boolean;
+  setNotifycommit(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): HostConfig.AsObject;
+  static toObject(includeInstance: boolean, msg: HostConfig): HostConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: HostConfig, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): HostConfig;
+  static deserializeBinaryFromReader(message: HostConfig, reader: jspb.BinaryReader): HostConfig;
+}
+
+export namespace HostConfig {
+  export type AsObject = {
+    deploymentid: number,
+    waldir: string,
+    hostdir: string,
+    roundtriptimeinmilliseconds: number,
+    raftaddress: string,
+    addressbyhostid: boolean,
+    listenaddress: string,
+    mutualtls: boolean,
+    cafile: string,
+    certfile: string,
+    keyfile: string,
+    enablemetrics: boolean,
+    notifycommit: boolean,
   }
 }
 

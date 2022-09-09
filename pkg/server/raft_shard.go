@@ -43,16 +43,16 @@ type MembershipEntry struct {
 	// ConfigChangeId is the Raft entry index of the last applied membership
 	// change entry.
 	ConfigChangeId uint64
-	// Nodes is a map of NodeID values to NodeHost Raft addresses for all regular
+	// Nodes is a map of ReplicaId values to NodeHost Raft addresses for all regular
 	// Raft nodes.
 	Replicas map[uint64]string
-	// Observers is a map of NodeID values to NodeHost Raft addresses for all
+	// Observers is a map of ReplicaId values to NodeHost Raft addresses for all
 	// observers in the Raft cluster.
 	Observers map[uint64]string
-	// Witnesses is a map of NodeID values to NodeHost Raft addresses for all
+	// Witnesses is a map of ReplicaId values to NodeHost Raft addresses for all
 	// witnesses in the Raft cluster.
 	Witnesses map[uint64]string
-	// Removed is a set of NodeID values that have been removed from the Raft
+	// Removed is a set of ReplicaId values that have been removed from the Raft
 	// cluster. They are not allowed to be added back to the cluster.
 	Removed map[uint64]struct{}
 }

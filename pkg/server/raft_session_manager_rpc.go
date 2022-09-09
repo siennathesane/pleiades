@@ -49,7 +49,7 @@ func (s *SessionManagerRPCService) writePayloads(payloadStream <-chan []byte, is
 
 func (s *SessionManagerRPCService) newSessionHandler(request *database.NewSessionRequest) {
 	//clientSession := &client.Session{
-	//	ClusterID: request.GetClusterId(),
+	//	ShardId: request.GetClusterId(),
 	//}
 	//
 	//payloadWriter := make(chan []byte)

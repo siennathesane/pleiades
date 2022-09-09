@@ -471,7 +471,7 @@ var ShardManager_ServiceDesc = grpc.ServiceDesc{
 type RaftHostClient interface {
 	Compact(ctx context.Context, in *raft.CompactRequest, opts ...grpc.CallOption) (*raft.CompactReply, error)
 	GetHostConfig(ctx context.Context, in *raft.GetHostConfigRequest, opts ...grpc.CallOption) (*raft.GetHostConfigReply, error)
-	LeaderTransfer(ctx context.Context, in *raft.LeaderTransferRequest, opts ...grpc.CallOption) (*raft.LeaderTransferReply, error)
+	//  rpc LeaderTransfer(raft.LeaderTransferRequest) returns (raft.LeaderTransferReply);
 	Snapshot(ctx context.Context, in *raft.SnapshotRequest, opts ...grpc.CallOption) (*raft.SnapshotReply, error)
 	Stop(ctx context.Context, in *raft.StopRequest, opts ...grpc.CallOption) (*raft.StopReply, error)
 }
@@ -502,15 +502,6 @@ func (c *raftHostClient) GetHostConfig(ctx context.Context, in *raft.GetHostConf
 	return out, nil
 }
 
-func (c *raftHostClient) LeaderTransfer(ctx context.Context, in *raft.LeaderTransferRequest, opts ...grpc.CallOption) (*raft.LeaderTransferReply, error) {
-	out := new(raft.LeaderTransferReply)
-	err := c.cc.Invoke(ctx, "/server.RaftHost/LeaderTransfer", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *raftHostClient) Snapshot(ctx context.Context, in *raft.SnapshotRequest, opts ...grpc.CallOption) (*raft.SnapshotReply, error) {
 	out := new(raft.SnapshotReply)
 	err := c.cc.Invoke(ctx, "/server.RaftHost/Snapshot", in, out, opts...)
@@ -535,7 +526,7 @@ func (c *raftHostClient) Stop(ctx context.Context, in *raft.StopRequest, opts ..
 type RaftHostServer interface {
 	Compact(context.Context, *raft.CompactRequest) (*raft.CompactReply, error)
 	GetHostConfig(context.Context, *raft.GetHostConfigRequest) (*raft.GetHostConfigReply, error)
-	LeaderTransfer(context.Context, *raft.LeaderTransferRequest) (*raft.LeaderTransferReply, error)
+	//  rpc LeaderTransfer(raft.LeaderTransferRequest) returns (raft.LeaderTransferReply);
 	Snapshot(context.Context, *raft.SnapshotRequest) (*raft.SnapshotReply, error)
 	Stop(context.Context, *raft.StopRequest) (*raft.StopReply, error)
 	mustEmbedUnimplementedRaftHostServer()
@@ -550,9 +541,6 @@ func (UnimplementedRaftHostServer) Compact(context.Context, *raft.CompactRequest
 }
 func (UnimplementedRaftHostServer) GetHostConfig(context.Context, *raft.GetHostConfigRequest) (*raft.GetHostConfigReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHostConfig not implemented")
-}
-func (UnimplementedRaftHostServer) LeaderTransfer(context.Context, *raft.LeaderTransferRequest) (*raft.LeaderTransferReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LeaderTransfer not implemented")
 }
 func (UnimplementedRaftHostServer) Snapshot(context.Context, *raft.SnapshotRequest) (*raft.SnapshotReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Snapshot not implemented")
@@ -609,24 +597,6 @@ func _RaftHost_GetHostConfig_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RaftHost_LeaderTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(raft.LeaderTransferRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(RaftHostServer).LeaderTransfer(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/server.RaftHost/LeaderTransfer",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RaftHostServer).LeaderTransfer(ctx, req.(*raft.LeaderTransferRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _RaftHost_Snapshot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(raft.SnapshotRequest)
 	if err := dec(in); err != nil {
@@ -677,10 +647,6 @@ var RaftHost_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetHostConfig",
 			Handler:    _RaftHost_GetHostConfig_Handler,
-		},
-		{
-			MethodName: "LeaderTransfer",
-			Handler:    _RaftHost_LeaderTransfer_Handler,
 		},
 		{
 			MethodName: "Snapshot",

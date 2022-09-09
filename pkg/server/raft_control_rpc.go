@@ -40,7 +40,7 @@ var (
 	RaftControlRPCWriteTimeout time.Duration = 1 * time.Second
 )
 
-func NewRaftControlRPCServer(node INodeHost, host host.Host, logger zerolog.Logger) *RaftControlRPCServer {
+func NewRaftControlRPCServer(node IHost, host host.Host, logger zerolog.Logger) *RaftControlRPCServer {
 	rcrs := &RaftControlRPCServer{
 		logger: logger,
 		node:   node,
@@ -53,7 +53,7 @@ func NewRaftControlRPCServer(node INodeHost, host host.Host, logger zerolog.Logg
 
 type RaftControlRPCServer struct {
 	logger zerolog.Logger
-	node   INodeHost
+	node   IHost
 	host   host.Host
 }
 //
@@ -259,7 +259,7 @@ type RaftControlRPCServer struct {
 //
 //func (r *RaftControlRPCServer) GetID(ctx context.Context, _ *database.IdRequest, stream network.Stream) {
 //	ctx = r.logger.WithContext(ctx)
-//	id := r.node.ID()
+//	id := r.node.Id()
 //
 //	responseFrame := NewFrame().WithService(RaftControlServiceByte).WithMethod(GetLeaderId)
 //
