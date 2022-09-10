@@ -88,7 +88,7 @@ func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raft.Ge
 
 func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raft.GetShardMembersRequest) (*raft.GetShardMembersReply, error) {
 	if request.GetShardId() <= systemShardStop {
-		return nil, errors.New("shardId is within system shard range")
+		return nil, ErrSystemShardRange
 	}
 
 	membership, err := r.clusterManager.GetShardMembers(request.ShardId)
@@ -206,7 +206,7 @@ func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request
 
 func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raft.StopReplicaRequest) (*raft.StopReplicaReply, error) {
 	if request.GetShardId() <= systemShardStop {
-		return nil, errors.New("shardId is within system shard range")
+		return nil, ErrSystemShardRange
 	}
 
 	_, err := r.clusterManager.StopReplica(request.GetShardId())
@@ -221,7 +221,7 @@ func (r *raftShardGrpcAdapter) mustEmbedUnimplementedShardManagerServer() { }
 
 func (r *raftShardGrpcAdapter) checkRequestConfig(shardId, replicaId uint64) error {
 	if shardId <= systemShardStop {
-		return errors.New("shardId is within system shard range")
+		return ErrSystemShardRange
 	}
 
 	if replicaId == 0 {

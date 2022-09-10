@@ -56,7 +56,7 @@ func (r *raftHostGrpcAdapter) GetHostConfig(ctx context.Context, request *raft.G
 
 func (r *raftHostGrpcAdapter) Snapshot(ctx context.Context, request *raft.SnapshotRequest) (*raft.SnapshotReply, error) {
 	if request.GetShardId() <= systemShardStop {
-		return &raft.SnapshotReply{}, errors.New("shardId is within system shard range")
+		return &raft.SnapshotReply{}, ErrSystemShardRange
 	}
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
@@ -79,7 +79,7 @@ func (r *raftHostGrpcAdapter) mustEmbedUnimplementedRaftHostServer() {
 
 func (r *raftHostGrpcAdapter) checkRequestConfig(shardId, replicaId uint64) error {
 	if shardId <= systemShardStop {
-		return errors.New("shardId is within system shard range")
+		return ErrSystemShardRange
 	}
 
 	if replicaId == 0 {

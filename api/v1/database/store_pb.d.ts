@@ -2,7 +2,7 @@
 // file: api/v1/database/store.proto
 
 import * as jspb from "google-protobuf";
-import * as api_v1_database_session_pb from "../../../api/v1/database/session_pb";
+import * as api_v1_database_transactions_pb from "../../../api/v1/database/transactions_pb";
 import * as api_v1_database_kv_pb from "../../../api/v1/database/kv_pb";
 
 export class DeleteResponse extends jspb.Message {
@@ -29,8 +29,8 @@ export class DeleteRequest extends jspb.Message {
 
   hasSession(): boolean;
   clearSession(): void;
-  getSession(): api_v1_database_session_pb.Session | undefined;
-  setSession(value?: api_v1_database_session_pb.Session): void;
+  getSession(): api_v1_database_transactions_pb.Transaction | undefined;
+  setSession(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteRequest.AsObject;
@@ -45,7 +45,7 @@ export class DeleteRequest extends jspb.Message {
 export namespace DeleteRequest {
   export type AsObject = {
     payload?: api_v1_database_kv_pb.KeyValue.AsObject,
-    session?: api_v1_database_session_pb.Session.AsObject,
+    session?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -57,8 +57,8 @@ export class PutRequest extends jspb.Message {
 
   hasSession(): boolean;
   clearSession(): void;
-  getSession(): api_v1_database_session_pb.Session | undefined;
-  setSession(value?: api_v1_database_session_pb.Session): void;
+  getSession(): api_v1_database_transactions_pb.Transaction | undefined;
+  setSession(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PutRequest.AsObject;
@@ -73,7 +73,7 @@ export class PutRequest extends jspb.Message {
 export namespace PutRequest {
   export type AsObject = {
     payload?: api_v1_database_kv_pb.KeyValue.AsObject,
-    session?: api_v1_database_session_pb.Session.AsObject,
+    session?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -97,11 +97,6 @@ export class GetRequest extends jspb.Message {
   getKey(): string;
   setKey(value: string): void;
 
-  hasSession(): boolean;
-  clearSession(): void;
-  getSession(): api_v1_database_session_pb.Session | undefined;
-  setSession(value?: api_v1_database_session_pb.Session): void;
-
   getClusterid(): number;
   setClusterid(value: number): void;
 
@@ -118,7 +113,6 @@ export class GetRequest extends jspb.Message {
 export namespace GetRequest {
   export type AsObject = {
     key: string,
-    session?: api_v1_database_session_pb.Session.AsObject,
     clusterid: number,
   }
 }
