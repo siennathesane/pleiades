@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2022 Sienna Lloyd
  *
- * Licensed under the PolyForm Strict License 1.0.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * Licensed under the PolyForm Strict License 1.0.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
@@ -209,7 +209,7 @@ func prepBucket(kvp db.KeyValue) (string, []string, error) {
 		return "", []string{}, errors.New("cannot create empty bucket")
 	}
 
-	if bucketHierarchyLen < fsmRootKeyCount {
+	if bucketHierarchyLen < 5 {
 		return "", []string{}, errors.New("the fsm root key count is not correct")
 	}
 
