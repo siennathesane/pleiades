@@ -9,7 +9,17 @@
 
 package server
 
+import (
+	"github.com/cockroachdb/errors"
+)
+
 const (
 	systemShardStart = 1
 	systemShardStop = 100
+)
+
+var (
+	errNilTransaction = errors.New("cannot close an empty transaction")
+	errUnupportedTransaction = errors.New("unsupported transaction type")
+	ErrSystemShardRange = errors.New("shardId is within system shard range")
 )
