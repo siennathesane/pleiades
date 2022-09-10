@@ -15,8 +15,8 @@ var jspb = require('google-protobuf');
 var goog = jspb;
 var global = (function() { return this || window || global || self || Function('return this')(); }).call(null);
 
-var api_v1_database_session_pb = require('../../../api/v1/database/session_pb.js');
-goog.object.extend(proto, api_v1_database_session_pb);
+var api_v1_database_transactions_pb = require('../../../api/v1/database/transactions_pb.js');
+goog.object.extend(proto, api_v1_database_transactions_pb);
 var api_v1_database_kv_pb = require('../../../api/v1/database/kv_pb.js');
 goog.object.extend(proto, api_v1_database_kv_pb);
 goog.exportSymbol('proto.database.DeleteRequest', null, global);
@@ -285,7 +285,7 @@ proto.database.DeleteRequest.prototype.toObject = function(opt_includeInstance) 
 proto.database.DeleteRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     payload: (f = msg.getPayload()) && api_v1_database_kv_pb.KeyValue.toObject(includeInstance, f),
-    session: (f = msg.getSession()) && api_v1_database_session_pb.Session.toObject(includeInstance, f)
+    session: (f = msg.getSession()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -328,8 +328,8 @@ proto.database.DeleteRequest.deserializeBinaryFromReader = function(msg, reader)
       msg.setPayload(value);
       break;
     case 2:
-      var value = new api_v1_database_session_pb.Session;
-      reader.readMessage(value,api_v1_database_session_pb.Session.deserializeBinaryFromReader);
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
       msg.setSession(value);
       break;
     default:
@@ -374,7 +374,7 @@ proto.database.DeleteRequest.serializeBinaryToWriter = function(message, writer)
     writer.writeMessage(
       2,
       f,
-      api_v1_database_session_pb.Session.serializeBinaryToWriter
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -418,17 +418,17 @@ proto.database.DeleteRequest.prototype.hasPayload = function() {
 
 
 /**
- * optional Session session = 2;
- * @return {?proto.database.Session}
+ * optional Transaction session = 2;
+ * @return {?proto.database.Transaction}
  */
 proto.database.DeleteRequest.prototype.getSession = function() {
-  return /** @type{?proto.database.Session} */ (
-    jspb.Message.getWrapperField(this, api_v1_database_session_pb.Session, 2));
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
 };
 
 
 /**
- * @param {?proto.database.Session|undefined} value
+ * @param {?proto.database.Transaction|undefined} value
  * @return {!proto.database.DeleteRequest} returns this
 */
 proto.database.DeleteRequest.prototype.setSession = function(value) {
@@ -487,7 +487,7 @@ proto.database.PutRequest.prototype.toObject = function(opt_includeInstance) {
 proto.database.PutRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     payload: (f = msg.getPayload()) && api_v1_database_kv_pb.KeyValue.toObject(includeInstance, f),
-    session: (f = msg.getSession()) && api_v1_database_session_pb.Session.toObject(includeInstance, f)
+    session: (f = msg.getSession()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -530,8 +530,8 @@ proto.database.PutRequest.deserializeBinaryFromReader = function(msg, reader) {
       msg.setPayload(value);
       break;
     case 2:
-      var value = new api_v1_database_session_pb.Session;
-      reader.readMessage(value,api_v1_database_session_pb.Session.deserializeBinaryFromReader);
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
       msg.setSession(value);
       break;
     default:
@@ -576,7 +576,7 @@ proto.database.PutRequest.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       2,
       f,
-      api_v1_database_session_pb.Session.serializeBinaryToWriter
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -620,17 +620,17 @@ proto.database.PutRequest.prototype.hasPayload = function() {
 
 
 /**
- * optional Session session = 2;
- * @return {?proto.database.Session}
+ * optional Transaction session = 2;
+ * @return {?proto.database.Transaction}
  */
 proto.database.PutRequest.prototype.getSession = function() {
-  return /** @type{?proto.database.Session} */ (
-    jspb.Message.getWrapperField(this, api_v1_database_session_pb.Session, 2));
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
 };
 
 
 /**
- * @param {?proto.database.Session|undefined} value
+ * @param {?proto.database.Transaction|undefined} value
  * @return {!proto.database.PutRequest} returns this
 */
 proto.database.PutRequest.prototype.setSession = function(value) {
@@ -790,7 +790,6 @@ proto.database.GetRequest.prototype.toObject = function(opt_includeInstance) {
 proto.database.GetRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     key: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    session: (f = msg.getSession()) && api_v1_database_session_pb.Session.toObject(includeInstance, f),
     clusterid: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
@@ -832,11 +831,6 @@ proto.database.GetRequest.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setKey(value);
       break;
-    case 2:
-      var value = new api_v1_database_session_pb.Session;
-      reader.readMessage(value,api_v1_database_session_pb.Session.deserializeBinaryFromReader);
-      msg.setSession(value);
-      break;
     case 3:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setClusterid(value);
@@ -877,14 +871,6 @@ proto.database.GetRequest.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getSession();
-  if (f != null) {
-    writer.writeMessage(
-      2,
-      f,
-      api_v1_database_session_pb.Session.serializeBinaryToWriter
-    );
-  }
   f = message.getClusterid();
   if (f !== 0) {
     writer.writeUint64(
@@ -910,43 +896,6 @@ proto.database.GetRequest.prototype.getKey = function() {
  */
 proto.database.GetRequest.prototype.setKey = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional Session session = 2;
- * @return {?proto.database.Session}
- */
-proto.database.GetRequest.prototype.getSession = function() {
-  return /** @type{?proto.database.Session} */ (
-    jspb.Message.getWrapperField(this, api_v1_database_session_pb.Session, 2));
-};
-
-
-/**
- * @param {?proto.database.Session|undefined} value
- * @return {!proto.database.GetRequest} returns this
-*/
-proto.database.GetRequest.prototype.setSession = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.database.GetRequest} returns this
- */
-proto.database.GetRequest.prototype.clearSession = function() {
-  return this.setSession(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.database.GetRequest.prototype.hasSession = function() {
-  return jspb.Message.getField(this, 2) != null;
 };
 
 

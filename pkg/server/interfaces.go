@@ -13,6 +13,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/api/v1/database"
 	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
 	"github.com/lni/dragonboat/v3/statemachine"
@@ -52,9 +53,10 @@ type IHost interface {
 }
 
 type ITransactionManager interface {
-	GetNoOpSession(clusterID uint64) *client.Session
-	CloseSession(ctx context.Context, cs *client.Session) error
-	GetSession(ctx context.Context, clusterID uint64) (*client.Session, error)
+	CloseTransaction(ctx context.Context, transaction *database.Transaction) error
+	Commit(ctx context.Context, transaction *database.Transaction) *database.Transaction
+	GetNoOpTransaction(shardId uint64) *database.Transaction
+	GetTransaction(ctx context.Context, shardId uint64) (*database.Transaction, error)
 }
 
 type IStore interface {

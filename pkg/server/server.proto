@@ -1,6 +1,8 @@
 syntax = "proto3";
 package server;
 
+import "api/v1/database/store.proto";
+import "api/v1/database/transactions.proto";
 import "api/v1/raft/raft_shard.proto";
 import "api/v1/raft/raft_host.proto";
 option go_package = "github.com/mxplusb/pleiades/pkg/server";
@@ -25,4 +27,16 @@ service RaftHost {
 //  rpc LeaderTransfer(raft.LeaderTransferRequest) returns (raft.LeaderTransferReply);
   rpc Snapshot(raft.SnapshotRequest) returns (raft.SnapshotReply);
   rpc Stop(raft.StopRequest) returns (raft.StopReply);
+}
+
+service Transactions {
+  rpc NewTransaction(database.NewTransactionRequest) returns (database.NewTransactionReply);
+  rpc CloseTransaction(database.CloseTransactionRequest) returns (database.CloseTransactionReply);
+  rpc Commit(database.CommitRequest) returns (database.CommitReply);
+}
+
+service KVStoreService {
+  rpc Get(database.GetRequest) returns (database.GetResponse) {}
+  rpc Put(database.PutRequest) returns (database.PutReply) {}
+  rpc Delete(database.DeleteRequest) returns (database.DeleteResponse) {}
 }
