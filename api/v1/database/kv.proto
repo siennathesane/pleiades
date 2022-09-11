@@ -15,10 +15,134 @@
 syntax = "proto3";
 package database;
 option go_package = "github.com/mxplusb/pleiades/api/v1/database";
+import "google/protobuf/timestamp.proto";
+
+message PayloadWrapper {
+  bytes account = 1;
+  bytes bucket = 2;
+
+  enum RequestType {
+    CREATE_BUCKET_REQUEST = 0;
+    CREATE_BUCKET_REPLY = 1;
+    DELETE_BUCKET_REQUEST = 2;
+    DELETE_BUCKET_REPLY = 3;
+    GET_KEY_REQUEST = 4;
+    GET_KEY_REPLY = 5;
+    PUT_KEY_REQUEST = 6;
+    PUT_KEY_REPLY = 7;
+    DELETE_KEY_REQUEST = 8;
+    DELETE_KEY_REPLY = 9;
+  }
+
+  RequestType typ = 3;
+  oneof payload {
+    CreateBucketRequest create_bucket_request = 4;
+    CreateBucketReply create_bucket_reply = 5;
+    DeleteBucketRequest delete_bucket_request = 6;
+    DeleteBucketReply delete_bucket_reply = 7;
+  }
+}
+
+message CreateAccountRequest {
+  uint64 account_id = 1;
+  string owner = 2;
+}
+
+message CreateAccountReply {
+  AccountDescriptor account_descriptor = 1;
+}
+
+message DeleteAccountRequest {
+  uint64 account_id = 1;
+  string owner = 2;
+}
+
+message DeleteAccountReply {
+  bool ok = 1;
+}
+
+message GetAccountDescriptorRequest {
+  uint64 account_id = 1;
+}
+
+message GetAccountDescriptorReply {
+  AccountDescriptor account_descriptor = 1;
+}
+
+message AccountDescriptor {
+  uint64 account_id = 1;
+  string owner = 2;
+  google.protobuf.Timestamp created = 3;
+  google.protobuf.Timestamp last_updated = 4;
+  uint64 bucket_count = 5;
+  repeated string buckets = 6;
+}
+
+message CreateBucketRequest {
+  uint64 account_id = 1;
+  string name = 2;
+  string owner = 3;
+}
+
+message CreateBucketReply {
+  BucketDescriptor bucket_descriptor = 1;
+}
+
+message DeleteBucketRequest {
+  uint64 account_id = 1;
+  string name = 2;
+}
+
+message DeleteBucketReply {
+  bool ok = 1;
+}
+
+message BucketDescriptor {
+  string owner = 1;
+  uint64 size = 2;
+  uint64 key_count = 3;
+  google.protobuf.Timestamp created = 4;
+  google.protobuf.Timestamp last_updated = 5;
+}
+
+message GetKeyRequest {
+  uint64 account_id = 1;
+  string bucket_id = 2;
+  string key_id = 3;
+}
+
+message GetKeyReply {
+  KeyValue key_value_pair = 1;
+  uint64 size = 2;
+  google.protobuf.Timestamp created = 3;
+  google.protobuf.Timestamp last_updated = 4;
+}
+
+message PutKeyRequest {
+  uint64 account_id = 1;
+  string bucket_id = 2;
+  KeyValue key_value_pair = 3;
+}
+
+message PutKeyReply {
+  KeyValue key_value_pair = 1;
+  uint64 size = 2;
+  google.protobuf.Timestamp created = 3;
+}
+
+message DeleteKeyRequest {
+  uint64 account_id = 1;
+  string bucket_id = 2;
+  string key_id = 3;
+}
+
+message DeleteKeyReply {
+  bool ok = 1;
+}
 
 message KeyValue {
   // key is the key in bytes. An empty key is not allowed.
-  bytes key = 1;
+  string key = 1;
   // create_revision is the revision of last creation on this key.
   int64 create_revision = 2;
   // mod_revision is the revision of last modification on this key.
@@ -35,16 +159,17 @@ message KeyValue {
   int64 lease = 6;
 }
 
+enum KeyOperationType {
+  GET = 0;
+  PUT = 1;
+  DELETE = 2;
+}
+
 message Event {
-  enum EventType {
-    GET = 0;
-    PUT = 1;
-    DELETE = 2;
-  }
   // type is the kind of event. If type is a PUT, it indicates
   // new data has been stored to the key. If type is a DELETE,
   // it indicates the key was deleted.
-  EventType type = 1;
+  KeyOperationType type = 1;
   // kv holds the KeyValue for the event.
   // A PUT event contains current kv pair.
   // A PUT event with kv.Version=1 indicates the creation of a key.
@@ -53,5 +178,5 @@ message Event {
   KeyValue kv = 2;
 
   // prev_kv holds the key-value pair before the event happens.
-  KeyValue prev_kv = 3;
+  optional KeyValue prev_kv = 3;
 }

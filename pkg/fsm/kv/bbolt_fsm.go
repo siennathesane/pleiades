@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package kv
 
 import (
 	"encoding/binary"
@@ -65,19 +65,18 @@ func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 
 	dbPath := b.dbPath(true)
 	noDb := b.dbPath(false)
-	err := os.MkdirAll(noDb, os.FileMode(dbDirModeVal))
+	err := os.MkdirAll(noDb, os.FileMode(484))
 	if err != nil {
 		return uint64(0), err
 	}
 
-	b.db, err = bbolt.Open(dbPath, os.FileMode(dbFileModeVal), b.Options)
+	b.db, err = bbolt.Open(dbPath, os.FileMode(484), b.Options)
 	if err != nil {
 		return 0, err
 	}
 
 	var index uint64
 
-	b.mu.Lock()
 	err = b.db.Update(func(tx *bbolt.Tx) error {
 		// todo (sienna): implement db stats on open
 		//tx.Stats()
@@ -97,7 +96,6 @@ func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 		index = binary.LittleEndian.Uint64(val)
 		return nil
 	})
-	b.mu.Unlock()
 
 	if err != nil {
 		return 0, err
@@ -209,12 +207,12 @@ func prepBucket(kvp db.KeyValue) (string, []string, error) {
 		return "", []string{}, errors.New("cannot create empty bucket")
 	}
 
-	if bucketHierarchyLen < fsmRootKeyCount {
+	if bucketHierarchyLen < 5 {
 		return "", []string{}, errors.New("the fsm root key count is not correct")
 	}
 
-	if bucketHierarchyLen+3 > maxKeyDepth {
-		return "", []string{}, fmt.Errorf("the nested key cannot be more than %d levels deep", maxKeyDepth)
+	if bucketHierarchyLen+3 > 5 {
+		return "", []string{}, fmt.Errorf("the nested key cannot be more than %d levels deep", 5)
 	}
 
 	return bucketHierarchy[0], bucketHierarchy[1:], nil
