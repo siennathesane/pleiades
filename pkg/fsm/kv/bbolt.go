@@ -29,9 +29,10 @@ const (
 )
 
 var (
-	ErrInvalidAccount    = errors.New("invalid account id")
-	ErrInvalidBucketName = errors.New("invalid bucket name")
-	ErrInvalidOwner      = errors.New("invalid owner")
+	ErrInvalidAccount       = errors.New("invalid account id")
+	ErrInvalidBucketName    = errors.New("invalid bucket name")
+	ErrInvalidOwner         = errors.New("invalid owner")
+	ErrMissingAccountBucket = errors.New("account bucket not found")
 )
 
 func newBboltStore(shardId, replicaId uint64, dbPath string, logger zerolog.Logger) (*bboltStore, error) {
@@ -118,6 +119,51 @@ func (b *bboltStore) GetAccountInfo(request *database.GetAccountDescriptorReques
 	panic("implement me")
 }
 
+func (b *bboltStore) DeleteAccountBucket(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error) {
+	account := request.GetAccountId()
+	if account == 0 {
+		b.logger.Trace().Msg("empty account value")
+		return &database.DeleteAccountReply{}, ErrInvalidAccount
+	}
+
+	owner := request.GetOwner()
+	if owner == "" {
+		b.logger.Trace().Msg("empty owner value")
+		return &database.DeleteAccountReply{}, ErrInvalidOwner
+	}
+
+	err := b.db.Update(func(tx *bbolt.Tx) error {
+		accountBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(accountBuf, account)
+
+		// open the account bucket
+		accountBucket := tx.Bucket(accountBuf)
+		if accountBucket == nil {
+			b.logger.Error().Msg("account bucket not found")
+			return errors.Wrap(bbolt.ErrBucketNotFound, ErrMissingAccountBucket.Error())
+		}
+		// clear the reference
+		accountBucket = nil
+
+		err := tx.DeleteBucket(accountBuf)
+		if err != nil {
+			b.logger.Error().Err(err).Msg("can't delete account bucket")
+			return errors.Wrap(err, "can't delete account bucket")
+		}
+
+		return nil
+	})
+	resp := &database.DeleteAccountReply{
+		Ok: true,
+	}
+
+	if err != nil {
+		b.logger.Error().Err(err).Msg("can't delete account bucket")
+		resp.Ok = false
+	}
+	return resp, err
+}
+
 func (b *bboltStore) CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
 	account := request.GetAccountId()
 	if account == 0 {
@@ -150,7 +196,7 @@ func (b *bboltStore) CreateBucket(request *database.CreateBucketRequest) (*datab
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, account)
 
-		// open the account newBucket
+		// open the account bucket
 		accountBucket := tx.Bucket(accountBuf)
 		if accountBucket == nil {
 			b.logger.Error().Msg("account bucket doesn't exist")
@@ -316,17 +362,17 @@ func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*datab
 	return rep, err
 }
 
-func (b *bboltStore) Get(request *database.GetRequest) (*database.GetResponse, error) {
+func (b *bboltStore) GetKey(request *database.GetRequest) (*database.GetResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *bboltStore) Put(request *database.PutRequest) (*database.PutReply, error) {
+func (b *bboltStore) PutKey(request *database.PutRequest) (*database.PutReply, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *bboltStore) Delete(ctx context.Context, request *database.DeleteRequest) (*database.DeleteResponse, error) {
+func (b *bboltStore) DeleteKey(ctx context.Context, request *database.DeleteRequest) (*database.DeleteResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -17,7 +17,7 @@ package database;
 option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 import "google/protobuf/timestamp.proto";
 
-message PayloadWrapper {
+message KVStoreWrapper {
   bytes account = 1;
   bytes bucket = 2;
 
