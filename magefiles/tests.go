@@ -44,7 +44,7 @@ func (Test) Server() error {
 func (Test) Config() error {
 	mg.Deps(verifyVendor)
 	fmt.Println("running config tests")
-	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/conf/...")
+	return sh.RunWithV(nil, "go", "test", "-v", "./pkg/configuration/...")
 }
 
 // run fsm tests
