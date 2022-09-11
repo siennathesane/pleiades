@@ -16,7 +16,7 @@ import (
 	"runtime"
 
 	"github.com/mxplusb/cliflags/gen/gpflag"
-	"github.com/mxplusb/pleiades/pkg/conf"
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -232,7 +232,7 @@ gossip network is enough.
 }
 
 var (
-	cfg *conf.NodeHostConfig = &conf.NodeHostConfig{
+	cfg *configuration.NodeHostConfig = &configuration.NodeHostConfig{
 		DevMode:                       true,
 		DeploymentID:                  1,
 		WALDir:                        "/var/pleiades/wal",
@@ -251,7 +251,7 @@ var (
 		MaxSnapshotSendBytesPerSecond: 0,
 		MaxSnapshotRecvBytesPerSecond: 0,
 		NotifyCommit:                  true,
-		Gossip: conf.GossipConfig{
+		Gossip: configuration.GossipConfig{
 			AdvertiseAddress: "",
 			BindAddress:      "",
 			Seed:             []string{},
@@ -286,7 +286,7 @@ func init() {
 func startServer() {
 	//ctx, cancel := context.WithCancel(context.Background())
 
-	logger := conf.NewRootLogger()
+	logger := configuration.NewRootLogger()
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, os.Kill)

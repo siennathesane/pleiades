@@ -23,6 +23,7 @@ package database
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -34,53 +35,1301 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Event_EventType int32
+type KeyOperationType int32
 
 const (
-	Event_GET    Event_EventType = 0
-	Event_PUT    Event_EventType = 1
-	Event_DELETE Event_EventType = 2
+	KeyOperationType_GET    KeyOperationType = 0
+	KeyOperationType_PUT    KeyOperationType = 1
+	KeyOperationType_DELETE KeyOperationType = 2
 )
 
-// Enum value maps for Event_EventType.
+// Enum value maps for KeyOperationType.
 var (
-	Event_EventType_name = map[int32]string{
+	KeyOperationType_name = map[int32]string{
 		0: "GET",
 		1: "PUT",
 		2: "DELETE",
 	}
-	Event_EventType_value = map[string]int32{
+	KeyOperationType_value = map[string]int32{
 		"GET":    0,
 		"PUT":    1,
 		"DELETE": 2,
 	}
 )
 
-func (x Event_EventType) Enum() *Event_EventType {
-	p := new(Event_EventType)
+func (x KeyOperationType) Enum() *KeyOperationType {
+	p := new(KeyOperationType)
 	*p = x
 	return p
 }
 
-func (x Event_EventType) String() string {
+func (x KeyOperationType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Event_EventType) Descriptor() protoreflect.EnumDescriptor {
+func (KeyOperationType) Descriptor() protoreflect.EnumDescriptor {
 	return file_api_v1_database_kv_proto_enumTypes[0].Descriptor()
 }
 
-func (Event_EventType) Type() protoreflect.EnumType {
+func (KeyOperationType) Type() protoreflect.EnumType {
 	return &file_api_v1_database_kv_proto_enumTypes[0]
 }
 
-func (x Event_EventType) Number() protoreflect.EnumNumber {
+func (x KeyOperationType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Event_EventType.Descriptor instead.
-func (Event_EventType) EnumDescriptor() ([]byte, []int) {
-	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{1, 0}
+// Deprecated: Use KeyOperationType.Descriptor instead.
+func (KeyOperationType) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{0}
+}
+
+type PayloadWrapper_RequestType int32
+
+const (
+	PayloadWrapper_CREATE_BUCKET_REQUEST PayloadWrapper_RequestType = 0
+	PayloadWrapper_CREATE_BUCKET_REPLY   PayloadWrapper_RequestType = 1
+	PayloadWrapper_DELETE_BUCKET_REQUEST PayloadWrapper_RequestType = 2
+	PayloadWrapper_DELETE_BUCKET_REPLY   PayloadWrapper_RequestType = 3
+	PayloadWrapper_GET_KEY_REQUEST       PayloadWrapper_RequestType = 4
+	PayloadWrapper_GET_KEY_REPLY         PayloadWrapper_RequestType = 5
+	PayloadWrapper_PUT_KEY_REQUEST       PayloadWrapper_RequestType = 6
+	PayloadWrapper_PUT_KEY_REPLY         PayloadWrapper_RequestType = 7
+	PayloadWrapper_DELETE_KEY_REQUEST    PayloadWrapper_RequestType = 8
+	PayloadWrapper_DELETE_KEY_REPLY      PayloadWrapper_RequestType = 9
+)
+
+// Enum value maps for PayloadWrapper_RequestType.
+var (
+	PayloadWrapper_RequestType_name = map[int32]string{
+		0: "CREATE_BUCKET_REQUEST",
+		1: "CREATE_BUCKET_REPLY",
+		2: "DELETE_BUCKET_REQUEST",
+		3: "DELETE_BUCKET_REPLY",
+		4: "GET_KEY_REQUEST",
+		5: "GET_KEY_REPLY",
+		6: "PUT_KEY_REQUEST",
+		7: "PUT_KEY_REPLY",
+		8: "DELETE_KEY_REQUEST",
+		9: "DELETE_KEY_REPLY",
+	}
+	PayloadWrapper_RequestType_value = map[string]int32{
+		"CREATE_BUCKET_REQUEST": 0,
+		"CREATE_BUCKET_REPLY":   1,
+		"DELETE_BUCKET_REQUEST": 2,
+		"DELETE_BUCKET_REPLY":   3,
+		"GET_KEY_REQUEST":       4,
+		"GET_KEY_REPLY":         5,
+		"PUT_KEY_REQUEST":       6,
+		"PUT_KEY_REPLY":         7,
+		"DELETE_KEY_REQUEST":    8,
+		"DELETE_KEY_REPLY":      9,
+	}
+)
+
+func (x PayloadWrapper_RequestType) Enum() *PayloadWrapper_RequestType {
+	p := new(PayloadWrapper_RequestType)
+	*p = x
+	return p
+}
+
+func (x PayloadWrapper_RequestType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PayloadWrapper_RequestType) Descriptor() protoreflect.EnumDescriptor {
+	return file_api_v1_database_kv_proto_enumTypes[1].Descriptor()
+}
+
+func (PayloadWrapper_RequestType) Type() protoreflect.EnumType {
+	return &file_api_v1_database_kv_proto_enumTypes[1]
+}
+
+func (x PayloadWrapper_RequestType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PayloadWrapper_RequestType.Descriptor instead.
+func (PayloadWrapper_RequestType) EnumDescriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{0, 0}
+}
+
+type PayloadWrapper struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Account []byte                     `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"`
+	Bucket  []byte                     `protobuf:"bytes,2,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	Typ     PayloadWrapper_RequestType `protobuf:"varint,3,opt,name=typ,proto3,enum=database.PayloadWrapper_RequestType" json:"typ,omitempty"`
+	// Types that are assignable to Payload:
+	//	*PayloadWrapper_CreateBucketRequest
+	//	*PayloadWrapper_CreateBucketReply
+	//	*PayloadWrapper_DeleteBucketRequest
+	//	*PayloadWrapper_DeleteBucketReply
+	Payload isPayloadWrapper_Payload `protobuf_oneof:"payload"`
+}
+
+func (x *PayloadWrapper) Reset() {
+	*x = PayloadWrapper{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PayloadWrapper) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PayloadWrapper) ProtoMessage() {}
+
+func (x *PayloadWrapper) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PayloadWrapper.ProtoReflect.Descriptor instead.
+func (*PayloadWrapper) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PayloadWrapper) GetAccount() []byte {
+	if x != nil {
+		return x.Account
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetBucket() []byte {
+	if x != nil {
+		return x.Bucket
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetTyp() PayloadWrapper_RequestType {
+	if x != nil {
+		return x.Typ
+	}
+	return PayloadWrapper_CREATE_BUCKET_REQUEST
+}
+
+func (m *PayloadWrapper) GetPayload() isPayloadWrapper_Payload {
+	if m != nil {
+		return m.Payload
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetCreateBucketRequest() *CreateBucketRequest {
+	if x, ok := x.GetPayload().(*PayloadWrapper_CreateBucketRequest); ok {
+		return x.CreateBucketRequest
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetCreateBucketReply() *CreateBucketReply {
+	if x, ok := x.GetPayload().(*PayloadWrapper_CreateBucketReply); ok {
+		return x.CreateBucketReply
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetDeleteBucketRequest() *DeleteBucketRequest {
+	if x, ok := x.GetPayload().(*PayloadWrapper_DeleteBucketRequest); ok {
+		return x.DeleteBucketRequest
+	}
+	return nil
+}
+
+func (x *PayloadWrapper) GetDeleteBucketReply() *DeleteBucketReply {
+	if x, ok := x.GetPayload().(*PayloadWrapper_DeleteBucketReply); ok {
+		return x.DeleteBucketReply
+	}
+	return nil
+}
+
+type isPayloadWrapper_Payload interface {
+	isPayloadWrapper_Payload()
+}
+
+type PayloadWrapper_CreateBucketRequest struct {
+	CreateBucketRequest *CreateBucketRequest `protobuf:"bytes,4,opt,name=create_bucket_request,json=createBucketRequest,proto3,oneof"`
+}
+
+type PayloadWrapper_CreateBucketReply struct {
+	CreateBucketReply *CreateBucketReply `protobuf:"bytes,5,opt,name=create_bucket_reply,json=createBucketReply,proto3,oneof"`
+}
+
+type PayloadWrapper_DeleteBucketRequest struct {
+	DeleteBucketRequest *DeleteBucketRequest `protobuf:"bytes,6,opt,name=delete_bucket_request,json=deleteBucketRequest,proto3,oneof"`
+}
+
+type PayloadWrapper_DeleteBucketReply struct {
+	DeleteBucketReply *DeleteBucketReply `protobuf:"bytes,7,opt,name=delete_bucket_reply,json=deleteBucketReply,proto3,oneof"`
+}
+
+func (*PayloadWrapper_CreateBucketRequest) isPayloadWrapper_Payload() {}
+
+func (*PayloadWrapper_CreateBucketReply) isPayloadWrapper_Payload() {}
+
+func (*PayloadWrapper_DeleteBucketRequest) isPayloadWrapper_Payload() {}
+
+func (*PayloadWrapper_DeleteBucketReply) isPayloadWrapper_Payload() {}
+
+type CreateAccountRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	Owner     string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+}
+
+func (x *CreateAccountRequest) Reset() {
+	*x = CreateAccountRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAccountRequest) ProtoMessage() {}
+
+func (x *CreateAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAccountRequest.ProtoReflect.Descriptor instead.
+func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CreateAccountRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *CreateAccountRequest) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+type CreateAccountReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountDescriptor *AccountDescriptor `protobuf:"bytes,1,opt,name=account_descriptor,json=accountDescriptor,proto3" json:"account_descriptor,omitempty"`
+}
+
+func (x *CreateAccountReply) Reset() {
+	*x = CreateAccountReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateAccountReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAccountReply) ProtoMessage() {}
+
+func (x *CreateAccountReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAccountReply.ProtoReflect.Descriptor instead.
+func (*CreateAccountReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateAccountReply) GetAccountDescriptor() *AccountDescriptor {
+	if x != nil {
+		return x.AccountDescriptor
+	}
+	return nil
+}
+
+type DeleteAccountRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	Owner     string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+}
+
+func (x *DeleteAccountRequest) Reset() {
+	*x = DeleteAccountRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAccountRequest) ProtoMessage() {}
+
+func (x *DeleteAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAccountRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAccountRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DeleteAccountRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *DeleteAccountRequest) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+type DeleteAccountReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+}
+
+func (x *DeleteAccountReply) Reset() {
+	*x = DeleteAccountReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAccountReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAccountReply) ProtoMessage() {}
+
+func (x *DeleteAccountReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAccountReply.ProtoReflect.Descriptor instead.
+func (*DeleteAccountReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DeleteAccountReply) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
+type GetAccountDescriptorRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+}
+
+func (x *GetAccountDescriptorRequest) Reset() {
+	*x = GetAccountDescriptorRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAccountDescriptorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAccountDescriptorRequest) ProtoMessage() {}
+
+func (x *GetAccountDescriptorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAccountDescriptorRequest.ProtoReflect.Descriptor instead.
+func (*GetAccountDescriptorRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetAccountDescriptorRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+type GetAccountDescriptorReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountDescriptor *AccountDescriptor `protobuf:"bytes,1,opt,name=account_descriptor,json=accountDescriptor,proto3" json:"account_descriptor,omitempty"`
+}
+
+func (x *GetAccountDescriptorReply) Reset() {
+	*x = GetAccountDescriptorReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAccountDescriptorReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAccountDescriptorReply) ProtoMessage() {}
+
+func (x *GetAccountDescriptorReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAccountDescriptorReply.ProtoReflect.Descriptor instead.
+func (*GetAccountDescriptorReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetAccountDescriptorReply) GetAccountDescriptor() *AccountDescriptor {
+	if x != nil {
+		return x.AccountDescriptor
+	}
+	return nil
+}
+
+type AccountDescriptor struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId   uint64                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	Owner       string                 `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Created     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created,proto3" json:"created,omitempty"`
+	LastUpdated *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=last_updated,json=lastUpdated,proto3" json:"last_updated,omitempty"`
+	BucketCount uint64                 `protobuf:"varint,5,opt,name=bucket_count,json=bucketCount,proto3" json:"bucket_count,omitempty"`
+	Buckets     []string               `protobuf:"bytes,6,rep,name=buckets,proto3" json:"buckets,omitempty"`
+}
+
+func (x *AccountDescriptor) Reset() {
+	*x = AccountDescriptor{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AccountDescriptor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AccountDescriptor) ProtoMessage() {}
+
+func (x *AccountDescriptor) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AccountDescriptor.ProtoReflect.Descriptor instead.
+func (*AccountDescriptor) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *AccountDescriptor) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *AccountDescriptor) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+func (x *AccountDescriptor) GetCreated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Created
+	}
+	return nil
+}
+
+func (x *AccountDescriptor) GetLastUpdated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return nil
+}
+
+func (x *AccountDescriptor) GetBucketCount() uint64 {
+	if x != nil {
+		return x.BucketCount
+	}
+	return 0
+}
+
+func (x *AccountDescriptor) GetBuckets() []string {
+	if x != nil {
+		return x.Buckets
+	}
+	return nil
+}
+
+type CreateBucketRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	Name      string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Owner     string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+}
+
+func (x *CreateBucketRequest) Reset() {
+	*x = CreateBucketRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateBucketRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBucketRequest) ProtoMessage() {}
+
+func (x *CreateBucketRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBucketRequest.ProtoReflect.Descriptor instead.
+func (*CreateBucketRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *CreateBucketRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *CreateBucketRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateBucketRequest) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+type CreateBucketReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BucketDescriptor *BucketDescriptor `protobuf:"bytes,1,opt,name=bucket_descriptor,json=bucketDescriptor,proto3" json:"bucket_descriptor,omitempty"`
+}
+
+func (x *CreateBucketReply) Reset() {
+	*x = CreateBucketReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateBucketReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateBucketReply) ProtoMessage() {}
+
+func (x *CreateBucketReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateBucketReply.ProtoReflect.Descriptor instead.
+func (*CreateBucketReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *CreateBucketReply) GetBucketDescriptor() *BucketDescriptor {
+	if x != nil {
+		return x.BucketDescriptor
+	}
+	return nil
+}
+
+type DeleteBucketRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	Name      string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *DeleteBucketRequest) Reset() {
+	*x = DeleteBucketRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteBucketRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteBucketRequest) ProtoMessage() {}
+
+func (x *DeleteBucketRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteBucketRequest.ProtoReflect.Descriptor instead.
+func (*DeleteBucketRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DeleteBucketRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *DeleteBucketRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type DeleteBucketReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+}
+
+func (x *DeleteBucketReply) Reset() {
+	*x = DeleteBucketReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteBucketReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteBucketReply) ProtoMessage() {}
+
+func (x *DeleteBucketReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteBucketReply.ProtoReflect.Descriptor instead.
+func (*DeleteBucketReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DeleteBucketReply) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
+}
+
+type BucketDescriptor struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Owner       string                 `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	Size        uint64                 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	KeyCount    uint64                 `protobuf:"varint,3,opt,name=key_count,json=keyCount,proto3" json:"key_count,omitempty"`
+	Created     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created,proto3" json:"created,omitempty"`
+	LastUpdated *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=last_updated,json=lastUpdated,proto3" json:"last_updated,omitempty"`
+}
+
+func (x *BucketDescriptor) Reset() {
+	*x = BucketDescriptor{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BucketDescriptor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BucketDescriptor) ProtoMessage() {}
+
+func (x *BucketDescriptor) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BucketDescriptor.ProtoReflect.Descriptor instead.
+func (*BucketDescriptor) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *BucketDescriptor) GetOwner() string {
+	if x != nil {
+		return x.Owner
+	}
+	return ""
+}
+
+func (x *BucketDescriptor) GetSize() uint64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *BucketDescriptor) GetKeyCount() uint64 {
+	if x != nil {
+		return x.KeyCount
+	}
+	return 0
+}
+
+func (x *BucketDescriptor) GetCreated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Created
+	}
+	return nil
+}
+
+func (x *BucketDescriptor) GetLastUpdated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return nil
+}
+
+type GetKeyRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	BucketId  string `protobuf:"bytes,2,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
+	KeyId     string `protobuf:"bytes,3,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
+}
+
+func (x *GetKeyRequest) Reset() {
+	*x = GetKeyRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetKeyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetKeyRequest) ProtoMessage() {}
+
+func (x *GetKeyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetKeyRequest.ProtoReflect.Descriptor instead.
+func (*GetKeyRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *GetKeyRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *GetKeyRequest) GetBucketId() string {
+	if x != nil {
+		return x.BucketId
+	}
+	return ""
+}
+
+func (x *GetKeyRequest) GetKeyId() string {
+	if x != nil {
+		return x.KeyId
+	}
+	return ""
+}
+
+type GetKeyReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	KeyValuePair *KeyValue              `protobuf:"bytes,1,opt,name=key_value_pair,json=keyValuePair,proto3" json:"key_value_pair,omitempty"`
+	Size         uint64                 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	Created      *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created,proto3" json:"created,omitempty"`
+	LastUpdated  *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=last_updated,json=lastUpdated,proto3" json:"last_updated,omitempty"`
+}
+
+func (x *GetKeyReply) Reset() {
+	*x = GetKeyReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetKeyReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetKeyReply) ProtoMessage() {}
+
+func (x *GetKeyReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetKeyReply.ProtoReflect.Descriptor instead.
+func (*GetKeyReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *GetKeyReply) GetKeyValuePair() *KeyValue {
+	if x != nil {
+		return x.KeyValuePair
+	}
+	return nil
+}
+
+func (x *GetKeyReply) GetSize() uint64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *GetKeyReply) GetCreated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Created
+	}
+	return nil
+}
+
+func (x *GetKeyReply) GetLastUpdated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LastUpdated
+	}
+	return nil
+}
+
+type PutKeyRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId    uint64    `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	BucketId     string    `protobuf:"bytes,2,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
+	KeyValuePair *KeyValue `protobuf:"bytes,3,opt,name=key_value_pair,json=keyValuePair,proto3" json:"key_value_pair,omitempty"`
+}
+
+func (x *PutKeyRequest) Reset() {
+	*x = PutKeyRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PutKeyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutKeyRequest) ProtoMessage() {}
+
+func (x *PutKeyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutKeyRequest.ProtoReflect.Descriptor instead.
+func (*PutKeyRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *PutKeyRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *PutKeyRequest) GetBucketId() string {
+	if x != nil {
+		return x.BucketId
+	}
+	return ""
+}
+
+func (x *PutKeyRequest) GetKeyValuePair() *KeyValue {
+	if x != nil {
+		return x.KeyValuePair
+	}
+	return nil
+}
+
+type PutKeyReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	KeyValuePair *KeyValue              `protobuf:"bytes,1,opt,name=key_value_pair,json=keyValuePair,proto3" json:"key_value_pair,omitempty"`
+	Size         uint64                 `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	Created      *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created,proto3" json:"created,omitempty"`
+}
+
+func (x *PutKeyReply) Reset() {
+	*x = PutKeyReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PutKeyReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutKeyReply) ProtoMessage() {}
+
+func (x *PutKeyReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutKeyReply.ProtoReflect.Descriptor instead.
+func (*PutKeyReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *PutKeyReply) GetKeyValuePair() *KeyValue {
+	if x != nil {
+		return x.KeyValuePair
+	}
+	return nil
+}
+
+func (x *PutKeyReply) GetSize() uint64 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+func (x *PutKeyReply) GetCreated() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Created
+	}
+	return nil
+}
+
+type DeleteKeyRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AccountId uint64 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	BucketId  string `protobuf:"bytes,2,opt,name=bucket_id,json=bucketId,proto3" json:"bucket_id,omitempty"`
+	KeyId     string `protobuf:"bytes,3,opt,name=key_id,json=keyId,proto3" json:"key_id,omitempty"`
+}
+
+func (x *DeleteKeyRequest) Reset() {
+	*x = DeleteKeyRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteKeyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteKeyRequest) ProtoMessage() {}
+
+func (x *DeleteKeyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteKeyRequest.ProtoReflect.Descriptor instead.
+func (*DeleteKeyRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *DeleteKeyRequest) GetAccountId() uint64 {
+	if x != nil {
+		return x.AccountId
+	}
+	return 0
+}
+
+func (x *DeleteKeyRequest) GetBucketId() string {
+	if x != nil {
+		return x.BucketId
+	}
+	return ""
+}
+
+func (x *DeleteKeyRequest) GetKeyId() string {
+	if x != nil {
+		return x.KeyId
+	}
+	return ""
+}
+
+type DeleteKeyReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ok bool `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+}
+
+func (x *DeleteKeyReply) Reset() {
+	*x = DeleteKeyReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_v1_database_kv_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteKeyReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteKeyReply) ProtoMessage() {}
+
+func (x *DeleteKeyReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_database_kv_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteKeyReply.ProtoReflect.Descriptor instead.
+func (*DeleteKeyReply) Descriptor() ([]byte, []int) {
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *DeleteKeyReply) GetOk() bool {
+	if x != nil {
+		return x.Ok
+	}
+	return false
 }
 
 type KeyValue struct {
@@ -89,7 +1338,7 @@ type KeyValue struct {
 	unknownFields protoimpl.UnknownFields
 
 	// key is the key in bytes. An empty key is not allowed.
-	Key []byte `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Key string `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
 	// create_revision is the revision of last creation on this key.
 	CreateRevision int64 `protobuf:"varint,2,opt,name=create_revision,json=createRevision,proto3" json:"create_revision,omitempty"`
 	// mod_revision is the revision of last modification on this key.
@@ -109,7 +1358,7 @@ type KeyValue struct {
 func (x *KeyValue) Reset() {
 	*x = KeyValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_database_kv_proto_msgTypes[0]
+		mi := &file_api_v1_database_kv_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -122,7 +1371,7 @@ func (x *KeyValue) String() string {
 func (*KeyValue) ProtoMessage() {}
 
 func (x *KeyValue) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_database_kv_proto_msgTypes[0]
+	mi := &file_api_v1_database_kv_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -135,14 +1384,14 @@ func (x *KeyValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KeyValue.ProtoReflect.Descriptor instead.
 func (*KeyValue) Descriptor() ([]byte, []int) {
-	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{0}
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *KeyValue) GetKey() []byte {
+func (x *KeyValue) GetKey() string {
 	if x != nil {
 		return x.Key
 	}
-	return nil
+	return ""
 }
 
 func (x *KeyValue) GetCreateRevision() int64 {
@@ -188,7 +1437,7 @@ type Event struct {
 	// type is the kind of event. If type is a PUT, it indicates
 	// new data has been stored to the key. If type is a DELETE,
 	// it indicates the key was deleted.
-	Type Event_EventType `protobuf:"varint,1,opt,name=type,proto3,enum=database.Event_EventType" json:"type,omitempty"`
+	Type KeyOperationType `protobuf:"varint,1,opt,name=type,proto3,enum=database.KeyOperationType" json:"type,omitempty"`
 	// kv holds the KeyValue for the event.
 	// A PUT event contains current kv pair.
 	// A PUT event with kv.Version=1 indicates the creation of a key.
@@ -196,13 +1445,13 @@ type Event struct {
 	// its modification revision set to the revision of deletion.
 	Kv *KeyValue `protobuf:"bytes,2,opt,name=kv,proto3" json:"kv,omitempty"`
 	// prev_kv holds the key-value pair before the event happens.
-	PrevKv *KeyValue `protobuf:"bytes,3,opt,name=prev_kv,json=prevKv,proto3" json:"prev_kv,omitempty"`
+	PrevKv *KeyValue `protobuf:"bytes,3,opt,name=prev_kv,json=prevKv,proto3,oneof" json:"prev_kv,omitempty"`
 }
 
 func (x *Event) Reset() {
 	*x = Event{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_v1_database_kv_proto_msgTypes[1]
+		mi := &file_api_v1_database_kv_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -215,7 +1464,7 @@ func (x *Event) String() string {
 func (*Event) ProtoMessage() {}
 
 func (x *Event) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_database_kv_proto_msgTypes[1]
+	mi := &file_api_v1_database_kv_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -228,14 +1477,14 @@ func (x *Event) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Event.ProtoReflect.Descriptor instead.
 func (*Event) Descriptor() ([]byte, []int) {
-	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{1}
+	return file_api_v1_database_kv_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *Event) GetType() Event_EventType {
+func (x *Event) GetType() KeyOperationType {
 	if x != nil {
 		return x.Type
 	}
-	return Event_GET
+	return KeyOperationType_GET
 }
 
 func (x *Event) GetKv() *KeyValue {
@@ -257,27 +1506,197 @@ var File_api_v1_database_kv_proto protoreflect.FileDescriptor
 var file_api_v1_database_kv_proto_rawDesc = []byte{
 	0x0a, 0x18, 0x61, 0x70, 0x69, 0x2f, 0x76, 0x31, 0x2f, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73,
 	0x65, 0x2f, 0x6b, 0x76, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x64, 0x61, 0x74, 0x61,
-	0x62, 0x61, 0x73, 0x65, 0x22, 0xae, 0x01, 0x0a, 0x08, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75,
-	0x65, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x03,
-	0x6b, 0x65, 0x79, 0x12, 0x27, 0x0a, 0x0f, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x72, 0x65,
-	0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e, 0x63, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x21, 0x0a, 0x0c,
-	0x6d, 0x6f, 0x64, 0x5f, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x03, 0x52, 0x0b, 0x6d, 0x6f, 0x64, 0x52, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x12,
-	0x18, 0x0a, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12,
-	0x14, 0x0a, 0x05, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05,
-	0x6c, 0x65, 0x61, 0x73, 0x65, 0x22, 0xb2, 0x01, 0x0a, 0x05, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12,
-	0x2d, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e,
-	0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x2e, 0x45,
-	0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x22,
-	0x0a, 0x02, 0x6b, 0x76, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61, 0x74,
-	0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02,
-	0x6b, 0x76, 0x12, 0x2b, 0x0a, 0x07, 0x70, 0x72, 0x65, 0x76, 0x5f, 0x6b, 0x76, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b,
-	0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x06, 0x70, 0x72, 0x65, 0x76, 0x4b, 0x76, 0x22,
-	0x29, 0x0a, 0x09, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x07, 0x0a, 0x03,
+	0x62, 0x61, 0x73, 0x65, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xc3, 0x05, 0x0a, 0x0e, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61,
+	0x64, 0x57, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x06, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x12, 0x36, 0x0a, 0x03, 0x74, 0x79,
+	0x70, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x24, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61,
+	0x73, 0x65, 0x2e, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x57, 0x72, 0x61, 0x70, 0x70, 0x65,
+	0x72, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x52, 0x03, 0x74,
+	0x79, 0x70, 0x12, 0x53, 0x0a, 0x15, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x62, 0x75, 0x63,
+	0x6b, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x1d, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x43, 0x72, 0x65,
+	0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x48, 0x00, 0x52, 0x13, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x4d, 0x0a, 0x13, 0x63, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x5f, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x70, 0x6c, 0x79, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e,
+	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x70, 0x6c,
+	0x79, 0x48, 0x00, 0x52, 0x11, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65,
+	0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x53, 0x0a, 0x15, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x5f, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18,
+	0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65,
+	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x48, 0x00, 0x52, 0x13, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x75,
+	0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x4d, 0x0a, 0x13, 0x64,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x5f, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x70,
+	0x6c, 0x79, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62,
+	0x61, 0x73, 0x65, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x48, 0x00, 0x52, 0x11, 0x64, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42,
+	0x75, 0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0xf3, 0x01, 0x0a, 0x0b, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x19, 0x0a, 0x15, 0x43, 0x52,
+	0x45, 0x41, 0x54, 0x45, 0x5f, 0x42, 0x55, 0x43, 0x4b, 0x45, 0x54, 0x5f, 0x52, 0x45, 0x51, 0x55,
+	0x45, 0x53, 0x54, 0x10, 0x00, 0x12, 0x17, 0x0a, 0x13, 0x43, 0x52, 0x45, 0x41, 0x54, 0x45, 0x5f,
+	0x42, 0x55, 0x43, 0x4b, 0x45, 0x54, 0x5f, 0x52, 0x45, 0x50, 0x4c, 0x59, 0x10, 0x01, 0x12, 0x19,
+	0x0a, 0x15, 0x44, 0x45, 0x4c, 0x45, 0x54, 0x45, 0x5f, 0x42, 0x55, 0x43, 0x4b, 0x45, 0x54, 0x5f,
+	0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x02, 0x12, 0x17, 0x0a, 0x13, 0x44, 0x45, 0x4c,
+	0x45, 0x54, 0x45, 0x5f, 0x42, 0x55, 0x43, 0x4b, 0x45, 0x54, 0x5f, 0x52, 0x45, 0x50, 0x4c, 0x59,
+	0x10, 0x03, 0x12, 0x13, 0x0a, 0x0f, 0x47, 0x45, 0x54, 0x5f, 0x4b, 0x45, 0x59, 0x5f, 0x52, 0x45,
+	0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x04, 0x12, 0x11, 0x0a, 0x0d, 0x47, 0x45, 0x54, 0x5f, 0x4b,
+	0x45, 0x59, 0x5f, 0x52, 0x45, 0x50, 0x4c, 0x59, 0x10, 0x05, 0x12, 0x13, 0x0a, 0x0f, 0x50, 0x55,
+	0x54, 0x5f, 0x4b, 0x45, 0x59, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x06, 0x12,
+	0x11, 0x0a, 0x0d, 0x50, 0x55, 0x54, 0x5f, 0x4b, 0x45, 0x59, 0x5f, 0x52, 0x45, 0x50, 0x4c, 0x59,
+	0x10, 0x07, 0x12, 0x16, 0x0a, 0x12, 0x44, 0x45, 0x4c, 0x45, 0x54, 0x45, 0x5f, 0x4b, 0x45, 0x59,
+	0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x08, 0x12, 0x14, 0x0a, 0x10, 0x44, 0x45,
+	0x4c, 0x45, 0x54, 0x45, 0x5f, 0x4b, 0x45, 0x59, 0x5f, 0x52, 0x45, 0x50, 0x4c, 0x59, 0x10, 0x09,
+	0x42, 0x09, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x4b, 0x0a, 0x14, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x22, 0x60, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x4a,
+	0x0a, 0x12, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69,
+	0x70, 0x74, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x64, 0x61, 0x74,
+	0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x73,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x11, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x22, 0x4b, 0x0a, 0x14, 0x44, 0x65,
+	0x6c, 0x65, 0x74, 0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49,
+	0x64, 0x12, 0x14, 0x0a, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x22, 0x24, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x0e, 0x0a,
+	0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x22, 0x3c, 0x0a,
+	0x1b, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72,
+	0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a,
+	0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04,
+	0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x22, 0x67, 0x0a, 0x19, 0x47,
+	0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
+	0x74, 0x6f, 0x72, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x4a, 0x0a, 0x12, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x5f, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e,
+	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f,
+	0x72, 0x52, 0x11, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69,
+	0x70, 0x74, 0x6f, 0x72, 0x22, 0xfa, 0x01, 0x0a, 0x11, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
+	0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6f, 0x77, 0x6e,
+	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12,
+	0x34, 0x0a, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x07, 0x63, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x64, 0x12, 0x3d, 0x0a, 0x0c, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x75, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x6c, 0x61, 0x73, 0x74, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0b, 0x62, 0x75, 0x63, 0x6b,
+	0x65, 0x74, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x62, 0x75, 0x63, 0x6b, 0x65,
+	0x74, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74,
+	0x73, 0x22, 0x5e, 0x0a, 0x13, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x6f,
+	0x77, 0x6e, 0x65, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65,
+	0x72, 0x22, 0x5c, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65,
+	0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x47, 0x0a, 0x11, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74,
+	0x5f, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x1a, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x42, 0x75, 0x63,
+	0x6b, 0x65, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x52, 0x10, 0x62,
+	0x75, 0x63, 0x6b, 0x65, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x6f, 0x72, 0x22,
+	0x48, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x23, 0x0a, 0x11, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x0e,
+	0x0a, 0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x22, 0xce,
+	0x01, 0x0a, 0x10, 0x42, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
+	0x74, 0x6f, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x1b, 0x0a,
+	0x09, 0x6b, 0x65, 0x79, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x04,
+	0x52, 0x08, 0x6b, 0x65, 0x79, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x34, 0x0a, 0x07, 0x63, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69,
+	0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64,
+	0x12, 0x3d, 0x0a, 0x0c, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64,
+	0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61,
+	0x6d, 0x70, 0x52, 0x0b, 0x6c, 0x61, 0x73, 0x74, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x22,
+	0x62, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x4b, 0x65, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12,
+	0x1b, 0x0a, 0x09, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x08, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x49, 0x64, 0x12, 0x15, 0x0a, 0x06,
+	0x6b, 0x65, 0x79, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6b, 0x65,
+	0x79, 0x49, 0x64, 0x22, 0xd0, 0x01, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x4b, 0x65, 0x79, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x12, 0x38, 0x0a, 0x0e, 0x6b, 0x65, 0x79, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x5f, 0x70, 0x61, 0x69, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61,
+	0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52,
+	0x0c, 0x6b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x50, 0x61, 0x69, 0x72, 0x12, 0x12, 0x0a,
+	0x04, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a,
+	0x65, 0x12, 0x34, 0x0a, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x07,
+	0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x12, 0x3d, 0x0a, 0x0c, 0x6c, 0x61, 0x73, 0x74, 0x5f,
+	0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x6c, 0x61, 0x73, 0x74, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x64, 0x22, 0x85, 0x01, 0x0a, 0x0d, 0x50, 0x75, 0x74, 0x4b, 0x65,
+	0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x62, 0x75, 0x63, 0x6b, 0x65,
+	0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x62, 0x75, 0x63, 0x6b,
+	0x65, 0x74, 0x49, 0x64, 0x12, 0x38, 0x0a, 0x0e, 0x6b, 0x65, 0x79, 0x5f, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x5f, 0x70, 0x61, 0x69, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64,
+	0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65,
+	0x52, 0x0c, 0x6b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x50, 0x61, 0x69, 0x72, 0x22, 0x91,
+	0x01, 0x0a, 0x0b, 0x50, 0x75, 0x74, 0x4b, 0x65, 0x79, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x38,
+	0x0a, 0x0e, 0x6b, 0x65, 0x79, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x5f, 0x70, 0x61, 0x69, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73,
+	0x65, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x0c, 0x6b, 0x65, 0x79, 0x56,
+	0x61, 0x6c, 0x75, 0x65, 0x50, 0x61, 0x69, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x73, 0x69, 0x7a, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x73, 0x69, 0x7a, 0x65, 0x12, 0x34, 0x0a, 0x07,
+	0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e,
+	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
+	0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x07, 0x63, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x64, 0x22, 0x65, 0x0a, 0x10, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4b, 0x65, 0x79, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74, 0x5f,
+	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x62, 0x75, 0x63, 0x6b, 0x65, 0x74,
+	0x49, 0x64, 0x12, 0x15, 0x0a, 0x06, 0x6b, 0x65, 0x79, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x05, 0x6b, 0x65, 0x79, 0x49, 0x64, 0x22, 0x20, 0x0a, 0x0e, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x4b, 0x65, 0x79, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x0e, 0x0a, 0x02, 0x6f,
+	0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x22, 0xae, 0x01, 0x0a, 0x08,
+	0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x27, 0x0a, 0x0f, 0x63, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x5f, 0x72, 0x65, 0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x0e, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x76, 0x69, 0x73,
+	0x69, 0x6f, 0x6e, 0x12, 0x21, 0x0a, 0x0c, 0x6d, 0x6f, 0x64, 0x5f, 0x72, 0x65, 0x76, 0x69, 0x73,
+	0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b, 0x6d, 0x6f, 0x64, 0x52, 0x65,
+	0x76, 0x69, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f,
+	0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e,
+	0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x18,
+	0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x6c, 0x65, 0x61, 0x73, 0x65, 0x22, 0x99, 0x01, 0x0a,
+	0x05, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x2e, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0e, 0x32, 0x1a, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e,
+	0x4b, 0x65, 0x79, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65,
+	0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x22, 0x0a, 0x02, 0x6b, 0x76, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61, 0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b, 0x65,
+	0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02, 0x6b, 0x76, 0x12, 0x30, 0x0a, 0x07, 0x70, 0x72,
+	0x65, 0x76, 0x5f, 0x6b, 0x76, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x64, 0x61,
+	0x74, 0x61, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x4b, 0x65, 0x79, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x48,
+	0x00, 0x52, 0x06, 0x70, 0x72, 0x65, 0x76, 0x4b, 0x76, 0x88, 0x01, 0x01, 0x42, 0x0a, 0x0a, 0x08,
+	0x5f, 0x70, 0x72, 0x65, 0x76, 0x5f, 0x6b, 0x76, 0x2a, 0x30, 0x0a, 0x10, 0x4b, 0x65, 0x79, 0x4f,
+	0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x07, 0x0a, 0x03,
 	0x47, 0x45, 0x54, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x50, 0x55, 0x54, 0x10, 0x01, 0x12, 0x0a,
 	0x0a, 0x06, 0x44, 0x45, 0x4c, 0x45, 0x54, 0x45, 0x10, 0x02, 0x42, 0x22, 0x5a, 0x20, 0x61, 0x31,
 	0x33, 0x73, 0x2e, 0x69, 0x6f, 0x2f, 0x70, 0x6c, 0x65, 0x69, 0x61, 0x64, 0x65, 0x73, 0x2f, 0x61,
@@ -297,22 +1716,61 @@ func file_api_v1_database_kv_proto_rawDescGZIP() []byte {
 	return file_api_v1_database_kv_proto_rawDescData
 }
 
-var file_api_v1_database_kv_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_api_v1_database_kv_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_api_v1_database_kv_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_api_v1_database_kv_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_api_v1_database_kv_proto_goTypes = []interface{}{
-	(Event_EventType)(0), // 0: database.Event.EventType
-	(*KeyValue)(nil),     // 1: database.KeyValue
-	(*Event)(nil),        // 2: database.Event
+	(KeyOperationType)(0),               // 0: database.KeyOperationType
+	(PayloadWrapper_RequestType)(0),     // 1: database.PayloadWrapper.RequestType
+	(*PayloadWrapper)(nil),              // 2: database.PayloadWrapper
+	(*CreateAccountRequest)(nil),        // 3: database.CreateAccountRequest
+	(*CreateAccountReply)(nil),          // 4: database.CreateAccountReply
+	(*DeleteAccountRequest)(nil),        // 5: database.DeleteAccountRequest
+	(*DeleteAccountReply)(nil),          // 6: database.DeleteAccountReply
+	(*GetAccountDescriptorRequest)(nil), // 7: database.GetAccountDescriptorRequest
+	(*GetAccountDescriptorReply)(nil),   // 8: database.GetAccountDescriptorReply
+	(*AccountDescriptor)(nil),           // 9: database.AccountDescriptor
+	(*CreateBucketRequest)(nil),         // 10: database.CreateBucketRequest
+	(*CreateBucketReply)(nil),           // 11: database.CreateBucketReply
+	(*DeleteBucketRequest)(nil),         // 12: database.DeleteBucketRequest
+	(*DeleteBucketReply)(nil),           // 13: database.DeleteBucketReply
+	(*BucketDescriptor)(nil),            // 14: database.BucketDescriptor
+	(*GetKeyRequest)(nil),               // 15: database.GetKeyRequest
+	(*GetKeyReply)(nil),                 // 16: database.GetKeyReply
+	(*PutKeyRequest)(nil),               // 17: database.PutKeyRequest
+	(*PutKeyReply)(nil),                 // 18: database.PutKeyReply
+	(*DeleteKeyRequest)(nil),            // 19: database.DeleteKeyRequest
+	(*DeleteKeyReply)(nil),              // 20: database.DeleteKeyReply
+	(*KeyValue)(nil),                    // 21: database.KeyValue
+	(*Event)(nil),                       // 22: database.Event
+	(*timestamppb.Timestamp)(nil),       // 23: google.protobuf.Timestamp
 }
 var file_api_v1_database_kv_proto_depIdxs = []int32{
-	0, // 0: database.Event.type:type_name -> database.Event.EventType
-	1, // 1: database.Event.kv:type_name -> database.KeyValue
-	1, // 2: database.Event.prev_kv:type_name -> database.KeyValue
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	1,  // 0: database.PayloadWrapper.typ:type_name -> database.PayloadWrapper.RequestType
+	10, // 1: database.PayloadWrapper.create_bucket_request:type_name -> database.CreateBucketRequest
+	11, // 2: database.PayloadWrapper.create_bucket_reply:type_name -> database.CreateBucketReply
+	12, // 3: database.PayloadWrapper.delete_bucket_request:type_name -> database.DeleteBucketRequest
+	13, // 4: database.PayloadWrapper.delete_bucket_reply:type_name -> database.DeleteBucketReply
+	9,  // 5: database.CreateAccountReply.account_descriptor:type_name -> database.AccountDescriptor
+	9,  // 6: database.GetAccountDescriptorReply.account_descriptor:type_name -> database.AccountDescriptor
+	23, // 7: database.AccountDescriptor.created:type_name -> google.protobuf.Timestamp
+	23, // 8: database.AccountDescriptor.last_updated:type_name -> google.protobuf.Timestamp
+	14, // 9: database.CreateBucketReply.bucket_descriptor:type_name -> database.BucketDescriptor
+	23, // 10: database.BucketDescriptor.created:type_name -> google.protobuf.Timestamp
+	23, // 11: database.BucketDescriptor.last_updated:type_name -> google.protobuf.Timestamp
+	21, // 12: database.GetKeyReply.key_value_pair:type_name -> database.KeyValue
+	23, // 13: database.GetKeyReply.created:type_name -> google.protobuf.Timestamp
+	23, // 14: database.GetKeyReply.last_updated:type_name -> google.protobuf.Timestamp
+	21, // 15: database.PutKeyRequest.key_value_pair:type_name -> database.KeyValue
+	21, // 16: database.PutKeyReply.key_value_pair:type_name -> database.KeyValue
+	23, // 17: database.PutKeyReply.created:type_name -> google.protobuf.Timestamp
+	0,  // 18: database.Event.type:type_name -> database.KeyOperationType
+	21, // 19: database.Event.kv:type_name -> database.KeyValue
+	21, // 20: database.Event.prev_kv:type_name -> database.KeyValue
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_database_kv_proto_init() }
@@ -322,7 +1780,7 @@ func file_api_v1_database_kv_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_api_v1_database_kv_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*KeyValue); i {
+			switch v := v.(*PayloadWrapper); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -334,6 +1792,234 @@ func file_api_v1_database_kv_proto_init() {
 			}
 		}
 		file_api_v1_database_kv_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateAccountRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateAccountReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAccountRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAccountReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAccountDescriptorRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAccountDescriptorReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AccountDescriptor); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateBucketRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateBucketReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteBucketRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteBucketReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BucketDescriptor); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetKeyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetKeyReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PutKeyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PutKeyReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteKeyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteKeyReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*KeyValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_v1_database_kv_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Event); i {
 			case 0:
 				return &v.state
@@ -346,13 +2032,20 @@ func file_api_v1_database_kv_proto_init() {
 			}
 		}
 	}
+	file_api_v1_database_kv_proto_msgTypes[0].OneofWrappers = []interface{}{
+		(*PayloadWrapper_CreateBucketRequest)(nil),
+		(*PayloadWrapper_CreateBucketReply)(nil),
+		(*PayloadWrapper_DeleteBucketRequest)(nil),
+		(*PayloadWrapper_DeleteBucketReply)(nil),
+	}
+	file_api_v1_database_kv_proto_msgTypes[20].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_v1_database_kv_proto_rawDesc,
-			NumEnums:      1,
-			NumMessages:   2,
+			NumEnums:      2,
+			NumMessages:   21,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

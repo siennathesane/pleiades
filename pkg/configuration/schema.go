@@ -7,10 +7,13 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package conf
+package configuration
 
-type GossipConfig struct {
-	BindAddress      string
-	AdvertiseAddress string
-	Seed             []string
+type Configuration struct {
+	Datastore *Storage `json:"datastore,omitempty" yaml:"datastore,omitempty"`
+}
+
+type Storage struct {
+	BasePath string `json:"basePath,omitempty" yaml:"basePath,omitempty"`
+
 }

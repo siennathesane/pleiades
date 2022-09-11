@@ -1,6 +1,7 @@
 syntax = "proto3";
 package server;
 
+import "api/v1/database/kv.proto";
 import "api/v1/database/store.proto";
 import "api/v1/database/transactions.proto";
 import "api/v1/raft/raft_shard.proto";
@@ -36,6 +37,11 @@ service Transactions {
 }
 
 service KVStoreService {
+  rpc CreateAccount(database.CreateAccountRequest) returns (database.CreateAccountReply) {}
+  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
+  rpc DeleteAccount(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
+  rpc CreateBucket(database.CreateBucketRequest) returns (database.CreateBucketReply) {}
+  rpc DeleteBucket(database.DeleteBucketRequest) returns (database.DeleteBucketReply) {}
   rpc Get(database.GetRequest) returns (database.GetResponse) {}
   rpc Put(database.PutRequest) returns (database.PutReply) {}
   rpc Delete(database.DeleteRequest) returns (database.DeleteResponse) {}
