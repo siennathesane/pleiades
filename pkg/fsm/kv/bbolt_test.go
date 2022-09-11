@@ -115,6 +115,55 @@ func (t *BBoltTestSuite) TestCreateAccountBucket() {
 	t.Require().Empty(expectedBucketList, foundAcctDescriptor.GetBuckets(), "the list of buckets must be empty")
 }
 
+func (t *BBoltTestSuite) TestDeleteAccountBucket() {
+	shardId, replicaId := uint64(10), uint64(20)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+
+	path := filepath.Join(t.T().TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, t.logger)
+	t.Require().NoError(err, "there must be an error when passing a bad directory")
+	t.Require().NotNil(b, "the bbolt store must be nil")
+
+	testAccountId := rand.Uint64()
+	testOwner := "test@test.com"
+
+	// prep the test
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test account bucket")
+
+	req := &database.DeleteAccountRequest{}
+
+	req.AccountId = testAccountId
+	resp, err := b.DeleteAccountBucket(req)
+	t.Require().Error(err, "there must be an error when sending a partial request")
+	t.Require().False(resp.GetOk(), "the response must not be ok")
+
+	req.Owner = testOwner
+	resp, err = b.DeleteAccountBucket(req)
+	t.Require().NoError(err, "there must not be an error when sending a request")
+	t.Require().True(resp.GetOk(), "the response must be ok")
+
+	err = b.db.View(func(tx *bbolt.Tx) error {
+		accountBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
+
+		bucket := tx.Bucket(accountBuf)
+		t.Require().Nil(bucket)
+		return nil
+	})
+	t.Require().NoError(err, "there must not be an error when peeking for the deleted account bucket")
+
+	resp, err = b.DeleteAccountBucket(&database.DeleteAccountRequest{
+		AccountId: 1234,
+		Owner:     "empty",
+	})
+	t.Require().Error(err, "there must be an error when trying to delete an account which doesn't exist")
+	t.Require().False(resp.GetOk(), "the response must not be ok")
+}
+
 func (t *BBoltTestSuite) TestCreateBucket() {
 	shardId, replicaId := uint64(10), uint64(20)
 	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)

@@ -42,7 +42,7 @@ service KVStoreService {
   rpc DeleteAccount(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
   rpc CreateBucket(database.CreateBucketRequest) returns (database.CreateBucketReply) {}
   rpc DeleteBucket(database.DeleteBucketRequest) returns (database.DeleteBucketReply) {}
-  rpc Get(database.GetRequest) returns (database.GetResponse) {}
-  rpc Put(database.PutRequest) returns (database.PutReply) {}
-  rpc Delete(database.DeleteRequest) returns (database.DeleteResponse) {}
+  rpc GetKey(database.GetRequest) returns (database.GetResponse) {}
+  rpc PutKey(database.PutRequest) returns (database.PutReply) {}
+  rpc DeleteKey(database.DeleteRequest) returns (database.DeleteResponse) {}
 }
