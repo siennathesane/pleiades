@@ -273,14 +273,11 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 	}
 
 	switch wrapper.Typ {
-	case database.KVStoreWrapper_GET_ACCOUNT_DESCRIPTOR_REQUEST:
-		// todo (sienna): implement this
-		//req := wrapper.GetGetAccountDescriptorRequest()
-		break
 	case database.KVStoreWrapper_GET_KEY_REQUEST:
 		req := wrapper.GetGetKeyRequest()
 		var resp *database.GetKeyReply
 		resp, err = b.store.GetKey(req)
+		wrapper.Typ = database.KVStoreWrapper_GET_KEY_REPLY
 		wrapper.Payload = &database.KVStoreWrapper_GetKeyReply{GetKeyReply: resp}
 		break
 
