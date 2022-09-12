@@ -41,8 +41,8 @@ func (smts *shardManagerTestSuite) SetupSuite() {
 
 	smts.logger = utils.NewTestLogger(smts.T())
 
-	smts.defaultTimeout = 3000 * time.Millisecond
-	smts.extendedDefaultTimeout = 5000 * time.Millisecond
+	smts.defaultTimeout = 300 * time.Millisecond
+	smts.extendedDefaultTimeout = 500 * time.Millisecond
 }
 
 func (smts *shardManagerTestSuite) TestAddReplica() {
