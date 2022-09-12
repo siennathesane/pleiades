@@ -18,6 +18,36 @@ export class KVStoreWrapper extends jspb.Message {
   getTyp(): KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap];
   setTyp(value: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap]): void;
 
+  hasCreateAccountRequest(): boolean;
+  clearCreateAccountRequest(): void;
+  getCreateAccountRequest(): CreateAccountRequest | undefined;
+  setCreateAccountRequest(value?: CreateAccountRequest): void;
+
+  hasCreateAccountReply(): boolean;
+  clearCreateAccountReply(): void;
+  getCreateAccountReply(): CreateAccountReply | undefined;
+  setCreateAccountReply(value?: CreateAccountReply): void;
+
+  hasDeleteAccountRequest(): boolean;
+  clearDeleteAccountRequest(): void;
+  getDeleteAccountRequest(): DeleteAccountRequest | undefined;
+  setDeleteAccountRequest(value?: DeleteAccountRequest): void;
+
+  hasDeleteAccountReply(): boolean;
+  clearDeleteAccountReply(): void;
+  getDeleteAccountReply(): DeleteAccountReply | undefined;
+  setDeleteAccountReply(value?: DeleteAccountReply): void;
+
+  hasGetAccountDescriptorRequest(): boolean;
+  clearGetAccountDescriptorRequest(): void;
+  getGetAccountDescriptorRequest(): GetAccountDescriptorRequest | undefined;
+  setGetAccountDescriptorRequest(value?: GetAccountDescriptorRequest): void;
+
+  hasGetAccountDescriptorReply(): boolean;
+  clearGetAccountDescriptorReply(): void;
+  getGetAccountDescriptorReply(): GetAccountDescriptorReply | undefined;
+  setGetAccountDescriptorReply(value?: GetAccountDescriptorReply): void;
+
   hasCreateBucketRequest(): boolean;
   clearCreateBucketRequest(): void;
   getCreateBucketRequest(): CreateBucketRequest | undefined;
@@ -38,6 +68,36 @@ export class KVStoreWrapper extends jspb.Message {
   getDeleteBucketReply(): DeleteBucketReply | undefined;
   setDeleteBucketReply(value?: DeleteBucketReply): void;
 
+  hasGetKeyRequest(): boolean;
+  clearGetKeyRequest(): void;
+  getGetKeyRequest(): GetKeyRequest | undefined;
+  setGetKeyRequest(value?: GetKeyRequest): void;
+
+  hasGetKeyReply(): boolean;
+  clearGetKeyReply(): void;
+  getGetKeyReply(): GetKeyReply | undefined;
+  setGetKeyReply(value?: GetKeyReply): void;
+
+  hasPutKeyRequest(): boolean;
+  clearPutKeyRequest(): void;
+  getPutKeyRequest(): PutKeyRequest | undefined;
+  setPutKeyRequest(value?: PutKeyRequest): void;
+
+  hasPutKeyReply(): boolean;
+  clearPutKeyReply(): void;
+  getPutKeyReply(): PutKeyReply | undefined;
+  setPutKeyReply(value?: PutKeyReply): void;
+
+  hasDeleteKeyRequest(): boolean;
+  clearDeleteKeyRequest(): void;
+  getDeleteKeyRequest(): DeleteKeyRequest | undefined;
+  setDeleteKeyRequest(value?: DeleteKeyRequest): void;
+
+  hasDeleteKeyReply(): boolean;
+  clearDeleteKeyReply(): void;
+  getDeleteKeyReply(): DeleteKeyReply | undefined;
+  setDeleteKeyReply(value?: DeleteKeyReply): void;
+
   getPayloadCase(): KVStoreWrapper.PayloadCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): KVStoreWrapper.AsObject;
@@ -54,33 +114,63 @@ export namespace KVStoreWrapper {
     account: Uint8Array | string,
     bucket: Uint8Array | string,
     typ: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap],
+    createAccountRequest?: CreateAccountRequest.AsObject,
+    createAccountReply?: CreateAccountReply.AsObject,
+    deleteAccountRequest?: DeleteAccountRequest.AsObject,
+    deleteAccountReply?: DeleteAccountReply.AsObject,
+    getAccountDescriptorRequest?: GetAccountDescriptorRequest.AsObject,
+    getAccountDescriptorReply?: GetAccountDescriptorReply.AsObject,
     createBucketRequest?: CreateBucketRequest.AsObject,
     createBucketReply?: CreateBucketReply.AsObject,
     deleteBucketRequest?: DeleteBucketRequest.AsObject,
     deleteBucketReply?: DeleteBucketReply.AsObject,
+    getKeyRequest?: GetKeyRequest.AsObject,
+    getKeyReply?: GetKeyReply.AsObject,
+    putKeyRequest?: PutKeyRequest.AsObject,
+    putKeyReply?: PutKeyReply.AsObject,
+    deleteKeyRequest?: DeleteKeyRequest.AsObject,
+    deleteKeyReply?: DeleteKeyReply.AsObject,
   }
 
   export interface RequestTypeMap {
-    CREATE_BUCKET_REQUEST: 0;
-    CREATE_BUCKET_REPLY: 1;
-    DELETE_BUCKET_REQUEST: 2;
-    DELETE_BUCKET_REPLY: 3;
-    GET_KEY_REQUEST: 4;
-    GET_KEY_REPLY: 5;
-    PUT_KEY_REQUEST: 6;
-    PUT_KEY_REPLY: 7;
-    DELETE_KEY_REQUEST: 8;
-    DELETE_KEY_REPLY: 9;
+    CREATE_ACCOUNT_REQUEST: 0;
+    CREATE_ACCOUNT_REPLY: 1;
+    DELETE_ACCOUNT_REQUEST: 2;
+    DELETE_ACCOUNT_REPLY: 3;
+    GET_ACCOUNT_DESCRIPTOR_REQUEST: 4;
+    GET_ACCOUNT_DESCRIPTOR_REPLY: 5;
+    CREATE_BUCKET_REQUEST: 6;
+    CREATE_BUCKET_REPLY: 7;
+    DELETE_BUCKET_REQUEST: 8;
+    DELETE_BUCKET_REPLY: 9;
+    GET_KEY_REQUEST: 10;
+    GET_KEY_REPLY: 11;
+    PUT_KEY_REQUEST: 12;
+    PUT_KEY_REPLY: 13;
+    DELETE_KEY_REQUEST: 14;
+    DELETE_KEY_REPLY: 15;
   }
 
   export const RequestType: RequestTypeMap;
 
   export enum PayloadCase {
     PAYLOAD_NOT_SET = 0,
-    CREATE_BUCKET_REQUEST = 4,
-    CREATE_BUCKET_REPLY = 5,
-    DELETE_BUCKET_REQUEST = 6,
-    DELETE_BUCKET_REPLY = 7,
+    CREATE_ACCOUNT_REQUEST = 4,
+    CREATE_ACCOUNT_REPLY = 5,
+    DELETE_ACCOUNT_REQUEST = 6,
+    DELETE_ACCOUNT_REPLY = 7,
+    GET_ACCOUNT_DESCRIPTOR_REQUEST = 8,
+    GET_ACCOUNT_DESCRIPTOR_REPLY = 9,
+    CREATE_BUCKET_REQUEST = 10,
+    CREATE_BUCKET_REPLY = 11,
+    DELETE_BUCKET_REQUEST = 12,
+    DELETE_BUCKET_REPLY = 13,
+    GET_KEY_REQUEST = 14,
+    GET_KEY_REPLY = 15,
+    PUT_KEY_REQUEST = 16,
+    PUT_KEY_REPLY = 17,
+    DELETE_KEY_REQUEST = 18,
+    DELETE_KEY_REPLY = 19,
   }
 }
 

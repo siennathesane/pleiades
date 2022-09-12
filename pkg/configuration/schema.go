@@ -15,5 +15,12 @@ type Configuration struct {
 
 type Storage struct {
 	BasePath string `json:"basePath,omitempty" yaml:"basePath,omitempty"`
+}
 
+func DefaultConfiguration() *Configuration {
+	return &Configuration{
+		Datastore: &Storage{
+			BasePath: ".",
+		},
+	}
 }

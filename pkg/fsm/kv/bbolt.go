@@ -558,3 +558,39 @@ func (b *bboltStore) DeleteKey(request *database.DeleteKeyRequest) (*database.De
 
 	return resp, err
 }
+
+func (b *bboltStore) UpdateMonotonicLog(idx uint64) error {
+	b.logger.Debug().Uint64("index", idx).Msg("updating monotonic log")
+	return b.db.Update(func(tx *bbolt.Tx) error {
+		internalBucket, err := tx.CreateBucketIfNotExists([]byte(monotonicLogBucket))
+		if err != nil {
+			return err
+		}
+
+		indexBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(indexBuf, idx)
+
+		return internalBucket.Put([]byte(monotonicLogKey), indexBuf)
+	})
+}
+
+func (b *bboltStore) GetMonotonicLogIndex() (uint64, error) {
+	idx := uint64(0)
+
+	err := b.db.Update(func(tx *bbolt.Tx) error {
+		internalBucket, err := tx.CreateBucketIfNotExists([]byte(monotonicLogBucket))
+		if err != nil {
+			return err
+		}
+
+		val := internalBucket.Get([]byte(monotonicLogKey))
+		if val == nil {
+			return nil
+		}
+
+		idx = binary.LittleEndian.Uint64(val)
+		return nil
+	})
+
+	return idx, err
+}

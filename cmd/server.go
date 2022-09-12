@@ -10,6 +10,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -20,6 +21,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // serverCmd represents the server command
@@ -280,6 +282,14 @@ func init() {
 	if err := gpflag.ParseTo(cfg, serverCmd.Flags()); err != nil {
 		log.Logger.Err(err).Msg("cannot properly parse command strings")
 		os.Exit(1)
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			fmt.Printf("error: %s", err)
+		} else {
+			fmt.Printf("error: %s", err)
+		}
 	}
 }
 

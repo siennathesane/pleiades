@@ -491,17 +491,29 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.database.KVStoreWrapper.oneofGroups_ = [[4,5,6,7]];
+proto.database.KVStoreWrapper.oneofGroups_ = [[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]];
 
 /**
  * @enum {number}
  */
 proto.database.KVStoreWrapper.PayloadCase = {
   PAYLOAD_NOT_SET: 0,
-  CREATE_BUCKET_REQUEST: 4,
-  CREATE_BUCKET_REPLY: 5,
-  DELETE_BUCKET_REQUEST: 6,
-  DELETE_BUCKET_REPLY: 7
+  CREATE_ACCOUNT_REQUEST: 4,
+  CREATE_ACCOUNT_REPLY: 5,
+  DELETE_ACCOUNT_REQUEST: 6,
+  DELETE_ACCOUNT_REPLY: 7,
+  GET_ACCOUNT_DESCRIPTOR_REQUEST: 8,
+  GET_ACCOUNT_DESCRIPTOR_REPLY: 9,
+  CREATE_BUCKET_REQUEST: 10,
+  CREATE_BUCKET_REPLY: 11,
+  DELETE_BUCKET_REQUEST: 12,
+  DELETE_BUCKET_REPLY: 13,
+  GET_KEY_REQUEST: 14,
+  GET_KEY_REPLY: 15,
+  PUT_KEY_REQUEST: 16,
+  PUT_KEY_REPLY: 17,
+  DELETE_KEY_REQUEST: 18,
+  DELETE_KEY_REPLY: 19
 };
 
 /**
@@ -545,10 +557,22 @@ proto.database.KVStoreWrapper.toObject = function(includeInstance, msg) {
     account: msg.getAccount_asB64(),
     bucket: msg.getBucket_asB64(),
     typ: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    createAccountRequest: (f = msg.getCreateAccountRequest()) && proto.database.CreateAccountRequest.toObject(includeInstance, f),
+    createAccountReply: (f = msg.getCreateAccountReply()) && proto.database.CreateAccountReply.toObject(includeInstance, f),
+    deleteAccountRequest: (f = msg.getDeleteAccountRequest()) && proto.database.DeleteAccountRequest.toObject(includeInstance, f),
+    deleteAccountReply: (f = msg.getDeleteAccountReply()) && proto.database.DeleteAccountReply.toObject(includeInstance, f),
+    getAccountDescriptorRequest: (f = msg.getGetAccountDescriptorRequest()) && proto.database.GetAccountDescriptorRequest.toObject(includeInstance, f),
+    getAccountDescriptorReply: (f = msg.getGetAccountDescriptorReply()) && proto.database.GetAccountDescriptorReply.toObject(includeInstance, f),
     createBucketRequest: (f = msg.getCreateBucketRequest()) && proto.database.CreateBucketRequest.toObject(includeInstance, f),
     createBucketReply: (f = msg.getCreateBucketReply()) && proto.database.CreateBucketReply.toObject(includeInstance, f),
     deleteBucketRequest: (f = msg.getDeleteBucketRequest()) && proto.database.DeleteBucketRequest.toObject(includeInstance, f),
-    deleteBucketReply: (f = msg.getDeleteBucketReply()) && proto.database.DeleteBucketReply.toObject(includeInstance, f)
+    deleteBucketReply: (f = msg.getDeleteBucketReply()) && proto.database.DeleteBucketReply.toObject(includeInstance, f),
+    getKeyRequest: (f = msg.getGetKeyRequest()) && proto.database.GetKeyRequest.toObject(includeInstance, f),
+    getKeyReply: (f = msg.getGetKeyReply()) && proto.database.GetKeyReply.toObject(includeInstance, f),
+    putKeyRequest: (f = msg.getPutKeyRequest()) && proto.database.PutKeyRequest.toObject(includeInstance, f),
+    putKeyReply: (f = msg.getPutKeyReply()) && proto.database.PutKeyReply.toObject(includeInstance, f),
+    deleteKeyRequest: (f = msg.getDeleteKeyRequest()) && proto.database.DeleteKeyRequest.toObject(includeInstance, f),
+    deleteKeyReply: (f = msg.getDeleteKeyReply()) && proto.database.DeleteKeyReply.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -598,24 +622,84 @@ proto.database.KVStoreWrapper.deserializeBinaryFromReader = function(msg, reader
       msg.setTyp(value);
       break;
     case 4:
+      var value = new proto.database.CreateAccountRequest;
+      reader.readMessage(value,proto.database.CreateAccountRequest.deserializeBinaryFromReader);
+      msg.setCreateAccountRequest(value);
+      break;
+    case 5:
+      var value = new proto.database.CreateAccountReply;
+      reader.readMessage(value,proto.database.CreateAccountReply.deserializeBinaryFromReader);
+      msg.setCreateAccountReply(value);
+      break;
+    case 6:
+      var value = new proto.database.DeleteAccountRequest;
+      reader.readMessage(value,proto.database.DeleteAccountRequest.deserializeBinaryFromReader);
+      msg.setDeleteAccountRequest(value);
+      break;
+    case 7:
+      var value = new proto.database.DeleteAccountReply;
+      reader.readMessage(value,proto.database.DeleteAccountReply.deserializeBinaryFromReader);
+      msg.setDeleteAccountReply(value);
+      break;
+    case 8:
+      var value = new proto.database.GetAccountDescriptorRequest;
+      reader.readMessage(value,proto.database.GetAccountDescriptorRequest.deserializeBinaryFromReader);
+      msg.setGetAccountDescriptorRequest(value);
+      break;
+    case 9:
+      var value = new proto.database.GetAccountDescriptorReply;
+      reader.readMessage(value,proto.database.GetAccountDescriptorReply.deserializeBinaryFromReader);
+      msg.setGetAccountDescriptorReply(value);
+      break;
+    case 10:
       var value = new proto.database.CreateBucketRequest;
       reader.readMessage(value,proto.database.CreateBucketRequest.deserializeBinaryFromReader);
       msg.setCreateBucketRequest(value);
       break;
-    case 5:
+    case 11:
       var value = new proto.database.CreateBucketReply;
       reader.readMessage(value,proto.database.CreateBucketReply.deserializeBinaryFromReader);
       msg.setCreateBucketReply(value);
       break;
-    case 6:
+    case 12:
       var value = new proto.database.DeleteBucketRequest;
       reader.readMessage(value,proto.database.DeleteBucketRequest.deserializeBinaryFromReader);
       msg.setDeleteBucketRequest(value);
       break;
-    case 7:
+    case 13:
       var value = new proto.database.DeleteBucketReply;
       reader.readMessage(value,proto.database.DeleteBucketReply.deserializeBinaryFromReader);
       msg.setDeleteBucketReply(value);
+      break;
+    case 14:
+      var value = new proto.database.GetKeyRequest;
+      reader.readMessage(value,proto.database.GetKeyRequest.deserializeBinaryFromReader);
+      msg.setGetKeyRequest(value);
+      break;
+    case 15:
+      var value = new proto.database.GetKeyReply;
+      reader.readMessage(value,proto.database.GetKeyReply.deserializeBinaryFromReader);
+      msg.setGetKeyReply(value);
+      break;
+    case 16:
+      var value = new proto.database.PutKeyRequest;
+      reader.readMessage(value,proto.database.PutKeyRequest.deserializeBinaryFromReader);
+      msg.setPutKeyRequest(value);
+      break;
+    case 17:
+      var value = new proto.database.PutKeyReply;
+      reader.readMessage(value,proto.database.PutKeyReply.deserializeBinaryFromReader);
+      msg.setPutKeyReply(value);
+      break;
+    case 18:
+      var value = new proto.database.DeleteKeyRequest;
+      reader.readMessage(value,proto.database.DeleteKeyRequest.deserializeBinaryFromReader);
+      msg.setDeleteKeyRequest(value);
+      break;
+    case 19:
+      var value = new proto.database.DeleteKeyReply;
+      reader.readMessage(value,proto.database.DeleteKeyReply.deserializeBinaryFromReader);
+      msg.setDeleteKeyReply(value);
       break;
     default:
       reader.skipField();
@@ -667,10 +751,58 @@ proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer
       f
     );
   }
-  f = message.getCreateBucketRequest();
+  f = message.getCreateAccountRequest();
   if (f != null) {
     writer.writeMessage(
       4,
+      f,
+      proto.database.CreateAccountRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getCreateAccountReply();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      proto.database.CreateAccountReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getDeleteAccountRequest();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      proto.database.DeleteAccountRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getDeleteAccountReply();
+  if (f != null) {
+    writer.writeMessage(
+      7,
+      f,
+      proto.database.DeleteAccountReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getGetAccountDescriptorRequest();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      proto.database.GetAccountDescriptorRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getGetAccountDescriptorReply();
+  if (f != null) {
+    writer.writeMessage(
+      9,
+      f,
+      proto.database.GetAccountDescriptorReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getCreateBucketRequest();
+  if (f != null) {
+    writer.writeMessage(
+      10,
       f,
       proto.database.CreateBucketRequest.serializeBinaryToWriter
     );
@@ -678,7 +810,7 @@ proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer
   f = message.getCreateBucketReply();
   if (f != null) {
     writer.writeMessage(
-      5,
+      11,
       f,
       proto.database.CreateBucketReply.serializeBinaryToWriter
     );
@@ -686,7 +818,7 @@ proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer
   f = message.getDeleteBucketRequest();
   if (f != null) {
     writer.writeMessage(
-      6,
+      12,
       f,
       proto.database.DeleteBucketRequest.serializeBinaryToWriter
     );
@@ -694,9 +826,57 @@ proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer
   f = message.getDeleteBucketReply();
   if (f != null) {
     writer.writeMessage(
-      7,
+      13,
       f,
       proto.database.DeleteBucketReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getGetKeyRequest();
+  if (f != null) {
+    writer.writeMessage(
+      14,
+      f,
+      proto.database.GetKeyRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getGetKeyReply();
+  if (f != null) {
+    writer.writeMessage(
+      15,
+      f,
+      proto.database.GetKeyReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getPutKeyRequest();
+  if (f != null) {
+    writer.writeMessage(
+      16,
+      f,
+      proto.database.PutKeyRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getPutKeyReply();
+  if (f != null) {
+    writer.writeMessage(
+      17,
+      f,
+      proto.database.PutKeyReply.serializeBinaryToWriter
+    );
+  }
+  f = message.getDeleteKeyRequest();
+  if (f != null) {
+    writer.writeMessage(
+      18,
+      f,
+      proto.database.DeleteKeyRequest.serializeBinaryToWriter
+    );
+  }
+  f = message.getDeleteKeyReply();
+  if (f != null) {
+    writer.writeMessage(
+      19,
+      f,
+      proto.database.DeleteKeyReply.serializeBinaryToWriter
     );
   }
 };
@@ -706,16 +886,22 @@ proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer
  * @enum {number}
  */
 proto.database.KVStoreWrapper.RequestType = {
-  CREATE_BUCKET_REQUEST: 0,
-  CREATE_BUCKET_REPLY: 1,
-  DELETE_BUCKET_REQUEST: 2,
-  DELETE_BUCKET_REPLY: 3,
-  GET_KEY_REQUEST: 4,
-  GET_KEY_REPLY: 5,
-  PUT_KEY_REQUEST: 6,
-  PUT_KEY_REPLY: 7,
-  DELETE_KEY_REQUEST: 8,
-  DELETE_KEY_REPLY: 9
+  CREATE_ACCOUNT_REQUEST: 0,
+  CREATE_ACCOUNT_REPLY: 1,
+  DELETE_ACCOUNT_REQUEST: 2,
+  DELETE_ACCOUNT_REPLY: 3,
+  GET_ACCOUNT_DESCRIPTOR_REQUEST: 4,
+  GET_ACCOUNT_DESCRIPTOR_REPLY: 5,
+  CREATE_BUCKET_REQUEST: 6,
+  CREATE_BUCKET_REPLY: 7,
+  DELETE_BUCKET_REQUEST: 8,
+  DELETE_BUCKET_REPLY: 9,
+  GET_KEY_REQUEST: 10,
+  GET_KEY_REPLY: 11,
+  PUT_KEY_REQUEST: 12,
+  PUT_KEY_REPLY: 13,
+  DELETE_KEY_REQUEST: 14,
+  DELETE_KEY_REPLY: 15
 };
 
 /**
@@ -821,12 +1007,234 @@ proto.database.KVStoreWrapper.prototype.setTyp = function(value) {
 
 
 /**
- * optional CreateBucketRequest create_bucket_request = 4;
+ * optional CreateAccountRequest create_account_request = 4;
+ * @return {?proto.database.CreateAccountRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getCreateAccountRequest = function() {
+  return /** @type{?proto.database.CreateAccountRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.CreateAccountRequest, 4));
+};
+
+
+/**
+ * @param {?proto.database.CreateAccountRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setCreateAccountRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 4, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearCreateAccountRequest = function() {
+  return this.setCreateAccountRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasCreateAccountRequest = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional CreateAccountReply create_account_reply = 5;
+ * @return {?proto.database.CreateAccountReply}
+ */
+proto.database.KVStoreWrapper.prototype.getCreateAccountReply = function() {
+  return /** @type{?proto.database.CreateAccountReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.CreateAccountReply, 5));
+};
+
+
+/**
+ * @param {?proto.database.CreateAccountReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setCreateAccountReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 5, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearCreateAccountReply = function() {
+  return this.setCreateAccountReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasCreateAccountReply = function() {
+  return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional DeleteAccountRequest delete_account_request = 6;
+ * @return {?proto.database.DeleteAccountRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getDeleteAccountRequest = function() {
+  return /** @type{?proto.database.DeleteAccountRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.DeleteAccountRequest, 6));
+};
+
+
+/**
+ * @param {?proto.database.DeleteAccountRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setDeleteAccountRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 6, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearDeleteAccountRequest = function() {
+  return this.setDeleteAccountRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasDeleteAccountRequest = function() {
+  return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional DeleteAccountReply delete_account_reply = 7;
+ * @return {?proto.database.DeleteAccountReply}
+ */
+proto.database.KVStoreWrapper.prototype.getDeleteAccountReply = function() {
+  return /** @type{?proto.database.DeleteAccountReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.DeleteAccountReply, 7));
+};
+
+
+/**
+ * @param {?proto.database.DeleteAccountReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setDeleteAccountReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 7, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearDeleteAccountReply = function() {
+  return this.setDeleteAccountReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasDeleteAccountReply = function() {
+  return jspb.Message.getField(this, 7) != null;
+};
+
+
+/**
+ * optional GetAccountDescriptorRequest get_account_descriptor_request = 8;
+ * @return {?proto.database.GetAccountDescriptorRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getGetAccountDescriptorRequest = function() {
+  return /** @type{?proto.database.GetAccountDescriptorRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.GetAccountDescriptorRequest, 8));
+};
+
+
+/**
+ * @param {?proto.database.GetAccountDescriptorRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setGetAccountDescriptorRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 8, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearGetAccountDescriptorRequest = function() {
+  return this.setGetAccountDescriptorRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasGetAccountDescriptorRequest = function() {
+  return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional GetAccountDescriptorReply get_account_descriptor_reply = 9;
+ * @return {?proto.database.GetAccountDescriptorReply}
+ */
+proto.database.KVStoreWrapper.prototype.getGetAccountDescriptorReply = function() {
+  return /** @type{?proto.database.GetAccountDescriptorReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.GetAccountDescriptorReply, 9));
+};
+
+
+/**
+ * @param {?proto.database.GetAccountDescriptorReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setGetAccountDescriptorReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 9, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearGetAccountDescriptorReply = function() {
+  return this.setGetAccountDescriptorReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasGetAccountDescriptorReply = function() {
+  return jspb.Message.getField(this, 9) != null;
+};
+
+
+/**
+ * optional CreateBucketRequest create_bucket_request = 10;
  * @return {?proto.database.CreateBucketRequest}
  */
 proto.database.KVStoreWrapper.prototype.getCreateBucketRequest = function() {
   return /** @type{?proto.database.CreateBucketRequest} */ (
-    jspb.Message.getWrapperField(this, proto.database.CreateBucketRequest, 4));
+    jspb.Message.getWrapperField(this, proto.database.CreateBucketRequest, 10));
 };
 
 
@@ -835,7 +1243,7 @@ proto.database.KVStoreWrapper.prototype.getCreateBucketRequest = function() {
  * @return {!proto.database.KVStoreWrapper} returns this
 */
 proto.database.KVStoreWrapper.prototype.setCreateBucketRequest = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 4, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 10, proto.database.KVStoreWrapper.oneofGroups_[0], value);
 };
 
 
@@ -853,17 +1261,17 @@ proto.database.KVStoreWrapper.prototype.clearCreateBucketRequest = function() {
  * @return {boolean}
  */
 proto.database.KVStoreWrapper.prototype.hasCreateBucketRequest = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.getField(this, 10) != null;
 };
 
 
 /**
- * optional CreateBucketReply create_bucket_reply = 5;
+ * optional CreateBucketReply create_bucket_reply = 11;
  * @return {?proto.database.CreateBucketReply}
  */
 proto.database.KVStoreWrapper.prototype.getCreateBucketReply = function() {
   return /** @type{?proto.database.CreateBucketReply} */ (
-    jspb.Message.getWrapperField(this, proto.database.CreateBucketReply, 5));
+    jspb.Message.getWrapperField(this, proto.database.CreateBucketReply, 11));
 };
 
 
@@ -872,7 +1280,7 @@ proto.database.KVStoreWrapper.prototype.getCreateBucketReply = function() {
  * @return {!proto.database.KVStoreWrapper} returns this
 */
 proto.database.KVStoreWrapper.prototype.setCreateBucketReply = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 5, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 11, proto.database.KVStoreWrapper.oneofGroups_[0], value);
 };
 
 
@@ -890,17 +1298,17 @@ proto.database.KVStoreWrapper.prototype.clearCreateBucketReply = function() {
  * @return {boolean}
  */
 proto.database.KVStoreWrapper.prototype.hasCreateBucketReply = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.getField(this, 11) != null;
 };
 
 
 /**
- * optional DeleteBucketRequest delete_bucket_request = 6;
+ * optional DeleteBucketRequest delete_bucket_request = 12;
  * @return {?proto.database.DeleteBucketRequest}
  */
 proto.database.KVStoreWrapper.prototype.getDeleteBucketRequest = function() {
   return /** @type{?proto.database.DeleteBucketRequest} */ (
-    jspb.Message.getWrapperField(this, proto.database.DeleteBucketRequest, 6));
+    jspb.Message.getWrapperField(this, proto.database.DeleteBucketRequest, 12));
 };
 
 
@@ -909,7 +1317,7 @@ proto.database.KVStoreWrapper.prototype.getDeleteBucketRequest = function() {
  * @return {!proto.database.KVStoreWrapper} returns this
 */
 proto.database.KVStoreWrapper.prototype.setDeleteBucketRequest = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 6, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 12, proto.database.KVStoreWrapper.oneofGroups_[0], value);
 };
 
 
@@ -927,17 +1335,17 @@ proto.database.KVStoreWrapper.prototype.clearDeleteBucketRequest = function() {
  * @return {boolean}
  */
 proto.database.KVStoreWrapper.prototype.hasDeleteBucketRequest = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.getField(this, 12) != null;
 };
 
 
 /**
- * optional DeleteBucketReply delete_bucket_reply = 7;
+ * optional DeleteBucketReply delete_bucket_reply = 13;
  * @return {?proto.database.DeleteBucketReply}
  */
 proto.database.KVStoreWrapper.prototype.getDeleteBucketReply = function() {
   return /** @type{?proto.database.DeleteBucketReply} */ (
-    jspb.Message.getWrapperField(this, proto.database.DeleteBucketReply, 7));
+    jspb.Message.getWrapperField(this, proto.database.DeleteBucketReply, 13));
 };
 
 
@@ -946,7 +1354,7 @@ proto.database.KVStoreWrapper.prototype.getDeleteBucketReply = function() {
  * @return {!proto.database.KVStoreWrapper} returns this
 */
 proto.database.KVStoreWrapper.prototype.setDeleteBucketReply = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 7, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 13, proto.database.KVStoreWrapper.oneofGroups_[0], value);
 };
 
 
@@ -964,7 +1372,229 @@ proto.database.KVStoreWrapper.prototype.clearDeleteBucketReply = function() {
  * @return {boolean}
  */
 proto.database.KVStoreWrapper.prototype.hasDeleteBucketReply = function() {
-  return jspb.Message.getField(this, 7) != null;
+  return jspb.Message.getField(this, 13) != null;
+};
+
+
+/**
+ * optional GetKeyRequest get_key_request = 14;
+ * @return {?proto.database.GetKeyRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getGetKeyRequest = function() {
+  return /** @type{?proto.database.GetKeyRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.GetKeyRequest, 14));
+};
+
+
+/**
+ * @param {?proto.database.GetKeyRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setGetKeyRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 14, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearGetKeyRequest = function() {
+  return this.setGetKeyRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasGetKeyRequest = function() {
+  return jspb.Message.getField(this, 14) != null;
+};
+
+
+/**
+ * optional GetKeyReply get_key_reply = 15;
+ * @return {?proto.database.GetKeyReply}
+ */
+proto.database.KVStoreWrapper.prototype.getGetKeyReply = function() {
+  return /** @type{?proto.database.GetKeyReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.GetKeyReply, 15));
+};
+
+
+/**
+ * @param {?proto.database.GetKeyReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setGetKeyReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 15, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearGetKeyReply = function() {
+  return this.setGetKeyReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasGetKeyReply = function() {
+  return jspb.Message.getField(this, 15) != null;
+};
+
+
+/**
+ * optional PutKeyRequest put_key_request = 16;
+ * @return {?proto.database.PutKeyRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getPutKeyRequest = function() {
+  return /** @type{?proto.database.PutKeyRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.PutKeyRequest, 16));
+};
+
+
+/**
+ * @param {?proto.database.PutKeyRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setPutKeyRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 16, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearPutKeyRequest = function() {
+  return this.setPutKeyRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasPutKeyRequest = function() {
+  return jspb.Message.getField(this, 16) != null;
+};
+
+
+/**
+ * optional PutKeyReply put_key_reply = 17;
+ * @return {?proto.database.PutKeyReply}
+ */
+proto.database.KVStoreWrapper.prototype.getPutKeyReply = function() {
+  return /** @type{?proto.database.PutKeyReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.PutKeyReply, 17));
+};
+
+
+/**
+ * @param {?proto.database.PutKeyReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setPutKeyReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 17, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearPutKeyReply = function() {
+  return this.setPutKeyReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasPutKeyReply = function() {
+  return jspb.Message.getField(this, 17) != null;
+};
+
+
+/**
+ * optional DeleteKeyRequest delete_key_request = 18;
+ * @return {?proto.database.DeleteKeyRequest}
+ */
+proto.database.KVStoreWrapper.prototype.getDeleteKeyRequest = function() {
+  return /** @type{?proto.database.DeleteKeyRequest} */ (
+    jspb.Message.getWrapperField(this, proto.database.DeleteKeyRequest, 18));
+};
+
+
+/**
+ * @param {?proto.database.DeleteKeyRequest|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setDeleteKeyRequest = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 18, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearDeleteKeyRequest = function() {
+  return this.setDeleteKeyRequest(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasDeleteKeyRequest = function() {
+  return jspb.Message.getField(this, 18) != null;
+};
+
+
+/**
+ * optional DeleteKeyReply delete_key_reply = 19;
+ * @return {?proto.database.DeleteKeyReply}
+ */
+proto.database.KVStoreWrapper.prototype.getDeleteKeyReply = function() {
+  return /** @type{?proto.database.DeleteKeyReply} */ (
+    jspb.Message.getWrapperField(this, proto.database.DeleteKeyReply, 19));
+};
+
+
+/**
+ * @param {?proto.database.DeleteKeyReply|undefined} value
+ * @return {!proto.database.KVStoreWrapper} returns this
+*/
+proto.database.KVStoreWrapper.prototype.setDeleteKeyReply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 19, proto.database.KVStoreWrapper.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.KVStoreWrapper} returns this
+ */
+proto.database.KVStoreWrapper.prototype.clearDeleteKeyReply = function() {
+  return this.setDeleteKeyReply(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.KVStoreWrapper.prototype.hasDeleteKeyReply = function() {
+  return jspb.Message.getField(this, 19) != null;
 };
 
 
