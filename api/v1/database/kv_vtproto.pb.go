@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-func (this *PayloadWrapper) EqualVT(that *PayloadWrapper) bool {
+func (this *KVStoreWrapper) EqualVT(that *KVStoreWrapper) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
@@ -33,7 +33,7 @@ func (this *PayloadWrapper) EqualVT(that *PayloadWrapper) bool {
 			return false
 		}
 		if !this.Payload.(interface {
-			EqualVT(isPayloadWrapper_Payload) bool
+			EqualVT(isKVStoreWrapper_Payload) bool
 		}).EqualVT(that.Payload) {
 			return false
 		}
@@ -50,8 +50,8 @@ func (this *PayloadWrapper) EqualVT(that *PayloadWrapper) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (this *PayloadWrapper_CreateBucketRequest) EqualVT(thatIface isPayloadWrapper_Payload) bool {
-	that, ok := thatIface.(*PayloadWrapper_CreateBucketRequest)
+func (this *KVStoreWrapper_CreateBucketRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_CreateBucketRequest)
 	if !ok {
 		return false
 	}
@@ -75,8 +75,8 @@ func (this *PayloadWrapper_CreateBucketRequest) EqualVT(thatIface isPayloadWrapp
 	return true
 }
 
-func (this *PayloadWrapper_CreateBucketReply) EqualVT(thatIface isPayloadWrapper_Payload) bool {
-	that, ok := thatIface.(*PayloadWrapper_CreateBucketReply)
+func (this *KVStoreWrapper_CreateBucketReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_CreateBucketReply)
 	if !ok {
 		return false
 	}
@@ -100,8 +100,8 @@ func (this *PayloadWrapper_CreateBucketReply) EqualVT(thatIface isPayloadWrapper
 	return true
 }
 
-func (this *PayloadWrapper_DeleteBucketRequest) EqualVT(thatIface isPayloadWrapper_Payload) bool {
-	that, ok := thatIface.(*PayloadWrapper_DeleteBucketRequest)
+func (this *KVStoreWrapper_DeleteBucketRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteBucketRequest)
 	if !ok {
 		return false
 	}
@@ -125,8 +125,8 @@ func (this *PayloadWrapper_DeleteBucketRequest) EqualVT(thatIface isPayloadWrapp
 	return true
 }
 
-func (this *PayloadWrapper_DeleteBucketReply) EqualVT(thatIface isPayloadWrapper_Payload) bool {
-	that, ok := thatIface.(*PayloadWrapper_DeleteBucketReply)
+func (this *KVStoreWrapper_DeleteBucketReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteBucketReply)
 	if !ok {
 		return false
 	}
@@ -375,10 +375,10 @@ func (this *GetKeyRequest) EqualVT(that *GetKeyRequest) bool {
 	if this.AccountId != that.AccountId {
 		return false
 	}
-	if this.BucketId != that.BucketId {
+	if this.BucketName != that.BucketName {
 		return false
 	}
-	if this.KeyId != that.KeyId {
+	if this.Key != that.Key {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -393,27 +393,6 @@ func (this *GetKeyReply) EqualVT(that *GetKeyReply) bool {
 	if !this.KeyValuePair.EqualVT(that.KeyValuePair) {
 		return false
 	}
-	if this.Size != that.Size {
-		return false
-	}
-	if equal, ok := interface{}(this.Created).(interface {
-		EqualVT(*timestamppb.Timestamp) bool
-	}); ok {
-		if !equal.EqualVT(that.Created) {
-			return false
-		}
-	} else if !proto.Equal(this.Created, that.Created) {
-		return false
-	}
-	if equal, ok := interface{}(this.LastUpdated).(interface {
-		EqualVT(*timestamppb.Timestamp) bool
-	}); ok {
-		if !equal.EqualVT(that.LastUpdated) {
-			return false
-		}
-	} else if !proto.Equal(this.LastUpdated, that.LastUpdated) {
-		return false
-	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -426,7 +405,7 @@ func (this *PutKeyRequest) EqualVT(that *PutKeyRequest) bool {
 	if this.AccountId != that.AccountId {
 		return false
 	}
-	if this.BucketId != that.BucketId {
+	if this.BucketName != that.BucketName {
 		return false
 	}
 	if !this.KeyValuePair.EqualVT(that.KeyValuePair) {
@@ -441,21 +420,6 @@ func (this *PutKeyReply) EqualVT(that *PutKeyReply) bool {
 	} else if that == nil {
 		return false
 	}
-	if !this.KeyValuePair.EqualVT(that.KeyValuePair) {
-		return false
-	}
-	if this.Size != that.Size {
-		return false
-	}
-	if equal, ok := interface{}(this.Created).(interface {
-		EqualVT(*timestamppb.Timestamp) bool
-	}); ok {
-		if !equal.EqualVT(that.Created) {
-			return false
-		}
-	} else if !proto.Equal(this.Created, that.Created) {
-		return false
-	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -468,10 +432,10 @@ func (this *DeleteKeyRequest) EqualVT(that *DeleteKeyRequest) bool {
 	if this.AccountId != that.AccountId {
 		return false
 	}
-	if this.BucketId != that.BucketId {
+	if this.BucketName != that.BucketName {
 		return false
 	}
-	if this.KeyId != that.KeyId {
+	if this.Key != that.Key {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -534,7 +498,7 @@ func (this *Event) EqualVT(that *Event) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
-func (m *PayloadWrapper) MarshalVT() (dAtA []byte, err error) {
+func (m *KVStoreWrapper) MarshalVT() (dAtA []byte, err error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -547,12 +511,12 @@ func (m *PayloadWrapper) MarshalVT() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *PayloadWrapper) MarshalToVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *PayloadWrapper) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m == nil {
 		return 0, nil
 	}
@@ -595,12 +559,12 @@ func (m *PayloadWrapper) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *PayloadWrapper_CreateBucketRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_CreateBucketRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *PayloadWrapper_CreateBucketRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_CreateBucketRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.CreateBucketRequest != nil {
 		size, err := m.CreateBucketRequest.MarshalToSizedBufferVT(dAtA[:i])
@@ -614,12 +578,12 @@ func (m *PayloadWrapper_CreateBucketRequest) MarshalToSizedBufferVT(dAtA []byte)
 	}
 	return len(dAtA) - i, nil
 }
-func (m *PayloadWrapper_CreateBucketReply) MarshalToVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_CreateBucketReply) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *PayloadWrapper_CreateBucketReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_CreateBucketReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.CreateBucketReply != nil {
 		size, err := m.CreateBucketReply.MarshalToSizedBufferVT(dAtA[:i])
@@ -633,12 +597,12 @@ func (m *PayloadWrapper_CreateBucketReply) MarshalToSizedBufferVT(dAtA []byte) (
 	}
 	return len(dAtA) - i, nil
 }
-func (m *PayloadWrapper_DeleteBucketRequest) MarshalToVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_DeleteBucketRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *PayloadWrapper_DeleteBucketRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_DeleteBucketRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.DeleteBucketRequest != nil {
 		size, err := m.DeleteBucketRequest.MarshalToSizedBufferVT(dAtA[:i])
@@ -652,12 +616,12 @@ func (m *PayloadWrapper_DeleteBucketRequest) MarshalToSizedBufferVT(dAtA []byte)
 	}
 	return len(dAtA) - i, nil
 }
-func (m *PayloadWrapper_DeleteBucketReply) MarshalToVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_DeleteBucketReply) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
 }
 
-func (m *PayloadWrapper_DeleteBucketReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+func (m *KVStoreWrapper_DeleteBucketReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	if m.DeleteBucketReply != nil {
 		size, err := m.DeleteBucketReply.MarshalToSizedBufferVT(dAtA[:i])
@@ -1338,17 +1302,17 @@ func (m *GetKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.KeyId) > 0 {
-		i -= len(m.KeyId)
-		copy(dAtA[i:], m.KeyId)
-		i = encodeVarint(dAtA, i, uint64(len(m.KeyId)))
+	if len(m.Key) > 0 {
+		i -= len(m.Key)
+		copy(dAtA[i:], m.Key)
+		i = encodeVarint(dAtA, i, uint64(len(m.Key)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.BucketId) > 0 {
-		i -= len(m.BucketId)
-		copy(dAtA[i:], m.BucketId)
-		i = encodeVarint(dAtA, i, uint64(len(m.BucketId)))
+	if len(m.BucketName) > 0 {
+		i -= len(m.BucketName)
+		copy(dAtA[i:], m.BucketName)
+		i = encodeVarint(dAtA, i, uint64(len(m.BucketName)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1389,55 +1353,6 @@ func (m *GetKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
-	}
-	if m.LastUpdated != nil {
-		if vtmsg, ok := interface{}(m.LastUpdated).(interface {
-			MarshalToSizedBufferVT([]byte) (int, error)
-		}); ok {
-			size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarint(dAtA, i, uint64(size))
-		} else {
-			encoded, err := proto.Marshal(m.LastUpdated)
-			if err != nil {
-				return 0, err
-			}
-			i -= len(encoded)
-			copy(dAtA[i:], encoded)
-			i = encodeVarint(dAtA, i, uint64(len(encoded)))
-		}
-		i--
-		dAtA[i] = 0x22
-	}
-	if m.Created != nil {
-		if vtmsg, ok := interface{}(m.Created).(interface {
-			MarshalToSizedBufferVT([]byte) (int, error)
-		}); ok {
-			size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarint(dAtA, i, uint64(size))
-		} else {
-			encoded, err := proto.Marshal(m.Created)
-			if err != nil {
-				return 0, err
-			}
-			i -= len(encoded)
-			copy(dAtA[i:], encoded)
-			i = encodeVarint(dAtA, i, uint64(len(encoded)))
-		}
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Size != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.Size))
-		i--
-		dAtA[i] = 0x10
 	}
 	if m.KeyValuePair != nil {
 		size, err := m.KeyValuePair.MarshalToSizedBufferVT(dAtA[:i])
@@ -1492,10 +1407,10 @@ func (m *PutKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.BucketId) > 0 {
-		i -= len(m.BucketId)
-		copy(dAtA[i:], m.BucketId)
-		i = encodeVarint(dAtA, i, uint64(len(m.BucketId)))
+	if len(m.BucketName) > 0 {
+		i -= len(m.BucketName)
+		copy(dAtA[i:], m.BucketName)
+		i = encodeVarint(dAtA, i, uint64(len(m.BucketName)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1537,43 +1452,6 @@ func (m *PutKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.Created != nil {
-		if vtmsg, ok := interface{}(m.Created).(interface {
-			MarshalToSizedBufferVT([]byte) (int, error)
-		}); ok {
-			size, err := vtmsg.MarshalToSizedBufferVT(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarint(dAtA, i, uint64(size))
-		} else {
-			encoded, err := proto.Marshal(m.Created)
-			if err != nil {
-				return 0, err
-			}
-			i -= len(encoded)
-			copy(dAtA[i:], encoded)
-			i = encodeVarint(dAtA, i, uint64(len(encoded)))
-		}
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Size != 0 {
-		i = encodeVarint(dAtA, i, uint64(m.Size))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.KeyValuePair != nil {
-		size, err := m.KeyValuePair.MarshalToSizedBufferVT(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0xa
-	}
 	return len(dAtA) - i, nil
 }
 
@@ -1607,17 +1485,17 @@ func (m *DeleteKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if len(m.KeyId) > 0 {
-		i -= len(m.KeyId)
-		copy(dAtA[i:], m.KeyId)
-		i = encodeVarint(dAtA, i, uint64(len(m.KeyId)))
+	if len(m.Key) > 0 {
+		i -= len(m.Key)
+		copy(dAtA[i:], m.Key)
+		i = encodeVarint(dAtA, i, uint64(len(m.Key)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.BucketId) > 0 {
-		i -= len(m.BucketId)
-		copy(dAtA[i:], m.BucketId)
-		i = encodeVarint(dAtA, i, uint64(len(m.BucketId)))
+	if len(m.BucketName) > 0 {
+		i -= len(m.BucketName)
+		copy(dAtA[i:], m.BucketName)
+		i = encodeVarint(dAtA, i, uint64(len(m.BucketName)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -1808,7 +1686,7 @@ func encodeVarint(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *PayloadWrapper) SizeVT() (n int) {
+func (m *KVStoreWrapper) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1832,7 +1710,7 @@ func (m *PayloadWrapper) SizeVT() (n int) {
 	return n
 }
 
-func (m *PayloadWrapper_CreateBucketRequest) SizeVT() (n int) {
+func (m *KVStoreWrapper_CreateBucketRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1844,7 +1722,7 @@ func (m *PayloadWrapper_CreateBucketRequest) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *PayloadWrapper_CreateBucketReply) SizeVT() (n int) {
+func (m *KVStoreWrapper_CreateBucketReply) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1856,7 +1734,7 @@ func (m *PayloadWrapper_CreateBucketReply) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *PayloadWrapper_DeleteBucketRequest) SizeVT() (n int) {
+func (m *KVStoreWrapper_DeleteBucketRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1868,7 +1746,7 @@ func (m *PayloadWrapper_DeleteBucketRequest) SizeVT() (n int) {
 	}
 	return n
 }
-func (m *PayloadWrapper_DeleteBucketReply) SizeVT() (n int) {
+func (m *KVStoreWrapper_DeleteBucketReply) SizeVT() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2128,11 +2006,11 @@ func (m *GetKeyRequest) SizeVT() (n int) {
 	if m.AccountId != 0 {
 		n += 1 + sov(uint64(m.AccountId))
 	}
-	l = len(m.BucketId)
+	l = len(m.BucketName)
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
-	l = len(m.KeyId)
+	l = len(m.Key)
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
@@ -2150,29 +2028,6 @@ func (m *GetKeyReply) SizeVT() (n int) {
 		l = m.KeyValuePair.SizeVT()
 		n += 1 + l + sov(uint64(l))
 	}
-	if m.Size != 0 {
-		n += 1 + sov(uint64(m.Size))
-	}
-	if m.Created != nil {
-		if size, ok := interface{}(m.Created).(interface {
-			SizeVT() int
-		}); ok {
-			l = size.SizeVT()
-		} else {
-			l = proto.Size(m.Created)
-		}
-		n += 1 + l + sov(uint64(l))
-	}
-	if m.LastUpdated != nil {
-		if size, ok := interface{}(m.LastUpdated).(interface {
-			SizeVT() int
-		}); ok {
-			l = size.SizeVT()
-		} else {
-			l = proto.Size(m.LastUpdated)
-		}
-		n += 1 + l + sov(uint64(l))
-	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -2186,7 +2041,7 @@ func (m *PutKeyRequest) SizeVT() (n int) {
 	if m.AccountId != 0 {
 		n += 1 + sov(uint64(m.AccountId))
 	}
-	l = len(m.BucketId)
+	l = len(m.BucketName)
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
@@ -2204,23 +2059,6 @@ func (m *PutKeyReply) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	if m.KeyValuePair != nil {
-		l = m.KeyValuePair.SizeVT()
-		n += 1 + l + sov(uint64(l))
-	}
-	if m.Size != 0 {
-		n += 1 + sov(uint64(m.Size))
-	}
-	if m.Created != nil {
-		if size, ok := interface{}(m.Created).(interface {
-			SizeVT() int
-		}); ok {
-			l = size.SizeVT()
-		} else {
-			l = proto.Size(m.Created)
-		}
-		n += 1 + l + sov(uint64(l))
-	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -2234,11 +2072,11 @@ func (m *DeleteKeyRequest) SizeVT() (n int) {
 	if m.AccountId != 0 {
 		n += 1 + sov(uint64(m.AccountId))
 	}
-	l = len(m.BucketId)
+	l = len(m.BucketName)
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
-	l = len(m.KeyId)
+	l = len(m.Key)
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
@@ -2316,7 +2154,7 @@ func sov(x uint64) (n int) {
 func soz(x uint64) (n int) {
 	return sov(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
+func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2339,10 +2177,10 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: PayloadWrapper: wiretype end group for non-group")
+			return fmt.Errorf("proto: KVStoreWrapper: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: PayloadWrapper: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: KVStoreWrapper: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2427,7 +2265,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Typ |= PayloadWrapper_RequestType(b&0x7F) << shift
+				m.Typ |= KVStoreWrapper_RequestType(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2461,7 +2299,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Payload.(*PayloadWrapper_CreateBucketRequest); ok {
+			if oneof, ok := m.Payload.(*KVStoreWrapper_CreateBucketRequest); ok {
 				if err := oneof.CreateBucketRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2470,7 +2308,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Payload = &PayloadWrapper_CreateBucketRequest{CreateBucketRequest: v}
+				m.Payload = &KVStoreWrapper_CreateBucketRequest{CreateBucketRequest: v}
 			}
 			iNdEx = postIndex
 		case 5:
@@ -2502,7 +2340,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Payload.(*PayloadWrapper_CreateBucketReply); ok {
+			if oneof, ok := m.Payload.(*KVStoreWrapper_CreateBucketReply); ok {
 				if err := oneof.CreateBucketReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2511,7 +2349,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Payload = &PayloadWrapper_CreateBucketReply{CreateBucketReply: v}
+				m.Payload = &KVStoreWrapper_CreateBucketReply{CreateBucketReply: v}
 			}
 			iNdEx = postIndex
 		case 6:
@@ -2543,7 +2381,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Payload.(*PayloadWrapper_DeleteBucketRequest); ok {
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteBucketRequest); ok {
 				if err := oneof.DeleteBucketRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2552,7 +2390,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Payload = &PayloadWrapper_DeleteBucketRequest{DeleteBucketRequest: v}
+				m.Payload = &KVStoreWrapper_DeleteBucketRequest{DeleteBucketRequest: v}
 			}
 			iNdEx = postIndex
 		case 7:
@@ -2584,7 +2422,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if oneof, ok := m.Payload.(*PayloadWrapper_DeleteBucketReply); ok {
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteBucketReply); ok {
 				if err := oneof.DeleteBucketReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
@@ -2593,7 +2431,7 @@ func (m *PayloadWrapper) UnmarshalVT(dAtA []byte) error {
 				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
 					return err
 				}
-				m.Payload = &PayloadWrapper_DeleteBucketReply{DeleteBucketReply: v}
+				m.Payload = &KVStoreWrapper_DeleteBucketReply{DeleteBucketReply: v}
 			}
 			iNdEx = postIndex
 		default:
@@ -4031,7 +3869,7 @@ func (m *GetKeyRequest) UnmarshalVT(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BucketId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BucketName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4059,11 +3897,11 @@ func (m *GetKeyRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BucketId = string(dAtA[iNdEx:postIndex])
+			m.BucketName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field KeyId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Key", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4091,7 +3929,7 @@ func (m *GetKeyRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.KeyId = string(dAtA[iNdEx:postIndex])
+			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -4180,113 +4018,6 @@ func (m *GetKeyReply) UnmarshalVT(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Size", wireType)
-			}
-			m.Size = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Size |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Created", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Created == nil {
-				m.Created = &timestamppb.Timestamp{}
-			}
-			if unmarshal, ok := interface{}(m.Created).(interface {
-				UnmarshalVT([]byte) error
-			}); ok {
-				if err := unmarshal.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-					return err
-				}
-			} else {
-				if err := proto.Unmarshal(dAtA[iNdEx:postIndex], m.Created); err != nil {
-					return err
-				}
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LastUpdated", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.LastUpdated == nil {
-				m.LastUpdated = &timestamppb.Timestamp{}
-			}
-			if unmarshal, ok := interface{}(m.LastUpdated).(interface {
-				UnmarshalVT([]byte) error
-			}); ok {
-				if err := unmarshal.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-					return err
-				}
-			} else {
-				if err := proto.Unmarshal(dAtA[iNdEx:postIndex], m.LastUpdated); err != nil {
-					return err
-				}
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skip(dAtA[iNdEx:])
@@ -4359,7 +4090,7 @@ func (m *PutKeyRequest) UnmarshalVT(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BucketId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BucketName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4387,7 +4118,7 @@ func (m *PutKeyRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BucketId = string(dAtA[iNdEx:postIndex])
+			m.BucketName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -4476,105 +4207,6 @@ func (m *PutKeyReply) UnmarshalVT(dAtA []byte) error {
 			return fmt.Errorf("proto: PutKeyReply: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field KeyValuePair", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.KeyValuePair == nil {
-				m.KeyValuePair = &KeyValue{}
-			}
-			if err := m.KeyValuePair.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Size", wireType)
-			}
-			m.Size = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Size |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Created", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Created == nil {
-				m.Created = &timestamppb.Timestamp{}
-			}
-			if unmarshal, ok := interface{}(m.Created).(interface {
-				UnmarshalVT([]byte) error
-			}); ok {
-				if err := unmarshal.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-					return err
-				}
-			} else {
-				if err := proto.Unmarshal(dAtA[iNdEx:postIndex], m.Created); err != nil {
-					return err
-				}
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skip(dAtA[iNdEx:])
@@ -4647,7 +4279,7 @@ func (m *DeleteKeyRequest) UnmarshalVT(dAtA []byte) error {
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BucketId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BucketName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4675,11 +4307,11 @@ func (m *DeleteKeyRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BucketId = string(dAtA[iNdEx:postIndex])
+			m.BucketName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field KeyId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Key", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4707,7 +4339,7 @@ func (m *DeleteKeyRequest) UnmarshalVT(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.KeyId = string(dAtA[iNdEx:postIndex])
+			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

@@ -107,33 +107,26 @@ message BucketDescriptor {
 
 message GetKeyRequest {
   uint64 account_id = 1;
-  string bucket_id = 2;
-  string key_id = 3;
+  string bucket_name = 2;
+  string key = 3;
 }
 
 message GetKeyReply {
   KeyValue key_value_pair = 1;
-  uint64 size = 2;
-  google.protobuf.Timestamp created = 3;
-  google.protobuf.Timestamp last_updated = 4;
 }
 
 message PutKeyRequest {
   uint64 account_id = 1;
-  string bucket_id = 2;
+  string bucket_name = 2;
   KeyValue key_value_pair = 3;
 }
 
-message PutKeyReply {
-  KeyValue key_value_pair = 1;
-  uint64 size = 2;
-  google.protobuf.Timestamp created = 3;
-}
+message PutKeyReply {}
 
 message DeleteKeyRequest {
   uint64 account_id = 1;
-  string bucket_id = 2;
-  string key_id = 3;
+  string bucket_name = 2;
+  string key = 3;
 }
 
 message DeleteKeyReply {
