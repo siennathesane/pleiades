@@ -32,6 +32,7 @@ type TransactionManagerTestSuite struct {
 	logger  zerolog.Logger
 	shardId uint64
 	nh      *dragonboat.NodeHost
+	defaultTimeout time.Duration
 }
 
 // we need to ensure that we use a single cluster the entire time to emulate multiple
@@ -39,6 +40,7 @@ type TransactionManagerTestSuite struct {
 func (smt *TransactionManagerTestSuite) SetupSuite() {
 
 	smt.logger = utils.NewTestLogger(smt.T())
+	smt.defaultTimeout = 500 * time.Millisecond
 
 	smt.nh = buildTestNodeHost(smt.T())
 	smt.Require().NotNil(smt.nh, "node must not be nil")
@@ -50,7 +52,7 @@ func (smt *TransactionManagerTestSuite) SetupSuite() {
 
 	err := smt.nh.StartCluster(nodeClusters, false, newTestStateMachine, shardConfig)
 	smt.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(5000 * time.Millisecond)
+	time.Sleep(smt.defaultTimeout)
 }
 
 func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
@@ -62,7 +64,7 @@ func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
 	smt.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	_, err := smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
@@ -74,7 +76,7 @@ func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
 func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 	sm := newSessionManager(smt.nh, smt.logger)
 
-	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
 	smt.Require().NoError(err, "there must not be an error when getting the session")
 	smt.Require().NotNil(transaction, "the client session must not be nil")
@@ -82,7 +84,7 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
 	smt.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
@@ -94,7 +96,7 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 	sm := newSessionManager(smt.nh, smt.logger)
 
-	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
 	smt.Require().NoError(err, "there must not be an error when getting the session")
 	smt.Require().NotNil(transaction, "the client session must not be nil")
@@ -102,7 +104,7 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
 	smt.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 
@@ -118,7 +120,7 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 func (smt *TransactionManagerTestSuite) TestCommit() {
 	sm := newSessionManager(smt.nh, smt.logger)
 
-	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
 	smt.Require().NoError(err, "there must not be an error when getting the session")
 	smt.Require().NotNil(transaction, "the client session must not be nil")
@@ -126,7 +128,7 @@ func (smt *TransactionManagerTestSuite) TestCommit() {
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
 	smt.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	smt.Require().NoError(err, "there must not be an error when proposing a new message")
 

@@ -29,10 +29,12 @@ type RaftHostTestSuite struct {
 	suite.Suite
 	logger zerolog.Logger
 	nh *dragonboat.NodeHost
+	defaultTimeout time.Duration
 }
 
 func (r *RaftHostTestSuite) SetupSuite() {
 	r.logger = utils.NewTestLogger(r.T())
+	r.defaultTimeout = 300*time.Millisecond
 }
 
 func (r *RaftHostTestSuite) SetupTest() {
@@ -53,16 +55,16 @@ func (r *RaftHostTestSuite) TestCompact() {
 
 	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
 	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	time.Sleep(r.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), r.defaultTimeout)
 	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
 	r.Require().NoError(err, "there must not be an error when fetching the client session")
 	r.Require().NotNil(cs, "the client session must not be nil")
 	cancel()
 
 	for i := 0; i < 25; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+		proposeContext, _ := context.WithTimeout(context.Background(), r.defaultTimeout)
 		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
 		r.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
@@ -128,9 +130,9 @@ func (r *RaftHostTestSuite) TestSnapshot() {
 
 	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
 	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	time.Sleep(r.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), r.defaultTimeout)
 	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
 	r.Require().NoError(err, "there must not be an error when fetching the client session")
 	r.Require().NotNil(cs, "the client session must not be nil")
@@ -138,7 +140,7 @@ func (r *RaftHostTestSuite) TestSnapshot() {
 
 	loops := 25
 	for i := 0; i < loops; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+		proposeContext, _ := context.WithTimeout(context.Background(), r.defaultTimeout)
 		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
 		r.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
