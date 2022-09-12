@@ -13,7 +13,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"runtime"
 	"strconv"
@@ -148,14 +147,4 @@ func (Build) Rebuild() error {
 func (Build) Vet() error {
 	fmt.Println("running linter")
 	return sh.RunWithV(nil, "go", "vet", "./...")
-}
-
-func verifyVendor() error {
-	_, err := os.Stat(vendorDir)
-	if os.IsNotExist(err) {
-		fmt.Printf("%s does not exist, creating\n", vendorDir)
-		err = sh.RunWithV(nil, "vend")
-	}
-
-	return err
 }

@@ -67,10 +67,6 @@ type Gen mg.Namespace
 
 // setup the generator tools and environment
 func (Gen) Setup() {
-	defer func() {
-		verifyVendor()
-	}()
-
 	mg.Deps(Clean.Vendor)
 
 	mg.Deps(func() error {
