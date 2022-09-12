@@ -43,7 +43,7 @@ type raftHostGrpcAdapterTestSuite struct {
 // SetupTest represents a remote Pleiades host
 func (r *raftHostGrpcAdapterTestSuite) SetupTest() {
 	r.logger = utils.NewTestLogger(r.T())
-	r.defaultTimeout = 3000 * time.Millisecond
+	r.defaultTimeout = 300 * time.Millisecond
 
 	buffer := 1024 * 1024
 	listener := bufconn.Listen(buffer)

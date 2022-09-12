@@ -59,8 +59,8 @@ func (r *RaftShardGrpcAdapterTestSuite) SetupTest() {
 
 	r.testShardId = rand.Uint64()
 	r.testClusterConfig = buildTestShardConfig(r.T())
-	r.defaultTimeout = 3000 * time.Millisecond
-	r.extendedDefaultTimeout = 5000 * time.Millisecond
+	r.defaultTimeout = 300 * time.Millisecond
+	r.extendedDefaultTimeout = 500 * time.Millisecond
 
 	r.testShardManager = newShardManager(buildTestNodeHost(r.T()), r.logger)
 
