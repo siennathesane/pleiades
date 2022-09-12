@@ -25,6 +25,8 @@ stages:
     GOPATH: $CI_PROJECT_DIR/.go
   before_script:
     - mkdir -p .go
+    - ci/scripts/install-mage.sh
+    - mage install:godeps
   cache:
     paths:
       - .go/pkg/mod/
