@@ -18,8 +18,8 @@ option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 import "google/protobuf/timestamp.proto";
 
 message KVStoreWrapper {
-  bytes account = 1;
-  bytes bucket = 2;
+  uint64 account = 1;
+  string bucket = 2;
 
   enum RequestType {
     CREATE_ACCOUNT_REQUEST = 0;
