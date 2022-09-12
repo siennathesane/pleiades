@@ -8,6 +8,7 @@
  */
 
 //go:build mage
+
 package main
 
 import (
@@ -74,7 +75,7 @@ func (Install) Godeps() error {
 		return err
 	}
 
-	return verifyVendor()
+	return nil
 }
 
 // fetch the nodejs dependencies
