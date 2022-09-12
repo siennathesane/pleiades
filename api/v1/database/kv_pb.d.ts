@@ -4,7 +4,7 @@
 import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
-export class PayloadWrapper extends jspb.Message {
+export class KVStoreWrapper extends jspb.Message {
   getAccount(): Uint8Array | string;
   getAccount_asU8(): Uint8Array;
   getAccount_asB64(): string;
@@ -15,8 +15,8 @@ export class PayloadWrapper extends jspb.Message {
   getBucket_asB64(): string;
   setBucket(value: Uint8Array | string): void;
 
-  getTyp(): PayloadWrapper.RequestTypeMap[keyof PayloadWrapper.RequestTypeMap];
-  setTyp(value: PayloadWrapper.RequestTypeMap[keyof PayloadWrapper.RequestTypeMap]): void;
+  getTyp(): KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap];
+  setTyp(value: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap]): void;
 
   hasCreateBucketRequest(): boolean;
   clearCreateBucketRequest(): void;
@@ -38,22 +38,22 @@ export class PayloadWrapper extends jspb.Message {
   getDeleteBucketReply(): DeleteBucketReply | undefined;
   setDeleteBucketReply(value?: DeleteBucketReply): void;
 
-  getPayloadCase(): PayloadWrapper.PayloadCase;
+  getPayloadCase(): KVStoreWrapper.PayloadCase;
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): PayloadWrapper.AsObject;
-  static toObject(includeInstance: boolean, msg: PayloadWrapper): PayloadWrapper.AsObject;
+  toObject(includeInstance?: boolean): KVStoreWrapper.AsObject;
+  static toObject(includeInstance: boolean, msg: KVStoreWrapper): KVStoreWrapper.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: PayloadWrapper, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): PayloadWrapper;
-  static deserializeBinaryFromReader(message: PayloadWrapper, reader: jspb.BinaryReader): PayloadWrapper;
+  static serializeBinaryToWriter(message: KVStoreWrapper, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): KVStoreWrapper;
+  static deserializeBinaryFromReader(message: KVStoreWrapper, reader: jspb.BinaryReader): KVStoreWrapper;
 }
 
-export namespace PayloadWrapper {
+export namespace KVStoreWrapper {
   export type AsObject = {
     account: Uint8Array | string,
     bucket: Uint8Array | string,
-    typ: PayloadWrapper.RequestTypeMap[keyof PayloadWrapper.RequestTypeMap],
+    typ: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap],
     createBucketRequest?: CreateBucketRequest.AsObject,
     createBucketReply?: CreateBucketReply.AsObject,
     deleteBucketRequest?: DeleteBucketRequest.AsObject,
@@ -400,11 +400,11 @@ export class GetKeyRequest extends jspb.Message {
   getAccountId(): number;
   setAccountId(value: number): void;
 
-  getBucketId(): string;
-  setBucketId(value: string): void;
+  getBucketName(): string;
+  setBucketName(value: string): void;
 
-  getKeyId(): string;
-  setKeyId(value: string): void;
+  getKey(): string;
+  setKey(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetKeyRequest.AsObject;
@@ -419,8 +419,8 @@ export class GetKeyRequest extends jspb.Message {
 export namespace GetKeyRequest {
   export type AsObject = {
     accountId: number,
-    bucketId: string,
-    keyId: string,
+    bucketName: string,
+    key: string,
   }
 }
 
@@ -429,19 +429,6 @@ export class GetKeyReply extends jspb.Message {
   clearKeyValuePair(): void;
   getKeyValuePair(): KeyValue | undefined;
   setKeyValuePair(value?: KeyValue): void;
-
-  getSize(): number;
-  setSize(value: number): void;
-
-  hasCreated(): boolean;
-  clearCreated(): void;
-  getCreated(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setCreated(value?: google_protobuf_timestamp_pb.Timestamp): void;
-
-  hasLastUpdated(): boolean;
-  clearLastUpdated(): void;
-  getLastUpdated(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setLastUpdated(value?: google_protobuf_timestamp_pb.Timestamp): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetKeyReply.AsObject;
@@ -456,9 +443,6 @@ export class GetKeyReply extends jspb.Message {
 export namespace GetKeyReply {
   export type AsObject = {
     keyValuePair?: KeyValue.AsObject,
-    size: number,
-    created?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-    lastUpdated?: google_protobuf_timestamp_pb.Timestamp.AsObject,
   }
 }
 
@@ -466,8 +450,8 @@ export class PutKeyRequest extends jspb.Message {
   getAccountId(): number;
   setAccountId(value: number): void;
 
-  getBucketId(): string;
-  setBucketId(value: string): void;
+  getBucketName(): string;
+  setBucketName(value: string): void;
 
   hasKeyValuePair(): boolean;
   clearKeyValuePair(): void;
@@ -487,25 +471,12 @@ export class PutKeyRequest extends jspb.Message {
 export namespace PutKeyRequest {
   export type AsObject = {
     accountId: number,
-    bucketId: string,
+    bucketName: string,
     keyValuePair?: KeyValue.AsObject,
   }
 }
 
 export class PutKeyReply extends jspb.Message {
-  hasKeyValuePair(): boolean;
-  clearKeyValuePair(): void;
-  getKeyValuePair(): KeyValue | undefined;
-  setKeyValuePair(value?: KeyValue): void;
-
-  getSize(): number;
-  setSize(value: number): void;
-
-  hasCreated(): boolean;
-  clearCreated(): void;
-  getCreated(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setCreated(value?: google_protobuf_timestamp_pb.Timestamp): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PutKeyReply.AsObject;
   static toObject(includeInstance: boolean, msg: PutKeyReply): PutKeyReply.AsObject;
@@ -518,9 +489,6 @@ export class PutKeyReply extends jspb.Message {
 
 export namespace PutKeyReply {
   export type AsObject = {
-    keyValuePair?: KeyValue.AsObject,
-    size: number,
-    created?: google_protobuf_timestamp_pb.Timestamp.AsObject,
   }
 }
 
@@ -528,11 +496,11 @@ export class DeleteKeyRequest extends jspb.Message {
   getAccountId(): number;
   setAccountId(value: number): void;
 
-  getBucketId(): string;
-  setBucketId(value: string): void;
+  getBucketName(): string;
+  setBucketName(value: string): void;
 
-  getKeyId(): string;
-  setKeyId(value: string): void;
+  getKey(): string;
+  setKey(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteKeyRequest.AsObject;
@@ -547,8 +515,8 @@ export class DeleteKeyRequest extends jspb.Message {
 export namespace DeleteKeyRequest {
   export type AsObject = {
     accountId: number,
-    bucketId: string,
-    keyId: string,
+    bucketName: string,
+    key: string,
   }
 }
 

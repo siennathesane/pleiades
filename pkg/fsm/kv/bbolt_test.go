@@ -15,13 +15,21 @@ import (
 	"math/rand"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/mxplusb/pleiades/api/v1/database"
 	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
+	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
 	"google.golang.org/protobuf/proto"
+)
+
+const (
+	// fuzzRounds just sets how many times the fuzzer will run in test mode.
+	fuzzRounds = 256
 )
 
 func TestBBolt(t *testing.T) {
@@ -67,12 +75,12 @@ func (t *BBoltTestSuite) TestCreateAccountBucket() {
 	resp, err := b.CreateAccountBucket(req)
 	t.Require().Error(err, "there must be an error when sending an empty request")
 	t.Require().Empty(resp.GetAccountDescriptor(), "the response must be empty")
-	
+
 	req.AccountId = testAccountId
 	resp, err = b.CreateAccountBucket(req)
 	t.Require().Error(err, "there must be an error when sending a partial request")
 	t.Require().Empty(resp.GetAccountDescriptor(), "the response must be empty")
-	
+
 	req.Owner = testOwner
 	resp, err = b.CreateAccountBucket(req)
 	t.Require().NoError(err, "there must not be an error when sending a request")
@@ -234,8 +242,8 @@ func (t *BBoltTestSuite) TestCreateBucket() {
 	})
 	t.Require().NoError(err, "there must not be an error when peeking into the database")
 
-	t.Require().Equal(uint64(1),acctDescriptor.GetBucketCount(), "the number of buckets must match")
-	t.Require().Equal(testBucketName,acctDescriptor.GetBuckets()[0], "the bucket names must match")
+	t.Require().Equal(uint64(1), acctDescriptor.GetBucketCount(), "the number of buckets must match")
+	t.Require().Equal(testBucketName, acctDescriptor.GetBuckets()[0], "the bucket names must match")
 }
 
 func (t *BBoltTestSuite) TestDeleteBucket() {
@@ -246,7 +254,6 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	b, err := newBboltStore(shardId, replicaId, path, t.logger)
 	t.Require().NoError(err, "there must be an error when passing a bad directory")
 	t.Require().NotNil(b, "the bbolt store must be nil")
-
 
 	testAccountId := rand.Uint64()
 	testBucketName := "test-bucket"
@@ -262,7 +269,7 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	_, err = b.CreateBucket(&database.CreateBucketRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
-		Name: testBucketName,
+		Name:      testBucketName,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
@@ -304,6 +311,447 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	})
 	t.Require().NoError(err, "there must not be an error when peeking into the database")
 
-	t.Require().Equal(uint64(0),acctDescriptor.GetBucketCount(), "the number of buckets must match")
+	t.Require().Equal(uint64(0), acctDescriptor.GetBucketCount(), "the number of buckets must match")
 	t.Require().Empty(acctDescriptor.GetBuckets(), "the bucket names must empty")
+}
+
+func (t *BBoltTestSuite) TestGetKey() {
+	shardId, replicaId := uint64(10), uint64(20)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+
+	path := filepath.Join(t.T().TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, t.logger)
+	t.Require().NoError(err, "there must be an error when passing a bad directory")
+	t.Require().NotNil(b, "the bbolt store must be nil")
+
+	testAccountId := rand.Uint64()
+	testBucketName := "test-bucket"
+	testOwner := "test@test.com"
+
+	// prep the test
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test account bucket")
+
+	_, err = b.CreateBucket(&database.CreateBucketRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+		Name:      testBucketName,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test bucket")
+
+	now := time.Now().UnixMilli()
+	expectedKvp := &database.KeyValue{
+		Key:            "test-key",
+		CreateRevision: now,
+		ModRevision:    now,
+		Version:        1,
+		Value:          []byte("test-value"),
+		Lease:          0,
+	}
+
+	err = b.db.Update(func(tx *bbolt.Tx) error {
+		accountBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
+
+		acctBucket := tx.Bucket(accountBuf)
+		t.Require().NotNil(acctBucket, "the account bucket must not be nil")
+
+		bucket := acctBucket.Bucket([]byte(testBucketName))
+		t.Require().NotNil(bucket, "the target bucket must not be nil")
+
+		payload, err := expectedKvp.MarshalVT()
+		t.Require().NoError(err, "there must not be an error marshalling the test key")
+
+		err = bucket.Put([]byte(expectedKvp.Key), payload)
+		t.Require().NoError(err, "there must not be an error when storing the test key")
+
+		return nil
+	})
+	t.Require().NoError(err, "there must not be an error when setting the test key")
+
+	// search for a non-existent key in a non-existent account in a non-existent bucket
+	resp, err := b.GetKey(&database.GetKeyRequest{
+		AccountId:  1,
+		BucketName: "empty",
+		Key:        "no",
+	})
+	t.Require().Error(err, "there must be an error when search for a non-existent key in a non-existent account in a non-existent bucket")
+	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
+
+	// search for a non-existent key in a non-existent bucket
+	resp, err = b.GetKey(&database.GetKeyRequest{
+		AccountId:  testAccountId,
+		BucketName: "empty",
+		Key:        "no",
+	})
+	t.Require().Error(err, "there must be an error when search for a non-existent key in a non-existent bucket")
+	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
+
+	// search for a non-existent key
+	resp, err = b.GetKey(&database.GetKeyRequest{
+		AccountId:  testAccountId,
+		BucketName: testBucketName,
+		Key:        "no",
+	})
+	t.Require().Error(err, "there must be an error when search for a non-existent key")
+	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
+
+	// search for the target key
+	resp, err = b.GetKey(&database.GetKeyRequest{
+		AccountId:  testAccountId,
+		BucketName: testBucketName,
+		Key:        expectedKvp.GetKey(),
+	})
+	t.Require().NoError(err, "there must not be an error when searching for an existing key")
+	t.Require().NotEmpty(resp.GetKeyValuePair(), "the payload must not be empty")
+
+	foundKvp := resp.GetKeyValuePair()
+	t.Require().Equal(expectedKvp.GetKey(), foundKvp.GetKey(), "the keys must match")
+	t.Require().Equal(expectedKvp.GetValue(), foundKvp.GetValue(), "the values must match")
+	t.Require().Equal(expectedKvp.GetModRevision(), foundKvp.GetModRevision(), "the modify revisions must match")
+	t.Require().Equal(expectedKvp.GetCreateRevision(), foundKvp.GetCreateRevision(), "the create revisions must match")
+	t.Require().Equal(expectedKvp.GetVersion(), foundKvp.GetVersion(), "the versions must match")
+	t.Require().Equal(expectedKvp.GetLease(), foundKvp.GetLease(), "the leases must match")
+}
+
+func (t *BBoltTestSuite) TestPutKey() {
+	shardId, replicaId := uint64(10), uint64(20)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+
+	path := filepath.Join(t.T().TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, t.logger)
+	t.Require().NoError(err, "there must be an error when passing a bad directory")
+	t.Require().NotNil(b, "the bbolt store must be nil")
+
+	testAccountId := rand.Uint64()
+	testBucketName := "test-bucket"
+	testOwner := "test@test.com"
+
+	// prep the test
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test account bucket")
+
+	_, err = b.CreateBucket(&database.CreateBucketRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+		Name:      testBucketName,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test bucket")
+
+	expectedRequest := &database.PutKeyRequest{}
+
+	_, err = b.PutKey(expectedRequest)
+	t.Require().Error(err, "there must be an error putting an empty key")
+
+	expectedRequest.AccountId = testAccountId
+	_, err = b.PutKey(expectedRequest)
+	t.Require().Error(err, "there must be an error putting a partial payload")
+
+	expectedRequest.BucketName = testBucketName
+	_, err = b.PutKey(expectedRequest)
+	t.Require().Error(err, "there must be an error putting a partial payload")
+
+	expectedKvp := &database.KeyValue{
+		Key:            "",
+		CreateRevision: 0,
+		ModRevision:    0,
+		Version:        0,
+		Value:          nil,
+		Lease:          0,
+	}
+
+	expectedRequest.KeyValuePair = expectedKvp
+	_, err = b.PutKey(expectedRequest)
+	t.Require().Error(err, "there must be an error putting an empty kvp")
+
+	expectedKvp.Key = "test-key"
+	_, err = b.PutKey(expectedRequest)
+	t.Require().NoError(err, "there must not be an error putting an empty value")
+
+	expectedKvp.Version = 1
+	_, err = b.PutKey(expectedRequest)
+	t.Require().NoError(err, "there must be an error putting a partial kvp")
+
+	expectedKvp.Version = 0
+	_, err = b.PutKey(expectedRequest)
+	t.Require().Error(err, "there must be an error putting a kvp with an older version")
+
+	expectedKvp.Version = 1
+	expectedKvp.Value = []byte(utils.RandomString(utils.RandomInt(0, 64)))
+	_, err = b.PutKey(expectedRequest)
+	t.Require().NoError(err, "there must be an error putting a partial kvp")
+
+	foundKvp := &database.KeyValue{}
+	err = b.db.View(func(tx *bbolt.Tx) error {
+		accountBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
+
+		acctBucket := tx.Bucket(accountBuf)
+		t.Require().NotNil(acctBucket, "the account bucket must not be nil")
+
+		bucket := acctBucket.Bucket([]byte(testBucketName))
+		t.Require().NotNil(bucket, "the target bucket must not be nil")
+
+		payload := bucket.Get([]byte(expectedKvp.Key))
+		t.Require().NotNil(payload, "the expected kvp must not be empty")
+
+		return foundKvp.UnmarshalVT(payload)
+	})
+	t.Require().NoError(err, "there must not be an error peeking into the database")
+
+	t.Require().Equal(expectedKvp.GetKey(), foundKvp.GetKey(), "the keys must match")
+	t.Require().Equal(expectedKvp.GetValue(), foundKvp.GetValue(), "the values must match")
+	t.Require().Equal(expectedKvp.GetModRevision(), foundKvp.GetModRevision(), "the modify revisions must match")
+	t.Require().Equal(expectedKvp.GetCreateRevision(), foundKvp.GetCreateRevision(), "the create revisions must match")
+	t.Require().Equal(expectedKvp.GetVersion(), foundKvp.GetVersion(), "the versions must match")
+	t.Require().Equal(expectedKvp.GetLease(), foundKvp.GetLease(), "the leases must match")
+}
+
+func (t *BBoltTestSuite) TestDeleteKey() {
+	shardId, replicaId := uint64(10), uint64(20)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+
+	path := filepath.Join(t.T().TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, t.logger)
+	t.Require().NoError(err, "there must be an error when passing a bad directory")
+	t.Require().NotNil(b, "the bbolt store must be nil")
+
+	testAccountId := rand.Uint64()
+	testBucketName := "test-bucket"
+	testOwner := "test@test.com"
+
+	// prep the test
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test account bucket")
+
+	_, err = b.CreateBucket(&database.CreateBucketRequest{
+		AccountId: testAccountId,
+		Owner:     testOwner,
+		Name:      testBucketName,
+	})
+	t.Require().NoError(err, "there must not be an error creating the test bucket")
+
+	expectedKvp := &database.KeyValue{
+		Key:            "test-key",
+		Value:          []byte("test-value"),
+	}
+
+	expectedRequest := &database.PutKeyRequest{
+		AccountId: testAccountId,
+		BucketName: testBucketName,
+		KeyValuePair: expectedKvp,
+	}
+
+	_, err = b.PutKey(expectedRequest)
+	t.Require().NoError(err, "there must not be an error putting an empty kvp")
+
+	resp, err := b.DeleteKey(&database.DeleteKeyRequest{
+		AccountId:  testAccountId,
+		BucketName: testBucketName,
+		Key:        expectedKvp.Key,
+	})
+	t.Require().NoError(err, "there must not be an error when calling delete key")
+	t.Require().True(resp.Ok, "the key must have been deleted")
+
+	err = b.db.View(func(tx *bbolt.Tx) error {
+		accountBuf := make([]byte, 8)
+		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
+
+		acctBucket := tx.Bucket(accountBuf)
+		t.Require().NotNil(acctBucket, "the account bucket must not be nil")
+
+		bucket := acctBucket.Bucket([]byte(testBucketName))
+		t.Require().NotNil(bucket, "the target bucket must not be nil")
+
+		payload := bucket.Get([]byte(expectedKvp.Key))
+		t.Require().Nil(payload, "the expected kvp must be empty")
+
+		return nil
+	})
+	t.Require().NoError(err, "there must not be an error peeking into the database")
+}
+
+func FuzzBboltStore_CreateAccountBucket(f *testing.F) {
+
+	if testing.Short() {
+		f.Skipf("skipping account bucket fuzzing")
+	}
+
+	shardId, replicaId := uint64(10), uint64(20)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+	logger := zerolog.New(zerolog.NewConsoleWriter())
+
+	path := filepath.Join(f.TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, logger)
+	require.NoError(f, err, "there must be an error when passing a bad directory")
+	require.NotNil(f, b, "the bbolt store must be nil")
+
+	for i := 0; i < fuzzRounds; i++ {
+		f.Add(rand.Uint64())
+	}
+
+	f.Fuzz(func(t *testing.T, accountId uint64) {
+		testOwner := "test@test.com"
+		req := &database.CreateAccountRequest{
+			AccountId: accountId,
+			Owner:     testOwner,
+		}
+
+		resp, err := b.CreateAccountBucket(req)
+		if !errors.Is(err, bbolt.ErrBucketExists) {
+			require.NoError(t, err, "there must not be an error when creating the account key")
+		}
+		require.NotEmpty(t, resp.GetAccountDescriptor(), "the account descriptor must not be empty")
+
+		desc := resp.GetAccountDescriptor()
+		require.Equal(t, accountId, desc.GetAccountId(), "the account ids must equal")
+		require.Equal(t, testOwner, desc.GetOwner(), "the owner ids must equal")
+		require.Equal(t, uint64(0), desc.GetBucketCount(), "the bucket count must be zero")
+		require.NotNil(t, desc.GetCreated(), "the created timestamp must not be nil")
+		require.NotNil(t, desc.GetLastUpdated(), "the last updated timestamp must not be nil")
+	})
+}
+
+func FuzzBboltStore_CreateBucket(f *testing.F) {
+
+	if testing.Short() {
+		f.Skipf("skipping bucket fuzzing")
+	}
+
+	shardId, replicaId, accountId := uint64(10), uint64(20), uint64(30)
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+	logger := zerolog.New(zerolog.NewConsoleWriter())
+
+	path := filepath.Join(f.TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, logger)
+	require.NoError(f, err, "there must be an error when passing a bad directory")
+	require.NotNil(f, b, "the bbolt store must be nil")
+
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: accountId,
+		Owner:     "test@test.com",
+	})
+	require.NoError(f, err, "there must not be an error when creating the account key")
+
+	for i := 0; i < fuzzRounds; i++ {
+		f.Add(utils.RandomString(utils.RandomInt(0, 63)))
+	}
+
+	f.Fuzz(func(t *testing.T, bucketName string) {
+		testOwner := "test@test.com"
+		req := &database.CreateBucketRequest{
+			AccountId: accountId,
+			Owner:     testOwner,
+			Name:      bucketName,
+		}
+
+		resp, err := b.CreateBucket(req)
+
+		// unrecoverable errors, very skippable
+		if errors.Is(err, bbolt.ErrBucketExists) ||
+			errors.Is(err, ErrEmptyBucketName) {
+			return
+		}
+
+		require.NotEmpty(t, resp.GetBucketDescriptor(), "the account descriptor must not be empty")
+
+		desc := resp.GetBucketDescriptor()
+		require.Equal(t, testOwner, desc.GetOwner(), "the owner ids must equal")
+		require.NotNil(t, desc.GetCreated(), "the created timestamp must not be nil")
+		require.NotNil(t, desc.GetLastUpdated(), "the last updated timestamp must not be nil")
+	})
+}
+
+func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
+
+	if testing.Short() {
+		f.Skipf("skipping key operation fuzzing")
+	}
+
+	shardId, replicaId, accountId, testBucketName := uint64(10), uint64(20), uint64(30), "test-bucket"
+	dbPath := fmt.Sprintf("shard-%d-replica-%d.db", shardId, replicaId)
+	logger := zerolog.New(zerolog.NewConsoleWriter())
+
+	path := filepath.Join(f.TempDir(), dbPath)
+	b, err := newBboltStore(shardId, replicaId, path, logger)
+	require.NoError(f, err, "there must be an error when passing a bad directory")
+	require.NotNil(f, b, "the bbolt store must be nil")
+
+	_, err = b.CreateAccountBucket(&database.CreateAccountRequest{
+		AccountId: accountId,
+		Owner:     "test@test.com",
+	})
+	require.NoError(f, err, "there must not be an error when creating the account key")
+
+	_, err = b.CreateBucket(&database.CreateBucketRequest{
+		AccountId: accountId,
+		Owner:     "test@test.com",
+		Name: testBucketName,
+	})
+	require.NoError(f, err, "there must not be an error when creating the account key")
+
+	for i := 0; i < fuzzRounds; i++ {
+		f.Add(utils.RandomString(utils.RandomInt(0, 63)))
+	}
+
+	f.Fuzz(func(t *testing.T, keyName string) {
+		bytes, err := utils.RandomBytes(utils.RandomInt(0, 2<<4))
+		require.NoError(t, err, "there must not be an error when generating random bytes")
+
+		putReq := &database.PutKeyRequest{
+			AccountId: accountId,
+			BucketName: testBucketName,
+			KeyValuePair: &database.KeyValue{
+				Key:            keyName,
+				Value:          bytes,
+			},
+		}
+
+		_, err = b.PutKey(putReq)
+
+		if !errors.Is(err, errors.New("empty key identifier")) {
+			require.NoError(t, err, "there must not be an error putting a key")
+		}
+
+		getReq := &database.GetKeyRequest{
+			AccountId: accountId,
+			BucketName: testBucketName,
+			Key: keyName,
+		}
+
+		resp, err := b.GetKey(getReq)
+		if errors.Is(err, errors.New("empty key identifier")) {
+			return // can't compare empty keys
+		}
+		require.NoError(t, err, "there must not be an error getting a key")
+		require.Equal(t, keyName, resp.GetKeyValuePair().GetKey(), "the key must be found and equal")
+
+		// skip empty payload
+		if len(bytes) == 0 {
+			return
+		}
+
+		kvp := resp.GetKeyValuePair()
+		require.Equal(t, bytes, kvp.GetValue(), "the value must be equal")
+
+		delResp, err := b.DeleteKey(&database.DeleteKeyRequest{
+			AccountId: accountId,
+			BucketName: testBucketName,
+			Key: keyName,
+		})
+		if errors.Is(err, errors.New("empty key identifier")) {
+			return // can't compare empty keys
+		}
+		require.NoError(t, err, "there must not be an error when deleting the key")
+		require.True(t, delResp.GetOk(), "the key must have been deleted")
+	})
 }
