@@ -22,24 +22,42 @@ message KVStoreWrapper {
   bytes bucket = 2;
 
   enum RequestType {
-    CREATE_BUCKET_REQUEST = 0;
-    CREATE_BUCKET_REPLY = 1;
-    DELETE_BUCKET_REQUEST = 2;
-    DELETE_BUCKET_REPLY = 3;
-    GET_KEY_REQUEST = 4;
-    GET_KEY_REPLY = 5;
-    PUT_KEY_REQUEST = 6;
-    PUT_KEY_REPLY = 7;
-    DELETE_KEY_REQUEST = 8;
-    DELETE_KEY_REPLY = 9;
+    CREATE_ACCOUNT_REQUEST = 0;
+    CREATE_ACCOUNT_REPLY = 1;
+    DELETE_ACCOUNT_REQUEST = 2;
+    DELETE_ACCOUNT_REPLY = 3;
+    GET_ACCOUNT_DESCRIPTOR_REQUEST = 4;
+    GET_ACCOUNT_DESCRIPTOR_REPLY = 5;
+    CREATE_BUCKET_REQUEST = 6;
+    CREATE_BUCKET_REPLY = 7;
+    DELETE_BUCKET_REQUEST = 8;
+    DELETE_BUCKET_REPLY = 9;
+    GET_KEY_REQUEST = 10;
+    GET_KEY_REPLY = 11;
+    PUT_KEY_REQUEST = 12;
+    PUT_KEY_REPLY = 13;
+    DELETE_KEY_REQUEST = 14;
+    DELETE_KEY_REPLY = 15;
   }
 
   RequestType typ = 3;
   oneof payload {
-    CreateBucketRequest create_bucket_request = 4;
-    CreateBucketReply create_bucket_reply = 5;
-    DeleteBucketRequest delete_bucket_request = 6;
-    DeleteBucketReply delete_bucket_reply = 7;
+    CreateAccountRequest create_account_request = 4;
+    CreateAccountReply create_account_reply = 5;
+    DeleteAccountRequest delete_account_request = 6;
+    DeleteAccountReply delete_account_reply = 7;
+    GetAccountDescriptorRequest get_account_descriptor_request = 8;
+    GetAccountDescriptorReply get_account_descriptor_reply = 9;
+    CreateBucketRequest create_bucket_request = 10;
+    CreateBucketReply create_bucket_reply = 11;
+    DeleteBucketRequest delete_bucket_request = 12;
+    DeleteBucketReply delete_bucket_reply = 13;
+    GetKeyRequest get_key_request = 14;
+    GetKeyReply get_key_reply = 15;
+    PutKeyRequest put_key_request = 16;
+    PutKeyReply put_key_reply = 17;
+    DeleteKeyRequest delete_key_request = 18;
+    DeleteKeyReply delete_key_reply = 19;
   }
 }
 

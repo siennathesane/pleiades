@@ -50,6 +50,156 @@ func (this *KVStoreWrapper) EqualVT(that *KVStoreWrapper) bool {
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
+func (this *KVStoreWrapper_CreateAccountRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_CreateAccountRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.CreateAccountRequest, that.CreateAccountRequest; p != q {
+		if p == nil {
+			p = &CreateAccountRequest{}
+		}
+		if q == nil {
+			q = &CreateAccountRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_CreateAccountReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_CreateAccountReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.CreateAccountReply, that.CreateAccountReply; p != q {
+		if p == nil {
+			p = &CreateAccountReply{}
+		}
+		if q == nil {
+			q = &CreateAccountReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_DeleteAccountRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteAccountRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.DeleteAccountRequest, that.DeleteAccountRequest; p != q {
+		if p == nil {
+			p = &DeleteAccountRequest{}
+		}
+		if q == nil {
+			q = &DeleteAccountRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_DeleteAccountReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteAccountReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.DeleteAccountReply, that.DeleteAccountReply; p != q {
+		if p == nil {
+			p = &DeleteAccountReply{}
+		}
+		if q == nil {
+			q = &DeleteAccountReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_GetAccountDescriptorRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_GetAccountDescriptorRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.GetAccountDescriptorRequest, that.GetAccountDescriptorRequest; p != q {
+		if p == nil {
+			p = &GetAccountDescriptorRequest{}
+		}
+		if q == nil {
+			q = &GetAccountDescriptorRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_GetAccountDescriptorReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_GetAccountDescriptorReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.GetAccountDescriptorReply, that.GetAccountDescriptorReply; p != q {
+		if p == nil {
+			p = &GetAccountDescriptorReply{}
+		}
+		if q == nil {
+			q = &GetAccountDescriptorReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
 func (this *KVStoreWrapper_CreateBucketRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
 	that, ok := thatIface.(*KVStoreWrapper_CreateBucketRequest)
 	if !ok {
@@ -142,6 +292,156 @@ func (this *KVStoreWrapper_DeleteBucketReply) EqualVT(thatIface isKVStoreWrapper
 		}
 		if q == nil {
 			q = &DeleteBucketReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_GetKeyRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_GetKeyRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.GetKeyRequest, that.GetKeyRequest; p != q {
+		if p == nil {
+			p = &GetKeyRequest{}
+		}
+		if q == nil {
+			q = &GetKeyRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_GetKeyReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_GetKeyReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.GetKeyReply, that.GetKeyReply; p != q {
+		if p == nil {
+			p = &GetKeyReply{}
+		}
+		if q == nil {
+			q = &GetKeyReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_PutKeyRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_PutKeyRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.PutKeyRequest, that.PutKeyRequest; p != q {
+		if p == nil {
+			p = &PutKeyRequest{}
+		}
+		if q == nil {
+			q = &PutKeyRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_PutKeyReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_PutKeyReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.PutKeyReply, that.PutKeyReply; p != q {
+		if p == nil {
+			p = &PutKeyReply{}
+		}
+		if q == nil {
+			q = &PutKeyReply{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_DeleteKeyRequest) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteKeyRequest)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.DeleteKeyRequest, that.DeleteKeyRequest; p != q {
+		if p == nil {
+			p = &DeleteKeyRequest{}
+		}
+		if q == nil {
+			q = &DeleteKeyRequest{}
+		}
+		if !p.EqualVT(q) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *KVStoreWrapper_DeleteKeyReply) EqualVT(thatIface isKVStoreWrapper_Payload) bool {
+	that, ok := thatIface.(*KVStoreWrapper_DeleteKeyReply)
+	if !ok {
+		return false
+	}
+	if this == that {
+		return true
+	}
+	if this == nil && that != nil || this != nil && that == nil {
+		return false
+	}
+	if p, q := this.DeleteKeyReply, that.DeleteKeyReply; p != q {
+		if p == nil {
+			p = &DeleteKeyReply{}
+		}
+		if q == nil {
+			q = &DeleteKeyReply{}
 		}
 		if !p.EqualVT(q) {
 			return false
@@ -559,6 +859,120 @@ func (m *KVStoreWrapper) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *KVStoreWrapper_CreateAccountRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_CreateAccountRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.CreateAccountRequest != nil {
+		size, err := m.CreateAccountRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x22
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_CreateAccountReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_CreateAccountReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.CreateAccountReply != nil {
+		size, err := m.CreateAccountReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x2a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_DeleteAccountRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_DeleteAccountRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.DeleteAccountRequest != nil {
+		size, err := m.DeleteAccountRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x32
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_DeleteAccountReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_DeleteAccountReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.DeleteAccountReply != nil {
+		size, err := m.DeleteAccountReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x3a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_GetAccountDescriptorRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_GetAccountDescriptorRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.GetAccountDescriptorRequest != nil {
+		size, err := m.GetAccountDescriptorRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x42
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_GetAccountDescriptorReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_GetAccountDescriptorReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.GetAccountDescriptorReply != nil {
+		size, err := m.GetAccountDescriptorReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x4a
+	}
+	return len(dAtA) - i, nil
+}
 func (m *KVStoreWrapper_CreateBucketRequest) MarshalToVT(dAtA []byte) (int, error) {
 	size := m.SizeVT()
 	return m.MarshalToSizedBufferVT(dAtA[:size])
@@ -574,7 +988,7 @@ func (m *KVStoreWrapper_CreateBucketRequest) MarshalToSizedBufferVT(dAtA []byte)
 		i -= size
 		i = encodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x52
 	}
 	return len(dAtA) - i, nil
 }
@@ -593,7 +1007,7 @@ func (m *KVStoreWrapper_CreateBucketReply) MarshalToSizedBufferVT(dAtA []byte) (
 		i -= size
 		i = encodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x5a
 	}
 	return len(dAtA) - i, nil
 }
@@ -612,7 +1026,7 @@ func (m *KVStoreWrapper_DeleteBucketRequest) MarshalToSizedBufferVT(dAtA []byte)
 		i -= size
 		i = encodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x62
 	}
 	return len(dAtA) - i, nil
 }
@@ -631,7 +1045,129 @@ func (m *KVStoreWrapper_DeleteBucketReply) MarshalToSizedBufferVT(dAtA []byte) (
 		i -= size
 		i = encodeVarint(dAtA, i, uint64(size))
 		i--
-		dAtA[i] = 0x3a
+		dAtA[i] = 0x6a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_GetKeyRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_GetKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.GetKeyRequest != nil {
+		size, err := m.GetKeyRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x72
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_GetKeyReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_GetKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.GetKeyReply != nil {
+		size, err := m.GetKeyReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x7a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_PutKeyRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_PutKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.PutKeyRequest != nil {
+		size, err := m.PutKeyRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1
+		i--
+		dAtA[i] = 0x82
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_PutKeyReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_PutKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.PutKeyReply != nil {
+		size, err := m.PutKeyReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1
+		i--
+		dAtA[i] = 0x8a
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_DeleteKeyRequest) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_DeleteKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.DeleteKeyRequest != nil {
+		size, err := m.DeleteKeyRequest.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1
+		i--
+		dAtA[i] = 0x92
+	}
+	return len(dAtA) - i, nil
+}
+func (m *KVStoreWrapper_DeleteKeyReply) MarshalToVT(dAtA []byte) (int, error) {
+	size := m.SizeVT()
+	return m.MarshalToSizedBufferVT(dAtA[:size])
+}
+
+func (m *KVStoreWrapper_DeleteKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.DeleteKeyReply != nil {
+		size, err := m.DeleteKeyReply.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0x1
+		i--
+		dAtA[i] = 0x9a
 	}
 	return len(dAtA) - i, nil
 }
@@ -1710,6 +2246,78 @@ func (m *KVStoreWrapper) SizeVT() (n int) {
 	return n
 }
 
+func (m *KVStoreWrapper_CreateAccountRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CreateAccountRequest != nil {
+		l = m.CreateAccountRequest.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_CreateAccountReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CreateAccountReply != nil {
+		l = m.CreateAccountReply.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_DeleteAccountRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DeleteAccountRequest != nil {
+		l = m.DeleteAccountRequest.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_DeleteAccountReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DeleteAccountReply != nil {
+		l = m.DeleteAccountReply.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_GetAccountDescriptorRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GetAccountDescriptorRequest != nil {
+		l = m.GetAccountDescriptorRequest.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_GetAccountDescriptorReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GetAccountDescriptorReply != nil {
+		l = m.GetAccountDescriptorReply.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
 func (m *KVStoreWrapper_CreateBucketRequest) SizeVT() (n int) {
 	if m == nil {
 		return 0
@@ -1755,6 +2363,78 @@ func (m *KVStoreWrapper_DeleteBucketReply) SizeVT() (n int) {
 	if m.DeleteBucketReply != nil {
 		l = m.DeleteBucketReply.SizeVT()
 		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_GetKeyRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GetKeyRequest != nil {
+		l = m.GetKeyRequest.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_GetKeyReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GetKeyReply != nil {
+		l = m.GetKeyReply.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_PutKeyRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.PutKeyRequest != nil {
+		l = m.PutKeyRequest.SizeVT()
+		n += 2 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_PutKeyReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.PutKeyReply != nil {
+		l = m.PutKeyReply.SizeVT()
+		n += 2 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_DeleteKeyRequest) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DeleteKeyRequest != nil {
+		l = m.DeleteKeyRequest.SizeVT()
+		n += 2 + l + sov(uint64(l))
+	}
+	return n
+}
+func (m *KVStoreWrapper_DeleteKeyReply) SizeVT() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DeleteKeyReply != nil {
+		l = m.DeleteKeyReply.SizeVT()
+		n += 2 + l + sov(uint64(l))
 	}
 	return n
 }
@@ -2272,6 +2952,252 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 			}
 		case 4:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreateAccountRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_CreateAccountRequest); ok {
+				if err := oneof.CreateAccountRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &CreateAccountRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_CreateAccountRequest{CreateAccountRequest: v}
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreateAccountReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_CreateAccountReply); ok {
+				if err := oneof.CreateAccountReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &CreateAccountReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_CreateAccountReply{CreateAccountReply: v}
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeleteAccountRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteAccountRequest); ok {
+				if err := oneof.DeleteAccountRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &DeleteAccountRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_DeleteAccountRequest{DeleteAccountRequest: v}
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeleteAccountReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteAccountReply); ok {
+				if err := oneof.DeleteAccountReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &DeleteAccountReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_DeleteAccountReply{DeleteAccountReply: v}
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetAccountDescriptorRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_GetAccountDescriptorRequest); ok {
+				if err := oneof.GetAccountDescriptorRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &GetAccountDescriptorRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_GetAccountDescriptorRequest{GetAccountDescriptorRequest: v}
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetAccountDescriptorReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_GetAccountDescriptorReply); ok {
+				if err := oneof.GetAccountDescriptorReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &GetAccountDescriptorReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_GetAccountDescriptorReply{GetAccountDescriptorReply: v}
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CreateBucketRequest", wireType)
 			}
 			var msglen int
@@ -2311,7 +3237,7 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 				m.Payload = &KVStoreWrapper_CreateBucketRequest{CreateBucketRequest: v}
 			}
 			iNdEx = postIndex
-		case 5:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CreateBucketReply", wireType)
 			}
@@ -2352,7 +3278,7 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 				m.Payload = &KVStoreWrapper_CreateBucketReply{CreateBucketReply: v}
 			}
 			iNdEx = postIndex
-		case 6:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DeleteBucketRequest", wireType)
 			}
@@ -2393,7 +3319,7 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 				m.Payload = &KVStoreWrapper_DeleteBucketRequest{DeleteBucketRequest: v}
 			}
 			iNdEx = postIndex
-		case 7:
+		case 13:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DeleteBucketReply", wireType)
 			}
@@ -2432,6 +3358,252 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 					return err
 				}
 				m.Payload = &KVStoreWrapper_DeleteBucketReply{DeleteBucketReply: v}
+			}
+			iNdEx = postIndex
+		case 14:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetKeyRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_GetKeyRequest); ok {
+				if err := oneof.GetKeyRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &GetKeyRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_GetKeyRequest{GetKeyRequest: v}
+			}
+			iNdEx = postIndex
+		case 15:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GetKeyReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_GetKeyReply); ok {
+				if err := oneof.GetKeyReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &GetKeyReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_GetKeyReply{GetKeyReply: v}
+			}
+			iNdEx = postIndex
+		case 16:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PutKeyRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_PutKeyRequest); ok {
+				if err := oneof.PutKeyRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &PutKeyRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_PutKeyRequest{PutKeyRequest: v}
+			}
+			iNdEx = postIndex
+		case 17:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PutKeyReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_PutKeyReply); ok {
+				if err := oneof.PutKeyReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &PutKeyReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_PutKeyReply{PutKeyReply: v}
+			}
+			iNdEx = postIndex
+		case 18:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeleteKeyRequest", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteKeyRequest); ok {
+				if err := oneof.DeleteKeyRequest.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &DeleteKeyRequest{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_DeleteKeyRequest{DeleteKeyRequest: v}
+			}
+			iNdEx = postIndex
+		case 19:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeleteKeyReply", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if oneof, ok := m.Payload.(*KVStoreWrapper_DeleteKeyReply); ok {
+				if err := oneof.DeleteKeyReply.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+			} else {
+				v := &DeleteKeyReply{}
+				if err := v.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+					return err
+				}
+				m.Payload = &KVStoreWrapper_DeleteKeyReply{DeleteKeyReply: v}
 			}
 			iNdEx = postIndex
 		default:
