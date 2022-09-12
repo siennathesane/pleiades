@@ -612,7 +612,7 @@ func (smts *shardManagerTestSuite) TestStartObserverReplica() {
 	firstTestReplicaId := rand.Uint64()
 	err := firstShardManager.NewShard(testShardId, firstTestReplicaId, testStateMachineType, smts.defaultTimeout)
 	smts.Require().NoError(err, "there must not be an error when creating a new shard")
-	time.Sleep(smts.defaultTimeout)
+	time.Sleep(smts.extendedDefaultTimeout + smts.defaultTimeout)
 
 	ctx, cancel := context.WithTimeout(context.Background(), smts.defaultTimeout)
 	cs, err := firstShardManager.nh.SyncGetSession(ctx, testShardId)
