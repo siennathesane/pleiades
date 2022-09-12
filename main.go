@@ -8,7 +8,16 @@
  */
 package main
 
-import "github.com/mxplusb/pleiades/cmd"
+import (
+	"github.com/mxplusb/pleiades/cmd"
+	"github.com/planetscale/vtprotobuf/codec/grpc"
+	"google.golang.org/grpc/encoding"
+	_ "google.golang.org/grpc/encoding/proto"
+)
+
+func init() {
+	encoding.RegisterCodec(grpc.Codec{})
+}
 
 func main() {
 	cmd.Execute()

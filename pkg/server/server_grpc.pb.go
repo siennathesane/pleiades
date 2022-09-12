@@ -829,9 +829,9 @@ type KVStoreServiceClient interface {
 	DeleteAccount(ctx context.Context, in *database.GetAccountDescriptorRequest, opts ...grpc.CallOption) (*database.GetAccountDescriptorReply, error)
 	CreateBucket(ctx context.Context, in *database.CreateBucketRequest, opts ...grpc.CallOption) (*database.CreateBucketReply, error)
 	DeleteBucket(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
-	Get(ctx context.Context, in *database.GetRequest, opts ...grpc.CallOption) (*database.GetResponse, error)
-	Put(ctx context.Context, in *database.PutRequest, opts ...grpc.CallOption) (*database.PutReply, error)
-	Delete(ctx context.Context, in *database.DeleteRequest, opts ...grpc.CallOption) (*database.DeleteResponse, error)
+	GetKey(ctx context.Context, in *database.GetRequest, opts ...grpc.CallOption) (*database.GetResponse, error)
+	PutKey(ctx context.Context, in *database.PutRequest, opts ...grpc.CallOption) (*database.PutReply, error)
+	DeleteKey(ctx context.Context, in *database.DeleteRequest, opts ...grpc.CallOption) (*database.DeleteResponse, error)
 }
 
 type kVStoreServiceClient struct {
@@ -887,27 +887,27 @@ func (c *kVStoreServiceClient) DeleteBucket(ctx context.Context, in *database.De
 	return out, nil
 }
 
-func (c *kVStoreServiceClient) Get(ctx context.Context, in *database.GetRequest, opts ...grpc.CallOption) (*database.GetResponse, error) {
+func (c *kVStoreServiceClient) GetKey(ctx context.Context, in *database.GetRequest, opts ...grpc.CallOption) (*database.GetResponse, error) {
 	out := new(database.GetResponse)
-	err := c.cc.Invoke(ctx, "/server.KVStoreService/Get", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/server.KVStoreService/GetKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kVStoreServiceClient) Put(ctx context.Context, in *database.PutRequest, opts ...grpc.CallOption) (*database.PutReply, error) {
+func (c *kVStoreServiceClient) PutKey(ctx context.Context, in *database.PutRequest, opts ...grpc.CallOption) (*database.PutReply, error) {
 	out := new(database.PutReply)
-	err := c.cc.Invoke(ctx, "/server.KVStoreService/Put", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/server.KVStoreService/PutKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *kVStoreServiceClient) Delete(ctx context.Context, in *database.DeleteRequest, opts ...grpc.CallOption) (*database.DeleteResponse, error) {
+func (c *kVStoreServiceClient) DeleteKey(ctx context.Context, in *database.DeleteRequest, opts ...grpc.CallOption) (*database.DeleteResponse, error) {
 	out := new(database.DeleteResponse)
-	err := c.cc.Invoke(ctx, "/server.KVStoreService/Delete", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/server.KVStoreService/DeleteKey", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -923,9 +923,9 @@ type KVStoreServiceServer interface {
 	DeleteAccount(context.Context, *database.GetAccountDescriptorRequest) (*database.GetAccountDescriptorReply, error)
 	CreateBucket(context.Context, *database.CreateBucketRequest) (*database.CreateBucketReply, error)
 	DeleteBucket(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
-	Get(context.Context, *database.GetRequest) (*database.GetResponse, error)
-	Put(context.Context, *database.PutRequest) (*database.PutReply, error)
-	Delete(context.Context, *database.DeleteRequest) (*database.DeleteResponse, error)
+	GetKey(context.Context, *database.GetRequest) (*database.GetResponse, error)
+	PutKey(context.Context, *database.PutRequest) (*database.PutReply, error)
+	DeleteKey(context.Context, *database.DeleteRequest) (*database.DeleteResponse, error)
 	mustEmbedUnimplementedKVStoreServiceServer()
 }
 
@@ -948,14 +948,14 @@ func (UnimplementedKVStoreServiceServer) CreateBucket(context.Context, *database
 func (UnimplementedKVStoreServiceServer) DeleteBucket(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBucket not implemented")
 }
-func (UnimplementedKVStoreServiceServer) Get(context.Context, *database.GetRequest) (*database.GetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedKVStoreServiceServer) GetKey(context.Context, *database.GetRequest) (*database.GetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKey not implemented")
 }
-func (UnimplementedKVStoreServiceServer) Put(context.Context, *database.PutRequest) (*database.PutReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Put not implemented")
+func (UnimplementedKVStoreServiceServer) PutKey(context.Context, *database.PutRequest) (*database.PutReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutKey not implemented")
 }
-func (UnimplementedKVStoreServiceServer) Delete(context.Context, *database.DeleteRequest) (*database.DeleteResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+func (UnimplementedKVStoreServiceServer) DeleteKey(context.Context, *database.DeleteRequest) (*database.DeleteResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteKey not implemented")
 }
 func (UnimplementedKVStoreServiceServer) mustEmbedUnimplementedKVStoreServiceServer() {}
 
@@ -1060,56 +1060,56 @@ func _KVStoreService_DeleteBucket_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KVStoreService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KVStoreService_GetKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(database.GetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KVStoreServiceServer).Get(ctx, in)
+		return srv.(KVStoreServiceServer).GetKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/server.KVStoreService/Get",
+		FullMethod: "/server.KVStoreService/GetKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KVStoreServiceServer).Get(ctx, req.(*database.GetRequest))
+		return srv.(KVStoreServiceServer).GetKey(ctx, req.(*database.GetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KVStoreService_Put_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KVStoreService_PutKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(database.PutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KVStoreServiceServer).Put(ctx, in)
+		return srv.(KVStoreServiceServer).PutKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/server.KVStoreService/Put",
+		FullMethod: "/server.KVStoreService/PutKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KVStoreServiceServer).Put(ctx, req.(*database.PutRequest))
+		return srv.(KVStoreServiceServer).PutKey(ctx, req.(*database.PutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KVStoreService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _KVStoreService_DeleteKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(database.DeleteRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KVStoreServiceServer).Delete(ctx, in)
+		return srv.(KVStoreServiceServer).DeleteKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/server.KVStoreService/Delete",
+		FullMethod: "/server.KVStoreService/DeleteKey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KVStoreServiceServer).Delete(ctx, req.(*database.DeleteRequest))
+		return srv.(KVStoreServiceServer).DeleteKey(ctx, req.(*database.DeleteRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1142,16 +1142,16 @@ var KVStoreService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KVStoreService_DeleteBucket_Handler,
 		},
 		{
-			MethodName: "Get",
-			Handler:    _KVStoreService_Get_Handler,
+			MethodName: "GetKey",
+			Handler:    _KVStoreService_GetKey_Handler,
 		},
 		{
-			MethodName: "Put",
-			Handler:    _KVStoreService_Put_Handler,
+			MethodName: "PutKey",
+			Handler:    _KVStoreService_PutKey_Handler,
 		},
 		{
-			MethodName: "Delete",
-			Handler:    _KVStoreService_Delete_Handler,
+			MethodName: "DeleteKey",
+			Handler:    _KVStoreService_DeleteKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
