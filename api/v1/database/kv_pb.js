@@ -554,8 +554,8 @@ proto.database.KVStoreWrapper.prototype.toObject = function(opt_includeInstance)
  */
 proto.database.KVStoreWrapper.toObject = function(includeInstance, msg) {
   var f, obj = {
-    account: msg.getAccount_asB64(),
-    bucket: msg.getBucket_asB64(),
+    account: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    bucket: jspb.Message.getFieldWithDefault(msg, 2, ""),
     typ: jspb.Message.getFieldWithDefault(msg, 3, 0),
     createAccountRequest: (f = msg.getCreateAccountRequest()) && proto.database.CreateAccountRequest.toObject(includeInstance, f),
     createAccountReply: (f = msg.getCreateAccountReply()) && proto.database.CreateAccountReply.toObject(includeInstance, f),
@@ -610,11 +610,11 @@ proto.database.KVStoreWrapper.deserializeBinaryFromReader = function(msg, reader
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {number} */ (reader.readUint64());
       msg.setAccount(value);
       break;
     case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setBucket(value);
       break;
     case 3:
@@ -730,16 +730,16 @@ proto.database.KVStoreWrapper.prototype.serializeBinary = function() {
  */
 proto.database.KVStoreWrapper.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getAccount_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
+  f = message.getAccount();
+  if (f !== 0) {
+    writer.writeUint64(
       1,
       f
     );
   }
-  f = message.getBucket_asU8();
+  f = message.getBucket();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       2,
       f
     );
@@ -905,86 +905,38 @@ proto.database.KVStoreWrapper.RequestType = {
 };
 
 /**
- * optional bytes account = 1;
- * @return {!(string|Uint8Array)}
+ * optional uint64 account = 1;
+ * @return {number}
  */
 proto.database.KVStoreWrapper.prototype.getAccount = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
- * optional bytes account = 1;
- * This is a type-conversion wrapper around `getAccount()`
- * @return {string}
- */
-proto.database.KVStoreWrapper.prototype.getAccount_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getAccount()));
-};
-
-
-/**
- * optional bytes account = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getAccount()`
- * @return {!Uint8Array}
- */
-proto.database.KVStoreWrapper.prototype.getAccount_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getAccount()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
+ * @param {number} value
  * @return {!proto.database.KVStoreWrapper} returns this
  */
 proto.database.KVStoreWrapper.prototype.setAccount = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
 /**
- * optional bytes bucket = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.database.KVStoreWrapper.prototype.getBucket = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes bucket = 2;
- * This is a type-conversion wrapper around `getBucket()`
+ * optional string bucket = 2;
  * @return {string}
  */
-proto.database.KVStoreWrapper.prototype.getBucket_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getBucket()));
+proto.database.KVStoreWrapper.prototype.getBucket = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * optional bytes bucket = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getBucket()`
- * @return {!Uint8Array}
- */
-proto.database.KVStoreWrapper.prototype.getBucket_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getBucket()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
+ * @param {string} value
  * @return {!proto.database.KVStoreWrapper} returns this
  */
 proto.database.KVStoreWrapper.prototype.setBucket = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

@@ -5,15 +5,11 @@ import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 
 export class KVStoreWrapper extends jspb.Message {
-  getAccount(): Uint8Array | string;
-  getAccount_asU8(): Uint8Array;
-  getAccount_asB64(): string;
-  setAccount(value: Uint8Array | string): void;
+  getAccount(): number;
+  setAccount(value: number): void;
 
-  getBucket(): Uint8Array | string;
-  getBucket_asU8(): Uint8Array;
-  getBucket_asB64(): string;
-  setBucket(value: Uint8Array | string): void;
+  getBucket(): string;
+  setBucket(value: string): void;
 
   getTyp(): KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap];
   setTyp(value: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap]): void;
@@ -111,8 +107,8 @@ export class KVStoreWrapper extends jspb.Message {
 
 export namespace KVStoreWrapper {
   export type AsObject = {
-    account: Uint8Array | string,
-    bucket: Uint8Array | string,
+    account: number,
+    bucket: string,
     typ: KVStoreWrapper.RequestTypeMap[keyof KVStoreWrapper.RequestTypeMap],
     createAccountRequest?: CreateAccountRequest.AsObject,
     createAccountReply?: CreateAccountReply.AsObject,

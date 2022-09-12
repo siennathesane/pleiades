@@ -38,10 +38,10 @@ func (this *KVStoreWrapper) EqualVT(that *KVStoreWrapper) bool {
 			return false
 		}
 	}
-	if string(this.Account) != string(that.Account) {
+	if this.Account != that.Account {
 		return false
 	}
-	if string(this.Bucket) != string(that.Bucket) {
+	if this.Bucket != that.Bucket {
 		return false
 	}
 	if this.Typ != that.Typ {
@@ -849,12 +849,10 @@ func (m *KVStoreWrapper) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.Account) > 0 {
-		i -= len(m.Account)
-		copy(dAtA[i:], m.Account)
-		i = encodeVarint(dAtA, i, uint64(len(m.Account)))
+	if m.Account != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.Account))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -2228,9 +2226,8 @@ func (m *KVStoreWrapper) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Account)
-	if l > 0 {
-		n += 1 + l + sov(uint64(l))
+	if m.Account != 0 {
+		n += 1 + sov(uint64(m.Account))
 	}
 	l = len(m.Bucket)
 	if l > 0 {
@@ -2864,10 +2861,10 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Account", wireType)
 			}
-			var byteLen int
+			m.Account = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflow
@@ -2877,31 +2874,16 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				m.Account |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Account = append(m.Account[:0], dAtA[iNdEx:postIndex]...)
-			if m.Account == nil {
-				m.Account = []byte{}
-			}
-			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Bucket", wireType)
 			}
-			var byteLen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflow
@@ -2911,25 +2893,23 @@ func (m *KVStoreWrapper) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLength
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLength
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Bucket = append(m.Bucket[:0], dAtA[iNdEx:postIndex]...)
-			if m.Bucket == nil {
-				m.Bucket = []byte{}
-			}
+			m.Bucket = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {

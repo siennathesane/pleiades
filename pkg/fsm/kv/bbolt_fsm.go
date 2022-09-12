@@ -68,12 +68,17 @@ func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 	if err != nil {
 		return 0, err
 	}
+	b.store = store
 
 	return store.GetMonotonicLogIndex()
 }
 
 func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine.Entry, error) {
 	applied := make([]statemachine.Entry, 0)
+
+	if len(entries) == 0 {
+		return applied, nil
+	}
 
 	for _, entry := range entries {
 		wrapper := &database.KVStoreWrapper{}
@@ -86,17 +91,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_CREATE_ACCOUNT_REQUEST:
 			req := wrapper.GetCreateAccountRequest()
 
-			_, err := b.store.CreateAccountBucket(req)
+			resp, err := b.store.CreateAccountBucket(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				return applied, errors.Wrap(err, "can't create account bucket")
+			}
+			wrapper.Typ = database.KVStoreWrapper_CREATE_ACCOUNT_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_CreateAccountReply{
+				CreateAccountReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't create account bucket")
+				return applied, errors.Wrap(err, "can't serialize response wrapper")
 			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -105,17 +119,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_DELETE_ACCOUNT_REQUEST:
 			req := wrapper.GetDeleteAccountRequest()
 
-			_, err := b.store.DeleteAccountBucket(req)
+			resp, err := b.store.DeleteAccountBucket(req)
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				b.logger.Error().Err(err).Msg("can't delete account")
+				return applied, errors.Wrap(err, "can't delete account")
+			}
+			wrapper.Typ = database.KVStoreWrapper_DELETE_ACCOUNT_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_DeleteAccountReply{
+				DeleteAccountReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't delete account bucket")
+				return applied, errors.Wrap(err, "can't delete account bucket")
 			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -124,17 +147,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_CREATE_BUCKET_REQUEST:
 			req := wrapper.GetCreateBucketRequest()
 
-			_, err := b.store.CreateBucket(req)
+			resp, err := b.store.CreateBucket(req)
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't create bucket")
+				return applied, errors.Wrap(err, "can't create bucket")
+			}
+			wrapper.Typ = database.KVStoreWrapper_CREATE_BUCKET_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_CreateBucketReply{
+				CreateBucketReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				return applied, errors.Wrap(err, "can't serialize response wrapper")
 			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -143,17 +175,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_DELETE_BUCKET_REQUEST:
 			req := wrapper.GetDeleteBucketRequest()
 
-			_, err := b.store.DeleteBucket(req)
+			resp, err := b.store.DeleteBucket(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				return applied, errors.Wrap(err, "can't create account bucket")
+			}
+			wrapper.Typ = database.KVStoreWrapper_DELETE_BUCKET_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_DeleteBucketReply{
+				DeleteBucketReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't delete bucket")
+				return applied, errors.Wrap(err, "can't delete bucket")
 			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -162,17 +203,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_PUT_KEY_REQUEST:
 			req := wrapper.GetPutKeyRequest()
 
-			_, err := b.store.PutKey(req)
+			resp, err := b.store.PutKey(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
 				return applied, errors.New("can't create account bucket")
 			}
+			wrapper.Typ = database.KVStoreWrapper_PUT_KEY_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_PutKeyReply{
+				PutKeyReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't create account bucket")
+				return applied, errors.Wrap(err, "can't serialize response wrapper")
+			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -181,17 +231,26 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 		case database.KVStoreWrapper_DELETE_KEY_REQUEST:
 			req := wrapper.GetDeleteKeyRequest()
 
-			_, err := b.store.DeleteKey(req)
+			resp, err := b.store.DeleteKey(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
 				return applied, errors.New("can't create account bucket")
 			}
+			wrapper.Typ = database.KVStoreWrapper_DELETE_KEY_REPLY
+			wrapper.Payload = &database.KVStoreWrapper_DeleteKeyReply{
+				DeleteKeyReply: resp,
+			}
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't delete account bucket")
+				return applied, errors.Wrap(err, "can't delete response wrapper")
+			}
 
 			applied = append(applied, statemachine.Entry{
 				Index:  entry.Index,
-				Cmd:    entry.Cmd,
 				Result: statemachine.Result{
 					Value: entry.Index,
+					Data: serialized,
 				},
 			})
 
@@ -290,10 +349,17 @@ func (b *BBoltStateMachine) RecoverFromSnapshot(reader io.Reader, i <-chan struc
 }
 
 func (b *BBoltStateMachine) Close() error {
-	err := b.store.db.Close()
-	if err != nil {
-		return err
+	if b.store != nil {
+		if b.store.db != nil {
+			err := b.store.db.Close()
+			if err != nil {
+				return err
+			}
+		} else {
+			b.logger.Panic().Msg("no reference to bbolt")
+		}
+	} else {
+		b.logger.Panic().Msg("no reference to bbolt")
 	}
-
 	return nil
 }
