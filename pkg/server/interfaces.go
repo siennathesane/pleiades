@@ -20,7 +20,7 @@ type IRaft interface {
 	IShardManager
 	IHost
 	ITransactionManager
-	IStore
+	IKVStore
 }
 
 type IShardManager interface {
@@ -56,7 +56,7 @@ type ITransactionManager interface {
 	GetTransaction(ctx context.Context, shardId uint64) (*database.Transaction, error)
 }
 
-type IStore interface {
+type IKVStore interface {
 	CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error)
 	DeleteAccount(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error)
 	CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error)
