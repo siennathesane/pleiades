@@ -25,7 +25,7 @@ import (
 )
 
 // serverCmd represents the server command
-var serverCmd = &cobra.Command{
+var srvCmd = &cobra.Command{
 	Use:   "server",
 	Short: "run an instance of pleiades",
 	Long: `Run an instance of the Pleiades Platform Operating System.
