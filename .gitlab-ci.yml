@@ -1,5 +1,8 @@
 .before_script_template: &build-test-scripts
   before_script:
+    - mkdir -p .go
+    - go env -w GOBIN=/usr/local/bin
+    - go env -w GOPATH=$CI_PROJECT_DIR/.go
     - ci/scripts/install-mage.sh
     - mage install:godeps
 
@@ -21,12 +24,6 @@ stages:
   - test
 
 .go-cache:
-  variables:
-    GOPATH: $CI_PROJECT_DIR/.go
-  before_script:
-    - mkdir -p .go
-    - ci/scripts/install-mage.sh
-    - mage install:godeps
   cache:
     paths:
       - .go/pkg/mod/
