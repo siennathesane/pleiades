@@ -17,6 +17,8 @@ var global = (function() { return this || window || global || self || Function('
 
 var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
 goog.object.extend(proto, google_protobuf_timestamp_pb);
+var api_v1_database_transactions_pb = require('../../../api/v1/database/transactions_pb.js');
+goog.object.extend(proto, api_v1_database_transactions_pb);
 goog.exportSymbol('proto.database.AccountDescriptor', null, global);
 goog.exportSymbol('proto.database.BucketDescriptor', null, global);
 goog.exportSymbol('proto.database.CreateAccountReply', null, global);
@@ -1583,7 +1585,8 @@ proto.database.CreateAccountRequest.prototype.toObject = function(opt_includeIns
 proto.database.CreateAccountRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    owner: jspb.Message.getFieldWithDefault(msg, 2, "")
+    owner: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1628,6 +1631,11 @@ proto.database.CreateAccountRequest.deserializeBinaryFromReader = function(msg, 
       var value = /** @type {string} */ (reader.readString());
       msg.setOwner(value);
       break;
+    case 3:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1671,6 +1679,14 @@ proto.database.CreateAccountRequest.serializeBinaryToWriter = function(message, 
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -1710,6 +1726,43 @@ proto.database.CreateAccountRequest.prototype.setOwner = function(value) {
 };
 
 
+/**
+ * optional Transaction transaction = 3;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.CreateAccountRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 3));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.CreateAccountRequest} returns this
+*/
+proto.database.CreateAccountRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.CreateAccountRequest} returns this
+ */
+proto.database.CreateAccountRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.CreateAccountRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
 
 
 
@@ -1742,7 +1795,8 @@ proto.database.CreateAccountReply.prototype.toObject = function(opt_includeInsta
  */
 proto.database.CreateAccountReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountDescriptor: (f = msg.getAccountDescriptor()) && proto.database.AccountDescriptor.toObject(includeInstance, f)
+    accountDescriptor: (f = msg.getAccountDescriptor()) && proto.database.AccountDescriptor.toObject(includeInstance, f),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1784,6 +1838,11 @@ proto.database.CreateAccountReply.deserializeBinaryFromReader = function(msg, re
       reader.readMessage(value,proto.database.AccountDescriptor.deserializeBinaryFromReader);
       msg.setAccountDescriptor(value);
       break;
+    case 2:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1819,6 +1878,14 @@ proto.database.CreateAccountReply.serializeBinaryToWriter = function(message, wr
       1,
       f,
       proto.database.AccountDescriptor.serializeBinaryToWriter
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -1861,6 +1928,43 @@ proto.database.CreateAccountReply.prototype.hasAccountDescriptor = function() {
 };
 
 
+/**
+ * optional Transaction transaction = 2;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.CreateAccountReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.CreateAccountReply} returns this
+*/
+proto.database.CreateAccountReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.CreateAccountReply} returns this
+ */
+proto.database.CreateAccountReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.CreateAccountReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
 
 
 
@@ -1894,7 +1998,8 @@ proto.database.DeleteAccountRequest.prototype.toObject = function(opt_includeIns
 proto.database.DeleteAccountRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    owner: jspb.Message.getFieldWithDefault(msg, 2, "")
+    owner: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1939,6 +2044,11 @@ proto.database.DeleteAccountRequest.deserializeBinaryFromReader = function(msg, 
       var value = /** @type {string} */ (reader.readString());
       msg.setOwner(value);
       break;
+    case 3:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1982,6 +2092,14 @@ proto.database.DeleteAccountRequest.serializeBinaryToWriter = function(message, 
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -2021,6 +2139,43 @@ proto.database.DeleteAccountRequest.prototype.setOwner = function(value) {
 };
 
 
+/**
+ * optional Transaction transaction = 3;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteAccountRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 3));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteAccountRequest} returns this
+*/
+proto.database.DeleteAccountRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteAccountRequest} returns this
+ */
+proto.database.DeleteAccountRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteAccountRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
 
 
 
@@ -2053,7 +2208,8 @@ proto.database.DeleteAccountReply.prototype.toObject = function(opt_includeInsta
  */
 proto.database.DeleteAccountReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2094,6 +2250,11 @@ proto.database.DeleteAccountReply.deserializeBinaryFromReader = function(msg, re
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setOk(value);
       break;
+    case 2:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2130,6 +2291,14 @@ proto.database.DeleteAccountReply.serializeBinaryToWriter = function(message, wr
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -2148,6 +2317,43 @@ proto.database.DeleteAccountReply.prototype.getOk = function() {
  */
 proto.database.DeleteAccountReply.prototype.setOk = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
+};
+
+
+/**
+ * optional Transaction transaction = 2;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteAccountReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteAccountReply} returns this
+*/
+proto.database.DeleteAccountReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteAccountReply} returns this
+ */
+proto.database.DeleteAccountReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteAccountReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 
@@ -2183,7 +2389,8 @@ proto.database.GetAccountDescriptorRequest.prototype.toObject = function(opt_inc
  */
 proto.database.GetAccountDescriptorRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    accountId: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2224,6 +2431,11 @@ proto.database.GetAccountDescriptorRequest.deserializeBinaryFromReader = functio
       var value = /** @type {number} */ (reader.readUint64());
       msg.setAccountId(value);
       break;
+    case 3:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2260,6 +2472,14 @@ proto.database.GetAccountDescriptorRequest.serializeBinaryToWriter = function(me
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -2278,6 +2498,43 @@ proto.database.GetAccountDescriptorRequest.prototype.getAccountId = function() {
  */
 proto.database.GetAccountDescriptorRequest.prototype.setAccountId = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional Transaction transaction = 3;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.GetAccountDescriptorRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 3));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.GetAccountDescriptorRequest} returns this
+*/
+proto.database.GetAccountDescriptorRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.GetAccountDescriptorRequest} returns this
+ */
+proto.database.GetAccountDescriptorRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.GetAccountDescriptorRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -2814,7 +3071,8 @@ proto.database.CreateBucketRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    owner: jspb.Message.getFieldWithDefault(msg, 3, "")
+    owner: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2862,6 +3120,11 @@ proto.database.CreateBucketRequest.deserializeBinaryFromReader = function(msg, r
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setOwner(value);
+      break;
+    case 4:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
       break;
     default:
       reader.skipField();
@@ -2911,6 +3174,14 @@ proto.database.CreateBucketRequest.serializeBinaryToWriter = function(message, w
     writer.writeString(
       3,
       f
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -2970,6 +3241,43 @@ proto.database.CreateBucketRequest.prototype.setOwner = function(value) {
 };
 
 
+/**
+ * optional Transaction transaction = 4;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.CreateBucketRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 4));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.CreateBucketRequest} returns this
+*/
+proto.database.CreateBucketRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.CreateBucketRequest} returns this
+ */
+proto.database.CreateBucketRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.CreateBucketRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
 
 
 
@@ -3002,7 +3310,8 @@ proto.database.CreateBucketReply.prototype.toObject = function(opt_includeInstan
  */
 proto.database.CreateBucketReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    bucketDescriptor: (f = msg.getBucketDescriptor()) && proto.database.BucketDescriptor.toObject(includeInstance, f)
+    bucketDescriptor: (f = msg.getBucketDescriptor()) && proto.database.BucketDescriptor.toObject(includeInstance, f),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3044,6 +3353,11 @@ proto.database.CreateBucketReply.deserializeBinaryFromReader = function(msg, rea
       reader.readMessage(value,proto.database.BucketDescriptor.deserializeBinaryFromReader);
       msg.setBucketDescriptor(value);
       break;
+    case 2:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3079,6 +3393,14 @@ proto.database.CreateBucketReply.serializeBinaryToWriter = function(message, wri
       1,
       f,
       proto.database.BucketDescriptor.serializeBinaryToWriter
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -3121,6 +3443,43 @@ proto.database.CreateBucketReply.prototype.hasBucketDescriptor = function() {
 };
 
 
+/**
+ * optional Transaction transaction = 2;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.CreateBucketReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.CreateBucketReply} returns this
+*/
+proto.database.CreateBucketReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.CreateBucketReply} returns this
+ */
+proto.database.CreateBucketReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.CreateBucketReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
 
 
 
@@ -3154,7 +3513,8 @@ proto.database.DeleteBucketRequest.prototype.toObject = function(opt_includeInst
 proto.database.DeleteBucketRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    name: jspb.Message.getFieldWithDefault(msg, 2, "")
+    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3199,6 +3559,11 @@ proto.database.DeleteBucketRequest.deserializeBinaryFromReader = function(msg, r
       var value = /** @type {string} */ (reader.readString());
       msg.setName(value);
       break;
+    case 3:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3242,6 +3607,14 @@ proto.database.DeleteBucketRequest.serializeBinaryToWriter = function(message, w
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -3281,6 +3654,43 @@ proto.database.DeleteBucketRequest.prototype.setName = function(value) {
 };
 
 
+/**
+ * optional Transaction transaction = 3;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteBucketRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 3));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteBucketRequest} returns this
+*/
+proto.database.DeleteBucketRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteBucketRequest} returns this
+ */
+proto.database.DeleteBucketRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteBucketRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
 
 
 
@@ -3313,7 +3723,8 @@ proto.database.DeleteBucketReply.prototype.toObject = function(opt_includeInstan
  */
 proto.database.DeleteBucketReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3354,6 +3765,11 @@ proto.database.DeleteBucketReply.deserializeBinaryFromReader = function(msg, rea
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setOk(value);
       break;
+    case 2:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3390,6 +3806,14 @@ proto.database.DeleteBucketReply.serializeBinaryToWriter = function(message, wri
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -3408,6 +3832,43 @@ proto.database.DeleteBucketReply.prototype.getOk = function() {
  */
 proto.database.DeleteBucketReply.prototype.setOk = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
+};
+
+
+/**
+ * optional Transaction transaction = 2;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteBucketReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 2));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteBucketReply} returns this
+*/
+proto.database.DeleteBucketReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteBucketReply} returns this
+ */
+proto.database.DeleteBucketReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteBucketReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 
@@ -3737,7 +4198,8 @@ proto.database.GetKeyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     bucketName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    key: jspb.Message.getFieldWithDefault(msg, 3, "")
+    key: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3785,6 +4247,11 @@ proto.database.GetKeyRequest.deserializeBinaryFromReader = function(msg, reader)
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setKey(value);
+      break;
+    case 4:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
       break;
     default:
       reader.skipField();
@@ -3834,6 +4301,14 @@ proto.database.GetKeyRequest.serializeBinaryToWriter = function(message, writer)
     writer.writeString(
       3,
       f
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -3890,6 +4365,43 @@ proto.database.GetKeyRequest.prototype.getKey = function() {
  */
 proto.database.GetKeyRequest.prototype.setKey = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional Transaction transaction = 4;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.GetKeyRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 4));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.GetKeyRequest} returns this
+*/
+proto.database.GetKeyRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.GetKeyRequest} returns this
+ */
+proto.database.GetKeyRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.GetKeyRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -4078,7 +4590,8 @@ proto.database.PutKeyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     bucketName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    keyValuePair: (f = msg.getKeyValuePair()) && proto.database.KeyValue.toObject(includeInstance, f)
+    keyValuePair: (f = msg.getKeyValuePair()) && proto.database.KeyValue.toObject(includeInstance, f),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4127,6 +4640,11 @@ proto.database.PutKeyRequest.deserializeBinaryFromReader = function(msg, reader)
       var value = new proto.database.KeyValue;
       reader.readMessage(value,proto.database.KeyValue.deserializeBinaryFromReader);
       msg.setKeyValuePair(value);
+      break;
+    case 4:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
       break;
     default:
       reader.skipField();
@@ -4177,6 +4695,14 @@ proto.database.PutKeyRequest.serializeBinaryToWriter = function(message, writer)
       3,
       f,
       proto.database.KeyValue.serializeBinaryToWriter
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -4252,6 +4778,43 @@ proto.database.PutKeyRequest.prototype.clearKeyValuePair = function() {
  */
 proto.database.PutKeyRequest.prototype.hasKeyValuePair = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional Transaction transaction = 4;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.PutKeyRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 4));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.PutKeyRequest} returns this
+*/
+proto.database.PutKeyRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.PutKeyRequest} returns this
+ */
+proto.database.PutKeyRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.PutKeyRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -4390,7 +4953,8 @@ proto.database.DeleteKeyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     bucketName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    key: jspb.Message.getFieldWithDefault(msg, 3, "")
+    key: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4438,6 +5002,11 @@ proto.database.DeleteKeyRequest.deserializeBinaryFromReader = function(msg, read
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setKey(value);
+      break;
+    case 4:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
       break;
     default:
       reader.skipField();
@@ -4487,6 +5056,14 @@ proto.database.DeleteKeyRequest.serializeBinaryToWriter = function(message, writ
     writer.writeString(
       3,
       f
+    );
+  }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -4546,6 +5123,43 @@ proto.database.DeleteKeyRequest.prototype.setKey = function(value) {
 };
 
 
+/**
+ * optional Transaction transaction = 4;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteKeyRequest.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 4));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteKeyRequest} returns this
+*/
+proto.database.DeleteKeyRequest.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteKeyRequest} returns this
+ */
+proto.database.DeleteKeyRequest.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteKeyRequest.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
 
 
 
@@ -4578,7 +5192,8 @@ proto.database.DeleteKeyReply.prototype.toObject = function(opt_includeInstance)
  */
 proto.database.DeleteKeyReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+    ok: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4619,6 +5234,11 @@ proto.database.DeleteKeyReply.deserializeBinaryFromReader = function(msg, reader
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setOk(value);
       break;
+    case 3:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -4655,6 +5275,14 @@ proto.database.DeleteKeyReply.serializeBinaryToWriter = function(message, writer
       f
     );
   }
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
 };
 
 
@@ -4673,6 +5301,43 @@ proto.database.DeleteKeyReply.prototype.getOk = function() {
  */
 proto.database.DeleteKeyReply.prototype.setOk = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
+};
+
+
+/**
+ * optional Transaction transaction = 3;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.DeleteKeyReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 3));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.DeleteKeyReply} returns this
+*/
+proto.database.DeleteKeyReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.DeleteKeyReply} returns this
+ */
+proto.database.DeleteKeyReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.DeleteKeyReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 

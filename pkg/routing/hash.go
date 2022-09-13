@@ -10,16 +10,24 @@
 
 package routing
 
-func Hash(key uint64, numBuckets int) int32 {
+import (
+	"bytes"
 
-	var b int64 = -1
-	var j int64
+	"github.com/dgryski/go-farm"
+)
 
-	for j < int64(numBuckets) {
-		b = j
-		key = key*2862933555777941757 + 1
-		j = int64(float64(b+1) * (float64(int64(1)<<31) / float64((key>>33)+1)))
-	}
+type farmHash struct {
+	buf bytes.Buffer
+}
 
-	return int32(b)
+func (f *farmHash) Write(p []byte) (n int, err error) {
+	return f.buf.Write(p)
+}
+
+func (f *farmHash) Reset() {
+	f.buf.Reset()
+}
+
+func (f *farmHash) Sum64() uint64 {
+	return farm.Hash64(f.buf.Bytes())
 }

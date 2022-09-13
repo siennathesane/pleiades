@@ -3,6 +3,7 @@
 
 import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
+import * as api_v1_database_transactions_pb from "../../../api/v1/database/transactions_pb";
 
 export class KVStoreWrapper extends jspb.Message {
   getAccount(): number;
@@ -177,6 +178,11 @@ export class CreateAccountRequest extends jspb.Message {
   getOwner(): string;
   setOwner(value: string): void;
 
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateAccountRequest.AsObject;
   static toObject(includeInstance: boolean, msg: CreateAccountRequest): CreateAccountRequest.AsObject;
@@ -191,6 +197,7 @@ export namespace CreateAccountRequest {
   export type AsObject = {
     accountId: number,
     owner: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -199,6 +206,11 @@ export class CreateAccountReply extends jspb.Message {
   clearAccountDescriptor(): void;
   getAccountDescriptor(): AccountDescriptor | undefined;
   setAccountDescriptor(value?: AccountDescriptor): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateAccountReply.AsObject;
@@ -213,6 +225,7 @@ export class CreateAccountReply extends jspb.Message {
 export namespace CreateAccountReply {
   export type AsObject = {
     accountDescriptor?: AccountDescriptor.AsObject,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -222,6 +235,11 @@ export class DeleteAccountRequest extends jspb.Message {
 
   getOwner(): string;
   setOwner(value: string): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteAccountRequest.AsObject;
@@ -237,12 +255,18 @@ export namespace DeleteAccountRequest {
   export type AsObject = {
     accountId: number,
     owner: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
 export class DeleteAccountReply extends jspb.Message {
   getOk(): boolean;
   setOk(value: boolean): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteAccountReply.AsObject;
@@ -257,12 +281,18 @@ export class DeleteAccountReply extends jspb.Message {
 export namespace DeleteAccountReply {
   export type AsObject = {
     ok: boolean,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
 export class GetAccountDescriptorRequest extends jspb.Message {
   getAccountId(): number;
   setAccountId(value: number): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetAccountDescriptorRequest.AsObject;
@@ -277,6 +307,7 @@ export class GetAccountDescriptorRequest extends jspb.Message {
 export namespace GetAccountDescriptorRequest {
   export type AsObject = {
     accountId: number,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -358,6 +389,11 @@ export class CreateBucketRequest extends jspb.Message {
   getOwner(): string;
   setOwner(value: string): void;
 
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateBucketRequest.AsObject;
   static toObject(includeInstance: boolean, msg: CreateBucketRequest): CreateBucketRequest.AsObject;
@@ -373,6 +409,7 @@ export namespace CreateBucketRequest {
     accountId: number,
     name: string,
     owner: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -381,6 +418,11 @@ export class CreateBucketReply extends jspb.Message {
   clearBucketDescriptor(): void;
   getBucketDescriptor(): BucketDescriptor | undefined;
   setBucketDescriptor(value?: BucketDescriptor): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): CreateBucketReply.AsObject;
@@ -395,6 +437,7 @@ export class CreateBucketReply extends jspb.Message {
 export namespace CreateBucketReply {
   export type AsObject = {
     bucketDescriptor?: BucketDescriptor.AsObject,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -404,6 +447,11 @@ export class DeleteBucketRequest extends jspb.Message {
 
   getName(): string;
   setName(value: string): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteBucketRequest.AsObject;
@@ -419,12 +467,18 @@ export namespace DeleteBucketRequest {
   export type AsObject = {
     accountId: number,
     name: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
 export class DeleteBucketReply extends jspb.Message {
   getOk(): boolean;
   setOk(value: boolean): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteBucketReply.AsObject;
@@ -439,6 +493,7 @@ export class DeleteBucketReply extends jspb.Message {
 export namespace DeleteBucketReply {
   export type AsObject = {
     ok: boolean,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -492,6 +547,11 @@ export class GetKeyRequest extends jspb.Message {
   getKey(): string;
   setKey(value: string): void;
 
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetKeyRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetKeyRequest): GetKeyRequest.AsObject;
@@ -507,6 +567,7 @@ export namespace GetKeyRequest {
     accountId: number,
     bucketName: string,
     key: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -544,6 +605,11 @@ export class PutKeyRequest extends jspb.Message {
   getKeyValuePair(): KeyValue | undefined;
   setKeyValuePair(value?: KeyValue): void;
 
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PutKeyRequest.AsObject;
   static toObject(includeInstance: boolean, msg: PutKeyRequest): PutKeyRequest.AsObject;
@@ -559,6 +625,7 @@ export namespace PutKeyRequest {
     accountId: number,
     bucketName: string,
     keyValuePair?: KeyValue.AsObject,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -588,6 +655,11 @@ export class DeleteKeyRequest extends jspb.Message {
   getKey(): string;
   setKey(value: string): void;
 
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteKeyRequest.AsObject;
   static toObject(includeInstance: boolean, msg: DeleteKeyRequest): DeleteKeyRequest.AsObject;
@@ -603,12 +675,18 @@ export namespace DeleteKeyRequest {
     accountId: number,
     bucketName: string,
     key: string,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
 export class DeleteKeyReply extends jspb.Message {
   getOk(): boolean;
   setOk(value: boolean): void;
+
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeleteKeyReply.AsObject;
@@ -623,6 +701,7 @@ export class DeleteKeyReply extends jspb.Message {
 export namespace DeleteKeyReply {
   export type AsObject = {
     ok: boolean,
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
