@@ -19,3 +19,8 @@ func NewTestLogger(t *testing.T) zerolog.Logger {
 	testWriter := zerolog.NewTestWriter(t)
 	return zerolog.New(testWriter)
 }
+
+func NewFuzzLogger(t *testing.F) zerolog.Logger {
+	testWriter := zerolog.NewTestWriter(t)
+	return zerolog.New(testWriter)
+}

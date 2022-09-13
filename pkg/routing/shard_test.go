@@ -12,24 +12,30 @@ package routing
 import (
 	"testing"
 
+	"github.com/lithammer/go-jump-consistent-hash"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetShardAssignment(t *testing.T) {
-	shard := GetShardAssignment("abcd1234:bucket:key")
-	assert.LessOrEqual(t, shard, int32(shardLimit))
-}
+const (
+	fuzzLimit = 256
+)
 
 func FuzzGetShardAssignment(f *testing.F) {
-	f.Add("abcd1234")
-	f.Fuzz(func(t *testing.T, s string) {
-		shard := GetShardAssignment(s)
-		assert.LessOrEqual(t, shard, int32(shardLimit))
+	for i := uint64(0); i < fuzzLimit; i++ {
+		f.Add(i)
+	}
+	f.Fuzz(func(t *testing.T, a uint64) {
+		shardRouter := &Shard{}
+		shard := shardRouter.AccountToShard(a)
+		assert.LessOrEqual(t, shard, shardLimit, "the shard must be within the shard range")
 	})
 }
 
 func BenchmarkGetShardAssignment(b *testing.B) {
+	shardRouter := &Shard{
+		j: jump.New(int(shardLimit), &farmHash{}),
+	}
 	for i := 0; i < b.N; i++ {
-		GetShardAssignment("abcd1234")
+		shardRouter.AccountToShard(uint64(i))
 	}
 }

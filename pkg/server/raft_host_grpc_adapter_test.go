@@ -41,134 +41,134 @@ type raftHostGrpcAdapterTestSuite struct {
 }
 
 // SetupTest represents a remote Pleiades host
-func (r *raftHostGrpcAdapterTestSuite) SetupTest() {
-	r.logger = utils.NewTestLogger(r.T())
-	r.defaultTimeout = 3000 * time.Millisecond
+func (t *raftHostGrpcAdapterTestSuite) SetupTest() {
+	t.logger = utils.NewTestLogger(t.T())
+	t.defaultTimeout = 300 * time.Millisecond
 
 	buffer := 1024 * 1024
 	listener := bufconn.Listen(buffer)
 
 	ctx := context.Background()
-	r.srv = grpc.NewServer()
+	t.srv = grpc.NewServer()
 
-	r.nh = buildTestNodeHost(r.T())
-	r.rh = &raftHost{
-		nh:     r.nh,
-		logger: r.logger,
+	t.nh = buildTestNodeHost(t.T())
+	t.rh = &raftHost{
+		nh:     t.nh,
+		logger: t.logger,
 	}
 
-	RegisterRaftHostServer(r.srv, &raftHostGrpcAdapter{
-		logger: r.logger,
-		host:   r.rh,
+	RegisterRaftHostServer(t.srv, &raftHostGrpcAdapter{
+		logger: t.logger,
+		host:   t.rh,
 	})
 
 	go func() {
-		if err := r.srv.Serve(listener); err != nil {
+		if err := t.srv.Serve(listener); err != nil {
 			panic(err)
 		}
 	}()
 
-	r.conn, _ = grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
+	t.conn, _ = grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
 		return listener.Dial()
 	}), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
 }
 
-func (r *raftHostGrpcAdapterTestSuite) TearDownTest() {
+func (t *raftHostGrpcAdapterTestSuite) TearDownTest() {
 	// safely close things.
-	r.conn.Close()
-	r.srv.Stop()
+	t.conn.Close()
+	t.srv.Stop()
 
 	// clear out the values
-	r.srv = nil
-	r.conn = nil
-	r.rh = nil
-	r.nh = nil
+	t.srv = nil
+	t.conn = nil
+	t.rh = nil
+	t.nh = nil
 }
 
-func (r *raftHostGrpcAdapterTestSuite) TestCompact() {
+func (t *raftHostGrpcAdapterTestSuite) TestCompact() {
 	if testing.Short() {
-		r.T().Skipf("skipping")
+		t.T().Skipf("skipping")
 	}
 
-	shardConfig := buildTestShardConfig(r.T())
+	shardConfig := buildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
-	members[shardConfig.NodeID] = r.nh.RaftAddress()
+	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
-	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
+	utils.Wait(t.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
-	r.Require().NoError(err, "there must not be an error when fetching the client session")
-	r.Require().NotNil(cs, "the client session must not be nil")
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+	cs, err := t.nh.SyncGetSession(ctx, shardConfig.ClusterID)
+	t.Require().NoError(err, "there must not be an error when fetching the client session")
+	t.Require().NotNil(cs, "the client session must not be nil")
 	cancel()
 
 	for i := 0; i < 25; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
-		r.Require().NoError(err, "there must not be an error when proposing a new message")
+		proposeContext, _ := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+		_, err := t.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		t.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
 	}
 
-	client := NewRaftHostClient(r.conn)
+	client := NewRaftHostClient(t.conn)
 
 	// todo (sienna): figure out why it's being rejected.
 	_, err = client.Compact(context.Background(), &raft.CompactRequest{
 		ReplicaId: shardConfig.NodeID,
 		ShardId:   shardConfig.ClusterID,
 	})
-	r.Require().Error(err, "the request for log compaction must be rejected")
+	t.Require().Error(err, "the request for log compaction must be rejected")
 }
 
-func (r *raftHostGrpcAdapterTestSuite) TestGetHostConfig() {
-	client := NewRaftHostClient(r.conn)
+func (t *raftHostGrpcAdapterTestSuite) TestGetHostConfig() {
+	client := NewRaftHostClient(t.conn)
 	resp, err := client.GetHostConfig(context.Background(), &raft.GetHostConfigRequest{})
-	r.Require().NoError(err, "there must not be an error getting the host config")
-	r.Require().NotEmpty(resp, "the response must not be empty")
+	t.Require().NoError(err, "there must not be an error getting the host config")
+	t.Require().NotEmpty(resp, "the response must not be empty")
 }
 
-func (r *raftHostGrpcAdapterTestSuite) TestSnapshot() {
+func (t *raftHostGrpcAdapterTestSuite) TestSnapshot() {
 	if testing.Short() {
-		r.T().Skipf("skipping")
+		t.T().Skipf("skipping")
 	}
 
-	shardConfig := buildTestShardConfig(r.T())
+	shardConfig := buildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
-	members[shardConfig.NodeID] = r.nh.RaftAddress()
+	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
-	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
+	utils.Wait(t.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
-	r.Require().NoError(err, "there must not be an error when fetching the client session")
-	r.Require().NotNil(cs, "the client session must not be nil")
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+	cs, err := t.nh.SyncGetSession(ctx, shardConfig.ClusterID)
+	t.Require().NoError(err, "there must not be an error when fetching the client session")
+	t.Require().NotNil(cs, "the client session must not be nil")
 	cancel()
 
 	for i := 0; i < 25; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
-		r.Require().NoError(err, "there must not be an error when proposing a new message")
+		proposeContext, _ := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+		_, err := t.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		t.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
 	}
 
-	client := NewRaftHostClient(r.conn)
+	client := NewRaftHostClient(t.conn)
 
 	// todo (sienna): figure out why it's failing to write to disk
 	_, err = client.Snapshot(context.Background(), &raft.SnapshotRequest{
 		ShardId:   shardConfig.ClusterID,
-		Timeout: int64(r.defaultTimeout),
+		Timeout: int64(t.defaultTimeout),
 	})
-	r.Require().NoError(err, "there must not be an error when trying to create a snapshot")
+	t.Require().NoError(err, "there must not be an error when trying to create a snapshot")
 }
 
-func (r *raftHostGrpcAdapterTestSuite) TestStop() {
-	client := NewRaftHostClient(r.conn)
+func (t *raftHostGrpcAdapterTestSuite) TestStop() {
+	client := NewRaftHostClient(t.conn)
 	_, err := client.Stop(context.Background(), &raft.StopRequest{})
-	r.Require().NoError(err, "there must not be an error when trying to stop the host")
+	t.Require().NoError(err, "there must not be an error when trying to stop the host")
 }
 
