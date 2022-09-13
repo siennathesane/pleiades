@@ -14,9 +14,6 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/api/v1/database"
-	"github.com/lni/dragonboat/v3"
-	"github.com/lni/dragonboat/v3/client"
-	"github.com/lni/dragonboat/v3/statemachine"
 )
 
 type IRaft interface {
@@ -60,7 +57,11 @@ type ITransactionManager interface {
 }
 
 type IStore interface {
-	Propose(session *client.Session, cmd []byte, timeout time.Duration) (*dragonboat.RequestState, error)
-	SyncPropose(ctx context.Context, session *client.Session, cmd []byte) (statemachine.Result, error)
-	SyncRead(ctx context.Context, clusterID uint64, query interface{}) (interface{}, error)
+	CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error)
+	DeleteAccount(request *database.DeleteBucketRequest) (*database.DeleteAccountReply, error)
+	CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error)
+	DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
+	GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error)
+	PutKey(request *database.PutKeyRequest) (*database.PutKeyReply, error)
+	DeleteKey(request *database.DeleteKeyRequest) (*database.DeleteKeyReply, error)
 }

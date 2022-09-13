@@ -49,7 +49,7 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -105,7 +105,7 @@ func (t *shardManagerTestSuite) TestAddShardObserver() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -161,7 +161,7 @@ func (t *shardManagerTestSuite) TestAddShardWitness() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -217,7 +217,7 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -280,7 +280,7 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -333,7 +333,7 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -393,7 +393,7 @@ func (t *shardManagerTestSuite) TestNewShard() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
 	testShardId := firstNodeClusterConfig.ClusterID
@@ -427,7 +427,7 @@ func (t *shardManagerTestSuite) TestRemoveData() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -492,7 +492,7 @@ func (t *shardManagerTestSuite) TestRemoveReplica() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())
@@ -652,7 +652,7 @@ func (t *shardManagerTestSuite) TestStopReplica() {
 
 	firstTestHost := buildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
-	t.Require().NotNil(shardManager, "shardManager must not be nil")
+	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := buildTestShardConfig(t.T())

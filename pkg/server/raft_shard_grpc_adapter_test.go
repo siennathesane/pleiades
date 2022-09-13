@@ -42,7 +42,7 @@ type RaftShardGrpcAdapterTestSuite struct {
 	srv                    *grpc.Server
 	testShardId            uint64
 	testClusterConfig      dconfig.Config
-	testShardManager       *shardManager
+	testShardManager       *raftShardManager
 	defaultTimeout         time.Duration
 	extendedDefaultTimeout time.Duration
 }

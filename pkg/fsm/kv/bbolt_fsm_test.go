@@ -46,14 +46,14 @@ func (t *BBoltFsmTestSuite) SetupSuite() {
 func (t *BBoltFsmTestSuite) TestNewBBoltStateMachine() {
 	//viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 }
 
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineOpen() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))
@@ -84,7 +84,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineOpen() {
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineClose() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))
@@ -95,7 +95,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineClose() {
 	t.Require().NoError(err, "there must not be an error when closing the store")
 
 	fsm = nil
-	fsm = NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm = newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 	t.Assert().Panics(func() {
 		_ = fsm.Close()
@@ -105,7 +105,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineClose() {
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))
@@ -318,7 +318,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))
@@ -447,7 +447,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 func (t *BBoltFsmTestSuite) TestLookup() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))
@@ -563,7 +563,7 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 func (t *BBoltFsmTestSuite) TestSync() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
-	fsm := NewBBoltStateMachine(t.shardId, t.replicaId)
+	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
 
 	idx, err := fsm.Open(make(chan struct{}))

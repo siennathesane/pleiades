@@ -11,15 +11,23 @@
 package routing
 
 import (
-	"github.com/cespare/xxhash/v2"
+	"strconv"
+
+	"github.com/lithammer/go-jump-consistent-hash"
 )
 
 const (
 	// internal systemic limit for sharding
-	shardLimit int = 1024
+	shardLimit uint64 = 256
 )
 
-//GetShardAssignment determines which shard a given key is assigned to
-func GetShardAssignment(s string) int32 {
-	return Hash(xxhash.Sum64String(s), shardLimit)
+type Shard struct {
+	j *jump.Hasher
+}
+
+func (s *Shard) AccountToShard(accountId uint64) uint64 {
+	if s.j == nil {
+		s.j = jump.New(int(shardLimit), &farmHash{})
+	}
+	return uint64(s.j.Hash(strconv.FormatUint(accountId, 10)))
 }
