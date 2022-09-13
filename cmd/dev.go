@@ -18,13 +18,16 @@ import (
 // devCmd represents the dev command
 var devCmd = &cobra.Command{
 	Use:   "dev",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "the development commands",
+	Long: `these commands are used to run pleiades in various development modes.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+most of them are hacky, designed to test or implement various
+features, functionalities, or other various things used by both
+the pleiades development team, and developers at large. these 
+commands can't be trusted for anything other than development 
+purposes.
+
+DO NOT USE THEM FOR PRODUCTION`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("dev called")
 	},
