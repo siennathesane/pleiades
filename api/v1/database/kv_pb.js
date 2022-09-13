@@ -4198,8 +4198,7 @@ proto.database.GetKeyRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     accountId: jspb.Message.getFieldWithDefault(msg, 1, 0),
     bucketName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    key: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
+    key: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -4247,11 +4246,6 @@ proto.database.GetKeyRequest.deserializeBinaryFromReader = function(msg, reader)
     case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setKey(value);
-      break;
-    case 4:
-      var value = new api_v1_database_transactions_pb.Transaction;
-      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
-      msg.setTransaction(value);
       break;
     default:
       reader.skipField();
@@ -4301,14 +4295,6 @@ proto.database.GetKeyRequest.serializeBinaryToWriter = function(message, writer)
     writer.writeString(
       3,
       f
-    );
-  }
-  f = message.getTransaction();
-  if (f != null) {
-    writer.writeMessage(
-      4,
-      f,
-      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
     );
   }
 };
@@ -4365,43 +4351,6 @@ proto.database.GetKeyRequest.prototype.getKey = function() {
  */
 proto.database.GetKeyRequest.prototype.setKey = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional Transaction transaction = 4;
- * @return {?proto.database.Transaction}
- */
-proto.database.GetKeyRequest.prototype.getTransaction = function() {
-  return /** @type{?proto.database.Transaction} */ (
-    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 4));
-};
-
-
-/**
- * @param {?proto.database.Transaction|undefined} value
- * @return {!proto.database.GetKeyRequest} returns this
-*/
-proto.database.GetKeyRequest.prototype.setTransaction = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.database.GetKeyRequest} returns this
- */
-proto.database.GetKeyRequest.prototype.clearTransaction = function() {
-  return this.setTransaction(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.database.GetKeyRequest.prototype.hasTransaction = function() {
-  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -4850,7 +4799,7 @@ proto.database.PutKeyReply.prototype.toObject = function(opt_includeInstance) {
  */
 proto.database.PutKeyReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-
+    transaction: (f = msg.getTransaction()) && api_v1_database_transactions_pb.Transaction.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -4887,6 +4836,11 @@ proto.database.PutKeyReply.deserializeBinaryFromReader = function(msg, reader) {
     }
     var field = reader.getFieldNumber();
     switch (field) {
+    case 1:
+      var value = new api_v1_database_transactions_pb.Transaction;
+      reader.readMessage(value,api_v1_database_transactions_pb.Transaction.deserializeBinaryFromReader);
+      msg.setTransaction(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -4916,6 +4870,51 @@ proto.database.PutKeyReply.prototype.serializeBinary = function() {
  */
 proto.database.PutKeyReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
+  f = message.getTransaction();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      api_v1_database_transactions_pb.Transaction.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional Transaction transaction = 1;
+ * @return {?proto.database.Transaction}
+ */
+proto.database.PutKeyReply.prototype.getTransaction = function() {
+  return /** @type{?proto.database.Transaction} */ (
+    jspb.Message.getWrapperField(this, api_v1_database_transactions_pb.Transaction, 1));
+};
+
+
+/**
+ * @param {?proto.database.Transaction|undefined} value
+ * @return {!proto.database.PutKeyReply} returns this
+*/
+proto.database.PutKeyReply.prototype.setTransaction = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.database.PutKeyReply} returns this
+ */
+proto.database.PutKeyReply.prototype.clearTransaction = function() {
+  return this.setTransaction(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.database.PutKeyReply.prototype.hasTransaction = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 

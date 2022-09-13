@@ -707,9 +707,6 @@ func (this *GetKeyRequest) EqualVT(that *GetKeyRequest) bool {
 	if this.Key != that.Key {
 		return false
 	}
-	if !this.Transaction.EqualVT(that.Transaction) {
-		return false
-	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -750,6 +747,9 @@ func (this *PutKeyReply) EqualVT(that *PutKeyReply) bool {
 	if this == nil {
 		return that == nil
 	} else if that == nil {
+		return false
+	}
+	if !this.Transaction.EqualVT(that.Transaction) {
 		return false
 	}
 	return string(this.unknownFields) == string(that.unknownFields)
@@ -1964,16 +1964,6 @@ func (m *GetKeyRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
-	if m.Transaction != nil {
-		size, err := m.Transaction.MarshalToSizedBufferVT(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarint(dAtA, i, uint64(size))
-		i--
-		dAtA[i] = 0x22
-	}
 	if len(m.Key) > 0 {
 		i -= len(m.Key)
 		copy(dAtA[i:], m.Key)
@@ -2133,6 +2123,16 @@ func (m *PutKeyReply) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 	if m.unknownFields != nil {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
+	}
+	if m.Transaction != nil {
+		size, err := m.Transaction.MarshalToSizedBufferVT(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarint(dAtA, i, uint64(size))
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -2884,10 +2884,6 @@ func (m *GetKeyRequest) SizeVT() (n int) {
 	if l > 0 {
 		n += 1 + l + sov(uint64(l))
 	}
-	if m.Transaction != nil {
-		l = m.Transaction.SizeVT()
-		n += 1 + l + sov(uint64(l))
-	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -2937,6 +2933,10 @@ func (m *PutKeyReply) SizeVT() (n int) {
 	}
 	var l int
 	_ = l
+	if m.Transaction != nil {
+		l = m.Transaction.SizeVT()
+		n += 1 + l + sov(uint64(l))
+	}
 	n += len(m.unknownFields)
 	return n
 }
@@ -5610,42 +5610,6 @@ func (m *GetKeyRequest) UnmarshalVT(dAtA []byte) error {
 			}
 			m.Key = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Transaction", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLength
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLength
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Transaction == nil {
-				m.Transaction = &Transaction{}
-			}
-			if err := m.Transaction.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skip(dAtA[iNdEx:])
@@ -5958,6 +5922,42 @@ func (m *PutKeyReply) UnmarshalVT(dAtA []byte) error {
 			return fmt.Errorf("proto: PutKeyReply: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Transaction", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLength
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLength
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Transaction == nil {
+				m.Transaction = &Transaction{}
+			}
+			if err := m.Transaction.UnmarshalVT(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skip(dAtA[iNdEx:])
