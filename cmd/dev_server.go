@@ -11,20 +11,33 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
 
+	"github.com/mxplusb/cliflags/gen/gpflag"
+	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "run a development server",
+	Long: `runs a development server.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+it will boot with 256 predefined shards, configured in 
+insecure mode, and will generally be buggy. it will run
+the latest and greatest, which means it may or may not 
+be usable for consuming applications. there may be unversioned
+changes in this command which are not available as part of
+the cloud offering. this command is unsupported beyond 
+filing bugs against it the team may or may not get to
+
+DO NOT USE THIS IN PRODUCTION`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("server called")
 	},
@@ -32,6 +45,38 @@ to quickly create a Cobra application.`,
 
 func init() {
 	devCmd.AddCommand(serverCmd)
+
+	cfg := configuration.DefaultConfiguration()
+cfg.Host.MutualTLS = false
+
+	// if we're on a mac, set different paths for the default config
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		dir, err := homedir.Dir()
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to get home directory")
+		}
+
+		rootDir := filepath.Join(dir, "Library", "pleiades")
+		cfg.Host.DataDir = filepath.Join(rootDir, "logs")
+		cfg.Host.LogDir = filepath.Join(rootDir, "shards")
+		cfg.Host.CaFile = ""
+		cfg.Host.CertFile = ""
+		cfg.Host.KeyFile = ""
+
+		cfg.Datastore.BasePath = filepath.Join(rootDir, "pleiades")
+	}
+
+	if err := gpflag.ParseTo(cfg, serverCmd.Flags()); err != nil {
+		log.Logger.Err(err).Msg("cannot properly parse command strings")
+		os.Exit(1)
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {} else {
+			log.Logger.Error().Err(err).Msg("configuration file not found")
+		}
+	}
 
 	// Here you will define your flags and configuration settings.
 
