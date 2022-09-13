@@ -24,7 +24,7 @@ import (
 )
 
 var (
-	_ IStore = (*bboltStoreManager)(nil)
+	_ IKVStore = (*bboltStoreManager)(nil)
 )
 
 func newBboltStoreManager(tm *raftTransactionManager, nh *dragonboat.NodeHost, logger zerolog.Logger) *bboltStoreManager {

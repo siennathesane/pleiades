@@ -825,7 +825,7 @@ var Transactions_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KVStoreServiceClient interface {
 	CreateAccount(ctx context.Context, in *database.CreateAccountRequest, opts ...grpc.CallOption) (*database.CreateAccountReply, error)
-	DeleteAccount(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
+	DeleteAccount(ctx context.Context, in *database.DeleteAccountRequest, opts ...grpc.CallOption) (*database.DeleteAccountReply, error)
 	CreateBucket(ctx context.Context, in *database.CreateBucketRequest, opts ...grpc.CallOption) (*database.CreateBucketReply, error)
 	DeleteBucket(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
 	GetKey(ctx context.Context, in *database.GetKeyRequest, opts ...grpc.CallOption) (*database.GetKeyReply, error)
@@ -850,8 +850,8 @@ func (c *kVStoreServiceClient) CreateAccount(ctx context.Context, in *database.C
 	return out, nil
 }
 
-func (c *kVStoreServiceClient) DeleteAccount(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error) {
-	out := new(database.DeleteBucketReply)
+func (c *kVStoreServiceClient) DeleteAccount(ctx context.Context, in *database.DeleteAccountRequest, opts ...grpc.CallOption) (*database.DeleteAccountReply, error) {
+	out := new(database.DeleteAccountReply)
 	err := c.cc.Invoke(ctx, "/server.KVStoreService/DeleteAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -909,7 +909,7 @@ func (c *kVStoreServiceClient) DeleteKey(ctx context.Context, in *database.Delet
 // for forward compatibility
 type KVStoreServiceServer interface {
 	CreateAccount(context.Context, *database.CreateAccountRequest) (*database.CreateAccountReply, error)
-	DeleteAccount(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
+	DeleteAccount(context.Context, *database.DeleteAccountRequest) (*database.DeleteAccountReply, error)
 	CreateBucket(context.Context, *database.CreateBucketRequest) (*database.CreateBucketReply, error)
 	DeleteBucket(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
 	GetKey(context.Context, *database.GetKeyRequest) (*database.GetKeyReply, error)
@@ -925,7 +925,7 @@ type UnimplementedKVStoreServiceServer struct {
 func (UnimplementedKVStoreServiceServer) CreateAccount(context.Context, *database.CreateAccountRequest) (*database.CreateAccountReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
 }
-func (UnimplementedKVStoreServiceServer) DeleteAccount(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
+func (UnimplementedKVStoreServiceServer) DeleteAccount(context.Context, *database.DeleteAccountRequest) (*database.DeleteAccountReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccount not implemented")
 }
 func (UnimplementedKVStoreServiceServer) CreateBucket(context.Context, *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
@@ -975,7 +975,7 @@ func _KVStoreService_CreateAccount_Handler(srv interface{}, ctx context.Context,
 }
 
 func _KVStoreService_DeleteAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(database.DeleteBucketRequest)
+	in := new(database.DeleteAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -987,7 +987,7 @@ func _KVStoreService_DeleteAccount_Handler(srv interface{}, ctx context.Context,
 		FullMethod: "/server.KVStoreService/DeleteAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KVStoreServiceServer).DeleteAccount(ctx, req.(*database.DeleteBucketRequest))
+		return srv.(KVStoreServiceServer).DeleteAccount(ctx, req.(*database.DeleteAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
