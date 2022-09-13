@@ -4,7 +4,6 @@
     - go env -w GOBIN=/usr/local/bin
     - go env -w GOPATH=$CI_PROJECT_DIR/.go
     - ci/scripts/install-mage.sh
-    - mage install:godeps
 
 .default_rules: &default-rules
   rules:
@@ -23,7 +22,7 @@ stages:
   - build
   - test
 
-.go-cache:
+.go-cache: &mod-cache
   cache:
     paths:
       - .go/pkg/mod/
@@ -31,11 +30,11 @@ stages:
 build:
   stage: build
   image: "golang:$GO_VERSION"
-  extends: .go-cache
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
-    - |
-      mage build:compile
+    - mage install:godeps
+    - mage build:compile
   artifacts:
     paths:
       - "build/pleiades"
@@ -55,11 +54,12 @@ test-with-cover:
   retry: 2
   stage: test
   image: "golang:$GO_VERSION"
-  extends: .go-cache
   needs:
     - build
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
+    - mage install:godeps
     - go test ./... -coverprofile=coverage.txt -covermode atomic
     - gocover-cobertura < coverage.txt > coverage.xml
   artifacts:
@@ -73,11 +73,12 @@ test-with-report:
   retry: 2
   stage: test
   image: "golang:$GO_VERSION"
-  extends: .go-cache
   needs:
     - build
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
+    - mage install:godeps
     - gotestsum --junitfile report.xml --format testname
   artifacts:
     reports:
