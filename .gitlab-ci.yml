@@ -1,3 +1,16 @@
+.before_script_template: &build-test-scripts
+  before_script:
+    - mkdir -p .go
+    - go env -w GOBIN=/usr/local/bin
+    - go env -w GOPATH=$CI_PROJECT_DIR/.go
+    - ci/scripts/install-mage.sh
+
+.default_rules: &default-rules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # MR pipelines
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # default branch
+    - if: $CI_COMMIT_TAG # tags!
+
 variables:
   GO_VERSION: "1.19"
   MAGE_VERSION: "1.13.0"
@@ -9,24 +22,19 @@ stages:
   - build
   - test
 
-.before_script_template: &build-test-scripts
-  before_script:
-    - ci/scripts/install-mage.sh
-    - mage install:godeps
-
-.default_rules: &default-rules
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" # MR pipelines
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH # default branch
-    - if: $CI_COMMIT_TAG # tags!
+.go-cache: &mod-cache
+  cache:
+    paths:
+      - .go/pkg/mod/
 
 build:
   stage: build
   image: "golang:$GO_VERSION"
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
-    - |
-      mage build:compile
+    - mage install:godeps
+    - mage build:compile
   artifacts:
     paths:
       - "build/pleiades"
@@ -40,13 +48,18 @@ code_quality:
       when: never
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" # Run code quality job in merge request pipelines
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH      # Run code quality job in pipelines on the default branch (but not in other branch pipelines)
-    - if: $CI_COMMIT_TAG   
+    - if: $CI_COMMIT_TAG
 
 test-with-cover:
+  retry: 2
   stage: test
   image: "golang:$GO_VERSION"
+  needs:
+    - build
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
+    - mage install:godeps
     - go test ./... -coverprofile=coverage.txt -covermode atomic
     - gocover-cobertura < coverage.txt > coverage.xml
   artifacts:
@@ -56,11 +69,16 @@ test-with-cover:
         path: coverage.xml
   <<: *default-rules
 
-coverage:
+test-with-report:
+  retry: 2
   stage: test
   image: "golang:$GO_VERSION"
+  needs:
+    - build
+  <<: *mod-cache
   <<: *build-test-scripts
   script:
+    - mage install:godeps
     - gotestsum --junitfile report.xml --format testname
   artifacts:
     reports:

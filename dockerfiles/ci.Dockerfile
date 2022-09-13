@@ -1,10 +1,6 @@
-FROM homebrew/brew
+FROM golang:1.19
 
-RUN brew install \
-    go \
-    helm \
-    jq \
-    kubectl \
-    mage \
-    minio-mc \
-    vim
+ENV MAGE_VERSION "1.13.0"
+ADD ci/scripts/install-mage.sh .
+RUN ./install-mage.sh && \
+    rm LICENSE install-mage.sh mage_"${MAGE_VERSION}"_Linux-64bit.tar.gz

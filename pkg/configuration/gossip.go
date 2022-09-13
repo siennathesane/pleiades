@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package conf
+package configuration
 
 type GossipConfig struct {
 	BindAddress      string
