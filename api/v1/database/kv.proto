@@ -137,7 +137,6 @@ message GetKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
   string key = 3;
-  Transaction transaction = 4;
 }
 
 message GetKeyReply {
@@ -151,7 +150,9 @@ message PutKeyRequest {
   Transaction transaction = 4;
 }
 
-message PutKeyReply {}
+message PutKeyReply {
+  Transaction transaction = 1;
+}
 
 message DeleteKeyRequest {
   uint64 account_id = 1;
@@ -162,7 +163,7 @@ message DeleteKeyRequest {
 
 message DeleteKeyReply {
   bool ok = 1;
-  Transaction transaction =3;
+  Transaction transaction = 3;
 }
 
 message KeyValue {

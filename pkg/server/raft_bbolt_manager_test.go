@@ -10,6 +10,7 @@
 package server
 
 import (
+	"fmt"
 	"math/rand"
 	"sync"
 	"testing"
@@ -246,5 +247,115 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 		t.Require().NoError(err, "there must not be an error when creating an account")
 		t.Require().NotNil(deleteBucket, "the response must not be nil")
 		t.Require().True(deleteBucket.GetOk(), "the account descriptor must not be empty")
+	}
+}
+
+func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
+	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+
+	testBaseAccountId := rand.Uint64()
+	testBucketName := utils.RandomString(10)
+	testOwner := "test@test.com"
+
+	// no transaction
+	createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating an account")
+	t.Require().NotNil(createAccountReply, "the response must not be nil")
+	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
+
+	// no transaction
+	createBucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Name:        testBucketName,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating a bucket")
+	t.Require().NotNil(createBucketReply, "the response must not be nil")
+	t.Require().NotEmpty(createBucketReply.GetBucketDescriptor(), "the account descriptor must not be empty")
+
+	testPutValue, _ := utils.RandomBytes(128)
+	testKvp := &database.KeyValue{
+		Key:            "test-key",
+		CreateRevision: 0,
+		ModRevision:    0,
+		Version:        0,
+		Value:          testPutValue,
+		Lease:          0,
+	}
+
+	putKeyReply, err := storeManager.PutKey(&database.PutKeyRequest{
+		AccountId:    testBaseAccountId,
+		BucketName:   testBucketName,
+		KeyValuePair: testKvp,
+		Transaction:  nil,
+	})
+	t.Require().NoError(err, "there must not be an error when putting a key")
+	t.Require().NotNil(putKeyReply, "the key response must not be empty")
+
+	getKeyReply, err := storeManager.GetKey(&database.GetKeyRequest{
+		AccountId:  testBaseAccountId,
+		BucketName: testBucketName,
+		Key:        testKvp.Key,
+	})
+	t.Require().NoError(err, "there must not be an error when getting a key")
+	t.Require().NotNil(getKeyReply, "the reply must not be nil")
+	t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
+	t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
+
+	deleteKeyReply, err := storeManager.DeleteKey(&database.DeleteKeyRequest{
+		AccountId:   testBaseAccountId,
+		BucketName:  testBucketName,
+		Key:         testKvp.Key,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when deleting a key")
+	t.Require().NotNil(deleteKeyReply, "the reply must not be nil")
+	t.Require().True(deleteKeyReply.GetOk(), "the key must have been deleted")
+
+	// handle the lifecycle for 20 random keys
+	for i := 0; i < 20; i++ {
+		testPutValue, _ = utils.RandomBytes(128)
+		testKvp = &database.KeyValue{
+			Key:           fmt.Sprintf( "test-key-%d", i),
+			CreateRevision: 0,
+			ModRevision:    0,
+			Version:        0,
+			Value:          testPutValue,
+			Lease:          0,
+		}
+
+		putKeyReply, err = storeManager.PutKey(&database.PutKeyRequest{
+			AccountId:    testBaseAccountId,
+			BucketName:   testBucketName,
+			KeyValuePair: testKvp,
+			Transaction:  nil,
+		})
+		t.Require().NoError(err, "there must not be an error when putting a key")
+		t.Require().NotNil(putKeyReply, "the key response must not be empty")
+
+		getKeyReply, err = storeManager.GetKey(&database.GetKeyRequest{
+			AccountId:  testBaseAccountId,
+			BucketName: testBucketName,
+			Key:        testKvp.Key,
+		})
+		t.Require().NoError(err, "there must not be an error when getting a key")
+		t.Require().NotNil(getKeyReply, "the reply must not be nil")
+		t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
+		t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
+
+		deleteKeyReply, err = storeManager.DeleteKey(&database.DeleteKeyRequest{
+			AccountId:   testBaseAccountId,
+			BucketName:  testBucketName,
+			Key:         testKvp.Key,
+			Transaction: nil,
+		})
+		t.Require().NoError(err, "there must not be an error when deleting a key")
+		t.Require().NotNil(deleteKeyReply, "the reply must not be nil")
+		t.Require().True(deleteKeyReply.GetOk(), "the key must have been deleted")
 	}
 }

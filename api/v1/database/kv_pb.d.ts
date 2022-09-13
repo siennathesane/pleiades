@@ -547,11 +547,6 @@ export class GetKeyRequest extends jspb.Message {
   getKey(): string;
   setKey(value: string): void;
 
-  hasTransaction(): boolean;
-  clearTransaction(): void;
-  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
-  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetKeyRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetKeyRequest): GetKeyRequest.AsObject;
@@ -567,7 +562,6 @@ export namespace GetKeyRequest {
     accountId: number,
     bucketName: string,
     key: string,
-    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -630,6 +624,11 @@ export namespace PutKeyRequest {
 }
 
 export class PutKeyReply extends jspb.Message {
+  hasTransaction(): boolean;
+  clearTransaction(): void;
+  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
+  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PutKeyReply.AsObject;
   static toObject(includeInstance: boolean, msg: PutKeyReply): PutKeyReply.AsObject;
@@ -642,6 +641,7 @@ export class PutKeyReply extends jspb.Message {
 
 export namespace PutKeyReply {
   export type AsObject = {
+    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
