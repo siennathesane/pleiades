@@ -251,12 +251,13 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 	return ErrUnsupportedStateMachine
 }
 
+// todo (sienna): this should stop the replica, not the shard...
 func (c *raftShardManager) StopReplica(shardId uint64) (*OperationResult, error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("stopping replica")
 	err := c.nh.StopCluster(shardId)
 	if err != nil {
 		c.logger.Error().Err(err).Uint64("shard", shardId).Msg("failed to stop replica")
-		return nil, err
+		return nil, errors.Wrap(err, "failed to stop replica")
 	}
 	return &OperationResult{}, nil
 }

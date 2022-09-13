@@ -57,7 +57,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 		go func() {
 			wg.Add(1)
 			defer wg.Done()
-			err := t.sm.NewShard(i, rand.Uint64(), BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
+			err := t.sm.NewShard(i, i*4, BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
@@ -321,7 +321,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	for i := 0; i < 20; i++ {
 		testPutValue, _ = utils.RandomBytes(128)
 		testKvp = &database.KeyValue{
-			Key:           fmt.Sprintf( "test-key-%d", i),
+			Key:            fmt.Sprintf("test-key-%d", i),
 			CreateRevision: 0,
 			ModRevision:    0,
 			Version:        0,
