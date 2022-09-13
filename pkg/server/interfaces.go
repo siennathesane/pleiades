@@ -58,7 +58,7 @@ type ITransactionManager interface {
 
 type IStore interface {
 	CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error)
-	DeleteAccount(request *database.DeleteBucketRequest) (*database.DeleteAccountReply, error)
+	DeleteAccount(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error)
 	CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error)
 	DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
 	GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error)

@@ -16,6 +16,7 @@ import (
 	"github.com/mxplusb/pleiades/api/v1/database"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	"github.com/lni/dragonboat/v3/client"
@@ -28,14 +29,15 @@ var (
 
 func newBboltStoreManager(tm *raftTransactionManager, nh *dragonboat.NodeHost, logger zerolog.Logger) *bboltStoreManager {
 	l := logger.With().Str("component", "store-manager").Logger()
-	return &bboltStoreManager{l, tm, nh, &routing.Shard{}}
+	return &bboltStoreManager{l, tm, nh, &routing.Shard{}, 1000*time.Millisecond}
 }
 
 type bboltStoreManager struct {
-	logger zerolog.Logger
-	tm     *raftTransactionManager
-	nh     *dragonboat.NodeHost
-	shardRouter *routing.Shard
+	logger         zerolog.Logger
+	tm             *raftTransactionManager
+	nh             *dragonboat.NodeHost
+	shardRouter    *routing.Shard
+	defaultTimeout time.Duration
 }
 
 func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error) {
@@ -66,7 +68,7 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 		return &database.CreateAccountReply{}, errors.Wrap(err, "can't marshal request")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 1000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
 	var cs *client.Session
@@ -110,9 +112,72 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteAccount(request *database.DeleteBucketRequest) (*database.DeleteAccountReply, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error) {
+	account := request.GetAccountId()
+	if account == 0 {
+		s.logger.Trace().Msg("empty account value")
+		return &database.DeleteAccountReply{}, kv.ErrInvalidAccount
+	}
+
+	owner := request.GetOwner()
+	if owner == "" {
+		s.logger.Trace().Msg("empty owner value")
+		return &database.DeleteAccountReply{}, kv.ErrInvalidOwner
+	}
+
+	req := &database.KVStoreWrapper{
+		Account: request.GetAccountId(),
+		Typ:     database.KVStoreWrapper_DELETE_ACCOUNT_REQUEST,
+		Payload: &database.KVStoreWrapper_DeleteAccountRequest{
+			DeleteAccountRequest: request,
+		},
+	}
+
+	cmd, err := req.MarshalVT()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't marshal request")
+		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't marshal request")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
+	defer cancel()
+
+	var cs *client.Session
+	if request.Transaction != nil {
+		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+	} else {
+		shard := s.shardRouter.AccountToShard(account)
+		cs = s.nh.GetNoOPSession(shard)
+	}
+
+	result, err := s.nh.SyncPropose(ctx, cs, cmd)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't apply message")
+		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't apply message")
+	}
+
+	if cs.SeriesID != client.NoOPSeriesID {
+		cs.ProposalCompleted()
+	}
+
+	resp := &database.KVStoreWrapper{}
+	err = resp.UnmarshalVT(result.Data)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't unmarshal response")
+		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	response := &database.DeleteAccountReply{
+		Ok: resp.GetDeleteAccountReply().GetOk(),
+	}
+
+	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+		response.Transaction = &database.Transaction{}
+	} else {
+		response.Transaction = csToTransaction(*cs)
+	}
+
+	return response, nil
 }
 
 func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
