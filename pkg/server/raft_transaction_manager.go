@@ -23,7 +23,7 @@ var (
 	_ ITransactionManager = (*raftTransactionManager)(nil)
 )
 
-func newSessionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *raftTransactionManager {
+func newTransactionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *raftTransactionManager {
 	l := logger.With().Str("component", "session-manager").Logger()
 	return &raftTransactionManager{l, nh, make(map[uint64]*dclient.Session)}
 }

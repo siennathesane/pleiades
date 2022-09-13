@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package conf
+package configuration
 
 type NodeHostConfig struct {
 	DevMode                       bool         `flag:"dev d" desc:"enable dev mode?"`

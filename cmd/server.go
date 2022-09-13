@@ -10,16 +10,18 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"runtime"
 
 	"github.com/mxplusb/cliflags/gen/gpflag"
-	"github.com/mxplusb/pleiades/pkg/conf"
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // serverCmd represents the server command
@@ -232,7 +234,7 @@ gossip network is enough.
 }
 
 var (
-	cfg *conf.NodeHostConfig = &conf.NodeHostConfig{
+	cfg *configuration.NodeHostConfig = &configuration.NodeHostConfig{
 		DevMode:                       true,
 		DeploymentID:                  1,
 		WALDir:                        "/var/pleiades/wal",
@@ -251,7 +253,7 @@ var (
 		MaxSnapshotSendBytesPerSecond: 0,
 		MaxSnapshotRecvBytesPerSecond: 0,
 		NotifyCommit:                  true,
-		Gossip: conf.GossipConfig{
+		Gossip: configuration.GossipConfig{
 			AdvertiseAddress: "",
 			BindAddress:      "",
 			Seed:             []string{},
@@ -281,12 +283,20 @@ func init() {
 		log.Logger.Err(err).Msg("cannot properly parse command strings")
 		os.Exit(1)
 	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			fmt.Printf("error: %s", err)
+		} else {
+			fmt.Printf("error: %s", err)
+		}
+	}
 }
 
 func startServer() {
 	//ctx, cancel := context.WithCancel(context.Background())
 
-	logger := conf.NewRootLogger()
+	logger := configuration.NewRootLogger()
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, os.Kill)

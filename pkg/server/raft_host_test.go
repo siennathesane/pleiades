@@ -29,135 +29,137 @@ type RaftHostTestSuite struct {
 	suite.Suite
 	logger zerolog.Logger
 	nh *dragonboat.NodeHost
+	defaultTimeout time.Duration
 }
 
-func (r *RaftHostTestSuite) SetupSuite() {
-	r.logger = utils.NewTestLogger(r.T())
+func (t *RaftHostTestSuite) SetupSuite() {
+	t.logger = utils.NewTestLogger(t.T())
+	t.defaultTimeout = 300*time.Millisecond
 }
 
-func (r *RaftHostTestSuite) SetupTest() {
-	r.nh = buildTestNodeHost(r.T())
+func (t *RaftHostTestSuite) SetupTest() {
+	t.nh = buildTestNodeHost(t.T())
 }
 
-func (r *RaftHostTestSuite) TearDownTest() {
-	r.nh = nil
+func (t *RaftHostTestSuite) TearDownTest() {
+	t.nh = nil
 }
 
-func (r *RaftHostTestSuite) TestCompact() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestCompact() {
+	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(r.T())
+	shardConfig := buildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
-	members[shardConfig.NodeID] = r.nh.RaftAddress()
+	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
-	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
+	utils.Wait(t.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
-	r.Require().NoError(err, "there must not be an error when fetching the client session")
-	r.Require().NotNil(cs, "the client session must not be nil")
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+	cs, err := t.nh.SyncGetSession(ctx, shardConfig.ClusterID)
+	t.Require().NoError(err, "there must not be an error when fetching the client session")
+	t.Require().NotNil(cs, "the client session must not be nil")
 	cancel()
 
 	for i := 0; i < 25; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
-		r.Require().NoError(err, "there must not be an error when proposing a new message")
+		proposeContext, _ := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+		_, err := t.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		t.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
 	}
 
 	// todo (sienna): figure out why it's being rejected.
 	err = host.Compact(shardConfig.ClusterID, shardConfig.NodeID)
-	r.Require().Error(err, "the request for log compaction must be rejected")
+	t.Require().Error(err, "the request for log compaction must be rejected")
 }
 
-func (r *RaftHostTestSuite) TestGetHostInfo() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestGetHostInfo() {
+	host := newRaftHost(t.nh, t.logger)
 
 	resp := host.GetHostInfo(HostInfoOption{SkipLogInfo: false})
-	r.Require().NotEmpty(resp, "the response must not be empty")
+	t.Require().NotEmpty(resp, "the response must not be empty")
 }
 
-func (r *RaftHostTestSuite) TestHasNodeInfo() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestHasNodeInfo() {
+	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(r.T())
+	shardConfig := buildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
-	members[shardConfig.NodeID] = r.nh.RaftAddress()
+	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
-	r.Require().NoError(err, "there must not be an error when starting the test state machine")
+	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(3000*time.Millisecond)
 
 	resp := host.HasNodeInfo(shardConfig.ClusterID, shardConfig.NodeID)
-	r.Require().True(resp, "the host must have a replica it started")
+	t.Require().True(resp, "the host must have a replica it started")
 }
 
-func (r *RaftHostTestSuite) TestId() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestId() {
+	host := newRaftHost(t.nh, t.logger)
 
 	hostname := host.Id()
-	r.logger.Info().Str("host-id", hostname).Msg("got host id")
-	r.Require().NotEmpty(hostname, "the hostname must not be empty")
+	t.logger.Info().Str("host-id", hostname).Msg("got host id")
+	t.Require().NotEmpty(hostname, "the hostname must not be empty")
 }
 
-func (r *RaftHostTestSuite) TestHostConfig() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestHostConfig() {
+	host := newRaftHost(t.nh, t.logger)
 
 	resp := host.HostConfig()
-	r.Require().NotEmpty(resp, "the host config must not be empty")
+	t.Require().NotEmpty(resp, "the host config must not be empty")
 }
 
-func (r *RaftHostTestSuite) TestRaftAddress() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestRaftAddress() {
+	host := newRaftHost(t.nh, t.logger)
 
 	resp := host.RaftAddress()
-	r.Require().NotEmpty(resp, "the raft address must not be empty")
+	t.Require().NotEmpty(resp, "the raft address must not be empty")
 }
 
-func (r *RaftHostTestSuite) TestSnapshot() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestSnapshot() {
+	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(r.T())
+	shardConfig := buildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
-	members[shardConfig.NodeID] = r.nh.RaftAddress()
+	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
-	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
+	utils.Wait(t.defaultTimeout)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	cs, err := r.nh.SyncGetSession(ctx, shardConfig.ClusterID)
-	r.Require().NoError(err, "there must not be an error when fetching the client session")
-	r.Require().NotNil(cs, "the client session must not be nil")
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+	cs, err := t.nh.SyncGetSession(ctx, shardConfig.ClusterID)
+	t.Require().NoError(err, "there must not be an error when fetching the client session")
+	t.Require().NotNil(cs, "the client session must not be nil")
 	cancel()
 
 	loops := 25
 	for i := 0; i < loops; i++ {
-		proposeContext, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-		_, err := r.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
-		r.Require().NoError(err, "there must not be an error when proposing a new message")
+		proposeContext, _ := context.WithTimeout(context.Background(), utils.Timeout(t.defaultTimeout))
+		_, err := t.nh.SyncPropose(proposeContext, cs, []byte(fmt.Sprintf("test-message-%d", i)))
+		t.Require().NoError(err, "there must not be an error when proposing a new message")
 		cs.ProposalCompleted()
 	}
 
 	// todo (sienna): figure why this doesn't work
-	//x := r.T().TempDir()
+	//x := t.T().TempDir()
 	//err = os.MkdirAll(x, os.FileMode(484))
-	//r.Require().NoError(err, "there must not be an error when creating the temp directory")
+	//t.Require().NoError(err, "there must not be an error when creating the temp directory")
 	//target := filepath.Join(x, "test.bin")
 
 	_, err = host.Snapshot(shardConfig.ClusterID, SnapshotOption{
 		ExportPath:                 ".", // replace with target once you figure this problem out
 		Exported:                   true,
 	}, 3000*time.Millisecond)
-	r.Require().NoError(err, "there must not be an error when requesting a snapshot")
+	t.Require().NoError(err, "there must not be an error when requesting a snapshot")
 }
 
-func (r *RaftHostTestSuite) TestStop() {
-	host := newRaftHost(r.nh, r.logger)
+func (t *RaftHostTestSuite) TestStop() {
+	host := newRaftHost(t.nh, t.logger)
 	host.Stop()
 }

@@ -1,0 +1,4 @@
+exclude_patterns:
+  - "**/*.pb.go"
+  - "**/*.pb.js"
+  - "**/*.pb.ts"
