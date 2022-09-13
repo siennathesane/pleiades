@@ -32,7 +32,7 @@ const (
 )
 
 var (
-	_ statemachine.IOnDiskStateMachine = &BBoltStateMachine{}
+	_ statemachine.IOnDiskStateMachine = (*BBoltStateMachine)(nil)
 
 	ErrBadUpdate = errors.New("bad update")
 )
@@ -45,7 +45,11 @@ type BBoltStateMachine struct {
 	store  *bboltStore
 }
 
-func NewBBoltStateMachine(shardId, replicaId uint64) *BBoltStateMachine {
+func NewBBoltFSM(shardId, replicaId uint64) statemachine.IOnDiskStateMachine {
+	return newBBoltStateMachine(shardId, replicaId)
+}
+
+func newBBoltStateMachine(shardId, replicaId uint64) *BBoltStateMachine {
 	return &BBoltStateMachine{
 		ShardId:   shardId,
 		ReplicaId: replicaId,

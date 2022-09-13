@@ -56,7 +56,7 @@ func (smt *TransactionManagerTestSuite) SetupSuite() {
 }
 
 func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
-	sm := newSessionManager(smt.nh, smt.logger)
+	sm := newTransactionManager(smt.nh, smt.logger)
 
 	transaction := sm.GetNoOpTransaction(smt.shardId)
 	smt.Require().NotNil(transaction, "the client transaction must not be nil")
@@ -74,7 +74,7 @@ func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
 }
 
 func (smt *TransactionManagerTestSuite) TestGetTransaction() {
-	sm := newSessionManager(smt.nh, smt.logger)
+	sm := newTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
@@ -94,7 +94,7 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 }
 
 func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
-	sm := newSessionManager(smt.nh, smt.logger)
+	sm := newTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
@@ -118,7 +118,7 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 }
 
 func (smt *TransactionManagerTestSuite) TestCommit() {
-	sm := newSessionManager(smt.nh, smt.logger)
+	sm := newTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)

@@ -825,7 +825,7 @@ var Transactions_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KVStoreServiceClient interface {
 	CreateAccount(ctx context.Context, in *database.CreateAccountRequest, opts ...grpc.CallOption) (*database.CreateAccountReply, error)
-	GetAccountInfo(ctx context.Context, in *database.GetAccountDescriptorRequest, opts ...grpc.CallOption) (*database.GetAccountDescriptorReply, error)
+	//  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
 	DeleteAccount(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
 	CreateBucket(ctx context.Context, in *database.CreateBucketRequest, opts ...grpc.CallOption) (*database.CreateBucketReply, error)
 	DeleteBucket(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
@@ -845,15 +845,6 @@ func NewKVStoreServiceClient(cc grpc.ClientConnInterface) KVStoreServiceClient {
 func (c *kVStoreServiceClient) CreateAccount(ctx context.Context, in *database.CreateAccountRequest, opts ...grpc.CallOption) (*database.CreateAccountReply, error) {
 	out := new(database.CreateAccountReply)
 	err := c.cc.Invoke(ctx, "/server.KVStoreService/CreateAccount", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *kVStoreServiceClient) GetAccountInfo(ctx context.Context, in *database.GetAccountDescriptorRequest, opts ...grpc.CallOption) (*database.GetAccountDescriptorReply, error) {
-	out := new(database.GetAccountDescriptorReply)
-	err := c.cc.Invoke(ctx, "/server.KVStoreService/GetAccountInfo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -919,7 +910,7 @@ func (c *kVStoreServiceClient) DeleteKey(ctx context.Context, in *database.Delet
 // for forward compatibility
 type KVStoreServiceServer interface {
 	CreateAccount(context.Context, *database.CreateAccountRequest) (*database.CreateAccountReply, error)
-	GetAccountInfo(context.Context, *database.GetAccountDescriptorRequest) (*database.GetAccountDescriptorReply, error)
+	//  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
 	DeleteAccount(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
 	CreateBucket(context.Context, *database.CreateBucketRequest) (*database.CreateBucketReply, error)
 	DeleteBucket(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
@@ -935,9 +926,6 @@ type UnimplementedKVStoreServiceServer struct {
 
 func (UnimplementedKVStoreServiceServer) CreateAccount(context.Context, *database.CreateAccountRequest) (*database.CreateAccountReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
-}
-func (UnimplementedKVStoreServiceServer) GetAccountInfo(context.Context, *database.GetAccountDescriptorRequest) (*database.GetAccountDescriptorReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccountInfo not implemented")
 }
 func (UnimplementedKVStoreServiceServer) DeleteAccount(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccount not implemented")
@@ -984,24 +972,6 @@ func _KVStoreService_CreateAccount_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KVStoreServiceServer).CreateAccount(ctx, req.(*database.CreateAccountRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _KVStoreService_GetAccountInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(database.GetAccountDescriptorRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(KVStoreServiceServer).GetAccountInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/server.KVStoreService/GetAccountInfo",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KVStoreServiceServer).GetAccountInfo(ctx, req.(*database.GetAccountDescriptorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1124,10 +1094,6 @@ var KVStoreService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAccount",
 			Handler:    _KVStoreService_CreateAccount_Handler,
-		},
-		{
-			MethodName: "GetAccountInfo",
-			Handler:    _KVStoreService_GetAccountInfo_Handler,
 		},
 		{
 			MethodName: "DeleteAccount",

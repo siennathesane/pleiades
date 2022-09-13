@@ -16,6 +16,7 @@ syntax = "proto3";
 package database;
 option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 import "google/protobuf/timestamp.proto";
+import "api/v1/database/transactions.proto";
 
 message KVStoreWrapper {
   uint64 account = 1;
@@ -64,23 +65,28 @@ message KVStoreWrapper {
 message CreateAccountRequest {
   uint64 account_id = 1;
   string owner = 2;
+  Transaction transaction = 3;
 }
 
 message CreateAccountReply {
   AccountDescriptor account_descriptor = 1;
+  Transaction transaction = 2;
 }
 
 message DeleteAccountRequest {
   uint64 account_id = 1;
   string owner = 2;
+  Transaction transaction = 3;
 }
 
 message DeleteAccountReply {
   bool ok = 1;
+  Transaction transaction = 2;
 }
 
 message GetAccountDescriptorRequest {
   uint64 account_id = 1;
+  Transaction transaction = 3;
 }
 
 message GetAccountDescriptorReply {
@@ -100,19 +106,23 @@ message CreateBucketRequest {
   uint64 account_id = 1;
   string name = 2;
   string owner = 3;
+  Transaction transaction = 4;
 }
 
 message CreateBucketReply {
   BucketDescriptor bucket_descriptor = 1;
+  Transaction transaction = 2;
 }
 
 message DeleteBucketRequest {
   uint64 account_id = 1;
   string name = 2;
+  Transaction transaction = 3;
 }
 
 message DeleteBucketReply {
   bool ok = 1;
+  Transaction transaction = 2;
 }
 
 message BucketDescriptor {
@@ -127,6 +137,7 @@ message GetKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
   string key = 3;
+  Transaction transaction = 4;
 }
 
 message GetKeyReply {
@@ -137,6 +148,7 @@ message PutKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
   KeyValue key_value_pair = 3;
+  Transaction transaction = 4;
 }
 
 message PutKeyReply {}
@@ -145,10 +157,12 @@ message DeleteKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
   string key = 3;
+  Transaction transaction = 4;
 }
 
 message DeleteKeyReply {
   bool ok = 1;
+  Transaction transaction =3;
 }
 
 message KeyValue {

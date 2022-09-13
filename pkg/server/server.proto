@@ -37,7 +37,6 @@ service Transactions {
 
 service KVStoreService {
   rpc CreateAccount(database.CreateAccountRequest) returns (database.CreateAccountReply) {}
-//  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
   rpc DeleteAccount(database.DeleteBucketRequest) returns (database.DeleteBucketReply) {}
   rpc CreateBucket(database.CreateBucketRequest) returns (database.CreateBucketReply) {}
   rpc DeleteBucket(database.DeleteBucketRequest) returns (database.DeleteBucketReply) {}
