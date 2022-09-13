@@ -29,7 +29,7 @@ var (
 
 func newBboltStoreManager(tm *raftTransactionManager, nh *dragonboat.NodeHost, logger zerolog.Logger) *bboltStoreManager {
 	l := logger.With().Str("component", "store-manager").Logger()
-	return &bboltStoreManager{l, tm, nh, &routing.Shard{}, 1000*time.Millisecond}
+	return &bboltStoreManager{l, tm, nh, &routing.Shard{}, 1000 * time.Millisecond}
 }
 
 type bboltStoreManager struct {
@@ -181,8 +181,81 @@ func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest
 }
 
 func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
-	//TODO implement me
-	panic("implement me")
+	account := request.GetAccountId()
+	if account == 0 {
+		s.logger.Trace().Msg("empty account value")
+		return &database.CreateBucketReply{}, kv.ErrInvalidAccount
+	}
+
+	owner := request.GetOwner()
+	if owner == "" {
+		s.logger.Trace().Msg("empty owner value")
+		return &database.CreateBucketReply{}, kv.ErrInvalidOwner
+	}
+
+	bucketName := request.GetName()
+	if owner == "" {
+		s.logger.Trace().Msg("empty bucket name")
+		return &database.CreateBucketReply{}, kv.ErrInvalidBucketName
+	}
+
+	req := &database.KVStoreWrapper{
+		Account: request.GetAccountId(),
+		Bucket:  bucketName,
+		Typ:     database.KVStoreWrapper_CREATE_BUCKET_REQUEST,
+		Payload: &database.KVStoreWrapper_CreateBucketRequest{
+			CreateBucketRequest: request,
+		},
+	}
+
+	cmd, err := req.MarshalVT()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't marshal request")
+		return &database.CreateBucketReply{}, errors.Wrap(err, "can't marshal request")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
+	defer cancel()
+
+	var cs *client.Session
+	if request.Transaction != nil {
+		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+	} else {
+		shard := s.shardRouter.AccountToShard(account)
+		cs = s.nh.GetNoOPSession(shard)
+	}
+
+	result, err := s.nh.SyncPropose(ctx, cs, cmd)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't apply message")
+		return &database.CreateBucketReply{}, errors.Wrap(err, "can't apply message")
+	}
+
+	if cs.SeriesID != client.NoOPSeriesID {
+		cs.ProposalCompleted()
+	}
+
+	resp := &database.KVStoreWrapper{}
+	err = resp.UnmarshalVT(result.Data)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't unmarshal response")
+		return &database.CreateBucketReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	response := &database.CreateBucketReply{}
+	if resp.GetCreateBucketReply() == nil {
+		response.BucketDescriptor = &database.BucketDescriptor{}
+	} else {
+		response.BucketDescriptor = resp.GetCreateBucketReply().GetBucketDescriptor()
+	}
+
+	if request.Transaction == nil {
+		response.Transaction = &database.Transaction{}
+	} else {
+		response.Transaction = csToTransaction(*cs)
+	}
+
+	return response, nil
 }
 
 func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {

@@ -60,7 +60,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
-		utils.Wait(100 *time.Millisecond)
+		utils.Wait(100 * time.Millisecond)
 	}
 	wg.Wait()
 }
@@ -82,7 +82,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 	t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// create 20 new accounts
-	for i := testBaseAccountId+2; i < testBaseAccountId+2+20; i++ {
+	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
 		resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
@@ -119,16 +119,69 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 	t.Require().NotNil(resp, "the response must not be nil")
 	t.Require().True(resp.Ok, "the request must be okay")
 
-	// create 20 new accounts
-	//for i := testBaseAccountId+2; i < testBaseAccountId+2+20; i++ {
-	//	resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
-	//		AccountId:   i,
-	//		Owner:       testOwner,
-	//		Transaction: nil,
-	//	})
-	//	t.Require().NoError(err, "there must not be an error when creating an account")
-	//	t.Require().NotNil(resp, "the response must not be nil")
-	//	t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
-	//	t.Require().NotEmpty(i, resp.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
-	//}
+	// create and delete 20 new accounts
+	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
+		createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+			AccountId:   i,
+			Owner:       testOwner,
+			Transaction: nil,
+		})
+		t.Require().NoError(err, "there must not be an error when creating an account")
+		t.Require().NotNil(createAccountReply, "the response must not be nil")
+		t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
+		t.Require().NotEmpty(i, createAccountReply.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
+
+		deleteAccountReply, err := storeManager.DeleteAccount(&database.DeleteAccountRequest{
+			AccountId:   i,
+			Owner:       testOwner,
+			Transaction: nil,
+		})
+		t.Require().NoError(err, "there must not be an error when creating an account")
+		t.Require().NotNil(deleteAccountReply, "the response must not be nil")
+		t.Require().True(deleteAccountReply.Ok, "the request must be okay")
+	}
+}
+
+func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
+	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+
+	testBaseAccountId := rand.Uint64()
+	testBucketName := utils.RandomString(10)
+	testOwner := "test@test.com"
+
+	// no transaction
+	createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating an account")
+	t.Require().NotNil(createAccountReply, "the response must not be nil")
+	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
+
+	// no transaction
+	createBucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Name:        testBucketName,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating an account")
+	t.Require().NotNil(createBucketReply, "the response must not be nil")
+	t.Require().NotEmpty(createBucketReply.GetBucketDescriptor(), "the account descriptor must not be empty")
+
+	//create 20 new buckets
+	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
+		testBucketName = utils.RandomString(10)
+		resp, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+			AccountId:   testBaseAccountId,
+			Owner:       testOwner,
+			Name:        testBucketName,
+			Transaction: nil,
+		})
+		t.Require().NoError(err, "there must not be an error when creating an account")
+		t.Require().NotNil(resp, "the response must not be nil")
+		t.Require().NotEmpty(resp.GetBucketDescriptor(), "the bucket descriptor must not be empty")
+		t.Require().Empty(resp.GetBucketDescriptor().GetKeyCount(), "the key count must be zero")
+	}
 }
