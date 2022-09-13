@@ -259,8 +259,72 @@ func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) 
 }
 
 func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
-	//TODO implement me
-	panic("implement me")
+	account := request.GetAccountId()
+	if account == 0 {
+		s.logger.Trace().Msg("empty account value")
+		return &database.DeleteBucketReply{}, kv.ErrInvalidAccount
+	}
+
+	name := request.GetName()
+	if name == "" {
+		s.logger.Trace().Msg("empty name value")
+		return &database.DeleteBucketReply{}, kv.ErrInvalidOwner
+	}
+
+	req := &database.KVStoreWrapper{
+		Account: request.GetAccountId(),
+		Bucket: name,
+		Typ:     database.KVStoreWrapper_DELETE_BUCKET_REQUEST,
+		Payload: &database.KVStoreWrapper_DeleteBucketRequest{
+			DeleteBucketRequest: request,
+		},
+	}
+
+	cmd, err := req.MarshalVT()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't marshal request")
+		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't marshal request")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
+	defer cancel()
+
+	var cs *client.Session
+	if request.Transaction != nil {
+		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+	} else {
+		shard := s.shardRouter.AccountToShard(account)
+		cs = s.nh.GetNoOPSession(shard)
+	}
+
+	result, err := s.nh.SyncPropose(ctx, cs, cmd)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't apply message")
+		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't apply message")
+	}
+
+	if cs.SeriesID != client.NoOPSeriesID {
+		cs.ProposalCompleted()
+	}
+
+	resp := &database.KVStoreWrapper{}
+	err = resp.UnmarshalVT(result.Data)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't unmarshal response")
+		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	response := &database.DeleteBucketReply{
+		Ok: resp.GetDeleteBucketReply().GetOk(),
+	}
+
+	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+		response.Transaction = &database.Transaction{}
+	} else {
+		response.Transaction = csToTransaction(*cs)
+	}
+
+	return response, nil
 }
 
 func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error) {
