@@ -60,16 +60,30 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
 
-	testAccountId := rand.Uint64()
+	testBaseAccountId := rand.Uint64()
 	//testBucketId := utils.RandomString(10)
 	testOwner := "test@test.com"
 
 	// no transaction
 	resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
-		AccountId:   testAccountId,
+		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
 	})
 	t.Require().NoError(err, "there must not be an error when creating an account")
 	t.Require().NotNil(resp, "the response must not be nil")
+	t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
+
+	// create 20 new accounts
+	for i := testBaseAccountId+2; i < testBaseAccountId+2+20; i++ {
+		resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+			AccountId:   i,
+			Owner:       testOwner,
+			Transaction: nil,
+		})
+		t.Require().NoError(err, "there must not be an error when creating an account")
+		t.Require().NotNil(resp, "the response must not be nil")
+		t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
+		t.Require().NotEmpty(i, resp.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
+	}
 }
