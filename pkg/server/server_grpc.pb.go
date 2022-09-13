@@ -825,7 +825,6 @@ var Transactions_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KVStoreServiceClient interface {
 	CreateAccount(ctx context.Context, in *database.CreateAccountRequest, opts ...grpc.CallOption) (*database.CreateAccountReply, error)
-	//  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
 	DeleteAccount(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
 	CreateBucket(ctx context.Context, in *database.CreateBucketRequest, opts ...grpc.CallOption) (*database.CreateBucketReply, error)
 	DeleteBucket(ctx context.Context, in *database.DeleteBucketRequest, opts ...grpc.CallOption) (*database.DeleteBucketReply, error)
@@ -910,7 +909,6 @@ func (c *kVStoreServiceClient) DeleteKey(ctx context.Context, in *database.Delet
 // for forward compatibility
 type KVStoreServiceServer interface {
 	CreateAccount(context.Context, *database.CreateAccountRequest) (*database.CreateAccountReply, error)
-	//  rpc GetAccountInfo(database.GetAccountDescriptorRequest) returns (database.GetAccountDescriptorReply) {}
 	DeleteAccount(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
 	CreateBucket(context.Context, *database.CreateBucketRequest) (*database.CreateBucketReply, error)
 	DeleteBucket(context.Context, *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)

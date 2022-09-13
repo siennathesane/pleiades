@@ -11,6 +11,7 @@ package server
 
 import (
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 
@@ -50,18 +51,24 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	viper.SetDefault("datastore.basePath", t.T().TempDir())
 
 	// shardLimit+1
+	var wg sync.WaitGroup
 	for i := uint64(1); i < 257; i++ {
-		err := t.sm.NewShard(i, rand.Uint64(), BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
-		t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
-		utils.Wait(300 * time.Millisecond)
+		go func() {
+			wg.Add(1)
+			defer wg.Done()
+			err := t.sm.NewShard(i, rand.Uint64(), BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
+			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
+			utils.Wait(t.defaultTimeout)
+		}()
+		utils.Wait(100 *time.Millisecond)
 	}
+	wg.Wait()
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
-	//testBucketId := utils.RandomString(10)
 	testOwner := "test@test.com"
 
 	// no transaction
@@ -86,4 +93,42 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 		t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
 		t.Require().NotEmpty(i, resp.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
 	}
+}
+
+func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
+	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+
+	testBaseAccountId := rand.Uint64()
+	testOwner := "test@test.com"
+
+	// no transaction
+	_, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating an account")
+
+	// no transaction
+	resp, err := storeManager.DeleteAccount(&database.DeleteAccountRequest{
+		AccountId:   testBaseAccountId,
+		Owner:       testOwner,
+		Transaction: nil,
+	})
+	t.Require().NoError(err, "there must not be an error when creating an account")
+	t.Require().NotNil(resp, "the response must not be nil")
+	t.Require().True(resp.Ok, "the request must be okay")
+
+	// create 20 new accounts
+	//for i := testBaseAccountId+2; i < testBaseAccountId+2+20; i++ {
+	//	resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	//		AccountId:   i,
+	//		Owner:       testOwner,
+	//		Transaction: nil,
+	//	})
+	//	t.Require().NoError(err, "there must not be an error when creating an account")
+	//	t.Require().NotNil(resp, "the response must not be nil")
+	//	t.Require().NotEmpty(resp.GetAccountDescriptor(), "the account descriptor must not be empty")
+	//	t.Require().NotEmpty(i, resp.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
+	//}
 }
