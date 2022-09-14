@@ -79,6 +79,22 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 	return srv, nil
 }
 
+func (s *Server) GetRaftHost() IHost {
+	return s.raftHost
+}
+
+func (s *Server) GetRaftTransactionManager() ITransactionManager {
+return s.raftTransactionManager
+}
+
+func (s *Server) GetRaftKVStore() IKVStore{
+return s.bboltStoreManager
+}
+
+func (s *Server) GetRaftShardManager() IShardManager {
+	return s.raftShard
+}
+
 func (s *Server) Stop() {
 	s.nh.Stop()
 }
