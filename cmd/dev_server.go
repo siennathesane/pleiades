@@ -12,10 +12,14 @@ package cmd
 import (
 	"net"
 	"os"
+	"sync"
+	"time"
 
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/server"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	dconfig "github.com/lni/dragonboat/v3/config"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 )
@@ -55,12 +59,22 @@ func init() {
 }
 
 func startServer(cmd *cobra.Command, args []string) {
-	logger := configuration.NewRootLogger()
+	var logger zerolog.Logger
+	if debug {
+		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
+	} else {
+		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
+	}
+
 	logger.Info().Msg("hello from boulder")
 
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't parse flags")
+	}
+
+	if debug {
+
 	}
 
 	nhc := dconfig.NodeHostConfig{
@@ -99,6 +113,20 @@ func startServer(cmd *cobra.Command, args []string) {
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't create pleiades server")
 	}
+
+	var wg sync.WaitGroup
+	// shardLimit+1
+	for i := uint64(1); i < 257; i++ {
+		go func() {
+			wg.Add(1)
+			defer wg.Done()
+			err = s.GetRaftShardManager().NewShard(i, i*257, server.BBoltStateMachineType, 300*time.Millisecond)
+		}()
+		utils.Wait(100 * time.Millisecond)
+	}
+	wg.Wait()
+
+	logger.Debug().Msg("state machines finished, starting server")
 
 	listen, err := net.Listen("tcp", config.Server.Host.GrpcListenAddress)
 	if err != nil {

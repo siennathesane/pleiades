@@ -10,7 +10,6 @@
 package cmd
 
 import (
-	"fmt"
 	"path/filepath"
 	"runtime"
 
@@ -33,13 +32,12 @@ commands can't be trusted for anything other than development
 purposes.
 
 DO NOT USE THEM FOR PRODUCTION`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("dev called")
-	},
 }
 
 var (
 	serverConfig    *configuration.ServerConfig
+
+	serverAddr string
 )
 
 func init() {
@@ -78,6 +76,7 @@ func init() {
 	//goland:noinspection GoBoolExpressions
 	if runtime.GOOS == "darwin" {
 		serverConfig.Host.GrpcListenAddress = "0.0.0.0:50000"
+		devCmd.PersistentFlags().StringVar(&serverAddr, "server", "localhost:50000", "server to talk to")
 	}
 
 	devCmd.PersistentFlags().StringVar(&serverConfig.Host.CaFile, "ca-cert", serverConfig.Host.CaFile, "tls ca")

@@ -26,7 +26,6 @@ func init() {
 		With().
 		Str("sha", pkg.Sha).
 		Timestamp().
-		Caller().
 		Logger().
 		Level(zlog.InfoLevel)
 }
