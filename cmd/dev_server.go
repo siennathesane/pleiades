@@ -10,17 +10,14 @@
 package cmd
 
 import (
-	"fmt"
+	"net"
 	"os"
-	"path/filepath"
-	"runtime"
 
-	"github.com/mxplusb/cliflags/gen/gpflag"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mitchellh/go-homedir"
-	"github.com/rs/zerolog/log"
+	"github.com/mxplusb/pleiades/pkg/server"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"google.golang.org/grpc"
 )
 
 // serverCmd represents the server command
@@ -38,53 +35,80 @@ the cloud offering. this command is unsupported beyond
 filing bugs against it the team may or may not get to
 
 DO NOT USE THIS IN PRODUCTION`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
-	},
+	Run: startServer,
 }
+
+var reset = true
 
 func init() {
 	devCmd.AddCommand(serverCmd)
 
-	cfg := configuration.DefaultConfiguration()
-cfg.Host.MutualTLS = false
+	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.BasePath, "datastore-base-path", serverConfig.Datastore.BasePath, "set the default base directory")
+	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.LogDir, "datastore-logs-dir", serverConfig.Datastore.LogDir, "logs for state machines")
+	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.DataDir, "datastore-data-dir", serverConfig.Datastore.DataDir, "data files for state machines")
 
-	// if we're on a mac, set different paths for the default config
-	//goland:noinspection GoBoolExpressions
-	if runtime.GOOS == "darwin" {
-		dir, err := homedir.Dir()
+	serverCmd.LocalFlags().Uint64Var(&serverConfig.Host.DeploymentId, "deployment-id", serverConfig.Host.DeploymentId, "deployment id for this host")
+	serverCmd.LocalFlags().StringVar(&serverConfig.Host.GrpcListenAddress, "grpc-listen-addr", serverConfig.Host.GrpcListenAddress, "grpc listen address")
+	serverCmd.LocalFlags().StringVar(&serverConfig.Host.ListenAddress, "listen-addr", serverConfig.Host.ListenAddress, "listen address")
+	serverCmd.LocalFlags().BoolVar(&serverConfig.Host.NotifyCommit, "notify-commit", serverConfig.Host.NotifyCommit, "enable notification on commit")
+	serverCmd.LocalFlags().Uint64Var(&serverConfig.Host.Rtt, "rtt", serverConfig.Host.DeploymentId, "average round-trip-time in milliseconds")
+}
+
+func startServer(cmd *cobra.Command, args []string) {
+	logger := configuration.NewRootLogger()
+	logger.Info().Msg("hello from boulder")
+
+	err := cmd.Flags().Parse(args)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't parse flags")
+	}
+
+	nhc := dconfig.NodeHostConfig{
+		DeploymentID:   config.Server.Host.DeploymentId,
+		WALDir:         config.Server.Datastore.LogDir,
+		NodeHostDir:    config.Server.Datastore.DataDir,
+		RTTMillisecond: config.Server.Host.Rtt,
+		RaftAddress:    config.Server.Host.ListenAddress,
+		EnableMetrics:  true,
+		NotifyCommit:   config.Server.Host.NotifyCommit,
+	}
+
+	if config.Server.Host.MutualTLS {
+		nhc.MutualTLS = config.Server.Host.MutualTLS
+		nhc.CAFile = config.Server.Host.CaFile
+		nhc.CertFile = config.Server.Host.CertFile
+		nhc.KeyFile = config.Server.Host.KeyFile
+	}
+
+	if reset {
+		err := os.RemoveAll(config.Server.Datastore.LogDir)
 		if err != nil {
-			log.Fatal().Err(err).Msg("failed to get home directory")
+			logger.Fatal().Err(err).Str("dir", config.Server.Datastore.LogDir).Msg("can't remove directory")
 		}
-
-		rootDir := filepath.Join(dir, "Library", "pleiades")
-		cfg.Host.DataDir = filepath.Join(rootDir, "logs")
-		cfg.Host.LogDir = filepath.Join(rootDir, "shards")
-		cfg.Host.CaFile = ""
-		cfg.Host.CertFile = ""
-		cfg.Host.KeyFile = ""
-
-		cfg.Datastore.BasePath = filepath.Join(rootDir, "pleiades")
-	}
-
-	if err := gpflag.ParseTo(cfg, serverCmd.Flags()); err != nil {
-		log.Logger.Err(err).Msg("cannot properly parse command strings")
-		os.Exit(1)
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {} else {
-			log.Logger.Error().Err(err).Msg("configuration file not found")
+		err = os.RemoveAll(config.Server.Datastore.DataDir)
+		if err != nil {
+			logger.Fatal().Err(err).Str("dir", config.Server.Datastore.DataDir).Msg("can't remove directory")
 		}
 	}
 
-	// Here you will define your flags and configuration settings.
+	var opts []grpc.ServerOption
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
+	gServer := grpc.NewServer(opts...)
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	s, err := server.New(nhc, gServer, logger)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't create pleiades server")
+	}
+
+	listen, err := net.Listen("tcp", config.Server.Host.GrpcListenAddress)
+	if err != nil {
+		logger.Fatal().Err(err).Str("listen-addr", config.Server.Host.GrpcListenAddress).Msg("can't start listener")
+	}
+
+	err = gServer.Serve(listen)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't run grpc server")
+	}
+
+	s.Stop()
 }

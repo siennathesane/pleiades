@@ -11,11 +11,10 @@ package cmd
 import (
 	"os"
 
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
-
-
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,11 +40,20 @@ func Execute() {
 	}
 }
 
+var (
+	defaultBasePath string
+	config          = &configuration.Configuration{
+		ConfigFilePath: configuration.DefaultBaseConfigPath,
+	}
+)
+
 func init() {
-	viper.SetConfigName("pleiades") // name of config file (without extension)
-	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath("/etc/pleiades/")   // path to look for the config file in
-	viper.AddConfigPath("$HOME/.pleiades")  // call multiple times to add many search paths
+	defaultBasePath = configuration.DefaultBaseConfigPath
+
+	viper.SetConfigName("pleiades")        // name of config file (without extension)
+	viper.SetConfigType("yaml")            // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("/etc/pleiades/")  // path to look for the config file in
+	viper.AddConfigPath("$HOME/.pleiades") // call multiple times to add many search paths
 	viper.AddConfigPath(".")               // optionally look for config in the working directory
 
 	// Here you will define your flags and configuration settings.
@@ -56,7 +64,4 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-

@@ -9,44 +9,38 @@
 
 package configuration
 
+const (
+	DefaultBaseDataPath   string = "/var/pleiades"
+	DefaultBaseConfigPath string = "/etc/pleiades"
+)
+
 type Configuration struct {
-	Datastore *Storage   `json:"datastore,omitempty" yaml:"datastore,omitempty"`
-	Host      HostConfig `json:"host,omitempty" yaml:"host,omitempty"`
+	ConfigFilePath string       `flag:"config" default:"/etc/pleiades/config.yaml" usage:"config file location"`
+	Server         *ServerConfig `json:"server" yaml:"server" mapstructure:"server"`
+	Client         *ClientConfig `json:"client" yaml:"client" mapstructure:"client"`
 }
 
-type Storage struct {
-	BasePath string `json:"basePath,omitempty" yaml:"basePath,omitempty"`
+type ClientConfig struct{}
+
+type ServerConfig struct {
+	Datastore *Datastore `json:"datastore,omitempty" yaml:"datastore,omitempty" mapstructure:"datastore"`
+	Host      *Host      `json:"host,omitempty" yaml:"host,omitempty" mapstructure:"host"`
 }
 
-type HostConfig struct {
-	DeploymentId  uint64 `desc:"deployment id of the node host"`
-	LogDir  string `desc:"wal log directory"`
-	DataDir       string `desc:"data directory"`
-	Rtt           uint64 `flag:"rtt" desc:"average round trip time, plus processing, in milliseconds to other hosts in the data centre"`
-	ListenAddress string `desc:"address to listen on"`
-	MutualTLS     bool   `desc:"require mutual tls?"`
-	CaFile        string `desc:"location of the certificate authority file"`
-	CertFile      string `desc:"location of the tls cert file"`
-	KeyFile       string `desc:"location of the tls key file"`
-	NotifyCommit  bool   `desc:"notify consumers of when the data is committed?"`
+type Datastore struct {
+	BasePath string `flag:"base-path" default:"/var/pleiades" usage:"set the default base directory" json:"basePath,omitempty" yaml:"basePath,omitempty" mapstructure:""`
+	LogDir   string `flag:"log-dir" default:"logs" usage:"folder path for the logs, relative to the base path" mapstructure:"" json:"logDir" yaml:"logDir"`
+	DataDir  string `flag:"data-dir" default:"data" usage:"folder path for the data, relative to the base path" mapstructure:"" json:"dataDir" yaml:"dataDir"`
 }
 
-func DefaultConfiguration() *Configuration {
-	return &Configuration{
-		Datastore: &Storage{
-			BasePath: "/var/pleiades/shards",
-		},
-		Host: HostConfig{
-			DeploymentId:  1,
-			LogDir:  "/var/pleiades/logs",
-			DataDir:       "/var/pleiades/shards",
-			Rtt:           10,
-			ListenAddress: "0.0.0.0:5000",
-			MutualTLS:     true,
-			CaFile:        "/etc/pleiades/ca.pem",
-			CertFile:      "/etc/pleiades/cert.pem",
-			KeyFile:       "/etc/pleiades/key.pem",
-			NotifyCommit:  true,
-		},
-	}
+type Host struct {
+	CaFile        string `flag:"ca-file" default:"/etc/pleiades/ca.pem" usage:"location of the certificate authority file" json:"caFile" yaml:"caFile" mapstructure:""`
+	CertFile      string `flag:"cert-file" default:"/etc/pleiades/cert.pem" usage:"location of the tls cert file" json:"certFile" yaml:"certFile" mapstructure:""`
+	DeploymentId  uint64 `flag:"deployment-id" default:"1" usage:"deployment id of this host" json:"deploymentId" yaml:"deploymentId" mapstructure:""`
+	KeyFile       string `flag:"key-file" default:"/etc/pleiades/key.pem" usage:"location of the tls key file" json:"keyFile" yaml:"keyFile" mapstructure:""`
+	ListenAddress string `flag:"listen-address" default:"0.0.0.0:5001" usage:"address to listen on" json:"listenAddress" yaml:"listenAddress" mapstructure:""`
+	GrpcListenAddress string `flag:"grpc-listen-address" default:"0.0.0.0:5000" usage:"address to listen on" json:"grpcListenAddress" yaml:"grpcListenAddress" mapstructure:""`
+	MutualTLS     bool   `flag:"mtls" default:"false" usage:"require mutual tls?" mapstructure:""`
+	NotifyCommit  bool   `flag:"notify-commit" default:"false" usage:"notify consumers of when the data is committed?" json:"notifyCommit" yaml:"notifyCommit" mapstructure:""`
+	Rtt           uint64 `flag:"rtt" default:"10" usage:"average round trip time, plus processing, in milliseconds to other hosts in the data centre" json:"rtt" yaml:"rtt" mapstructure:""`
 }
