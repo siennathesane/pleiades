@@ -21,8 +21,8 @@ import (
 var _ ShardManagerServer = (*raftShardGrpcAdapter)(nil)
 
 type raftShardGrpcAdapter struct {
-	logger zerolog.Logger
-	clusterManager IShardManager
+	logger       zerolog.Logger
+	shardManager IShardManager
 }
 
 func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raft.AddReplicaRequest) (*raft.AddReplicaReply, error) {
@@ -32,7 +32,7 @@ func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raft.Add
 
 	timeout := time.Duration(request.GetTimeout()) * time.Millisecond
 
-	err := r.clusterManager.AddReplica(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
+	err := r.shardManager.AddReplica(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add replica")
 		return nil, err
@@ -47,7 +47,7 @@ func (r *raftShardGrpcAdapter) AddReplicaObserver(ctx context.Context, request *
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.AddReplicaObserver(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
+	err := r.shardManager.AddReplicaObserver(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add shard observer")
 		return nil, err
@@ -62,7 +62,7 @@ func (r *raftShardGrpcAdapter) AddReplicaWitness(ctx context.Context, request *r
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.AddReplicaWitness(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
+	err := r.shardManager.AddReplicaWitness(request.GetShardId(), request.GetReplicaId(), request.Hostname, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add shard witness")
 		return nil, err
@@ -75,7 +75,7 @@ func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raft.Ge
 		return nil, err
 	}
 
-	leader, ok, err := r.clusterManager.GetLeaderId(request.GetShardId())
+	leader, ok, err := r.shardManager.GetLeaderId(request.GetShardId())
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't get leader id")
 		return nil, err
@@ -91,7 +91,7 @@ func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raf
 		return nil, ErrSystemShardRange
 	}
 
-	membership, err := r.clusterManager.GetShardMembers(request.ShardId)
+	membership, err := r.shardManager.GetShardMembers(request.ShardId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't get shard members")
 		return nil, err
@@ -128,7 +128,7 @@ func (r *raftShardGrpcAdapter) NewShard(ctx context.Context, request *raft.NewSh
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.NewShard(request.GetShardId(), request.GetReplicaId(), t, timeout)
+	err := r.shardManager.NewShard(request.GetShardId(), request.GetReplicaId(), t, timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't create new shard")
 		return nil, err
@@ -141,7 +141,7 @@ func (r *raftShardGrpcAdapter) RemoveData(ctx context.Context, request *raft.Rem
 		return nil, err
 	}
 
-	err := r.clusterManager.RemoveData(request.ShardId, request.ReplicaId)
+	err := r.shardManager.RemoveData(request.ShardId, request.ReplicaId)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't remove data from the host")
 		return nil, err
@@ -156,7 +156,7 @@ func (r *raftShardGrpcAdapter) RemoveReplica(ctx context.Context, request *raft.
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
-	err := r.clusterManager.RemoveReplica(request.GetShardId(), request.GetReplicaId(), timeout)
+	err := r.shardManager.RemoveReplica(request.GetShardId(), request.GetReplicaId(), timeout)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't delete replica")
 		return nil, err
@@ -179,7 +179,7 @@ func (r *raftShardGrpcAdapter) StartReplica(ctx context.Context, request *raft.S
 		return nil, ErrUnsupportedStateMachine
 	}
 
-	err := r.clusterManager.StartReplica(request.GetShardId(), request.GetReplicaId(), t)
+	err := r.shardManager.StartReplica(request.GetShardId(), request.GetReplicaId(), t)
 
 	return &raft.StartReplicaReply{}, err
 }
@@ -199,7 +199,7 @@ func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request
 		return nil, ErrUnsupportedStateMachine
 	}
 
-	err := r.clusterManager.StartReplicaObserver(request.GetShardId(), request.GetReplicaId(), t)
+	err := r.shardManager.StartReplicaObserver(request.GetShardId(), request.GetReplicaId(), t)
 
 	return &raft.StartReplicaReply{}, err
 }
@@ -209,7 +209,7 @@ func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raft.St
 		return nil, ErrSystemShardRange
 	}
 
-	_, err := r.clusterManager.StopReplica(request.GetShardId())
+	_, err := r.shardManager.StopReplica(request.GetShardId())
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't stop replica")
 		return nil, err

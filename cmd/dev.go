@@ -11,7 +11,12 @@ package cmd
 
 import (
 	"fmt"
+	"path/filepath"
+	"runtime"
 
+	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -33,16 +38,55 @@ DO NOT USE THEM FOR PRODUCTION`,
 	},
 }
 
+var (
+	serverConfig    *configuration.ServerConfig
+)
+
 func init() {
 	rootCmd.AddCommand(devCmd)
 
-	// Here you will define your flags and configuration settings.
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		dir, err := homedir.Dir()
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to get home directory")
+		}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// devCmd.PersistentFlags().String("foo", "", "A help for foo")
+		defaultBasePath = filepath.Join(dir, "Library", "pleiades")
+	}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// devCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serverConfig = &configuration.ServerConfig{
+		Datastore: &configuration.Datastore{
+			BasePath: defaultBasePath,
+			LogDir:   filepath.Join(defaultBasePath, "logs"),
+			DataDir:  filepath.Join(defaultBasePath, "data"),
+		},
+		Host: &configuration.Host{
+			CaFile:        filepath.Join(defaultBasePath, "tls", "ca.pem"),
+			CertFile:      filepath.Join(defaultBasePath, "tls", "cert.pem"),
+			DeploymentId:  1,
+			GrpcListenAddress: "0.0.0.0:5000",
+			KeyFile:       filepath.Join(defaultBasePath, "tls", "key.pem"),
+			ListenAddress: "0.0.0.0:5001",
+			MutualTLS:     false,
+			NotifyCommit:  false,
+			Rtt:           1,
+		},
+	}
+	config.Server = serverConfig
+
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		serverConfig.Host.GrpcListenAddress = "0.0.0.0:50000"
+	}
+
+	devCmd.PersistentFlags().StringVar(&serverConfig.Host.CaFile, "ca-cert", serverConfig.Host.CaFile, "tls ca")
+	devCmd.PersistentFlags().StringVar(&serverConfig.Host.CertFile, "cert", serverConfig.Host.CertFile, "mtls cert")
+	devCmd.PersistentFlags().StringVar(&serverConfig.Host.KeyFile, "cert-key", serverConfig.Host.KeyFile, "mtls key")
+	devCmd.PersistentFlags().BoolVar(&serverConfig.Host.MutualTLS, "mtls", serverConfig.Host.MutualTLS, "enable mtls")
+
+	devCmd.MarkFlagsRequiredTogether("mtls", "ca-cert", "cert", "cert-key")
+
+	c := filepath.Join(configuration.DefaultBaseConfigPath, "pleiades.yaml")
+	devCmd.PersistentFlags().StringP("config", "c", c, "config file location")
 }
