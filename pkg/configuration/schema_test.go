@@ -26,7 +26,7 @@ type schemaTestSuite struct {
 
 func (t *schemaTestSuite) TestGetFlagSet() {
 	dsFs := ToFlagSet[Datastore]("datastore")
-	hostFs := ToFlagSet[HostConfig]("host")
+	hostFs := ToFlagSet[Host]("host")
 
 	fs := pflag.NewFlagSet("root", pflag.ExitOnError)
 	fs.AddFlagSet(dsFs)

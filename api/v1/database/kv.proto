@@ -17,6 +17,7 @@ package database;
 option go_package = "github.com/mxplusb/pleiades/pkg/api/v1/database";
 import "google/protobuf/timestamp.proto";
 import "api/v1/database/transactions.proto";
+import "api/v1/errors/errors.proto";
 
 message KVStoreWrapper {
   uint64 account = 1;
@@ -39,6 +40,9 @@ message KVStoreWrapper {
     PUT_KEY_REPLY = 13;
     DELETE_KEY_REQUEST = 14;
     DELETE_KEY_REPLY = 15;
+    GET_BUCKET_DESCRIPTOR_REQUEST = 16;
+    GET_BUCKET_DESCRIPTOR_REPLY = 17;
+    RECOVERABLE_ERROR = 18;
   }
 
   RequestType typ = 3;
@@ -59,6 +63,9 @@ message KVStoreWrapper {
     PutKeyReply put_key_reply = 17;
     DeleteKeyRequest delete_key_request = 18;
     DeleteKeyReply delete_key_reply = 19;
+    GetBucketDescriptorRequest get_bucket_descriptor_request = 20;
+    GetBucketDescriptorReply get_bucket_descriptor_reply = 21;
+    apiv1.Error error = 22;
   }
 }
 
@@ -86,7 +93,6 @@ message DeleteAccountReply {
 
 message GetAccountDescriptorRequest {
   uint64 account_id = 1;
-  Transaction transaction = 3;
 }
 
 message GetAccountDescriptorReply {
@@ -131,6 +137,15 @@ message BucketDescriptor {
   uint64 key_count = 3;
   google.protobuf.Timestamp created = 4;
   google.protobuf.Timestamp last_updated = 5;
+}
+
+message GetBucketDescriptorRequest {
+  uint64 account_id = 1;
+  string name = 2;
+}
+
+message GetBucketDescriptorReply {
+  BucketDescriptor bucket_descriptor = 1;
 }
 
 message GetKeyRequest {

@@ -23,26 +23,26 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// bucketCreateCmd represents the bucketGet command
-var bucketCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: bucketCreate,
+// kvGetCmd represents the kvGet command
+var kvPutCmd = &cobra.Command{
+	Use:   "put",
+	Short: "put a key",
+	Run:   putKey,
 }
 
 func init() {
-	bucketCmd.AddCommand(bucketCreateCmd)
-	bucketCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the bucket")
-	bucketCreateCmd.PersistentFlags().StringVar(&bucketName, "name", "", "name of the bucket")
+	kvCmd.AddCommand(kvPutCmd)
+
+	kvPutCmd.PersistentFlags().BytesBase64VarP(&payload, "value", "v", []byte{}, "a base64 encoded value")
+	kvPutCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to use")
+	kvPutCmd.PersistentFlags().Int64VarP(&keyVersion, "version", "n", 0, "key version")
 }
 
-func bucketCreate(cmd *cobra.Command, args []string) {
+var (
+	keyVersion int64
+)
+
+func putKey(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		log.Logger.Fatal().Err(err).Msg("can't parse flags")
@@ -70,10 +70,21 @@ func bucketCreate(cmd *cobra.Command, args []string) {
 
 	client := server.NewKVStoreServiceClient(conn)
 
-	logger.Info().Msg("creating bucket")
-	descriptor, err := client.CreateBucket(context.Background(), &database.CreateBucketRequest{AccountId: accountId, Owner: accountOwner, Name: bucketName})
+	now := time.Now().UnixMilli()
+	logger.Info().Str("key", key).Msg("putting key")
+	descriptor, err := client.PutKey(context.Background(), &database.PutKeyRequest{
+		AccountId:  accountId,
+		BucketName: bucketName,
+		KeyValuePair: &database.KeyValue{
+			Key:            key,
+			CreateRevision: now,
+			ModRevision:    now,
+			Version:        keyVersion,
+			Value:          payload,
+			Lease:          0,
+		}})
 	if err != nil {
-		logger.Fatal().Err(err).Msg("can't create bucket")
+		logger.Fatal().Err(err).Msg("can't put key")
 	}
 
 	print(proto.MarshalTextString(descriptor))
