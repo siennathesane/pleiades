@@ -485,7 +485,12 @@ func (t *BBoltTestSuite) TestPutKey() {
 	expectedKvp.Version = 1
 	expectedKvp.Value = []byte(utils.RandomString(utils.RandomInt(0, 64)))
 	_, err = b.PutKey(expectedRequest)
-	t.Require().NoError(err, "there must be an error putting a partial kvp")
+	t.Require().Error(err, "there must be an error trying to overwrite a key with the same value")
+
+	expectedKvp.Version = 2
+	expectedKvp.Value = []byte(utils.RandomString(utils.RandomInt(0, 64)))
+	_, err = b.PutKey(expectedRequest)
+	t.Require().NoError(err, "there must not be an error trying to overwrite a key with a new version")
 
 	foundKvp := &database.KeyValue{}
 	err = b.db.View(func(tx *bbolt.Tx) error {
