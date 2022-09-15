@@ -150,11 +150,11 @@ func (Gen) DB() error {
 		return err
 	}
 
-	transportPbFiles, err := filepath.Glob("api/v1/*.proto")
+	errorPbFiles, err := filepath.Glob("api/v1/errors/*.proto")
 	if err != nil {
 		return err
 	}
-	localProtoFlags = append(goProtoFlags, transportPbFiles...)
+	localProtoFlags = append(goProtoFlags, errorPbFiles...)
 	if err := sh.RunWithV(nil, "protoc", localProtoFlags...); err != nil {
 		return err
 	}

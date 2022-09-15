@@ -23,20 +23,18 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// kvGetCmd represents the kvGet command
-var kvGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "get a key",
-	Run:   getKey,
+// kvPutCmd represents the bucketPut command
+var bucketDeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "delete a bucket",
+	Run: bucketDelete,
 }
 
 func init() {
-	kvCmd.AddCommand(kvGetCmd)
-
-	kvGetCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to look for")
+	bucketCmd.AddCommand(bucketDeleteCmd)
 }
 
-func getKey(cmd *cobra.Command, args []string) {
+func bucketDelete(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		log.Logger.Fatal().Err(err).Msg("can't parse flags")
@@ -64,15 +62,14 @@ func getKey(cmd *cobra.Command, args []string) {
 
 	client := server.NewKVStoreServiceClient(conn)
 
-	logger.Info().Str("key", key).Msg("getting key")
-	descriptor, err := client.GetKey(context.Background(), &database.GetKeyRequest{
-		AccountId:  accountId,
-		BucketName: bucketName,
-		Key:        key,
-	})
+	logger.Info().Msg("deleting bucket")
+	descriptor, err := client.DeleteBucket(context.Background(), &database.DeleteBucketRequest{
+		AccountId: accountId,
+		Name: bucketName})
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't delete bucket")
 	}
 
 	print(proto.MarshalTextString(descriptor))
 }
+

@@ -18,6 +18,13 @@ var kvCmd = &cobra.Command{
 	Short: "operations on keys!",
 }
 
+var (
+	payload []byte
+	key string
+)
+
 func init() {
 	devCmd.AddCommand(kvCmd)
+	kvCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
+	kvCmd.PersistentFlags().StringVarP(&bucketName, "bucket", "b", "","bucket to place the key in")
 }

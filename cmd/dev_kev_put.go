@@ -24,19 +24,25 @@ import (
 )
 
 // kvGetCmd represents the kvGet command
-var kvGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "get a key",
-	Run:   getKey,
+var kvPutCmd = &cobra.Command{
+	Use:   "put",
+	Short: "put a key",
+	Run:   putKey,
 }
 
 func init() {
-	kvCmd.AddCommand(kvGetCmd)
+	kvCmd.AddCommand(kvPutCmd)
 
-	kvGetCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to look for")
+	kvPutCmd.PersistentFlags().BytesBase64VarP(&payload, "value", "v", []byte{}, "a base64 encoded value")
+	kvPutCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to use")
+	kvPutCmd.PersistentFlags().Int64VarP(&keyVersion, "version", "n", 0, "key version")
 }
 
-func getKey(cmd *cobra.Command, args []string) {
+var (
+	keyVersion int64
+)
+
+func putKey(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		log.Logger.Fatal().Err(err).Msg("can't parse flags")
@@ -64,14 +70,21 @@ func getKey(cmd *cobra.Command, args []string) {
 
 	client := server.NewKVStoreServiceClient(conn)
 
-	logger.Info().Str("key", key).Msg("getting key")
-	descriptor, err := client.GetKey(context.Background(), &database.GetKeyRequest{
+	now := time.Now().UnixMilli()
+	logger.Info().Str("key", key).Msg("putting key")
+	descriptor, err := client.PutKey(context.Background(), &database.PutKeyRequest{
 		AccountId:  accountId,
 		BucketName: bucketName,
-		Key:        key,
-	})
+		KeyValuePair: &database.KeyValue{
+			Key:            key,
+			CreateRevision: now,
+			ModRevision:    now,
+			Version:        keyVersion,
+			Value:          payload,
+			Lease:          0,
+		}})
 	if err != nil {
-		logger.Fatal().Err(err).Msg("can't delete bucket")
+		logger.Fatal().Err(err).Msg("can't put key")
 	}
 
 	print(proto.MarshalTextString(descriptor))

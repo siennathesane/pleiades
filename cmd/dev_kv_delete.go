@@ -23,26 +23,20 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// bucketCreateCmd represents the bucketGet command
-var bucketCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: bucketCreate,
+// kvGetCmd represents the kvGet command
+var kvDeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "delete a key",
+	Run:   deleteKey,
 }
 
 func init() {
-	bucketCmd.AddCommand(bucketCreateCmd)
-	bucketCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the bucket")
-	bucketCreateCmd.PersistentFlags().StringVar(&bucketName, "name", "", "name of the bucket")
+	kvCmd.AddCommand(kvDeleteCmd)
+
+	kvDeleteCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to delete")
 }
 
-func bucketCreate(cmd *cobra.Command, args []string) {
+func deleteKey(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		log.Logger.Fatal().Err(err).Msg("can't parse flags")
@@ -70,10 +64,14 @@ func bucketCreate(cmd *cobra.Command, args []string) {
 
 	client := server.NewKVStoreServiceClient(conn)
 
-	logger.Info().Msg("creating bucket")
-	descriptor, err := client.CreateBucket(context.Background(), &database.CreateBucketRequest{AccountId: accountId, Owner: accountOwner, Name: bucketName})
+	logger.Info().Str("key", key).Msg("deleting key")
+	descriptor, err := client.DeleteKey(context.Background(), &database.DeleteKeyRequest{
+		AccountId:  accountId,
+		BucketName: bucketName,
+		Key:        key,
+	})
 	if err != nil {
-		logger.Fatal().Err(err).Msg("can't create bucket")
+		logger.Fatal().Err(err).Msg("can't delete key")
 	}
 
 	print(proto.MarshalTextString(descriptor))

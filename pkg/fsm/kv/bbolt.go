@@ -472,12 +472,15 @@ func (b *bboltStore) PutKey(request *database.PutKeyRequest) (*database.PutKeyRe
 			}
 
 			if tmp.Version > keyValuePair.GetVersion() {
-				return errors.New("cannot overwrite existing key with older version")
+				return errors.New("cannot overwrite existing key with an older version")
+			} else if tmp.Version == keyValuePair.GetVersion() {
+				return errors.New("cannot overwrite existing key with the same version")
+			} else if keyValuePair.GetVersion() > tmp.Version+1 {
+				return errors.Newf("cannot overwrite existing key with a version larger than %d", tmp.Version+1)
 			}
 
 			keyValuePair.ModRevision = now.UnixMilli()
 			keyValuePair.CreateRevision = tmp.CreateRevision
-			keyValuePair.Version += tmp.GetVersion()
 		}
 
 	overwrite:
