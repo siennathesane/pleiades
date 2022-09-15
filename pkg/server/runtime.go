@@ -23,6 +23,12 @@ func init() {
 	dlog.SetLoggerFactory(configuration.DragonboatLoggerFactory)
 }
 
+type Options struct {
+	GRPCPort int
+	EmbeddedEventStreamPort int
+	RaftPort int
+}
+
 type Server struct {
 	logger                 zerolog.Logger
 	nh                     *dragonboat.NodeHost
