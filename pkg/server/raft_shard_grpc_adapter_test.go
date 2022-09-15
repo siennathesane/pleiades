@@ -65,11 +65,11 @@ func (t *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	t.testShardManager = newShardManager(buildTestNodeHost(t.T()), t.logger)
 
 	t.adapter = &raftShardGrpcAdapter{
-		logger:         t.logger,
-		clusterManager: t.testShardManager,
+		logger:       t.logger,
+		shardManager: t.testShardManager,
 	}
 
-	err := t.adapter.clusterManager.NewShard(t.testShardId, t.testClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
+	err := t.adapter.shardManager.NewShard(t.testShardId, t.testClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when starting the test shard")
 	utils.Wait(t.defaultTimeout)
 
@@ -329,8 +329,8 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
 	ctx := context.Background()
 	srv := grpc.NewServer()
 	adapter := &raftShardGrpcAdapter{
-		logger:         t.logger,
-		clusterManager: localShardManager,
+		logger:       t.logger,
+		shardManager: localShardManager,
 	}
 	RegisterShardManagerServer(srv, adapter)
 	go func() {
@@ -398,8 +398,8 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
 	ctx := context.Background()
 	srv := grpc.NewServer()
 	adapter := &raftShardGrpcAdapter{
-		logger:         t.logger,
-		clusterManager: localShardManager,
+		logger:       t.logger,
+		shardManager: localShardManager,
 	}
 	RegisterShardManagerServer(srv, adapter)
 	go func() {

@@ -11,6 +11,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -33,33 +34,35 @@ to quickly create a Cobra application.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			// Config file not found; ignore error if desired
-		} else {
-			// Config file was found but another error was produced
-		}
-	}
-
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
+var (
+	debug bool
+	defaultBasePath string
+	config          = &configuration.Configuration{
+		ConfigFilePath: configuration.DefaultBaseConfigPath,
+	}
+)
+
 func init() {
+	defaultBasePath = configuration.DefaultBaseConfigPath
+
+	viper.SetConfigName("pleiades")        // name of config file (without extension)
+	viper.SetConfigType("yaml")            // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("/etc/pleiades/")  // path to look for the config file in
+	viper.AddConfigPath("$HOME/.pleiades") // call multiple times to add many search paths
+	viper.AddConfigPath(".")               // optionally look for config in the working directory
+
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "host", "", "host file (default is $HOME/.pleiades.yaml)")
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "enable debug logging")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	if err := viper.BindPFlags(rootCmd.Flags()); err != nil {
-		panic(err)
-	}
 }

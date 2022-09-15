@@ -10,7 +10,6 @@
 package configuration
 
 import (
-	"io"
 	"os"
 
 	"github.com/mxplusb/pleiades/pkg"
@@ -19,18 +18,14 @@ import (
 )
 
 var (
-	rootLogger  zlog.Logger
-	writers     []io.Writer
-	multiWriter = zlog.MultiLevelWriter(writers...)
+	rootLogger zlog.Logger
 )
 
 func init() {
-	writers = append(writers, zlog.ConsoleWriter{Out: os.Stdout})
-
-	rootLogger = zlog.New(multiWriter).With().
+	rootLogger = zlog.New(zlog.ConsoleWriter{Out: os.Stdout}).
+		With().
 		Str("sha", pkg.Sha).
 		Timestamp().
-		Caller().
 		Logger().
 		Level(zlog.InfoLevel)
 }

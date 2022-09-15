@@ -4,6 +4,7 @@
 import * as jspb from "google-protobuf";
 import * as google_protobuf_timestamp_pb from "google-protobuf/google/protobuf/timestamp_pb";
 import * as api_v1_database_transactions_pb from "../../../api/v1/database/transactions_pb";
+import * as api_v1_errors_errors_pb from "../../../api/v1/errors/errors_pb";
 
 export class KVStoreWrapper extends jspb.Message {
   getAccount(): number;
@@ -95,6 +96,21 @@ export class KVStoreWrapper extends jspb.Message {
   getDeleteKeyReply(): DeleteKeyReply | undefined;
   setDeleteKeyReply(value?: DeleteKeyReply): void;
 
+  hasGetBucketDescriptorRequest(): boolean;
+  clearGetBucketDescriptorRequest(): void;
+  getGetBucketDescriptorRequest(): GetBucketDescriptorRequest | undefined;
+  setGetBucketDescriptorRequest(value?: GetBucketDescriptorRequest): void;
+
+  hasGetBucketDescriptorReply(): boolean;
+  clearGetBucketDescriptorReply(): void;
+  getGetBucketDescriptorReply(): GetBucketDescriptorReply | undefined;
+  setGetBucketDescriptorReply(value?: GetBucketDescriptorReply): void;
+
+  hasError(): boolean;
+  clearError(): void;
+  getError(): api_v1_errors_errors_pb.Error | undefined;
+  setError(value?: api_v1_errors_errors_pb.Error): void;
+
   getPayloadCase(): KVStoreWrapper.PayloadCase;
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): KVStoreWrapper.AsObject;
@@ -127,6 +143,9 @@ export namespace KVStoreWrapper {
     putKeyReply?: PutKeyReply.AsObject,
     deleteKeyRequest?: DeleteKeyRequest.AsObject,
     deleteKeyReply?: DeleteKeyReply.AsObject,
+    getBucketDescriptorRequest?: GetBucketDescriptorRequest.AsObject,
+    getBucketDescriptorReply?: GetBucketDescriptorReply.AsObject,
+    error?: api_v1_errors_errors_pb.Error.AsObject,
   }
 
   export interface RequestTypeMap {
@@ -146,6 +165,9 @@ export namespace KVStoreWrapper {
     PUT_KEY_REPLY: 13;
     DELETE_KEY_REQUEST: 14;
     DELETE_KEY_REPLY: 15;
+    GET_BUCKET_DESCRIPTOR_REQUEST: 16;
+    GET_BUCKET_DESCRIPTOR_REPLY: 17;
+    RECOVERABLE_ERROR: 18;
   }
 
   export const RequestType: RequestTypeMap;
@@ -168,6 +190,9 @@ export namespace KVStoreWrapper {
     PUT_KEY_REPLY = 17,
     DELETE_KEY_REQUEST = 18,
     DELETE_KEY_REPLY = 19,
+    GET_BUCKET_DESCRIPTOR_REQUEST = 20,
+    GET_BUCKET_DESCRIPTOR_REPLY = 21,
+    ERROR = 22,
   }
 }
 
@@ -289,11 +314,6 @@ export class GetAccountDescriptorRequest extends jspb.Message {
   getAccountId(): number;
   setAccountId(value: number): void;
 
-  hasTransaction(): boolean;
-  clearTransaction(): void;
-  getTransaction(): api_v1_database_transactions_pb.Transaction | undefined;
-  setTransaction(value?: api_v1_database_transactions_pb.Transaction): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetAccountDescriptorRequest.AsObject;
   static toObject(includeInstance: boolean, msg: GetAccountDescriptorRequest): GetAccountDescriptorRequest.AsObject;
@@ -307,7 +327,6 @@ export class GetAccountDescriptorRequest extends jspb.Message {
 export namespace GetAccountDescriptorRequest {
   export type AsObject = {
     accountId: number,
-    transaction?: api_v1_database_transactions_pb.Transaction.AsObject,
   }
 }
 
@@ -534,6 +553,52 @@ export namespace BucketDescriptor {
     keyCount: number,
     created?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     lastUpdated?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+  }
+}
+
+export class GetBucketDescriptorRequest extends jspb.Message {
+  getAccountId(): number;
+  setAccountId(value: number): void;
+
+  getName(): string;
+  setName(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetBucketDescriptorRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetBucketDescriptorRequest): GetBucketDescriptorRequest.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetBucketDescriptorRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetBucketDescriptorRequest;
+  static deserializeBinaryFromReader(message: GetBucketDescriptorRequest, reader: jspb.BinaryReader): GetBucketDescriptorRequest;
+}
+
+export namespace GetBucketDescriptorRequest {
+  export type AsObject = {
+    accountId: number,
+    name: string,
+  }
+}
+
+export class GetBucketDescriptorReply extends jspb.Message {
+  hasBucketDescriptor(): boolean;
+  clearBucketDescriptor(): void;
+  getBucketDescriptor(): BucketDescriptor | undefined;
+  setBucketDescriptor(value?: BucketDescriptor): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetBucketDescriptorReply.AsObject;
+  static toObject(includeInstance: boolean, msg: GetBucketDescriptorReply): GetBucketDescriptorReply.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: GetBucketDescriptorReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetBucketDescriptorReply;
+  static deserializeBinaryFromReader(message: GetBucketDescriptorReply, reader: jspb.BinaryReader): GetBucketDescriptorReply;
+}
+
+export namespace GetBucketDescriptorReply {
+  export type AsObject = {
+    bucketDescriptor?: BucketDescriptor.AsObject,
   }
 }
 

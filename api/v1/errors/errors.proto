@@ -1,0 +1,17 @@
+syntax = "proto3";
+package apiv1;
+option go_package = "github.com/mxplusb/pleiades/api/v1/errors";
+
+import "api/v1/errors/error_codes.proto";
+
+// The `Status` type defines a logical error model that is suitable for
+// different programming environments, including REST APIs and RPC APIs.
+message Error {
+  // A simple error code that can be easily handled by the client. The
+  // actual error code is defined by `google.rpc.Code`.
+  Code code = 1;
+
+  // A developer-facing human-readable error message in English. It should
+  // both explain the error and offer an actionable resolution to it.
+  string message = 2;
+}

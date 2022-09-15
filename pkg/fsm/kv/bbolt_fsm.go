@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 
 	"github.com/mxplusb/pleiades/api/v1/database"
+	aerrs "github.com/mxplusb/pleiades/api/v1/errors"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3/statemachine"
@@ -86,9 +87,11 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 	for _, entry := range entries {
 		wrapper := &database.KVStoreWrapper{}
+
 		if err := wrapper.UnmarshalVT(entry.Cmd); err != nil {
 			b.logger.Error().Err(err).Msg("can't unmarshal kv store wrapper")
-			return applied, errors.Wrap(err, "can't unmarshal kv store wrapper")
+			b.buildError(errors.Wrap(err, "can't unmarshal wrapper").Error(), wrapper, entry.Index, &applied)
+			continue
 		}
 
 		switch wrapper.Typ {
@@ -98,7 +101,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			resp, err := b.store.CreateAccountBucket(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.Wrap(err, "can't create account bucket")
+				b.buildError(errors.Wrap(err, "can't create account bucket").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_CREATE_ACCOUNT_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_CreateAccountReply{
@@ -106,15 +110,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.Wrap(err, "can't serialize response wrapper")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -126,7 +131,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			resp, err := b.store.DeleteAccountBucket(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't delete account")
-				return applied, errors.Wrap(err, "can't delete account")
+				b.buildError(errors.Wrap(err, "can't delete account").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_DELETE_ACCOUNT_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_DeleteAccountReply{
@@ -134,15 +140,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't delete account bucket")
-				return applied, errors.Wrap(err, "can't delete account bucket")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -154,7 +161,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			resp, err := b.store.CreateBucket(req)
 			if err != nil {
 				b.logger.Error().Err(err).Msg("can't create bucket")
-				return applied, errors.Wrap(err, "can't create bucket")
+				b.buildError(errors.Wrap(err, "can't create bucket").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_CREATE_BUCKET_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_CreateBucketReply{
@@ -162,15 +170,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.Wrap(err, "can't serialize response wrapper")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -181,8 +190,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			resp, err := b.store.DeleteBucket(req)
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.Wrap(err, "can't create account bucket")
+				b.logger.Error().Err(err).Msg("can't delete bucket")
+				b.buildError(errors.Wrap(err, "can't delete bucket").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_DELETE_BUCKET_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_DeleteBucketReply{
@@ -190,15 +200,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't delete bucket")
-				return applied, errors.Wrap(err, "can't delete bucket")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -209,8 +220,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			resp, err := b.store.PutKey(req)
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				b.logger.Error().Err(err).Msg("can't put key")
+				b.buildError(errors.Wrap(err, "can't put key").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_PUT_KEY_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_PutKeyReply{
@@ -218,15 +230,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.Wrap(err, "can't serialize response wrapper")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -237,8 +250,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			resp, err := b.store.DeleteKey(req)
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't create account bucket")
-				return applied, errors.New("can't create account bucket")
+				b.logger.Error().Err(err).Msg("can't delete key")
+				b.buildError(errors.Wrap(err, "can't delete key").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 			wrapper.Typ = database.KVStoreWrapper_DELETE_KEY_REPLY
 			wrapper.Payload = &database.KVStoreWrapper_DeleteKeyReply{
@@ -246,15 +260,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 			}
 			serialized, err := wrapper.MarshalVT()
 			if err != nil {
-				b.logger.Error().Err(err).Msg("can't delete account bucket")
-				return applied, errors.Wrap(err, "can't delete response wrapper")
+				b.logger.Error().Err(err).Msg("can't marshal response wrapper")
+				b.buildError(errors.Wrap(err, "can't marshal response wrapper").Error(), wrapper, entry.Index, &applied)
+				continue
 			}
 
 			applied = append(applied, statemachine.Entry{
-				Index:  entry.Index,
+				Index: entry.Index,
 				Result: statemachine.Result{
 					Value: entry.Index,
-					Data: serialized,
+					Data:  serialized,
 				},
 			})
 
@@ -267,33 +282,82 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	return applied, nil
 }
 
+func (b *BBoltStateMachine) buildError(errMsg string, wrapper *database.KVStoreWrapper, idx uint64, entries *[]statemachine.Entry) {
+	wrapper.Typ = database.KVStoreWrapper_RECOVERABLE_ERROR
+	wrapper.Payload = &database.KVStoreWrapper_Error{
+		Error: &aerrs.Error{
+			Code:    aerrs.Code_ABORTED,
+			Message: errMsg,
+		},
+	}
+
+	serialized, err := wrapper.MarshalVT()
+	if err != nil {
+		b.logger.Error().Err(err).Msg("can't marshal error")
+	}
+
+	*entries = append(*entries, statemachine.Entry{
+		Index: idx,
+		Result: statemachine.Result{
+			Value: idx,
+			Data:  serialized,
+		},
+	})
+}
+
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 	wrapper := &database.KVStoreWrapper{}
 
 	err := wrapper.UnmarshalVT(i.([]byte))
 	if err != nil {
 		b.logger.Error().Err(err).Msg("can't unmarshal payload")
-		return []byte{}, errors.Wrap(err, "bad request")
+		wrapper.Typ = database.KVStoreWrapper_RECOVERABLE_ERROR
+		wrapper.Payload = &database.KVStoreWrapper_Error{
+			Error: &aerrs.Error{
+				Code:    aerrs.Code_ABORTED,
+				Message: errors.Wrap(err, "can't unmarshal payload").Error(),
+			},
+		}
+
+		serialized, err := wrapper.MarshalVT()
+		if err != nil {
+			b.logger.Error().Err(err).Msg("can't marshal error")
+		}
+		return serialized, nil
 	}
 
 	switch wrapper.Typ {
 	case database.KVStoreWrapper_GET_KEY_REQUEST:
 		req := wrapper.GetGetKeyRequest()
 		var resp *database.GetKeyReply
+
 		resp, err = b.store.GetKey(req)
+		if err != nil {
+			wrapper.Typ = database.KVStoreWrapper_RECOVERABLE_ERROR
+			wrapper.Payload = &database.KVStoreWrapper_Error{
+				Error: &aerrs.Error{
+					Code:    aerrs.Code_ABORTED,
+					Message: errors.Wrap(err, "can't get key").Error(),
+				},
+			}
+
+			serialized, err := wrapper.MarshalVT()
+			if err != nil {
+				b.logger.Error().Err(err).Msg("can't marshal error")
+			}
+
+			return serialized, nil
+		}
+
 		wrapper.Typ = database.KVStoreWrapper_GET_KEY_REPLY
 		wrapper.Payload = &database.KVStoreWrapper_GetKeyReply{GetKeyReply: resp}
-		break
-
-	default:
-		return []byte{}, errors.New("unsupported method")
 	}
 
 	buf, err := wrapper.MarshalVT()
 	if err != nil {
 		b.logger.Error().Err(err).Msg("error fetching data")
 	}
-	return buf, err
+	return buf, nil
 }
 
 func (b *BBoltStateMachine) Sync() error {
