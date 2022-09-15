@@ -1,6 +1,6 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.7.1",
+  "version": "22.9.14",
   "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,6 +13,7 @@
   "homepage": "https://anthroposlabs.com",
   "dependencies": {
     "@grpc/grpc-js": "^1.6.8",
+    "calver-ci": "^22.9.13-rc.30",
     "google-protobuf": "^3.20.1",
     "ts-protoc-gen": "^0.15.0"
   },
