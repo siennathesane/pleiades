@@ -24,19 +24,19 @@ import (
 )
 
 // kvGetCmd represents the kvGet command
-var kvGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "get a key",
-	Run:   getKey,
+var kvDeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "delete a key",
+	Run:   deleteKey,
 }
 
 func init() {
-	kvCmd.AddCommand(kvGetCmd)
+	kvCmd.AddCommand(kvDeleteCmd)
 
-	kvGetCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to look for")
+	kvDeleteCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to delete")
 }
 
-func getKey(cmd *cobra.Command, args []string) {
+func deleteKey(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		log.Logger.Fatal().Err(err).Msg("can't parse flags")
@@ -64,14 +64,14 @@ func getKey(cmd *cobra.Command, args []string) {
 
 	client := server.NewKVStoreServiceClient(conn)
 
-	logger.Info().Str("key", key).Msg("getting key")
-	descriptor, err := client.GetKey(context.Background(), &database.GetKeyRequest{
+	logger.Info().Str("key", key).Msg("deleting key")
+	descriptor, err := client.DeleteKey(context.Background(), &database.DeleteKeyRequest{
 		AccountId:  accountId,
 		BucketName: bucketName,
 		Key:        key,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msg("can't delete bucket")
+		logger.Fatal().Err(err).Msg("can't delete key")
 	}
 
 	print(proto.MarshalTextString(descriptor))
