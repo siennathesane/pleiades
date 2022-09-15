@@ -11,53 +11,90 @@ package server
 
 import (
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/cockroachdb/errors"
+	"github.com/lni/dragonboat/v3"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	dlog "github.com/lni/dragonboat/v3/logger"
+	"github.com/rs/zerolog"
+	"google.golang.org/grpc"
 )
 
 func init() {
 	dlog.SetLoggerFactory(configuration.DragonboatLoggerFactory)
 }
 
-//type Runtime struct {
-//	addrs    []multiaddr.Multiaddr
-//	ctx      context.Context
-//	host     host.Host
-//	listener transport.Listener
-//	logger   zerolog.Logger
-//	mp       multiplex.Multiplex
-//	peerId   peer.ID
-//	privKey  crypto.PrivKey
-//	quicTr   transport.Transport
-//}
-//
-//func (r *Runtime) Run() error {
-//
-//	transports := libp2p.ChainOptions(libp2p.Transport(r.quicTr),
-//		libp2p.Transport(tcp.NewTCPTransport),
-//		libp2p.Transport(websocket.New))
-//
-//	muxer := libp2p.Muxer("/mplex/6.7.0", mplex.DefaultTransport)
-//
-//	var err error
-//	r.host, err = libp2p.New(transports,
-//		muxer,
-//		libp2p.EnableNATService(),
-//		libp2p.EnableRelayService(),
-//		libp2p.ListenAddrs(r.addrs...),
-//		libp2p.Identity(r.privKey))
-//	if err != nil {
-//		r.logger.Error().Err(err).Msg("failed to create host")
-//		return err
-//	}
-//
-//	//r.host.SetStreamHandler(RaftControlProtocolVersion, r.handleStream)
-//
-//	return nil
-//}
-//
-//func (r *Runtime) Stop() {
-//	if err := r.host.Close(); err != nil {
-//		r.logger.Fatal().Err(err).Msg("cannot cleanly shut down networking")
-//	}
-//}
+type Server struct {
+	logger                 zerolog.Logger
+	nh                     *dragonboat.NodeHost
+	raftHost               IHost
+	raftShard              IShardManager
+	raftTransactionManager ITransactionManager
+	bboltStoreManager      IKVStore
+}
 
+func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger) (*Server, error) {
+	srv := &Server{
+		logger: logger.With().Str("component", "server").Logger(),
+	}
+
+	nh, err := dragonboat.NewNodeHost(nhc)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't start node host")
+	}
+
+	rh := newRaftHost(nh, logger)
+	rhAdapter := &raftHostGrpcAdapter{
+		logger: logger,
+		host:   rh,
+	}
+	RegisterRaftHostServer(gServer, rhAdapter)
+	srv.raftHost = rh
+
+	sm := newShardManager(nh, logger)
+	smAdapter := &raftShardGrpcAdapter{
+		logger:       logger,
+		shardManager: sm,
+	}
+	RegisterShardManagerServer(gServer, smAdapter)
+	srv.raftShard = sm
+
+	tm := newTransactionManager(nh, logger)
+	tmAdapter := &raftTransactionGrpcAdapter{
+		logger:             logger,
+		transactionManager: tm,
+	}
+	RegisterTransactionsServer(gServer, tmAdapter)
+	srv.raftTransactionManager = tm
+
+	store := newBboltStoreManager(tm, nh, logger)
+	storeAdapter := &raftBBoltStoreManagerGrpcAdapter{
+		logger:       logger,
+		storeManager: store,
+	}
+	RegisterKVStoreServiceServer(gServer, storeAdapter)
+	srv.bboltStoreManager = store
+
+	srv.nh = nh
+
+	return srv, nil
+}
+
+func (s *Server) GetRaftHost() IHost {
+	return s.raftHost
+}
+
+func (s *Server) GetRaftTransactionManager() ITransactionManager {
+return s.raftTransactionManager
+}
+
+func (s *Server) GetRaftKVStore() IKVStore{
+return s.bboltStoreManager
+}
+
+func (s *Server) GetRaftShardManager() IShardManager {
+	return s.raftShard
+}
+
+func (s *Server) Stop() {
+	s.nh.Stop()
+}

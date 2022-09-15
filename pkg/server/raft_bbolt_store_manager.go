@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	aerrs "github.com/mxplusb/pleiades/pkg/api/v1/errors"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
 	"github.com/mxplusb/pleiades/pkg/utils"
@@ -96,6 +97,13 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 		return &database.CreateAccountReply{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.CreateAccountReply{}, errors.New(errMsg.Message)
+	}
+
 	response := &database.CreateAccountReply{}
 	if resp.GetCreateAccountReply() == nil {
 		response.AccountDescriptor = &database.AccountDescriptor{}
@@ -165,6 +173,13 @@ func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
 		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.DeleteAccountReply{}, errors.New(errMsg.Message)
 	}
 
 	response := &database.DeleteAccountReply{
@@ -242,6 +257,13 @@ func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) 
 		return &database.CreateBucketReply{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.CreateBucketReply{}, errors.New(errMsg.Message)
+	}
+
 	response := &database.CreateBucketReply{}
 	if resp.GetCreateBucketReply() == nil {
 		response.BucketDescriptor = &database.BucketDescriptor{}
@@ -314,6 +336,13 @@ func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) 
 		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.DeleteBucketReply{}, errors.New(errMsg.Message)
+	}
+
 	response := &database.DeleteBucketReply{
 		Ok: resp.GetDeleteBucketReply().GetOk(),
 	}
@@ -377,6 +406,13 @@ func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.G
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
 		return &database.GetKeyReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.GetKeyReply{}, errors.New(errMsg.Message)
 	}
 
 
@@ -453,6 +489,13 @@ func (s *bboltStoreManager) PutKey(request *database.PutKeyRequest) (*database.P
 		return &database.PutKeyReply{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.PutKeyReply{}, errors.New(errMsg.Message)
+	}
+
 	response := &database.PutKeyReply{}
 
 	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
@@ -524,6 +567,13 @@ func (s *bboltStoreManager) DeleteKey(request *database.DeleteKeyRequest) (*data
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
 		return &database.DeleteKeyReply{}, errors.Wrap(err, "can't unmarshal response")
+	}
+
+	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+		errMsg := &aerrs.Error{}
+		errMsg = resp.GetError()
+
+		return &database.DeleteKeyReply{}, errors.New(errMsg.Message)
 	}
 
 	response := &database.DeleteKeyReply{}
