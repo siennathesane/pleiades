@@ -16,45 +16,55 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-type EmbeddedEventStreamOpts struct {
+type EmbeddedMessagingStreamOpts struct {
 	*server.Options
 	timeout time.Duration
 }
 
-type EmbeddedQueueClient struct {
+type EmbeddedMessagingStreamClient struct {
 	nats.JetStreamContext
 }
 
-type EmbeddedEventStreamClient struct {
+type EmbeddedMessagingPubSubClient struct {
 	*nats.Conn
 }
 
-func NewEmbeddedEventStream(opts *EmbeddedEventStreamOpts) (*EmbeddedEventStream, error) {
+func NewEmbeddedEventStream(opts *EmbeddedMessagingStreamOpts) (*EmbeddedMessaging, error) {
 	// todo (sienna): ensure that StoreDir is set
 	srv, err := server.NewServer(opts.Options)
-	return &EmbeddedEventStream{
+	return &EmbeddedMessaging{
 		opts: opts,
 		srv:  srv,
 	}, err
 }
 
-type EmbeddedEventStream struct {
-	opts *EmbeddedEventStreamOpts
+type EmbeddedMessaging struct {
+	opts *EmbeddedMessagingStreamOpts
 	srv  *server.Server
 }
 
-func (ev *EmbeddedEventStream) Start() {
+func (ev *EmbeddedMessaging) Start() {
 	go ev.srv.Start()
 	if !ev.srv.ReadyForConnections(ev.opts.timeout) {
 		panic("event server won't start")
 	}
 }
 
-func (ev *EmbeddedEventStream) Stop() {
+func (ev *EmbeddedMessaging) Stop() {
 	ev.srv.Shutdown()
 }
 
-func (ev *EmbeddedEventStream) GetClient() (*EmbeddedEventStreamClient, error) {
+func (ev *EmbeddedMessaging) GetPubSubClient() (*EmbeddedMessagingPubSubClient, error) {
 	conn, err := nats.Connect(ev.srv.ClientURL(), nats.InProcessServer(ev.srv))
-	return &EmbeddedEventStreamClient{conn}, err
+	return &EmbeddedMessagingPubSubClient{conn}, err
+}
+
+func (ev *EmbeddedMessaging) GetStreamClient() (*EmbeddedMessagingStreamClient, error) {
+	conn, err := nats.Connect(ev.srv.ClientURL(), nats.InProcessServer(ev.srv))
+	if err != nil {
+		return nil, err
+	}
+
+	js, err := conn.JetStream()
+	return &EmbeddedMessagingStreamClient{js}, err
 }
