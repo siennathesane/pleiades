@@ -1,6 +1,6 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.9.15",
+  "version": "22.9.15.1",
   "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
