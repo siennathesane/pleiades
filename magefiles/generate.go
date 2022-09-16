@@ -65,12 +65,12 @@ var (
 		"--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:.",
 	}
 
-	//fuckingNodeJsFlags = []string{
-	//	"-I",
-	//	".",
-	//	"--js_out=import_style=commonjs,binary:.",
-	//	"--grpc_out=grpc_js:.",
-	//}
+	fuckingNodeJsFlags = []string{
+		"-I",
+		".",
+		"--js_out=import_style=commonjs,binary:.",
+		"--grpc_out=grpc_js:.",
+	}
 )
 
 type Gen mg.Namespace
@@ -214,6 +214,11 @@ func (Gen) Server() error {
 	}
 	localGrpcFlags := append(grpcFlags, serverFiles...)
 	if err := sh.RunWithV(nil, "protoc", localGrpcFlags...); err != nil {
+		return err
+	}
+
+	fuckNode := append(fuckingNodeJsFlags, serverFiles...)
+	if err := sh.RunWithV(nil, fmt.Sprintf("%s/grpc_tools_node_protoc", nodeJsBinPath), fuckNode...); err != nil {
 		return err
 	}
 
