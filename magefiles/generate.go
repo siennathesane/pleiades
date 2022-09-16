@@ -56,10 +56,19 @@ var (
 		".",
 		"--plugin",
 		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-go", binDir),
+		"--plugin",
+		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-ts", nodeJsBinPath),
 		"--go_opt=paths=source_relative",
 		"--go_out=.",
 		"--go-grpc_out=.",
 		"--go-grpc_opt=paths=source_relative",
+	}
+
+	fuckingNodeJsFlags = []string{
+		"-I",
+		".",
+		"--js_out=import_style=commonjs,binary:.",
+		"--grpc_out=grpc_js:.",
 	}
 )
 
@@ -184,12 +193,17 @@ func (Gen) Server() error {
 
 	fmt.Println("generating server instances")
 
-	raftRpcFiles, err := filepath.Glob("pkg/server/*.proto")
+	serverFiles, err := filepath.Glob("pkg/server/*.proto")
 	if err != nil {
 		return err
 	}
-	localGrpcFlags := append(grpcFlags, raftRpcFiles...)
+	localGrpcFlags := append(grpcFlags, serverFiles...)
 	if err := sh.RunWithV(nil, "protoc", localGrpcFlags...); err != nil {
+		return err
+	}
+
+	fuckNode := append(fuckingNodeJsFlags, serverFiles...)
+	if err := sh.RunWithV(nil, fmt.Sprintf("%s/grpc_tools_node_protoc", nodeJsBinPath), fuckNode...); err != nil {
 		return err
 	}
 

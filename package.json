@@ -1,9 +1,10 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.9.14",
+  "version": "22.9.15",
   "description": "API interfaces for Pleiades",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-grpc": "npm_config_target_arch=x64 npm install grpc-tools"
   },
   "author": "Anthrophos Labs",
   "license": "PolyForm Strict License 1.0.0",
@@ -15,11 +16,20 @@
     "@grpc/grpc-js": "^1.6.8",
     "calver-ci": "^22.9.13-rc.30",
     "google-protobuf": "^3.20.1",
+    "grpc": "^1.24.11",
+    "grpc-tools": "^1.11.2",
+    "node-gyp-install": "^2.2.0",
     "ts-protoc-gen": "^0.15.0"
   },
   "files": [
-    "api/v1/database/*.ts",
-    "api/v1/database/*.js",
-    "api/v1/database/*.proto"
-  ]
+    "api/v1/**/*.ts",
+    "api/v1/**/*.js",
+    "api/v1/**/*.proto",
+    "pkg/server/*.js",
+    "pkg/server/*.ts",
+    "pkg/server/*.proto"
+  ],
+  "devDependencies": {
+    "grpc_tools_node_protoc_ts": "^5.3.2"
+  }
 }
