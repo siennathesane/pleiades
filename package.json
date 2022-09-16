@@ -1,6 +1,6 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.7.1",
+  "version": "22.9.15",
   "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,8 +17,8 @@
     "ts-protoc-gen": "^0.15.0"
   },
   "files": [
-    "api/v1/database/*.ts",
-    "api/v1/database/*.js",
-    "api/v1/database/*.proto"
+    "api/v1/**/*.ts",
+    "api/v1/**/*.js",
+    "api/v1/**/*.proto"
   ]
 }
