@@ -1,10 +1,10 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.9.16-dev+c17171a",
+  "version": "22.9.16",
   "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install-grpc": "npm_config_target_arch=x64 npm install grpc-tools"
+    "install-grpc": "npm_config_target_arch=x64 npm install grpc-tools --save-dev"
   },
   "author": "Anthrophos Labs",
   "license": "PolyForm Strict License 1.0.0",
@@ -20,14 +20,12 @@
     "pkg/server/*.ts",
     "pkg/server/*.proto"
   ],
-  "dependencies": {
-    "google-protobuf": "~3.14.0"
-  },
   "devDependencies": {
     "@grpc/grpc-js": "~1.1.8",
     "@grpc/proto-loader": "~0.5.4",
     "async": "~3.2.3",
     "google-protobuf": "~3.14.0",
+    "grpc-tools": "^1.11.2",
     "grpc-web": "~1.3.1",
     "lodash": "~4.17.0",
     "protoc-gen-ts": "^0.8.5",
