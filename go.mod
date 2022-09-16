@@ -6,11 +6,14 @@ require (
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13
 	github.com/go-git/go-git/v5 v5.4.2
+	github.com/golang/protobuf v1.5.2
 	github.com/lithammer/go-jump-consistent-hash v1.0.2
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/nats-io/nats-server/v2 v2.9.0
+	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
 	github.com/planetscale/vtprotobuf v0.3.0
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.5.0
@@ -18,6 +21,7 @@ require (
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
 	go.etcd.io/bbolt v1.3.6
+	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91
 	gonum.org/v1/gonum v0.11.0
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
@@ -39,7 +43,6 @@ require (
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/btree v1.0.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
@@ -65,8 +68,6 @@ require (
 	github.com/minio/highwayhash v1.0.2 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/nats-io/jwt/v2 v2.3.0 // indirect
-	github.com/nats-io/nats-server/v2 v2.9.0 // indirect
-	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
@@ -83,9 +84,7 @@ require (
 	github.com/valyala/fastrand v1.0.0 // indirect
 	github.com/valyala/histogram v1.0.1 // indirect
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
-	go.uber.org/automaxprocs v1.5.1 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
-	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect

@@ -24,11 +24,11 @@ func TestEmbeddedEventStream(t *testing.T) {
 
 type EmbeddedEventStreamTestSuite struct {
 	suite.Suite
-	opts *EmbeddedEventStreamOpts
+	opts *EmbeddedMessagingStreamOpts
 }
 
 func (t *EmbeddedEventStreamTestSuite) SetupSuite() {
-	t.opts = &EmbeddedEventStreamOpts{
+	t.opts = &EmbeddedMessagingStreamOpts{
 		Options: &server.Options{
 			Host: "localhost",
 		},
@@ -52,7 +52,7 @@ func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
 	t.Require().NotPanics(e.Stop, "the embedded server must not panic on stop")
 }
 
-func (t *EmbeddedEventStreamTestSuite) TestGetClient() {
+func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
 	e, err := NewEmbeddedEventStream(t.opts)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
@@ -61,7 +61,21 @@ func (t *EmbeddedEventStreamTestSuite) TestGetClient() {
 		e.Start()
 	}, "the embedded server must not panic on start")
 
-	embeddedClient, err := e.GetClient()
+	embeddedClient, err := e.GetPubSubClient()
+	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
+	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
+}
+
+func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
+	e, err := NewEmbeddedEventStream(t.opts)
+	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
+	t.Require().NotNil(e, "the event stream must not be nil")
+
+	t.Require().NotPanics(func() {
+		e.Start()
+	}, "the embedded server must not panic on start")
+
+	embeddedClient, err := e.GetStreamClient()
 	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
 	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
 }

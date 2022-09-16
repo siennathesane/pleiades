@@ -18,56 +18,45 @@ import (
 )
 
 const (
-	raftHostTopic       string = "system.raft.host"
-	raftLogTopic        string = "system.raft.log"
-	raftNodeTopic       string = "system.raft.node"
-	raftSnapshotTopic   string = "system.raft.snapshot"
-	raftConnectionTopic string = "system.raft.connection"
+	raftHostSubject       string = "system.raft.host"
+	raftLogSubject        string = "system.raft.log"
+	raftNodeSubject       string = "system.raft.node"
+	raftSnapshotSubject   string = "system.raft.snapshot"
+	raftConnectionSubject string = "system.raft.connection"
+	systemStreamName      string = "SYSTEM"
 )
 
 var _ raftio.ISystemEventListener = (*RaftListener)(nil)
 
-func NewRaftListener(client *EmbeddedEventStreamClient, queueClient *EmbeddedQueueClient, logger zerolog.Logger) (*RaftListener, error) {
+func NewRaftListener(client *EmbeddedMessagingPubSubClient, queueClient *EmbeddedMessagingStreamClient, logger zerolog.Logger) (*RaftListener, error) {
 	rl := &RaftListener{
 		logger:            logger.With().Str("component", "raft-listener").Logger(),
 		eventStreamClient: client,
-		queueClient: &EmbeddedQueueClient{
+		queueClient: &EmbeddedMessagingStreamClient{
 			JetStreamContext: queueClient,
 		},
 	}
 
-	rl.queueClient.AddStream(&nats.StreamConfig{
-		Name:              "RAFT",
-		Description:       "Work queue for Raft system notifications",
-		Subjects:          []string{raftHostTopic, raftLogTopic, raftNodeTopic, raftSnapshotTopic, raftConnectionTopic},
-		Retention:         nats.WorkQueuePolicy,
-		Discard:           nats.DiscardOld,
-		MaxAge:            0,
-		MaxMsgsPerSubject: 0,
-		MaxMsgSize:        0,
-		Storage:           nats.MemoryStorage,
-		NoAck:             false,
-		Template:          "",
-		Duplicates:        0,
-		Placement:         nil,
-		Mirror:            nil,
-		Sources:           nil,
-		Sealed:            false,
-		DenyDelete:        false,
-		DenyPurge:         false,
-		AllowRollup:       false,
-		RePublish:         nil,
-		AllowDirect:       false,
-		MirrorDirect:      false,
+	_, err := rl.queueClient.AddStream(&nats.StreamConfig{
+		Name:        systemStreamName,
+		Description: "Work queue for Raft system notifications",
+		Subjects:    []string{raftHostSubject, raftLogSubject, raftNodeSubject, raftSnapshotSubject, raftConnectionSubject},
+		Retention:   nats.WorkQueuePolicy,
+		Discard:     nats.DiscardOld,
+		Storage:     nats.MemoryStorage,
+		MaxMsgs:     1000,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return rl, nil
 }
 
 type RaftListener struct {
 	logger            zerolog.Logger
-	eventStreamClient *EmbeddedEventStreamClient
-	queueClient       *EmbeddedQueueClient
+	eventStreamClient *EmbeddedMessagingPubSubClient
+	queueClient       *EmbeddedMessagingStreamClient
 }
 
 func (r *RaftListener) NodeHostShuttingDown() {
@@ -82,14 +71,9 @@ func (r *RaftListener) NodeHostShuttingDown() {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftHostTopic, buf)
+	err = r.eventStreamClient.Publish(raftHostSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft host shut down event")
-	}
-
-	_, err = r.queueClient.Publish(raftHostTopic, buf)
-	if err != nil {
-		r.logger.Error().Err(err).Msg("can't publish raft host shut down to queue")
 	}
 }
 
@@ -110,7 +94,7 @@ func (r *RaftListener) NodeUnloaded(info raftio.NodeInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftNodeTopic, buf)
+	err = r.eventStreamClient.Publish(raftNodeSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node unload event")
 	}
@@ -133,7 +117,7 @@ func (r *RaftListener) NodeReady(info raftio.NodeInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftNodeTopic, buf)
+	err = r.eventStreamClient.Publish(raftNodeSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node ready event")
 	}
@@ -156,7 +140,7 @@ func (r *RaftListener) MembershipChanged(info raftio.NodeInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftNodeTopic, buf)
+	err = r.eventStreamClient.Publish(raftNodeSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node membership change event")
 	}
@@ -179,7 +163,7 @@ func (r *RaftListener) ConnectionEstablished(info raftio.ConnectionInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftConnectionTopic, buf)
+	err = r.eventStreamClient.Publish(raftConnectionSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft connection established event")
 	}
@@ -202,7 +186,7 @@ func (r *RaftListener) ConnectionFailed(info raftio.ConnectionInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftConnectionTopic, buf)
+	err = r.eventStreamClient.Publish(raftConnectionSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft connection failed event")
 	}
@@ -227,7 +211,7 @@ func (r *RaftListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot started event")
 	}
@@ -252,7 +236,7 @@ func (r *RaftListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot completed event")
 	}
@@ -277,7 +261,7 @@ func (r *RaftListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot aborted event")
 	}
@@ -302,7 +286,7 @@ func (r *RaftListener) SnapshotReceived(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot received event")
 	}
@@ -327,7 +311,7 @@ func (r *RaftListener) SnapshotRecovered(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot recovered event")
 	}
@@ -352,7 +336,7 @@ func (r *RaftListener) SnapshotCreated(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot created event")
 	}
@@ -377,7 +361,7 @@ func (r *RaftListener) SnapshotCompacted(info raftio.SnapshotInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftSnapshotTopic, buf)
+	err = r.eventStreamClient.Publish(raftSnapshotSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot compacted event")
 	}
@@ -401,7 +385,7 @@ func (r *RaftListener) LogCompacted(info raftio.EntryInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftLogTopic, buf)
+	err = r.eventStreamClient.Publish(raftLogSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft log compacted event")
 	}
@@ -425,7 +409,7 @@ func (r *RaftListener) LogDBCompacted(info raftio.EntryInfo) {
 		r.logger.Error().Err(err).Msg("error marshalling payload")
 	}
 
-	err = r.eventStreamClient.Publish(raftLogTopic, buf)
+	err = r.eventStreamClient.Publish(raftLogSubject, buf)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft logdb compacted event")
 	}
