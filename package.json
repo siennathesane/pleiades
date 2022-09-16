@@ -1,6 +1,6 @@
 {
   "name": "@anthropos-labs/api",
-  "version": "22.9.16",
+  "version": "22.9.16-dd34832",
   "description": "API interfaces for Pleiades",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -20,6 +20,9 @@
     "pkg/server/*.ts",
     "pkg/server/*.proto"
   ],
+  "dependencies": {
+    "google-protobuf": "~3.14.0"
+  },
   "devDependencies": {
     "@grpc/grpc-js": "~1.1.8",
     "@grpc/proto-loader": "~0.5.4",
