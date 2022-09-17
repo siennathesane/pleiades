@@ -1,4 +1,4 @@
-FROM golang:1.18
+FROM golang:1.19-alpine
 
 EXPOSE 8080
 RUN go install -v go.uber.org/sally@latest
