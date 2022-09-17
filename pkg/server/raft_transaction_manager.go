@@ -12,7 +12,7 @@ package server
 import (
 	"context"
 
-	"github.com/mxplusb/pleiades/api/v1/database"
+	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
@@ -36,7 +36,7 @@ type raftTransactionManager struct {
 	sessionCache map[uint64]*dclient.Session
 }
 
-func (t *raftTransactionManager) CloseTransaction(ctx context.Context, transaction *database.Transaction) error {
+func (t *raftTransactionManager) CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error {
 	t.logger.Debug().Uint64("shard", transaction.ShardId).Msg("closing transaction")
 
 	cs, ok := t.sessionCache[transaction.GetClientId()]
@@ -53,7 +53,7 @@ func (t *raftTransactionManager) CloseTransaction(ctx context.Context, transacti
 	return err
 }
 
-func (t *raftTransactionManager) Commit(ctx context.Context, transaction *database.Transaction) *database.Transaction {
+func (t *raftTransactionManager) Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction {
 	// nb (sienna): I know, I know. stop judging me.
 	// is this hacky? yes.
 	// does it work? yes.
@@ -64,7 +64,7 @@ func (t *raftTransactionManager) Commit(ctx context.Context, transaction *databa
 
 	cs, ok := t.sessionCache[transaction.GetClientId()]
 	if !ok {
-		return &database.Transaction{}
+		return &kvstorev1.Transaction{}
 	}
 
 	cs.ProposalCompleted()
@@ -73,14 +73,14 @@ func (t *raftTransactionManager) Commit(ctx context.Context, transaction *databa
 	return ta
 }
 
-func (t *raftTransactionManager) GetNoOpTransaction(shardId uint64) *database.Transaction {
+func (t *raftTransactionManager) GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting noop transaction")
 	cs := t.nh.GetNoOPSession(shardId)
 	t.sessionCache[cs.ClientID] = cs
 	return csToTransaction(*cs)
 }
 
-func (t *raftTransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*database.Transaction, error) {
+func (t *raftTransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error) {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting transaction")
 	cs, err := t.nh.SyncGetSession(ctx, shardId)
 	if err != nil {
@@ -93,8 +93,8 @@ func (t *raftTransactionManager) GetTransaction(ctx context.Context, shardId uin
 	return csToTransaction(*cs), nil
 }
 
-func csToTransaction(cs dclient.Session) *database.Transaction {
-	return &database.Transaction{
+func csToTransaction(cs dclient.Session) *kvstorev1.Transaction {
+	return &kvstorev1.Transaction{
 		ShardId:       cs.ClusterID,
 		ClientId:      cs.ClientID,
 		TransactionId: cs.SeriesID,
