@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package pubsub
+package messaging
 
 import (
 	"testing"
@@ -46,12 +46,13 @@ func (t *RaftSystemListenerTestSuite) SetupSuite() {
 		Options: &server.Options{
 			Host: "localhost",
 			JetStream: true,
+			DontListen: true,
 		},
 		timeout: utils.Timeout(4000 * time.Millisecond),
 	}
 
 	var err error
-	t.e, err = NewEmbeddedEventStream(opts)
+	t.e, err = NewEmbeddedMessaging(opts)
 	t.Require().NoError(err, "there must not be an error creating the event stream")
 
 	t.e.Start()
@@ -69,7 +70,7 @@ func (t *RaftSystemListenerTestSuite) SetupTest() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNewNewRaftSystemListener() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -81,7 +82,7 @@ func (t *RaftSystemListenerTestSuite) TestNewNewRaftSystemListener() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -91,7 +92,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -104,7 +105,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -118,7 +119,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -131,7 +132,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeReady() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -145,7 +146,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeReady() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -158,7 +159,7 @@ func (t *RaftSystemListenerTestSuite) TestNodeReady() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -172,7 +173,7 @@ func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -185,7 +186,7 @@ func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -199,7 +200,7 @@ func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -212,7 +213,7 @@ func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -226,7 +227,7 @@ func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -239,7 +240,7 @@ func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -255,7 +256,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -268,7 +269,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -284,7 +285,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -297,7 +298,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -313,7 +314,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -326,7 +327,7 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -342,7 +343,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -355,7 +356,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -371,7 +372,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -384,7 +385,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -400,7 +401,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -413,7 +414,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -429,7 +430,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -442,7 +443,7 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -457,7 +458,7 @@ func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
@@ -470,7 +471,7 @@ func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
-	listener, err := NewRaftListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
@@ -485,7 +486,7 @@ func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
 	t.Require().NoError(err, "there must not be an error when subscribing")
 	defer sub.Unsubscribe()
 
-	msgs, err := sub.NextMsg(1)
+	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
 	err = msgs.AckSync()
