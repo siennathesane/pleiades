@@ -1,6 +1,6 @@
 {
     "name": "@anthropos-labs/api",
-    "version": "22.9.15",
+    "version": "22.9.17-ea824cb",
     "description": "API interfaces for Pleiades",
     "scripts": {
         "generate": "buf generate"
@@ -12,7 +12,8 @@
     },
     "homepage": "https://anthroposlabs.com",
     "files": [
-        "**/*.js"
+        "**/*.js",
+        "**/*.ts"
     ],
     "devDependencies": {
         "@bufbuild/protoc-gen-connect-web": "^0.2.1",
