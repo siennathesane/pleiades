@@ -11,3 +11,4 @@ package-lock.json
 **.tgz
 vendor/
 **/*.db
+google/
