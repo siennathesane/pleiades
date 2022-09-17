@@ -32,25 +32,25 @@ static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_errors_2fv1_2ferror_5fcodes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\033errors/v1/error_codes.proto\022\terrors.v1"
-  "*\246\003\n\004Code\022\024\n\020CODE_UNSPECIFIED\020\000\022\013\n\007CODE_"
-  "OK\020\000\022\022\n\016CODE_CANCELLED\020\001\022\020\n\014CODE_UNKNOWN"
-  "\020\002\022\031\n\025CODE_INVALID_ARGUMENT\020\003\022\032\n\026CODE_DE"
-  "ADLINE_EXCEEDED\020\004\022\022\n\016CODE_NOT_FOUND\020\005\022\027\n"
-  "\023CODE_ALREADY_EXISTS\020\006\022\032\n\026CODE_PERMISSIO"
-  "N_DENIED\020\007\022\030\n\024CODE_UNAUTHENTICATED\020\020\022\033\n\027"
-  "CODE_RESOURCE_EXHAUSTED\020\010\022\034\n\030CODE_FAILED"
-  "_PRECONDITION\020\t\022\020\n\014CODE_ABORTED\020\n\022\025\n\021COD"
-  "E_OUT_OF_RANGE\020\013\022\026\n\022CODE_UNIMPLEMENTED\020\014"
-  "\022\021\n\rCODE_INTERNAL\020\r\022\024\n\020CODE_UNAVAILABLE\020"
-  "\016\022\022\n\016CODE_DATA_LOSS\020\017\032\002\020\001B\215\001\n\025io.a13s.ap"
-  "i.errors.v1B\017ErrorCodesProtoP\001Z\036a13s.io/"
-  "api/errors/v1;errorsv1\242\002\003EXX\252\002\tErrors.V1"
-  "\312\002\tErrors\\V1\342\002\025Errors\\V1\\GPBMetadata\352\002\nE"
-  "rrors::V1b\006proto3"
+  "*\242\003\n\004Code\022\024\n\020CODE_UNSPECIFIED\020\000\022\013\n\007CODE_"
+  "OK\020\001\022\022\n\016CODE_CANCELLED\020\002\022\020\n\014CODE_UNKNOWN"
+  "\020\003\022\031\n\025CODE_INVALID_ARGUMENT\020\004\022\032\n\026CODE_DE"
+  "ADLINE_EXCEEDED\020\005\022\022\n\016CODE_NOT_FOUND\020\006\022\027\n"
+  "\023CODE_ALREADY_EXISTS\020\007\022\032\n\026CODE_PERMISSIO"
+  "N_DENIED\020\010\022\030\n\024CODE_UNAUTHENTICATED\020\t\022\033\n\027"
+  "CODE_RESOURCE_EXHAUSTED\020\n\022\034\n\030CODE_FAILED"
+  "_PRECONDITION\020\013\022\020\n\014CODE_ABORTED\020\014\022\025\n\021COD"
+  "E_OUT_OF_RANGE\020\r\022\026\n\022CODE_UNIMPLEMENTED\020\016"
+  "\022\021\n\rCODE_INTERNAL\020\017\022\024\n\020CODE_UNAVAILABLE\020"
+  "\020\022\022\n\016CODE_DATA_LOSS\020\021B\215\001\n\025io.a13s.api.er"
+  "rors.v1B\017ErrorCodesProtoP\001Z\036a13s.io/api/"
+  "errors/v1;errorsv1\242\002\003EXX\252\002\tErrors.V1\312\002\tE"
+  "rrors\\V1\342\002\025Errors\\V1\\GPBMetadata\352\002\nError"
+  "s::V1b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_errors_2fv1_2ferror_5fcodes_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_errors_2fv1_2ferror_5fcodes_2eproto = {
-    false, false, 617, descriptor_table_protodef_errors_2fv1_2ferror_5fcodes_2eproto,
+    false, false, 613, descriptor_table_protodef_errors_2fv1_2ferror_5fcodes_2eproto,
     "errors/v1/error_codes.proto",
     &descriptor_table_errors_2fv1_2ferror_5fcodes_2eproto_once, nullptr, 0, 0,
     schemas, file_default_instances, TableStruct_errors_2fv1_2ferror_5fcodes_2eproto::offsets,
@@ -88,6 +88,7 @@ bool Code_IsValid(int value) {
     case 14:
     case 15:
     case 16:
+    case 17:
       return true;
     default:
       return false;

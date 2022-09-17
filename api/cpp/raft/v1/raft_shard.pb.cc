@@ -685,17 +685,17 @@ const char descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto[] PROTOBUF
   "2\031.raft.v1.StateMachineTypeR\004type\"\036\n\034Sta"
   "rtReplicaObserverResponse\"/\n\022StopReplica"
   "Request\022\031\n\010shard_id\030\001 \001(\004R\007shardId\"\025\n\023St"
-  "opReplicaResponse*r\n\020StateMachineType\022\"\n"
+  "opReplicaResponse*n\n\020StateMachineType\022\"\n"
   "\036STATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027STA"
-  "TE_MACHINE_TYPE_TEST\020\000\022\031\n\025STATE_MACHINE_"
-  "TYPE_KV\020\001\032\002\020\001B~\n\023io.a13s.api.raft.v1B\016Ra"
-  "ftShardProtoP\001Z\032a13s.io/api/raft/v1;raft"
-  "v1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\G"
-  "PBMetadata\352\002\010Raft::V1b\006proto3"
+  "TE_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_"
+  "TYPE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016RaftSh"
+  "ardProtoP\001Z\032a13s.io/api/raft/v1;raftv1\242\002"
+  "\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMe"
+  "tadata\352\002\010Raft::V1b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_raft_2fv1_2fraft_5fshard_2eproto = {
-    false, false, 2469, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
+    false, false, 2465, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
     "raft/v1/raft_shard.proto",
     &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, nullptr, 0, 26,
     schemas, file_default_instances, TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets,
@@ -718,6 +718,7 @@ bool StateMachineType_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;

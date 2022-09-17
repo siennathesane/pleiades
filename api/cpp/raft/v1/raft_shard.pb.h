@@ -164,8 +164,8 @@ namespace v1 {
 
 enum StateMachineType : int {
   STATE_MACHINE_TYPE_UNSPECIFIED = 0,
-  STATE_MACHINE_TYPE_TEST = 0,
-  STATE_MACHINE_TYPE_KV = 1,
+  STATE_MACHINE_TYPE_TEST = 1,
+  STATE_MACHINE_TYPE_KV = 2,
   StateMachineType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   StateMachineType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };

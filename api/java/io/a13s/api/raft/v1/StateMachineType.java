@@ -11,34 +11,34 @@ public enum StateMachineType
   /**
    * <code>STATE_MACHINE_TYPE_UNSPECIFIED = 0;</code>
    */
-  STATE_MACHINE_TYPE_UNSPECIFIED(0, 0),
+  STATE_MACHINE_TYPE_UNSPECIFIED(0),
   /**
-   * <code>STATE_MACHINE_TYPE_KV = 1;</code>
+   * <code>STATE_MACHINE_TYPE_TEST = 1;</code>
    */
-  STATE_MACHINE_TYPE_KV(2, 1),
-  UNRECOGNIZED(-1, -1),
+  STATE_MACHINE_TYPE_TEST(1),
+  /**
+   * <code>STATE_MACHINE_TYPE_KV = 2;</code>
+   */
+  STATE_MACHINE_TYPE_KV(2),
+  UNRECOGNIZED(-1),
   ;
 
-  /**
-   * <code>STATE_MACHINE_TYPE_TEST = 0;</code>
-   */
-  public static final StateMachineType STATE_MACHINE_TYPE_TEST = STATE_MACHINE_TYPE_UNSPECIFIED;
   /**
    * <code>STATE_MACHINE_TYPE_UNSPECIFIED = 0;</code>
    */
   public static final int STATE_MACHINE_TYPE_UNSPECIFIED_VALUE = 0;
   /**
-   * <code>STATE_MACHINE_TYPE_TEST = 0;</code>
+   * <code>STATE_MACHINE_TYPE_TEST = 1;</code>
    */
-  public static final int STATE_MACHINE_TYPE_TEST_VALUE = 0;
+  public static final int STATE_MACHINE_TYPE_TEST_VALUE = 1;
   /**
-   * <code>STATE_MACHINE_TYPE_KV = 1;</code>
+   * <code>STATE_MACHINE_TYPE_KV = 2;</code>
    */
-  public static final int STATE_MACHINE_TYPE_KV_VALUE = 1;
+  public static final int STATE_MACHINE_TYPE_KV_VALUE = 2;
 
 
   public final int getNumber() {
-    if (index == -1) {
+    if (this == UNRECOGNIZED) {
       throw new java.lang.IllegalArgumentException(
           "Can't get the number of an unknown enum value.");
     }
@@ -62,7 +62,8 @@ public enum StateMachineType
   public static StateMachineType forNumber(int value) {
     switch (value) {
       case 0: return STATE_MACHINE_TYPE_UNSPECIFIED;
-      case 1: return STATE_MACHINE_TYPE_KV;
+      case 1: return STATE_MACHINE_TYPE_TEST;
+      case 2: return STATE_MACHINE_TYPE_KV;
       default: return null;
     }
   }
@@ -81,11 +82,11 @@ public enum StateMachineType
 
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
-    if (index == -1) {
+    if (this == UNRECOGNIZED) {
       throw new java.lang.IllegalStateException(
           "Can't get the descriptor of an unrecognized enum value.");
     }
-    return getDescriptor().getValues().get(index);
+    return getDescriptor().getValues().get(ordinal());
   }
   public final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptorForType() {
@@ -96,12 +97,8 @@ public enum StateMachineType
     return io.a13s.api.raft.v1.RaftShardProto.getDescriptor().getEnumTypes().get(0);
   }
 
-  private static final StateMachineType[] VALUES = getStaticValuesArray();
-  private static StateMachineType[] getStaticValuesArray() {
-    return new StateMachineType[] {
-      STATE_MACHINE_TYPE_UNSPECIFIED, STATE_MACHINE_TYPE_TEST, STATE_MACHINE_TYPE_KV, 
-    };
-  }
+  private static final StateMachineType[] VALUES = values();
+
   public static StateMachineType valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
@@ -114,11 +111,9 @@ public enum StateMachineType
     return VALUES[desc.getIndex()];
   }
 
-  private final int index;
   private final int value;
 
-  private StateMachineType(int index, int value) {
-    this.index = index;
+  private StateMachineType(int value) {
     this.value = value;
   }
 

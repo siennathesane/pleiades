@@ -16,14 +16,14 @@ export declare enum StateMachineType {
   UNSPECIFIED = 0,
 
   /**
-   * @generated from enum value: STATE_MACHINE_TYPE_TEST = 0;
+   * @generated from enum value: STATE_MACHINE_TYPE_TEST = 1;
    */
-  TEST = 0,
+  TEST = 1,
 
   /**
-   * @generated from enum value: STATE_MACHINE_TYPE_KV = 1;
+   * @generated from enum value: STATE_MACHINE_TYPE_KV = 2;
    */
-  KV = 1,
+  KV = 2,
 }
 
 /**

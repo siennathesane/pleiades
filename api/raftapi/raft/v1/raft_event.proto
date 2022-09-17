@@ -1,0 +1,70 @@
+syntax = "proto3";
+package raft.v1;
+
+import "google/protobuf/timestamp.proto";
+
+enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+  EVENT_TYPE_LOG_ENTRY = 1;
+  EVENT_TYPE_SNAPSHOT = 2;
+  EVENT_TYPE_CONNECTION = 3;
+  EVENT_TYPE_HOST = 4;
+  EVENT_TYPE_NODE = 5;
+}
+
+enum Event {
+    EVENT_UNSPECIFIED = 0;
+    EVENT_CONNECTION_ESTABLISHED = 1;
+    EVENT_CONNECTION_FAILED = 2;
+    EVENT_LOG_COMPACTED = 3;
+    EVENT_LOGDB_COMPACTED = 4;
+    EVENT_MEMBERSHIP_CHANGED = 5;
+    EVENT_NODE_HOST_SHUTTING_DOWN = 6;
+    EVENT_NODE_READY = 7;
+    EVENT_NODE_UNLOADED = 8;
+    EVENT_SEND_SNAPSHOT_ABORTED = 9;
+    EVENT_SEND_SNAPSHOT_COMPLETED = 10;
+    EVENT_SEND_SNAPSHOT_STARTED = 11;
+    EVENT_SNAPSHOT_COMPACTED = 12;
+    EVENT_SNAPSHOT_CREATED = 13;
+    EVENT_SNAPSHOT_RECEIVED = 14;
+    EVENT_SNAPSHOT_RECOVERED = 15;
+}
+
+message RaftEvent {
+  EventType typ = 1;
+  Event action = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  oneof event {
+    RaftLogEntryEvent log_entry = 4;
+    RaftSnapshotEvent snapshot = 5;
+    RaftConnectionEvent connection = 6;
+    RaftNodeEvent node = 7;
+    RaftHostShutdown host_shutdown = 8;
+  }
+}
+
+message RaftLogEntryEvent {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  uint64 index = 3;
+}
+
+message RaftSnapshotEvent {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  uint64 from_index = 3;
+  uint64 to_index = 4;
+}
+
+message RaftConnectionEvent {
+  string address = 1;
+  bool is_snapshot = 2;
+}
+
+message RaftNodeEvent {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+}
+
+message RaftHostShutdown {}

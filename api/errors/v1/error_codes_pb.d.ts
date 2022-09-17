@@ -39,18 +39,18 @@ export declare enum Code {
    *
    * HTTP Mapping: 200 OK
    *
-   * @generated from enum value: CODE_OK = 0;
+   * @generated from enum value: CODE_OK = 1;
    */
-  OK = 0,
+  OK = 1,
 
   /**
    * The operation was cancelled, typically by the caller.
    *
    * HTTP Mapping: 499 Client Closed Request
    *
-   * @generated from enum value: CODE_CANCELLED = 1;
+   * @generated from enum value: CODE_CANCELLED = 2;
    */
-  CANCELLED = 1,
+  CANCELLED = 2,
 
   /**
    * Unknown error.  For example, this error may be returned when
@@ -61,9 +61,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 500 Internal Server Error
    *
-   * @generated from enum value: CODE_UNKNOWN = 2;
+   * @generated from enum value: CODE_UNKNOWN = 3;
    */
-  UNKNOWN = 2,
+  UNKNOWN = 3,
 
   /**
    * The client specified an invalid argument.  Note that this differs
@@ -73,9 +73,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 400 Bad Request
    *
-   * @generated from enum value: CODE_INVALID_ARGUMENT = 3;
+   * @generated from enum value: CODE_INVALID_ARGUMENT = 4;
    */
-  INVALID_ARGUMENT = 3,
+  INVALID_ARGUMENT = 4,
 
   /**
    * The deadline expired before the operation could complete. For operations
@@ -86,9 +86,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 504 Gateway Timeout
    *
-   * @generated from enum value: CODE_DEADLINE_EXCEEDED = 4;
+   * @generated from enum value: CODE_DEADLINE_EXCEEDED = 5;
    */
-  DEADLINE_EXCEEDED = 4,
+  DEADLINE_EXCEEDED = 5,
 
   /**
    * Some requested entity (e.g., file or directory) was not found.
@@ -101,9 +101,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 404 Not Found
    *
-   * @generated from enum value: CODE_NOT_FOUND = 5;
+   * @generated from enum value: CODE_NOT_FOUND = 6;
    */
-  NOT_FOUND = 5,
+  NOT_FOUND = 6,
 
   /**
    * The entity that a client attempted to create (e.g., file or directory)
@@ -111,9 +111,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 409 Conflict
    *
-   * @generated from enum value: CODE_ALREADY_EXISTS = 6;
+   * @generated from enum value: CODE_ALREADY_EXISTS = 7;
    */
-  ALREADY_EXISTS = 6,
+  ALREADY_EXISTS = 7,
 
   /**
    * The caller does not have permission to execute the specified
@@ -127,9 +127,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 403 Forbidden
    *
-   * @generated from enum value: CODE_PERMISSION_DENIED = 7;
+   * @generated from enum value: CODE_PERMISSION_DENIED = 8;
    */
-  PERMISSION_DENIED = 7,
+  PERMISSION_DENIED = 8,
 
   /**
    * The request does not have valid authentication credentials for the
@@ -137,9 +137,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 401 Unauthorized
    *
-   * @generated from enum value: CODE_UNAUTHENTICATED = 16;
+   * @generated from enum value: CODE_UNAUTHENTICATED = 9;
    */
-  UNAUTHENTICATED = 16,
+  UNAUTHENTICATED = 9,
 
   /**
    * Some resource has been exhausted, perhaps a per-user quota, or
@@ -147,9 +147,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 429 Too Many Requests
    *
-   * @generated from enum value: CODE_RESOURCE_EXHAUSTED = 8;
+   * @generated from enum value: CODE_RESOURCE_EXHAUSTED = 10;
    */
-  RESOURCE_EXHAUSTED = 8,
+  RESOURCE_EXHAUSTED = 10,
 
   /**
    * The operation was rejected because the system is not in a state
@@ -171,9 +171,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 400 Bad Request
    *
-   * @generated from enum value: CODE_FAILED_PRECONDITION = 9;
+   * @generated from enum value: CODE_FAILED_PRECONDITION = 11;
    */
-  FAILED_PRECONDITION = 9,
+  FAILED_PRECONDITION = 11,
 
   /**
    * The operation was aborted, typically due to a concurrency issue such as
@@ -184,9 +184,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 409 Conflict
    *
-   * @generated from enum value: CODE_ABORTED = 10;
+   * @generated from enum value: CODE_ABORTED = 12;
    */
-  ABORTED = 10,
+  ABORTED = 12,
 
   /**
    * The operation was attempted past the valid range.  E.g., seeking or
@@ -207,9 +207,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 400 Bad Request
    *
-   * @generated from enum value: CODE_OUT_OF_RANGE = 11;
+   * @generated from enum value: CODE_OUT_OF_RANGE = 13;
    */
-  OUT_OF_RANGE = 11,
+  OUT_OF_RANGE = 13,
 
   /**
    * The operation is not implemented or is not supported/enabled in this
@@ -217,9 +217,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 501 Not Implemented
    *
-   * @generated from enum value: CODE_UNIMPLEMENTED = 12;
+   * @generated from enum value: CODE_UNIMPLEMENTED = 14;
    */
-  UNIMPLEMENTED = 12,
+  UNIMPLEMENTED = 14,
 
   /**
    * Internal errors.  This means that some invariants expected by the
@@ -228,9 +228,9 @@ export declare enum Code {
    *
    * HTTP Mapping: 500 Internal Server Error
    *
-   * @generated from enum value: CODE_INTERNAL = 13;
+   * @generated from enum value: CODE_INTERNAL = 15;
    */
-  INTERNAL = 13,
+  INTERNAL = 15,
 
   /**
    * The service is currently unavailable.  This is most likely a
@@ -243,17 +243,17 @@ export declare enum Code {
    *
    * HTTP Mapping: 503 Service Unavailable
    *
-   * @generated from enum value: CODE_UNAVAILABLE = 14;
+   * @generated from enum value: CODE_UNAVAILABLE = 16;
    */
-  UNAVAILABLE = 14,
+  UNAVAILABLE = 16,
 
   /**
    * Unrecoverable data loss or corruption.
    *
    * HTTP Mapping: 500 Internal Server Error
    *
-   * @generated from enum value: CODE_DATA_LOSS = 15;
+   * @generated from enum value: CODE_DATA_LOSS = 17;
    */
-  DATA_LOSS = 15,
+  DATA_LOSS = 17,
 }
 

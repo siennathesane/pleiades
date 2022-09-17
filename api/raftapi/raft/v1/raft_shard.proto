@@ -3,10 +3,9 @@ syntax = "proto3";
 package raft.v1;
 
 enum StateMachineType {
-  option allow_alias = true;
   STATE_MACHINE_TYPE_UNSPECIFIED = 0;
-  STATE_MACHINE_TYPE_TEST = 0;
-  STATE_MACHINE_TYPE_KV = 1;
+  STATE_MACHINE_TYPE_TEST = 1;
+  STATE_MACHINE_TYPE_KV = 2;
 }
 
 message AddReplicaRequest {

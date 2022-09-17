@@ -12,8 +12,8 @@ export const StateMachineType = proto3.makeEnum(
   "raft.v1.StateMachineType",
   [
     {no: 0, name: "STATE_MACHINE_TYPE_UNSPECIFIED", localName: "UNSPECIFIED"},
-    {no: 0, name: "STATE_MACHINE_TYPE_TEST", localName: "TEST"},
-    {no: 1, name: "STATE_MACHINE_TYPE_KV", localName: "KV"},
+    {no: 1, name: "STATE_MACHINE_TYPE_TEST", localName: "TEST"},
+    {no: 2, name: "STATE_MACHINE_TYPE_KV", localName: "KV"},
   ],
 );
 

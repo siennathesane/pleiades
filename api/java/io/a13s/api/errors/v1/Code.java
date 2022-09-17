@@ -19,16 +19,25 @@ public enum Code
   /**
    * <code>CODE_UNSPECIFIED = 0;</code>
    */
-  CODE_UNSPECIFIED(0, 0),
+  CODE_UNSPECIFIED(0),
+  /**
+   * <pre>
+   * Not an error; returned on success
+   * HTTP Mapping: 200 OK
+   * </pre>
+   *
+   * <code>CODE_OK = 1;</code>
+   */
+  CODE_OK(1),
   /**
    * <pre>
    * The operation was cancelled, typically by the caller.
    * HTTP Mapping: 499 Client Closed Request
    * </pre>
    *
-   * <code>CODE_CANCELLED = 1;</code>
+   * <code>CODE_CANCELLED = 2;</code>
    */
-  CODE_CANCELLED(2, 1),
+  CODE_CANCELLED(2),
   /**
    * <pre>
    * Unknown error.  For example, this error may be returned when
@@ -39,9 +48,9 @@ public enum Code
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_UNKNOWN = 2;</code>
+   * <code>CODE_UNKNOWN = 3;</code>
    */
-  CODE_UNKNOWN(3, 2),
+  CODE_UNKNOWN(3),
   /**
    * <pre>
    * The client specified an invalid argument.  Note that this differs
@@ -51,9 +60,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_INVALID_ARGUMENT = 3;</code>
+   * <code>CODE_INVALID_ARGUMENT = 4;</code>
    */
-  CODE_INVALID_ARGUMENT(4, 3),
+  CODE_INVALID_ARGUMENT(4),
   /**
    * <pre>
    * The deadline expired before the operation could complete. For operations
@@ -64,9 +73,9 @@ public enum Code
    * HTTP Mapping: 504 Gateway Timeout
    * </pre>
    *
-   * <code>CODE_DEADLINE_EXCEEDED = 4;</code>
+   * <code>CODE_DEADLINE_EXCEEDED = 5;</code>
    */
-  CODE_DEADLINE_EXCEEDED(5, 4),
+  CODE_DEADLINE_EXCEEDED(5),
   /**
    * <pre>
    * Some requested entity (e.g., file or directory) was not found.
@@ -78,9 +87,9 @@ public enum Code
    * HTTP Mapping: 404 Not Found
    * </pre>
    *
-   * <code>CODE_NOT_FOUND = 5;</code>
+   * <code>CODE_NOT_FOUND = 6;</code>
    */
-  CODE_NOT_FOUND(6, 5),
+  CODE_NOT_FOUND(6),
   /**
    * <pre>
    * The entity that a client attempted to create (e.g., file or directory)
@@ -88,9 +97,9 @@ public enum Code
    * HTTP Mapping: 409 Conflict
    * </pre>
    *
-   * <code>CODE_ALREADY_EXISTS = 6;</code>
+   * <code>CODE_ALREADY_EXISTS = 7;</code>
    */
-  CODE_ALREADY_EXISTS(7, 6),
+  CODE_ALREADY_EXISTS(7),
   /**
    * <pre>
    * The caller does not have permission to execute the specified
@@ -104,9 +113,9 @@ public enum Code
    * HTTP Mapping: 403 Forbidden
    * </pre>
    *
-   * <code>CODE_PERMISSION_DENIED = 7;</code>
+   * <code>CODE_PERMISSION_DENIED = 8;</code>
    */
-  CODE_PERMISSION_DENIED(8, 7),
+  CODE_PERMISSION_DENIED(8),
   /**
    * <pre>
    * The request does not have valid authentication credentials for the
@@ -114,9 +123,9 @@ public enum Code
    * HTTP Mapping: 401 Unauthorized
    * </pre>
    *
-   * <code>CODE_UNAUTHENTICATED = 16;</code>
+   * <code>CODE_UNAUTHENTICATED = 9;</code>
    */
-  CODE_UNAUTHENTICATED(9, 16),
+  CODE_UNAUTHENTICATED(9),
   /**
    * <pre>
    * Some resource has been exhausted, perhaps a per-user quota, or
@@ -124,9 +133,9 @@ public enum Code
    * HTTP Mapping: 429 Too Many Requests
    * </pre>
    *
-   * <code>CODE_RESOURCE_EXHAUSTED = 8;</code>
+   * <code>CODE_RESOURCE_EXHAUSTED = 10;</code>
    */
-  CODE_RESOURCE_EXHAUSTED(10, 8),
+  CODE_RESOURCE_EXHAUSTED(10),
   /**
    * <pre>
    * The operation was rejected because the system is not in a state
@@ -147,9 +156,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_FAILED_PRECONDITION = 9;</code>
+   * <code>CODE_FAILED_PRECONDITION = 11;</code>
    */
-  CODE_FAILED_PRECONDITION(11, 9),
+  CODE_FAILED_PRECONDITION(11),
   /**
    * <pre>
    * The operation was aborted, typically due to a concurrency issue such as
@@ -159,9 +168,9 @@ public enum Code
    * HTTP Mapping: 409 Conflict
    * </pre>
    *
-   * <code>CODE_ABORTED = 10;</code>
+   * <code>CODE_ABORTED = 12;</code>
    */
-  CODE_ABORTED(12, 10),
+  CODE_ABORTED(12),
   /**
    * <pre>
    * The operation was attempted past the valid range.  E.g., seeking or
@@ -180,9 +189,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_OUT_OF_RANGE = 11;</code>
+   * <code>CODE_OUT_OF_RANGE = 13;</code>
    */
-  CODE_OUT_OF_RANGE(13, 11),
+  CODE_OUT_OF_RANGE(13),
   /**
    * <pre>
    * The operation is not implemented or is not supported/enabled in this
@@ -190,9 +199,9 @@ public enum Code
    * HTTP Mapping: 501 Not Implemented
    * </pre>
    *
-   * <code>CODE_UNIMPLEMENTED = 12;</code>
+   * <code>CODE_UNIMPLEMENTED = 14;</code>
    */
-  CODE_UNIMPLEMENTED(14, 12),
+  CODE_UNIMPLEMENTED(14),
   /**
    * <pre>
    * Internal errors.  This means that some invariants expected by the
@@ -201,9 +210,9 @@ public enum Code
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_INTERNAL = 13;</code>
+   * <code>CODE_INTERNAL = 15;</code>
    */
-  CODE_INTERNAL(15, 13),
+  CODE_INTERNAL(15),
   /**
    * <pre>
    * The service is currently unavailable.  This is most likely a
@@ -215,30 +224,21 @@ public enum Code
    * HTTP Mapping: 503 Service Unavailable
    * </pre>
    *
-   * <code>CODE_UNAVAILABLE = 14;</code>
+   * <code>CODE_UNAVAILABLE = 16;</code>
    */
-  CODE_UNAVAILABLE(16, 14),
+  CODE_UNAVAILABLE(16),
   /**
    * <pre>
    * Unrecoverable data loss or corruption.
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_DATA_LOSS = 15;</code>
+   * <code>CODE_DATA_LOSS = 17;</code>
    */
-  CODE_DATA_LOSS(17, 15),
-  UNRECOGNIZED(-1, -1),
+  CODE_DATA_LOSS(17),
+  UNRECOGNIZED(-1),
   ;
 
-  /**
-   * <pre>
-   * Not an error; returned on success
-   * HTTP Mapping: 200 OK
-   * </pre>
-   *
-   * <code>CODE_OK = 0;</code>
-   */
-  public static final Code CODE_OK = CODE_UNSPECIFIED;
   /**
    * <code>CODE_UNSPECIFIED = 0;</code>
    */
@@ -249,18 +249,18 @@ public enum Code
    * HTTP Mapping: 200 OK
    * </pre>
    *
-   * <code>CODE_OK = 0;</code>
+   * <code>CODE_OK = 1;</code>
    */
-  public static final int CODE_OK_VALUE = 0;
+  public static final int CODE_OK_VALUE = 1;
   /**
    * <pre>
    * The operation was cancelled, typically by the caller.
    * HTTP Mapping: 499 Client Closed Request
    * </pre>
    *
-   * <code>CODE_CANCELLED = 1;</code>
+   * <code>CODE_CANCELLED = 2;</code>
    */
-  public static final int CODE_CANCELLED_VALUE = 1;
+  public static final int CODE_CANCELLED_VALUE = 2;
   /**
    * <pre>
    * Unknown error.  For example, this error may be returned when
@@ -271,9 +271,9 @@ public enum Code
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_UNKNOWN = 2;</code>
+   * <code>CODE_UNKNOWN = 3;</code>
    */
-  public static final int CODE_UNKNOWN_VALUE = 2;
+  public static final int CODE_UNKNOWN_VALUE = 3;
   /**
    * <pre>
    * The client specified an invalid argument.  Note that this differs
@@ -283,9 +283,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_INVALID_ARGUMENT = 3;</code>
+   * <code>CODE_INVALID_ARGUMENT = 4;</code>
    */
-  public static final int CODE_INVALID_ARGUMENT_VALUE = 3;
+  public static final int CODE_INVALID_ARGUMENT_VALUE = 4;
   /**
    * <pre>
    * The deadline expired before the operation could complete. For operations
@@ -296,9 +296,9 @@ public enum Code
    * HTTP Mapping: 504 Gateway Timeout
    * </pre>
    *
-   * <code>CODE_DEADLINE_EXCEEDED = 4;</code>
+   * <code>CODE_DEADLINE_EXCEEDED = 5;</code>
    */
-  public static final int CODE_DEADLINE_EXCEEDED_VALUE = 4;
+  public static final int CODE_DEADLINE_EXCEEDED_VALUE = 5;
   /**
    * <pre>
    * Some requested entity (e.g., file or directory) was not found.
@@ -310,9 +310,9 @@ public enum Code
    * HTTP Mapping: 404 Not Found
    * </pre>
    *
-   * <code>CODE_NOT_FOUND = 5;</code>
+   * <code>CODE_NOT_FOUND = 6;</code>
    */
-  public static final int CODE_NOT_FOUND_VALUE = 5;
+  public static final int CODE_NOT_FOUND_VALUE = 6;
   /**
    * <pre>
    * The entity that a client attempted to create (e.g., file or directory)
@@ -320,9 +320,9 @@ public enum Code
    * HTTP Mapping: 409 Conflict
    * </pre>
    *
-   * <code>CODE_ALREADY_EXISTS = 6;</code>
+   * <code>CODE_ALREADY_EXISTS = 7;</code>
    */
-  public static final int CODE_ALREADY_EXISTS_VALUE = 6;
+  public static final int CODE_ALREADY_EXISTS_VALUE = 7;
   /**
    * <pre>
    * The caller does not have permission to execute the specified
@@ -336,9 +336,9 @@ public enum Code
    * HTTP Mapping: 403 Forbidden
    * </pre>
    *
-   * <code>CODE_PERMISSION_DENIED = 7;</code>
+   * <code>CODE_PERMISSION_DENIED = 8;</code>
    */
-  public static final int CODE_PERMISSION_DENIED_VALUE = 7;
+  public static final int CODE_PERMISSION_DENIED_VALUE = 8;
   /**
    * <pre>
    * The request does not have valid authentication credentials for the
@@ -346,9 +346,9 @@ public enum Code
    * HTTP Mapping: 401 Unauthorized
    * </pre>
    *
-   * <code>CODE_UNAUTHENTICATED = 16;</code>
+   * <code>CODE_UNAUTHENTICATED = 9;</code>
    */
-  public static final int CODE_UNAUTHENTICATED_VALUE = 16;
+  public static final int CODE_UNAUTHENTICATED_VALUE = 9;
   /**
    * <pre>
    * Some resource has been exhausted, perhaps a per-user quota, or
@@ -356,9 +356,9 @@ public enum Code
    * HTTP Mapping: 429 Too Many Requests
    * </pre>
    *
-   * <code>CODE_RESOURCE_EXHAUSTED = 8;</code>
+   * <code>CODE_RESOURCE_EXHAUSTED = 10;</code>
    */
-  public static final int CODE_RESOURCE_EXHAUSTED_VALUE = 8;
+  public static final int CODE_RESOURCE_EXHAUSTED_VALUE = 10;
   /**
    * <pre>
    * The operation was rejected because the system is not in a state
@@ -379,9 +379,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_FAILED_PRECONDITION = 9;</code>
+   * <code>CODE_FAILED_PRECONDITION = 11;</code>
    */
-  public static final int CODE_FAILED_PRECONDITION_VALUE = 9;
+  public static final int CODE_FAILED_PRECONDITION_VALUE = 11;
   /**
    * <pre>
    * The operation was aborted, typically due to a concurrency issue such as
@@ -391,9 +391,9 @@ public enum Code
    * HTTP Mapping: 409 Conflict
    * </pre>
    *
-   * <code>CODE_ABORTED = 10;</code>
+   * <code>CODE_ABORTED = 12;</code>
    */
-  public static final int CODE_ABORTED_VALUE = 10;
+  public static final int CODE_ABORTED_VALUE = 12;
   /**
    * <pre>
    * The operation was attempted past the valid range.  E.g., seeking or
@@ -412,9 +412,9 @@ public enum Code
    * HTTP Mapping: 400 Bad Request
    * </pre>
    *
-   * <code>CODE_OUT_OF_RANGE = 11;</code>
+   * <code>CODE_OUT_OF_RANGE = 13;</code>
    */
-  public static final int CODE_OUT_OF_RANGE_VALUE = 11;
+  public static final int CODE_OUT_OF_RANGE_VALUE = 13;
   /**
    * <pre>
    * The operation is not implemented or is not supported/enabled in this
@@ -422,9 +422,9 @@ public enum Code
    * HTTP Mapping: 501 Not Implemented
    * </pre>
    *
-   * <code>CODE_UNIMPLEMENTED = 12;</code>
+   * <code>CODE_UNIMPLEMENTED = 14;</code>
    */
-  public static final int CODE_UNIMPLEMENTED_VALUE = 12;
+  public static final int CODE_UNIMPLEMENTED_VALUE = 14;
   /**
    * <pre>
    * Internal errors.  This means that some invariants expected by the
@@ -433,9 +433,9 @@ public enum Code
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_INTERNAL = 13;</code>
+   * <code>CODE_INTERNAL = 15;</code>
    */
-  public static final int CODE_INTERNAL_VALUE = 13;
+  public static final int CODE_INTERNAL_VALUE = 15;
   /**
    * <pre>
    * The service is currently unavailable.  This is most likely a
@@ -447,22 +447,22 @@ public enum Code
    * HTTP Mapping: 503 Service Unavailable
    * </pre>
    *
-   * <code>CODE_UNAVAILABLE = 14;</code>
+   * <code>CODE_UNAVAILABLE = 16;</code>
    */
-  public static final int CODE_UNAVAILABLE_VALUE = 14;
+  public static final int CODE_UNAVAILABLE_VALUE = 16;
   /**
    * <pre>
    * Unrecoverable data loss or corruption.
    * HTTP Mapping: 500 Internal Server Error
    * </pre>
    *
-   * <code>CODE_DATA_LOSS = 15;</code>
+   * <code>CODE_DATA_LOSS = 17;</code>
    */
-  public static final int CODE_DATA_LOSS_VALUE = 15;
+  public static final int CODE_DATA_LOSS_VALUE = 17;
 
 
   public final int getNumber() {
-    if (index == -1) {
+    if (this == UNRECOGNIZED) {
       throw new java.lang.IllegalArgumentException(
           "Can't get the number of an unknown enum value.");
     }
@@ -486,22 +486,23 @@ public enum Code
   public static Code forNumber(int value) {
     switch (value) {
       case 0: return CODE_UNSPECIFIED;
-      case 1: return CODE_CANCELLED;
-      case 2: return CODE_UNKNOWN;
-      case 3: return CODE_INVALID_ARGUMENT;
-      case 4: return CODE_DEADLINE_EXCEEDED;
-      case 5: return CODE_NOT_FOUND;
-      case 6: return CODE_ALREADY_EXISTS;
-      case 7: return CODE_PERMISSION_DENIED;
-      case 16: return CODE_UNAUTHENTICATED;
-      case 8: return CODE_RESOURCE_EXHAUSTED;
-      case 9: return CODE_FAILED_PRECONDITION;
-      case 10: return CODE_ABORTED;
-      case 11: return CODE_OUT_OF_RANGE;
-      case 12: return CODE_UNIMPLEMENTED;
-      case 13: return CODE_INTERNAL;
-      case 14: return CODE_UNAVAILABLE;
-      case 15: return CODE_DATA_LOSS;
+      case 1: return CODE_OK;
+      case 2: return CODE_CANCELLED;
+      case 3: return CODE_UNKNOWN;
+      case 4: return CODE_INVALID_ARGUMENT;
+      case 5: return CODE_DEADLINE_EXCEEDED;
+      case 6: return CODE_NOT_FOUND;
+      case 7: return CODE_ALREADY_EXISTS;
+      case 8: return CODE_PERMISSION_DENIED;
+      case 9: return CODE_UNAUTHENTICATED;
+      case 10: return CODE_RESOURCE_EXHAUSTED;
+      case 11: return CODE_FAILED_PRECONDITION;
+      case 12: return CODE_ABORTED;
+      case 13: return CODE_OUT_OF_RANGE;
+      case 14: return CODE_UNIMPLEMENTED;
+      case 15: return CODE_INTERNAL;
+      case 16: return CODE_UNAVAILABLE;
+      case 17: return CODE_DATA_LOSS;
       default: return null;
     }
   }
@@ -520,11 +521,11 @@ public enum Code
 
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
-    if (index == -1) {
+    if (this == UNRECOGNIZED) {
       throw new java.lang.IllegalStateException(
           "Can't get the descriptor of an unrecognized enum value.");
     }
-    return getDescriptor().getValues().get(index);
+    return getDescriptor().getValues().get(ordinal());
   }
   public final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptorForType() {
@@ -535,12 +536,8 @@ public enum Code
     return io.a13s.api.errors.v1.ErrorCodesProto.getDescriptor().getEnumTypes().get(0);
   }
 
-  private static final Code[] VALUES = getStaticValuesArray();
-  private static Code[] getStaticValuesArray() {
-    return new Code[] {
-      CODE_UNSPECIFIED, CODE_OK, CODE_CANCELLED, CODE_UNKNOWN, CODE_INVALID_ARGUMENT, CODE_DEADLINE_EXCEEDED, CODE_NOT_FOUND, CODE_ALREADY_EXISTS, CODE_PERMISSION_DENIED, CODE_UNAUTHENTICATED, CODE_RESOURCE_EXHAUSTED, CODE_FAILED_PRECONDITION, CODE_ABORTED, CODE_OUT_OF_RANGE, CODE_UNIMPLEMENTED, CODE_INTERNAL, CODE_UNAVAILABLE, CODE_DATA_LOSS, 
-    };
-  }
+  private static final Code[] VALUES = values();
+
   public static Code valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
@@ -553,11 +550,9 @@ public enum Code
     return VALUES[desc.getIndex()];
   }
 
-  private final int index;
   private final int value;
 
-  private Code(int index, int value) {
-    this.index = index;
+  private Code(int value) {
     this.value = value;
   }
 
