@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package pubsub
+package messaging
 
 import (
 	"time"
@@ -29,7 +29,7 @@ type EmbeddedMessagingPubSubClient struct {
 	*nats.Conn
 }
 
-func NewEmbeddedEventStream(opts *EmbeddedMessagingStreamOpts) (*EmbeddedMessaging, error) {
+func NewEmbeddedMessaging(opts *EmbeddedMessagingStreamOpts) (*EmbeddedMessaging, error) {
 	// todo (sienna): ensure that StoreDir is set
 	srv, err := server.NewServer(opts.Options)
 	return &EmbeddedMessaging{

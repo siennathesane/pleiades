@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package pubsub
+package messaging
 
 import (
 	"github.com/mxplusb/pleiades/api/v1/raft"
@@ -26,10 +26,10 @@ const (
 	systemStreamName      string = "SYSTEM"
 )
 
-var _ raftio.ISystemEventListener = (*RaftListener)(nil)
+var _ raftio.ISystemEventListener = (*RaftSystemListener)(nil)
 
-func NewRaftListener(client *EmbeddedMessagingPubSubClient, queueClient *EmbeddedMessagingStreamClient, logger zerolog.Logger) (*RaftListener, error) {
-	rl := &RaftListener{
+func NewRaftSystemListener(client *EmbeddedMessagingPubSubClient, queueClient *EmbeddedMessagingStreamClient, logger zerolog.Logger) (*RaftSystemListener, error) {
+	rl := &RaftSystemListener{
 		logger:            logger.With().Str("component", "raft-listener").Logger(),
 		eventStreamClient: client,
 		queueClient: &EmbeddedMessagingStreamClient{
@@ -53,13 +53,13 @@ func NewRaftListener(client *EmbeddedMessagingPubSubClient, queueClient *Embedde
 	return rl, nil
 }
 
-type RaftListener struct {
+type RaftSystemListener struct {
 	logger            zerolog.Logger
 	eventStreamClient *EmbeddedMessagingPubSubClient
 	queueClient       *EmbeddedMessagingStreamClient
 }
 
-func (r *RaftListener) NodeHostShuttingDown() {
+func (r *RaftSystemListener) NodeHostShuttingDown() {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_HOST,
 		Action:    raft.Event_NODE_HOST_SHUTTING_DOWN,
@@ -77,7 +77,7 @@ func (r *RaftListener) NodeHostShuttingDown() {
 	}
 }
 
-func (r *RaftListener) NodeUnloaded(info raftio.NodeInfo) {
+func (r *RaftSystemListener) NodeUnloaded(info raftio.NodeInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_NODE,
 		Action:    raft.Event_NODE_UNLOADED,
@@ -100,7 +100,7 @@ func (r *RaftListener) NodeUnloaded(info raftio.NodeInfo) {
 	}
 }
 
-func (r *RaftListener) NodeReady(info raftio.NodeInfo) {
+func (r *RaftSystemListener) NodeReady(info raftio.NodeInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_NODE,
 		Action:    raft.Event_NODE_READY,
@@ -123,7 +123,7 @@ func (r *RaftListener) NodeReady(info raftio.NodeInfo) {
 	}
 }
 
-func (r *RaftListener) MembershipChanged(info raftio.NodeInfo) {
+func (r *RaftSystemListener) MembershipChanged(info raftio.NodeInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_NODE,
 		Action:    raft.Event_MEMBERSHIP_CHANGED,
@@ -146,7 +146,7 @@ func (r *RaftListener) MembershipChanged(info raftio.NodeInfo) {
 	}
 }
 
-func (r *RaftListener) ConnectionEstablished(info raftio.ConnectionInfo) {
+func (r *RaftSystemListener) ConnectionEstablished(info raftio.ConnectionInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_CONNECTION,
 		Action:    raft.Event_CONNECTION_ESTABLISHED,
@@ -169,7 +169,7 @@ func (r *RaftListener) ConnectionEstablished(info raftio.ConnectionInfo) {
 	}
 }
 
-func (r *RaftListener) ConnectionFailed(info raftio.ConnectionInfo) {
+func (r *RaftSystemListener) ConnectionFailed(info raftio.ConnectionInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_CONNECTION,
 		Action:    raft.Event_CONNECTION_FAILED,
@@ -192,7 +192,7 @@ func (r *RaftListener) ConnectionFailed(info raftio.ConnectionInfo) {
 	}
 }
 
-func (r *RaftListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SEND_SNAPSHOT_STARTED,
@@ -217,7 +217,7 @@ func (r *RaftListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SEND_SNAPSHOT_COMPLETED,
@@ -242,7 +242,7 @@ func (r *RaftListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SEND_SNAPSHOT_ABORTED,
@@ -267,7 +267,7 @@ func (r *RaftListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SnapshotReceived(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SnapshotReceived(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SNAPSHOT_RECEIVED,
@@ -292,7 +292,7 @@ func (r *RaftListener) SnapshotReceived(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SnapshotRecovered(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SnapshotRecovered(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SNAPSHOT_RECOVERED,
@@ -317,7 +317,7 @@ func (r *RaftListener) SnapshotRecovered(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SnapshotCreated(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SnapshotCreated(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SNAPSHOT_CREATED,
@@ -342,7 +342,7 @@ func (r *RaftListener) SnapshotCreated(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) SnapshotCompacted(info raftio.SnapshotInfo) {
+func (r *RaftSystemListener) SnapshotCompacted(info raftio.SnapshotInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_SNAPSHOT,
 		Action:    raft.Event_SNAPSHOT_COMPACTED,
@@ -367,7 +367,7 @@ func (r *RaftListener) SnapshotCompacted(info raftio.SnapshotInfo) {
 	}
 }
 
-func (r *RaftListener) LogCompacted(info raftio.EntryInfo) {
+func (r *RaftSystemListener) LogCompacted(info raftio.EntryInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_LOG_ENTRY,
 		Action:    raft.Event_LOG_COMPACTED,
@@ -391,7 +391,7 @@ func (r *RaftListener) LogCompacted(info raftio.EntryInfo) {
 	}
 }
 
-func (r *RaftListener) LogDBCompacted(info raftio.EntryInfo) {
+func (r *RaftSystemListener) LogDBCompacted(info raftio.EntryInfo) {
 	payload := &raft.RaftEvent{
 		Typ:       raft.EventType_LOG_ENTRY,
 		Action:    raft.Event_LOGDB_COMPACTED,
