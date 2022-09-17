@@ -28,6 +28,7 @@ require (
 )
 
 require (
+	github.com/mxplusb/api v0.0.0-20220917222456-7aaed79b95d5 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20220714114130-e85cedf506cd // indirect
 	github.com/VictoriaMetrics/metrics v1.6.2 // indirect

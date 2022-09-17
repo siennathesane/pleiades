@@ -1,3 +1,5 @@
+github.com/mxplusb/api v0.0.0-20220917222456-7aaed79b95d5 h1:N8roXlzmG/2NVPPU9Gvo3Z3ksxqUDpC1iqk8oRwYPOE=
+github.com/mxplusb/api v0.0.0-20220917222456-7aaed79b95d5/go.mod h1:1R514X3lXPASmY3pkI7flZ9XwKu1uAaLIenbZPBXVHo=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=
