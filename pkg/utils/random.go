@@ -14,6 +14,8 @@ import (
 	mr "math/rand"
 	"time"
 	"unsafe"
+
+	"golang.org/x/exp/rand"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -24,6 +26,12 @@ const (
 )
 
 var src = mr.NewSource(time.Now().UnixNano())
+
+func RandomPort() int {
+	max := 65535
+	min := 1025
+	return rand.Intn(max - min) + min
+}
 
 // Generates a random string of N characters long.
 // ref: https://stackoverflow.com/a/31832326/4949938
