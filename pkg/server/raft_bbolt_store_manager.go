@@ -13,8 +13,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
-	aerrs "github.com/mxplusb/pleiades/pkg/api/v1/errors"
+	aerrs "github.com/mxplusb/pleiades/pkg/api/errors/v1"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
 	"github.com/mxplusb/pleiades/pkg/utils"
@@ -41,24 +41,24 @@ type bboltStoreManager struct {
 	defaultTimeout time.Duration
 }
 
-func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error) {
+func (s *bboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error) {
 
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.CreateAccountReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.CreateAccountResponse{}, kv.ErrInvalidAccount
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		s.logger.Trace().Msg("empty owner value")
-		return &database.CreateAccountReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.CreateAccountResponse{}, kv.ErrInvalidOwner
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
-		Typ:     database.KVStoreWrapper_CREATE_ACCOUNT_REQUEST,
-		Payload: &database.KVStoreWrapper_CreateAccountRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_CreateAccountRequest{
 			CreateAccountRequest: request,
 		},
 	}
@@ -66,7 +66,7 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.CreateAccountReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.CreateAccountResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -83,36 +83,36 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.CreateAccountReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.CreateAccountResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.CreateAccountReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.CreateAccountResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.CreateAccountReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.CreateAccountResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.CreateAccountReply{}
+	response := &kvstorev1.CreateAccountResponse{}
 	if resp.GetCreateAccountReply() == nil {
-		response.AccountDescriptor = &database.AccountDescriptor{}
+		response.AccountDescriptor = &kvstorev1.AccountDescriptor{}
 	} else {
 		response.AccountDescriptor = resp.GetCreateAccountReply().GetAccountDescriptor()
 	}
 
 	if request.Transaction == nil {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
@@ -120,23 +120,23 @@ func (s *bboltStoreManager) CreateAccount(request *database.CreateAccountRequest
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error) {
+func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.DeleteAccountReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.DeleteAccountResponse{}, kv.ErrInvalidAccount
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		s.logger.Trace().Msg("empty owner value")
-		return &database.DeleteAccountReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.DeleteAccountResponse{}, kv.ErrInvalidOwner
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
-		Typ:     database.KVStoreWrapper_DELETE_ACCOUNT_REQUEST,
-		Payload: &database.KVStoreWrapper_DeleteAccountRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_DeleteAccountRequest{
 			DeleteAccountRequest: request,
 		},
 	}
@@ -144,7 +144,7 @@ func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.DeleteAccountResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -161,33 +161,33 @@ func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.DeleteAccountResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.DeleteAccountReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.DeleteAccountResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.DeleteAccountReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.DeleteAccountResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.DeleteAccountReply{
+	response := &kvstorev1.DeleteAccountResponse{
 		Ok: resp.GetDeleteAccountReply().GetOk(),
 	}
 
 	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
@@ -195,30 +195,30 @@ func (s *bboltStoreManager) DeleteAccount(request *database.DeleteAccountRequest
 	return response, nil
 }
 
-func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
+func (s *bboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.CreateBucketReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.CreateBucketResponse{}, kv.ErrInvalidAccount
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		s.logger.Trace().Msg("empty owner value")
-		return &database.CreateBucketReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.CreateBucketResponse{}, kv.ErrInvalidOwner
 	}
 
 	bucketName := request.GetName()
 	if bucketName == "" {
 		s.logger.Trace().Msg("empty bucket name")
-		return &database.CreateBucketReply{}, kv.ErrInvalidBucketName
+		return &kvstorev1.CreateBucketResponse{}, kv.ErrInvalidBucketName
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
 		Bucket:  bucketName,
-		Typ:     database.KVStoreWrapper_CREATE_BUCKET_REQUEST,
-		Payload: &database.KVStoreWrapper_CreateBucketRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_CreateBucketRequest{
 			CreateBucketRequest: request,
 		},
 	}
@@ -226,7 +226,7 @@ func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) 
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.CreateBucketReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.CreateBucketResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -243,36 +243,36 @@ func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) 
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.CreateBucketReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.CreateBucketResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.CreateBucketReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.CreateBucketResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.CreateBucketReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.CreateBucketResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.CreateBucketReply{}
+	response := &kvstorev1.CreateBucketResponse{}
 	if resp.GetCreateBucketReply() == nil {
-		response.BucketDescriptor = &database.BucketDescriptor{}
+		response.BucketDescriptor = &kvstorev1.BucketDescriptor{}
 	} else {
 		response.BucketDescriptor = resp.GetCreateBucketReply().GetBucketDescriptor()
 	}
 
 	if request.Transaction == nil {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
@@ -280,24 +280,24 @@ func (s *bboltStoreManager) CreateBucket(request *database.CreateBucketRequest) 
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
+func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.DeleteBucketReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.DeleteBucketResponse{}, kv.ErrInvalidAccount
 	}
 
 	name := request.GetName()
 	if name == "" {
 		s.logger.Trace().Msg("empty name value")
-		return &database.DeleteBucketReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.DeleteBucketResponse{}, kv.ErrInvalidOwner
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
 		Bucket:  name,
-		Typ:     database.KVStoreWrapper_DELETE_BUCKET_REQUEST,
-		Payload: &database.KVStoreWrapper_DeleteBucketRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_DeleteBucketRequest{
 			DeleteBucketRequest: request,
 		},
 	}
@@ -305,7 +305,7 @@ func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) 
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.DeleteBucketResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -322,33 +322,33 @@ func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) 
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.DeleteBucketResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.DeleteBucketReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.DeleteBucketResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.DeleteBucketReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.DeleteBucketResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.DeleteBucketReply{
+	response := &kvstorev1.DeleteBucketResponse{
 		Ok: resp.GetDeleteBucketReply().GetOk(),
 	}
 
 	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
@@ -356,30 +356,30 @@ func (s *bboltStoreManager) DeleteBucket(request *database.DeleteBucketRequest) 
 	return response, nil
 }
 
-func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error) {
+func (s *bboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.GetKeyReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.GetKeyResponse{}, kv.ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		s.logger.Trace().Msg("empty bucket name")
-		return &database.GetKeyReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.GetKeyResponse{}, kv.ErrInvalidOwner
 	}
 
 	keyName := request.GetKey()
 	if keyName == "" {
 		s.logger.Trace().Msg("empty key name")
-		return &database.GetKeyReply{}, errors.New("empty key name")
+		return &kvstorev1.GetKeyResponse{}, errors.New("empty key name")
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
 		Bucket:  bucketName,
-		Typ:     database.KVStoreWrapper_GET_KEY_REQUEST,
-		Payload: &database.KVStoreWrapper_GetKeyRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_GetKeyRequest{
 			GetKeyRequest: request,
 		},
 	}
@@ -387,7 +387,7 @@ func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.G
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.GetKeyReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.GetKeyResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -398,28 +398,27 @@ func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.G
 	result, err := s.nh.SyncRead(ctx, shard, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.GetKeyReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.GetKeyResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.([]byte))
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.GetKeyReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.GetKeyResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.GetKeyReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.GetKeyResponse{}, errors.New(errMsg.Message)
 	}
 
-
-	response := &database.GetKeyReply{}
+	response := &kvstorev1.GetKeyResponse{}
 	kvp := resp.GetGetKeyReply()
 	if kvp == nil {
-		response.KeyValuePair = &database.KeyValue{}
+		response.KeyValuePair = &kvstorev1.KeyValue{}
 	} else {
 		response.KeyValuePair = kvp.GetKeyValuePair()
 	}
@@ -427,30 +426,30 @@ func (s *bboltStoreManager) GetKey(request *database.GetKeyRequest) (*database.G
 	return response, nil
 }
 
-func (s *bboltStoreManager) PutKey(request *database.PutKeyRequest) (*database.PutKeyReply, error) {
+func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.PutKeyReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.PutKeyResponse{}, kv.ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		s.logger.Trace().Msg("empty bucketName value")
-		return &database.PutKeyReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.PutKeyResponse{}, kv.ErrInvalidOwner
 	}
 
 	keyValuePair := request.GetKeyValuePair()
 	if keyValuePair == nil {
 		s.logger.Trace().Msg("empty key value pair")
-		return &database.PutKeyReply{}, kv.ErrInvalidBucketName
+		return &kvstorev1.PutKeyResponse{}, kv.ErrInvalidBucketName
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
 		Bucket:  bucketName,
-		Typ:     database.KVStoreWrapper_PUT_KEY_REQUEST,
-		Payload: &database.KVStoreWrapper_PutKeyRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_PutKeyRequest{
 			PutKeyRequest: request,
 		},
 	}
@@ -458,7 +457,7 @@ func (s *bboltStoreManager) PutKey(request *database.PutKeyRequest) (*database.P
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.PutKeyReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.PutKeyResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -475,31 +474,31 @@ func (s *bboltStoreManager) PutKey(request *database.PutKeyRequest) (*database.P
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.PutKeyReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.PutKeyResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.PutKeyReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.PutKeyResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.PutKeyReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.PutKeyResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.PutKeyReply{}
+	response := &kvstorev1.PutKeyResponse{}
 
 	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
@@ -507,30 +506,30 @@ func (s *bboltStoreManager) PutKey(request *database.PutKeyRequest) (*database.P
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteKey(request *database.DeleteKeyRequest) (*database.DeleteKeyReply, error) {
+func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
-		return &database.DeleteKeyReply{}, kv.ErrInvalidAccount
+		return &kvstorev1.DeleteKeyResponse{}, kv.ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		s.logger.Trace().Msg("empty bucket name")
-		return &database.DeleteKeyReply{}, kv.ErrInvalidOwner
+		return &kvstorev1.DeleteKeyResponse{}, kv.ErrInvalidOwner
 	}
 
 	key := request.GetKey()
 	if key == "" {
 		s.logger.Trace().Msg("empty key value pair")
-		return &database.DeleteKeyReply{}, kv.ErrInvalidBucketName
+		return &kvstorev1.DeleteKeyResponse{}, kv.ErrInvalidBucketName
 	}
 
-	req := &database.KVStoreWrapper{
+	req := &kvstorev1.KVStoreWrapper{
 		Account: request.GetAccountId(),
 		Bucket:  bucketName,
-		Typ:     database.KVStoreWrapper_DELETE_KEY_REQUEST,
-		Payload: &database.KVStoreWrapper_DeleteKeyRequest{
+		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REQUEST,
+		Payload: &kvstorev1.KVStoreWrapper_DeleteKeyRequest{
 			DeleteKeyRequest: request,
 		},
 	}
@@ -538,7 +537,7 @@ func (s *bboltStoreManager) DeleteKey(request *database.DeleteKeyRequest) (*data
 	cmd, err := req.MarshalVT()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't marshal request")
-		return &database.DeleteKeyReply{}, errors.Wrap(err, "can't marshal request")
+		return &kvstorev1.DeleteKeyResponse{}, errors.Wrap(err, "can't marshal request")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
@@ -555,31 +554,31 @@ func (s *bboltStoreManager) DeleteKey(request *database.DeleteKeyRequest) (*data
 	result, err := s.nh.SyncPropose(ctx, cs, cmd)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't apply message")
-		return &database.DeleteKeyReply{}, errors.Wrap(err, "can't apply message")
+		return &kvstorev1.DeleteKeyResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
 	if cs.SeriesID != client.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
-	resp := &database.KVStoreWrapper{}
+	resp := &kvstorev1.KVStoreWrapper{}
 	err = resp.UnmarshalVT(result.Data)
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't unmarshal response")
-		return &database.DeleteKeyReply{}, errors.Wrap(err, "can't unmarshal response")
+		return &kvstorev1.DeleteKeyResponse{}, errors.Wrap(err, "can't unmarshal response")
 	}
 
-	if resp.Typ == database.KVStoreWrapper_RECOVERABLE_ERROR {
+	if resp.Typ == kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR {
 		errMsg := &aerrs.Error{}
 		errMsg = resp.GetError()
 
-		return &database.DeleteKeyReply{}, errors.New(errMsg.Message)
+		return &kvstorev1.DeleteKeyResponse{}, errors.New(errMsg.Message)
 	}
 
-	response := &database.DeleteKeyReply{}
+	response := &kvstorev1.DeleteKeyResponse{}
 
 	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
-		response.Transaction = &database.Transaction{}
+		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
 	}
