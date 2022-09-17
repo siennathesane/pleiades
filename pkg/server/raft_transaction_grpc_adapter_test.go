@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
@@ -40,7 +40,7 @@ type RaftTransactionGrpcAdapterTestSuite struct {
 	srv            *grpc.Server
 	nh             *dragonboat.NodeHost
 	rtm            *raftTransactionManager
-	rtmAdapter            *raftTransactionGrpcAdapter
+	rtmAdapter     *raftTransactionGrpcAdapter
 	defaultTimeout time.Duration
 }
 
@@ -57,16 +57,16 @@ func (r *RaftTransactionGrpcAdapterTestSuite) SetupTest() {
 
 	r.nh = buildTestNodeHost(r.T())
 	r.rtm = &raftTransactionManager{
-		logger: r.logger,
-		nh:     r.nh,
+		logger:       r.logger,
+		nh:           r.nh,
 		sessionCache: make(map[uint64]*dclient.Session),
 	}
 	r.rtmAdapter = &raftTransactionGrpcAdapter{
-		logger: r.logger,
-		transactionManager:   r.rtm,
+		logger:             r.logger,
+		transactionManager: r.rtm,
 	}
 
-	RegisterTransactionsServer(r.srv, r.rtmAdapter)
+	kvstorev1.RegisterTransactionsServiceServer(r.srv, r.rtmAdapter)
 
 	go func() {
 		if err := r.srv.Serve(listener); err != nil {
@@ -101,13 +101,13 @@ func (r *RaftTransactionGrpcAdapterTestSuite) TestTransactionLifecycle() {
 
 	err := r.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
 	r.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	time.Sleep(3000 * time.Millisecond)
 
 	// create a transaction
 
 	ctx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	client := NewTransactionsClient(r.conn)
-	resp, err := client.NewTransaction(ctx, &database.NewTransactionRequest{
+	client := kvstorev1.NewTransactionsServiceClient(r.conn)
+	resp, err := client.NewTransaction(ctx, &kvstorev1.NewTransactionRequest{
 		ShardId: shardConfig.ClusterID,
 	})
 	r.Require().NoError(err, "there must not be an error when requesting a new transaction")
@@ -132,7 +132,7 @@ func (r *RaftTransactionGrpcAdapterTestSuite) TestTransactionLifecycle() {
 
 	// commit the change
 
-	postCommitResp, err := client.Commit(context.Background(), &database.CommitRequest{Transaction: initialTransaction})
+	postCommitResp, err := client.Commit(context.Background(), &kvstorev1.CommitRequest{Transaction: initialTransaction})
 	r.Require().NoError(err, "there must not be an error when committing a transaction")
 	r.Require().NotNil(postCommitResp, "the response but not be nil")
 	r.Require().NotNil(postCommitResp.GetTransaction(), "the transaction must not be nil")
@@ -155,7 +155,7 @@ func (r *RaftTransactionGrpcAdapterTestSuite) TestTransactionLifecycle() {
 
 	// verify a second commit on the same transaction chain is possible
 
-	postSecondCommitResponse, err := client.Commit(context.Background(), &database.CommitRequest{Transaction: postCommitTransaction})
+	postSecondCommitResponse, err := client.Commit(context.Background(), &kvstorev1.CommitRequest{Transaction: postCommitTransaction})
 	r.Require().NoError(err, "there must not be an error when committing a transaction")
 	r.Require().NotNil(postCommitResp, "the response but not be nil")
 	r.Require().NotNil(postCommitResp.GetTransaction(), "the transaction must not be nil")
@@ -173,9 +173,9 @@ func (r *RaftTransactionGrpcAdapterTestSuite) TestTransactionLifecycle() {
 	// close the session
 
 	closeCtx, _ := context.WithTimeout(context.Background(), 3000*time.Millisecond)
-	_, err = client.CloseTransaction(closeCtx, &database.CloseTransactionRequest{
+	_, err = client.CloseTransaction(closeCtx, &kvstorev1.CloseTransactionRequest{
 		Transaction: postSecondCommitTransaction,
-		Timeout: int64(3000*time.Millisecond),
+		Timeout:     int64(3000 * time.Millisecond),
 	})
 	r.Require().NoError(err, "there must not be an error when closing the transaction")
 
