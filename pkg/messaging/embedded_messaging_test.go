@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package pubsub
+package messaging
 
 import (
 	"testing"
@@ -31,19 +31,21 @@ func (t *EmbeddedEventStreamTestSuite) SetupSuite() {
 	t.opts = &EmbeddedMessagingStreamOpts{
 		Options: &server.Options{
 			Host: "localhost",
+			JetStream: true,
+			DontListen: true,
 		},
 		timeout: utils.Timeout(4000*time.Millisecond),
 	}
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestNew() {
-	e, err := NewEmbeddedEventStream(t.opts)
+	e, err := NewEmbeddedMessaging(t.opts)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
-	e, err := NewEmbeddedEventStream(t.opts)
+	e, err := NewEmbeddedMessaging(t.opts)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
@@ -53,7 +55,7 @@ func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
-	e, err := NewEmbeddedEventStream(t.opts)
+	e, err := NewEmbeddedMessaging(t.opts)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
@@ -67,7 +69,7 @@ func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
-	e, err := NewEmbeddedEventStream(t.opts)
+	e, err := NewEmbeddedMessaging(t.opts)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
