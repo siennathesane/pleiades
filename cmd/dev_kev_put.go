@@ -12,9 +12,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/server"
 	"github.com/golang/protobuf/proto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -68,14 +67,14 @@ func putKey(cmd *cobra.Command, args []string) {
 		logger.Fatal().Err(err).Msg("error dialing server")
 	}
 
-	client := server.NewKVStoreServiceClient(conn)
+	client := kvstorev1.NewKvStoreServiceClient(conn)
 
 	now := time.Now().UnixMilli()
 	logger.Info().Str("key", key).Msg("putting key")
-	descriptor, err := client.PutKey(context.Background(), &database.PutKeyRequest{
+	descriptor, err := client.PutKey(context.Background(), &kvstorev1.PutKeyRequest{
 		AccountId:  accountId,
 		BucketName: bucketName,
-		KeyValuePair: &database.KeyValue{
+		KeyValuePair: &kvstorev1.KeyValue{
 			Key:            key,
 			CreateRevision: now,
 			ModRevision:    now,
