@@ -2,6 +2,8 @@ url: a13s.io
 
 # must be alphabetical
 packages:
+  api:
+    repo: gitlab.com/anthropos-labs/api
   cliflags:
     repo: gitlab.com/anthropos-labs/cliflags
   pleiades:
