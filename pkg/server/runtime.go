@@ -62,7 +62,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger:       logger,
 		shardManager: sm,
 	}
-	RegisterShardManagerServer(gServer, smAdapter)
+	raftv1.RegisterShardServiceServer(gServer, smAdapter)
 	srv.raftShard = sm
 
 	tm := newTransactionManager(nh, logger)
