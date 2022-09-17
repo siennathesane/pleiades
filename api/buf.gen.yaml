@@ -17,6 +17,11 @@ plugins:
   - name: go
     out: .
     opt: paths=source_relative
+  - name: go-vtproto
+    out: .
+    opt:
+      - features=marshal+unmarshal+size+equal+pool
+      - paths=source_relative
   - name: es
     out: .
     opt:
