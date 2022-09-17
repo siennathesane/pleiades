@@ -10,6 +10,7 @@
 package server
 
 import (
+	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
@@ -53,7 +54,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger: logger,
 		host:   rh,
 	}
-	RegisterRaftHostServer(gServer, rhAdapter)
+	raftv1.RegisterHostServiceServer(gServer, rhAdapter)
 	srv.raftHost = rh
 
 	sm := newShardManager(nh, logger)
