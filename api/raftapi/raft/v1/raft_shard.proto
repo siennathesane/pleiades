@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package raft.v1;
+
+enum StateMachineType {
+  option allow_alias = true;
+  STATE_MACHINE_TYPE_UNSPECIFIED = 0;
+  STATE_MACHINE_TYPE_TEST = 0;
+  STATE_MACHINE_TYPE_KV = 1;
+}
+
+message AddReplicaRequest {
+  // replica_id is a non-zero value used to identify a node within a Raft cluster.
+  uint64 replica_id = 1;
+  // shard_id is the unique value used to identify a Raft cluster.
+  uint64 shard_id = 2;
+  string hostname = 4;
+  int64 timeout = 5;
+}
+
+message AddReplicaResponse {}
+
+message AddReplicaObserverRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  string hostname = 3;
+  int64 timeout = 4;
+}
+
+message AddReplicaObserverResponse {}
+
+message AddReplicaWitnessRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  string hostname = 3;
+  int64 timeout = 4;
+}
+
+message AddReplicaWitnessResponse {}
+
+message RemoveReplicaRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  int64 timeout = 3;
+}
+
+message RemoveReplicaResponse {}
+
+message GetLeaderIdRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  int64 timeout = 3;
+}
+
+message GetLeaderIdResponse {
+  uint64 leader = 1;
+  bool available = 2;
+}
+
+message GetShardMembersRequest {
+  uint64 shard_id = 1;
+}
+
+message GetShardMembersResponse {
+  uint64 config_change_id = 1;
+  map<uint64, string> replicas = 2;
+  map<uint64, string> observers = 3;
+  map<uint64, string> witnesses = 4;
+  map<uint64, string> removed = 5;
+}
+
+message NewShardRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  StateMachineType type = 3;
+  string hostname = 4;
+  int64 timeout = 5;
+}
+
+message NewShardResponse {}
+
+message RemoveDataRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+}
+
+message RemoveDataResponse {}
+
+message StartReplicaRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  StateMachineType type = 3;
+}
+
+message StartReplicaResponse {}
+
+message StartReplicaObserverRequest {
+  uint64 shard_id = 1;
+  uint64 replica_id = 2;
+  StateMachineType type = 3;
+}
+
+message StartReplicaObserverResponse {}
+
+message StopReplicaRequest {
+  // shard_id is the unique value used to identify a Raft cluster.
+  uint64 shard_id = 1;
+}
+
+message StopReplicaResponse {}

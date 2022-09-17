@@ -1,0 +1,8 @@
+version: v1
+name: buf.build/anthropos-labs/raft
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

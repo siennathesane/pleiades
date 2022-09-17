@@ -1,0 +1,226 @@
+// Copyright 2015 The etcd Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package kvstore.v1;
+
+import "errors/v1/errors.proto";
+import "google/protobuf/timestamp.proto";
+import "kvstore/v1/transactions.proto";
+
+message KVStoreWrapper {
+  uint64 account = 1;
+  string bucket = 2;
+
+  enum RequestType {
+    REQUEST_TYPE_UNSPECIFIED = 0;
+    REQUEST_TYPE_CREATE_ACCOUNT_REQUEST = 1;
+    REQUEST_TYPE_CREATE_ACCOUNT_REPLY = 2;
+    REQUEST_TYPE_DELETE_ACCOUNT_REQUEST = 3;
+    REQUEST_TYPE_DELETE_ACCOUNT_REPLY = 4;
+    REQUEST_TYPE_GET_ACCOUNT_DESCRIPTOR_REQUEST = 5;
+    REQUEST_TYPE_GET_ACCOUNT_DESCRIPTOR_REPLY = 6;
+    REQUEST_TYPE_CREATE_BUCKET_REQUEST = 7;
+    REQUEST_TYPE_CREATE_BUCKET_REPLY = 8;
+    REQUEST_TYPE_DELETE_BUCKET_REQUEST = 9;
+    REQUEST_TYPE_DELETE_BUCKET_REPLY = 10;
+    REQUEST_TYPE_GET_KEY_REQUEST = 11;
+    REQUEST_TYPE_GET_KEY_REPLY = 12;
+    REQUEST_TYPE_PUT_KEY_REQUEST = 13;
+    REQUEST_TYPE_PUT_KEY_REPLY = 14;
+    REQUEST_TYPE_DELETE_KEY_REQUEST = 15;
+    REQUEST_TYPE_DELETE_KEY_REPLY = 16;
+    REQUEST_TYPE_GET_BUCKET_DESCRIPTOR_REQUEST = 17;
+    REQUEST_TYPE_GET_BUCKET_DESCRIPTOR_REPLY = 18;
+    REQUEST_TYPE_RECOVERABLE_ERROR = 19;
+  }
+
+  RequestType typ = 3;
+  oneof payload {
+    CreateAccountRequest create_account_request = 4;
+    CreateAccountResponse create_account_reply = 5;
+    DeleteAccountRequest delete_account_request = 6;
+    DeleteAccountResponse delete_account_reply = 7;
+    GetAccountDescriptorRequest get_account_descriptor_request = 8;
+    GetAccountDescriptorResponse get_account_descriptor_reply = 9;
+    CreateBucketRequest create_bucket_request = 10;
+    CreateBucketResponse create_bucket_reply = 11;
+    DeleteBucketRequest delete_bucket_request = 12;
+    DeleteBucketResponse delete_bucket_reply = 13;
+    GetKeyRequest get_key_request = 14;
+    GetKeyResponse get_key_reply = 15;
+    PutKeyRequest put_key_request = 16;
+    PutKeyResponse put_key_reply = 17;
+    DeleteKeyRequest delete_key_request = 18;
+    DeleteKeyResponse delete_key_reply = 19;
+    GetBucketDescriptorRequest get_bucket_descriptor_request = 20;
+    GetBucketDescriptorResponse get_bucket_descriptor_reply = 21;
+    errors.v1.Error error = 22;
+  }
+}
+
+message CreateAccountRequest {
+  uint64 account_id = 1;
+  string owner = 2;
+  Transaction transaction = 3;
+}
+
+message CreateAccountResponse {
+  AccountDescriptor account_descriptor = 1;
+  Transaction transaction = 2;
+}
+
+message DeleteAccountRequest {
+  uint64 account_id = 1;
+  string owner = 2;
+  Transaction transaction = 3;
+}
+
+message DeleteAccountResponse {
+  bool ok = 1;
+  Transaction transaction = 2;
+}
+
+message GetAccountDescriptorRequest {
+  uint64 account_id = 1;
+}
+
+message GetAccountDescriptorResponse {
+  AccountDescriptor account_descriptor = 1;
+}
+
+message AccountDescriptor {
+  uint64 account_id = 1;
+  string owner = 2;
+  google.protobuf.Timestamp created = 3;
+  google.protobuf.Timestamp last_updated = 4;
+  uint64 bucket_count = 5;
+  repeated string buckets = 6;
+}
+
+message CreateBucketRequest {
+  uint64 account_id = 1;
+  string name = 2;
+  string owner = 3;
+  Transaction transaction = 4;
+}
+
+message CreateBucketResponse {
+  BucketDescriptor bucket_descriptor = 1;
+  Transaction transaction = 2;
+}
+
+message DeleteBucketRequest {
+  uint64 account_id = 1;
+  string name = 2;
+  Transaction transaction = 3;
+}
+
+message DeleteBucketResponse {
+  bool ok = 1;
+  Transaction transaction = 2;
+}
+
+message BucketDescriptor {
+  string owner = 1;
+  uint64 size = 2;
+  uint64 key_count = 3;
+  google.protobuf.Timestamp created = 4;
+  google.protobuf.Timestamp last_updated = 5;
+}
+
+message GetBucketDescriptorRequest {
+  uint64 account_id = 1;
+  string name = 2;
+}
+
+message GetBucketDescriptorResponse {
+  BucketDescriptor bucket_descriptor = 1;
+}
+
+message GetKeyRequest {
+  uint64 account_id = 1;
+  string bucket_name = 2;
+  string key = 3;
+}
+
+message GetKeyResponse {
+  KeyValue key_value_pair = 1;
+}
+
+message PutKeyRequest {
+  uint64 account_id = 1;
+  string bucket_name = 2;
+  KeyValue key_value_pair = 3;
+  Transaction transaction = 4;
+}
+
+message PutKeyResponse {
+  Transaction transaction = 1;
+}
+
+message DeleteKeyRequest {
+  uint64 account_id = 1;
+  string bucket_name = 2;
+  string key = 3;
+  Transaction transaction = 4;
+}
+
+message DeleteKeyResponse {
+  bool ok = 1;
+  Transaction transaction = 3;
+}
+
+message KeyValue {
+  // key is the key in bytes. An empty key is not allowed.
+  string key = 1;
+  // create_revision is the revision of last creation on this key.
+  int64 create_revision = 2;
+  // mod_revision is the revision of last modification on this key.
+  int64 mod_revision = 3;
+  // version is the version of the key. A deletion resets
+  // the version to zero and any modification of the key
+  // increases its version.
+  int64 version = 4;
+  // value is the value held by the key, in bytes.
+  bytes value = 5;
+  // lease is the ID of the lease that attached to key.
+  // When the attached lease expires, the key will be deleted.
+  // If lease is 0, then no lease is attached to the key.
+  int64 lease = 6;
+}
+
+enum KeyOperationType {
+  KEY_OPERATION_TYPE_UNSPECIFIED = 0;
+  KEY_OPERATION_TYPE_GET = 1;
+  KEY_OPERATION_TYPE_PUT = 2;
+  KEY_OPERATION_TYPE_DELETE = 3;
+}
+
+message Event {
+  // type is the kind of event. If type is a PUT, it indicates
+  // new data has been stored to the key. If type is a DELETE,
+  // it indicates the key was deleted.
+  KeyOperationType type = 1;
+  // kv holds the KeyValue for the event.
+  // A PUT event contains current kv pair.
+  // A PUT event with kv.Version=1 indicates the creation of a key.
+  // A DELETE/EXPIRE event contains the deleted key with
+  // its modification revision set to the revision of deletion.
+  KeyValue kv = 2;
+
+  // prev_kv holds the key-value pair before the event happens.
+  optional KeyValue prev_kv = 3;
+}

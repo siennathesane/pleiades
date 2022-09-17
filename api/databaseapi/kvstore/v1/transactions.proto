@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package kvstore.v1;
+
+message CloseTransactionRequest {
+  Transaction transaction = 1;
+  int64 timeout = 2;
+}
+
+message CloseTransactionResponse {
+  Transaction transaction = 1;
+  int64 timeout = 2;
+}
+
+message CommitRequest {
+  Transaction transaction = 1;
+}
+
+message CommitResponse {
+  Transaction transaction = 1;
+}
+
+message Transaction {
+  uint64 shard_id = 1;
+  uint64 client_id = 2;
+  uint64 transaction_id = 3;
+  uint64 responded_to = 4;
+}
+
+message NewTransactionRequest {
+  uint64 shard_id = 1;
+  uint64 client_id = 2;
+}
+
+message NewTransactionResponse {
+  Transaction transaction = 1;
+}

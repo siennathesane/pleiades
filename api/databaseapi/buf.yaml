@@ -1,0 +1,10 @@
+version: v1
+name: buf.build/anthropos-labs/kvstore
+deps:
+  - buf.build/anthropos-labs/errors
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT

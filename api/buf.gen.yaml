@@ -1,0 +1,24 @@
+version: v1
+managed:
+  enabled: true
+  cc_enable_arenas: true
+  java_multiple_files: true
+  java_package_prefix:
+    default: io.a13s.api
+  go_package_prefix:
+    default: a13s.io/api
+    except:
+      - buf.build/googleapis/googleapis
+plugins:
+  - name: cpp
+    out: cpp
+  - name: java
+    out: java
+  - name: go
+    out: .
+    opt: paths=source_relative
+  - name: go-grpc
+    out: .
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
