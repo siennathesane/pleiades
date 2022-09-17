@@ -57,11 +57,12 @@ var (
 		"--plugin",
 		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-go", binDir),
 		"--plugin",
-		fmt.Sprintf("protoc-gen-go=%s/protoc-gen-ts", nodeJsBinPath),
+		fmt.Sprintf("protoc-gen-grpc-web=%s/protoc-gen-grpc-web", binDir),
 		"--go_opt=paths=source_relative",
 		"--go_out=.",
 		"--go-grpc_out=.",
 		"--go-grpc_opt=paths=source_relative",
+		"--grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:.",
 	}
 
 	fuckingNodeJsFlags = []string{
@@ -130,6 +131,20 @@ func (Gen) Setup() {
 			"-o",
 			fmt.Sprintf("%s/protoc-gen-go-grpc", binDir),
 			"google.golang.org/grpc/cmd/protoc-gen-go-grpc")
+	})
+
+	mg.Deps(func() error {
+		fmt.Println("installing node generator")
+
+		if err := sh.RunWithV(nil, "wget", "-O",fmt.Sprintf("%s/protoc-gen-grpc-web", binDir), "https://github.com/grpc/grpc-web/releases/download/1.3.1/protoc-gen-grpc-web-1.3.1-darwin-x86_64"); err != nil {
+			return err
+		}
+
+		if err := sh.RunWithV(nil, "chmod", "a+x", fmt.Sprintf("%s/protoc-gen-grpc-web", binDir)); err != nil {
+			return err
+		}
+
+		return nil
 	})
 
 	mg.Deps(func() error {
