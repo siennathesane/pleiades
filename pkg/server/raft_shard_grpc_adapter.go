@@ -13,19 +13,19 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/raft"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 )
 
-var _ ShardManagerServer = (*raftShardGrpcAdapter)(nil)
+var _ raftv1.ShardServiceServer = (*raftShardGrpcAdapter)(nil)
 
 type raftShardGrpcAdapter struct {
 	logger       zerolog.Logger
 	shardManager IShardManager
 }
 
-func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raft.AddReplicaRequest) (*raft.AddReplicaReply, error) {
+func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raftv1.AddReplicaRequest) (*raftv1.AddReplicaResponse, error) {
 	if err := r.checkRequestConfig(request.ShardId, request.ReplicaId); err != nil {
 		return nil, err
 	}
@@ -37,10 +37,10 @@ func (r *raftShardGrpcAdapter) AddReplica(ctx context.Context, request *raft.Add
 		r.logger.Error().Err(err).Msg("can't add replica")
 		return nil, err
 	}
-	return &raft.AddReplicaReply{}, err
+	return &raftv1.AddReplicaResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) AddReplicaObserver(ctx context.Context, request *raft.AddReplicaObserverRequest) (*raft.AddReplicaObserverReply, error) {
+func (r *raftShardGrpcAdapter) AddReplicaObserver(ctx context.Context, request *raftv1.AddReplicaObserverRequest) (*raftv1.AddReplicaObserverResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
@@ -52,10 +52,10 @@ func (r *raftShardGrpcAdapter) AddReplicaObserver(ctx context.Context, request *
 		r.logger.Error().Err(err).Msg("can't add shard observer")
 		return nil, err
 	}
-	return &raft.AddReplicaObserverReply{}, err
+	return &raftv1.AddReplicaObserverResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) AddReplicaWitness(ctx context.Context, request *raft.AddReplicaWitnessRequest) (*raft.AddReplicaWitnessReply, error) {
+func (r *raftShardGrpcAdapter) AddReplicaWitness(ctx context.Context, request *raftv1.AddReplicaWitnessRequest) (*raftv1.AddReplicaWitnessResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
@@ -67,10 +67,10 @@ func (r *raftShardGrpcAdapter) AddReplicaWitness(ctx context.Context, request *r
 		r.logger.Error().Err(err).Msg("can't add shard witness")
 		return nil, err
 	}
-	return &raft.AddReplicaWitnessReply{}, err
+	return &raftv1.AddReplicaWitnessResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raft.GetLeaderIdRequest) (*raft.GetLeaderIdReply, error) {
+func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raftv1.GetLeaderIdRequest) (*raftv1.GetLeaderIdResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
@@ -80,13 +80,13 @@ func (r *raftShardGrpcAdapter) GetLeaderId(ctx context.Context, request *raft.Ge
 		r.logger.Error().Err(err).Msg("can't get leader id")
 		return nil, err
 	}
-	return &raft.GetLeaderIdReply{
-		Leader: leader,
+	return &raftv1.GetLeaderIdResponse{
+		Leader:    leader,
 		Available: ok,
 	}, err
 }
 
-func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raft.GetShardMembersRequest) (*raft.GetShardMembersReply, error) {
+func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raftv1.GetShardMembersRequest) (*raftv1.GetShardMembersResponse, error) {
 	if request.GetShardId() <= systemShardStop {
 		return nil, ErrSystemShardRange
 	}
@@ -96,11 +96,11 @@ func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raf
 		r.logger.Error().Err(err).Msg("can't get shard members")
 		return nil, err
 	}
-	return &raft.GetShardMembersReply{
+	return &raftv1.GetShardMembersResponse{
 		ConfigChangeId: membership.ConfigChangeId,
-		Replicas: membership.Replicas,
-		Witnesses: membership.Witnesses,
-		Observers: membership.Observers,
+		Replicas:       membership.Replicas,
+		Witnesses:      membership.Witnesses,
+		Observers:      membership.Observers,
 		Removed: func() map[uint64]string {
 			m := make(map[uint64]string)
 			for k, _ := range membership.Removed {
@@ -111,16 +111,16 @@ func (r *raftShardGrpcAdapter) GetShardMembers(ctx context.Context, request *raf
 	}, err
 }
 
-func (r *raftShardGrpcAdapter) NewShard(ctx context.Context, request *raft.NewShardRequest) (*raft.NewShardReply, error) {
+func (r *raftShardGrpcAdapter) NewShard(ctx context.Context, request *raftv1.NewShardRequest) (*raftv1.NewShardResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
 
 	var t StateMachineType
 	switch request.GetType() {
-	case raft.StateMachineType_TEST:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
 		t = testStateMachineType
-	case raft.StateMachineType_KV:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
 		t = BBoltStateMachineType
 	default:
 		return nil, ErrUnsupportedStateMachine
@@ -133,10 +133,10 @@ func (r *raftShardGrpcAdapter) NewShard(ctx context.Context, request *raft.NewSh
 		r.logger.Error().Err(err).Msg("can't create new shard")
 		return nil, err
 	}
-	return &raft.NewShardReply{}, err
+	return &raftv1.NewShardResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) RemoveData(ctx context.Context, request *raft.RemoveDataRequest) (*raft.RemoveDataReply, error) {
+func (r *raftShardGrpcAdapter) RemoveData(ctx context.Context, request *raftv1.RemoveDataRequest) (*raftv1.RemoveDataResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
@@ -146,10 +146,10 @@ func (r *raftShardGrpcAdapter) RemoveData(ctx context.Context, request *raft.Rem
 		r.logger.Error().Err(err).Msg("can't remove data from the host")
 		return nil, err
 	}
-	return &raft.RemoveDataReply{}, err
+	return &raftv1.RemoveDataResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) RemoveReplica(ctx context.Context, request *raft.DeleteReplicaRequest) (*raft.DeleteReplicaReply, error) {
+func (r *raftShardGrpcAdapter) RemoveReplica(ctx context.Context, request *raftv1.RemoveReplicaRequest) (*raftv1.RemoveReplicaResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
@@ -161,19 +161,19 @@ func (r *raftShardGrpcAdapter) RemoveReplica(ctx context.Context, request *raft.
 		r.logger.Error().Err(err).Msg("can't delete replica")
 		return nil, err
 	}
-	return &raft.DeleteReplicaReply{}, err
+	return &raftv1.RemoveReplicaResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) StartReplica(ctx context.Context, request *raft.StartReplicaRequest) (*raft.StartReplicaReply, error) {
+func (r *raftShardGrpcAdapter) StartReplica(ctx context.Context, request *raftv1.StartReplicaRequest) (*raftv1.StartReplicaResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
 
 	var t StateMachineType
 	switch request.GetType() {
-	case raft.StateMachineType_TEST:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
 		t = testStateMachineType
-	case raft.StateMachineType_KV:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
 		t = BBoltStateMachineType
 	default:
 		return nil, ErrUnsupportedStateMachine
@@ -181,19 +181,19 @@ func (r *raftShardGrpcAdapter) StartReplica(ctx context.Context, request *raft.S
 
 	err := r.shardManager.StartReplica(request.GetShardId(), request.GetReplicaId(), t)
 
-	return &raft.StartReplicaReply{}, err
+	return &raftv1.StartReplicaResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request *raft.StartReplicaRequest) (*raft.StartReplicaReply, error) {
+func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request *raftv1.StartReplicaObserverRequest) (*raftv1.StartReplicaObserverResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
 		return nil, err
 	}
 
 	var t StateMachineType
 	switch request.GetType() {
-	case raft.StateMachineType_TEST:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
 		t = testStateMachineType
-	case raft.StateMachineType_KV:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
 		t = BBoltStateMachineType
 	default:
 		return nil, ErrUnsupportedStateMachine
@@ -201,10 +201,10 @@ func (r *raftShardGrpcAdapter) StartReplicaObserver(ctx context.Context, request
 
 	err := r.shardManager.StartReplicaObserver(request.GetShardId(), request.GetReplicaId(), t)
 
-	return &raft.StartReplicaReply{}, err
+	return &raftv1.StartReplicaObserverResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raft.StopReplicaRequest) (*raft.StopReplicaReply, error) {
+func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raftv1.StopReplicaRequest) (*raftv1.StopReplicaResponse, error) {
 	if request.GetShardId() <= systemShardStop {
 		return nil, ErrSystemShardRange
 	}
@@ -214,10 +214,10 @@ func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raft.St
 		r.logger.Error().Err(err).Msg("can't stop replica")
 		return nil, err
 	}
-	return &raft.StopReplicaReply{}, err
+	return &raftv1.StopReplicaResponse{}, err
 }
 
-func (r *raftShardGrpcAdapter) mustEmbedUnimplementedShardManagerServer() { }
+func (r *raftShardGrpcAdapter) mustEmbedUnimplementedShardManagerServer() {}
 
 func (r *raftShardGrpcAdapter) checkRequestConfig(shardId, replicaId uint64) error {
 	if shardId <= systemShardStop {
