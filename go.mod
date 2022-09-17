@@ -11,7 +11,7 @@ require (
 	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/planetscale/vtprotobuf v0.3.0
+	github.com/planetscale/vtprotobuf v0.3.1-0.20220817155510-0ae748fd2007
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
@@ -85,6 +85,7 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
