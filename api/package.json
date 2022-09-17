@@ -1,0 +1,26 @@
+{
+    "name": "@anthropos-labs/api",
+    "version": "22.9.15",
+    "description": "API interfaces for Pleiades",
+    "scripts": {
+        "generate": "buf generate"
+    },
+    "author": "Anthrophos Labs",
+    "license": "PolyForm Strict License 1.0.0",
+    "bugs": {
+        "url": "https://gitlab.com/anthropos-labs/pleiades/issues"
+    },
+    "homepage": "https://anthroposlabs.com",
+    "files": [
+        "**/*.js"
+    ],
+    "devDependencies": {
+        "@bufbuild/protoc-gen-connect-web": "^0.2.1",
+        "@bufbuild/protoc-gen-es": "^0.1.1",
+        "grpc_tools_node_protoc_ts": "^5.3.2"
+    },
+    "dependencies": {
+        "@bufbuild/connect-web": "^0.2.1",
+        "@bufbuild/protobuf": "^0.1.1"
+    }
+}
