@@ -10,7 +10,7 @@
 package messaging
 
 import (
-	"github.com/mxplusb/pleiades/pkg/api/v1/raft"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/lni/dragonboat/v3/raftio"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -18,11 +18,11 @@ import (
 )
 
 const (
-	raftHostSubject       string = "system.raft.host"
-	raftLogSubject        string = "system.raft.log"
-	raftNodeSubject       string = "system.raft.node"
-	raftSnapshotSubject   string = "system.raft.snapshot"
-	raftConnectionSubject string = "system.raft.connection"
+	raftHostSubject       string = "system.raftv1.host"
+	raftLogSubject        string = "system.raftv1.log"
+	raftNodeSubject       string = "system.raftv1.node"
+	raftSnapshotSubject   string = "system.raftv1.snapshot"
+	raftConnectionSubject string = "system.raftv1.connection"
 	systemStreamName      string = "SYSTEM"
 )
 
@@ -60,11 +60,11 @@ type RaftSystemListener struct {
 }
 
 func (r *RaftSystemListener) NodeHostShuttingDown() {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_HOST,
-		Action:    raft.Event_NODE_HOST_SHUTTING_DOWN,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_HOST,
+		Action:    raftv1.Event_EVENT_NODE_HOST_SHUTTING_DOWN,
 		Timestamp: timestamppb.Now(),
-		Event:     &raft.RaftEvent_HostShutdown{},
+		Event:     &raftv1.RaftEvent_HostShutdown{},
 	}
 	buf, err := payload.MarshalVT()
 	if err != nil {
@@ -78,12 +78,12 @@ func (r *RaftSystemListener) NodeHostShuttingDown() {
 }
 
 func (r *RaftSystemListener) NodeUnloaded(info raftio.NodeInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_NODE,
-		Action:    raft.Event_NODE_UNLOADED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+		Action:    raftv1.Event_EVENT_NODE_UNLOADED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Node{
-			Node: &raft.RaftNodeEvent{
+		Event: &raftv1.RaftEvent_Node{
+			Node: &raftv1.RaftNodeEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 			},
@@ -101,12 +101,12 @@ func (r *RaftSystemListener) NodeUnloaded(info raftio.NodeInfo) {
 }
 
 func (r *RaftSystemListener) NodeReady(info raftio.NodeInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_NODE,
-		Action:    raft.Event_NODE_READY,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+		Action:    raftv1.Event_EVENT_NODE_READY,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Node{
-			Node: &raft.RaftNodeEvent{
+		Event: &raftv1.RaftEvent_Node{
+			Node: &raftv1.RaftNodeEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 			},
@@ -124,12 +124,12 @@ func (r *RaftSystemListener) NodeReady(info raftio.NodeInfo) {
 }
 
 func (r *RaftSystemListener) MembershipChanged(info raftio.NodeInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_NODE,
-		Action:    raft.Event_MEMBERSHIP_CHANGED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+		Action:    raftv1.Event_EVENT_MEMBERSHIP_CHANGED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Node{
-			Node: &raft.RaftNodeEvent{
+		Event: &raftv1.RaftEvent_Node{
+			Node: &raftv1.RaftNodeEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 			},
@@ -147,12 +147,12 @@ func (r *RaftSystemListener) MembershipChanged(info raftio.NodeInfo) {
 }
 
 func (r *RaftSystemListener) ConnectionEstablished(info raftio.ConnectionInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_CONNECTION,
-		Action:    raft.Event_CONNECTION_ESTABLISHED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_CONNECTION,
+		Action:    raftv1.Event_EVENT_CONNECTION_ESTABLISHED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Connection{
-			Connection: &raft.RaftConnectionEvent{
+		Event: &raftv1.RaftEvent_Connection{
+			Connection: &raftv1.RaftConnectionEvent{
 				Address:    info.Address,
 				IsSnapshot: info.SnapshotConnection,
 			},
@@ -170,12 +170,12 @@ func (r *RaftSystemListener) ConnectionEstablished(info raftio.ConnectionInfo) {
 }
 
 func (r *RaftSystemListener) ConnectionFailed(info raftio.ConnectionInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_CONNECTION,
-		Action:    raft.Event_CONNECTION_FAILED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_CONNECTION,
+		Action:    raftv1.Event_EVENT_CONNECTION_FAILED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Connection{
-			Connection: &raft.RaftConnectionEvent{
+		Event: &raftv1.RaftEvent_Connection{
+			Connection: &raftv1.RaftConnectionEvent{
 				Address:    info.Address,
 				IsSnapshot: info.SnapshotConnection,
 			},
@@ -193,12 +193,12 @@ func (r *RaftSystemListener) ConnectionFailed(info raftio.ConnectionInfo) {
 }
 
 func (r *RaftSystemListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SEND_SNAPSHOT_STARTED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SEND_SNAPSHOT_STARTED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -218,12 +218,12 @@ func (r *RaftSystemListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SEND_SNAPSHOT_COMPLETED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SEND_SNAPSHOT_COMPLETED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -243,12 +243,12 @@ func (r *RaftSystemListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SEND_SNAPSHOT_ABORTED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SEND_SNAPSHOT_ABORTED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -268,12 +268,12 @@ func (r *RaftSystemListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SnapshotReceived(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SNAPSHOT_RECEIVED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SNAPSHOT_RECEIVED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -293,12 +293,12 @@ func (r *RaftSystemListener) SnapshotReceived(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SnapshotRecovered(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SNAPSHOT_RECOVERED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SNAPSHOT_RECOVERED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -318,12 +318,12 @@ func (r *RaftSystemListener) SnapshotRecovered(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SnapshotCreated(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SNAPSHOT_CREATED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SNAPSHOT_CREATED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -343,12 +343,12 @@ func (r *RaftSystemListener) SnapshotCreated(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) SnapshotCompacted(info raftio.SnapshotInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_SNAPSHOT,
-		Action:    raft.Event_SNAPSHOT_COMPACTED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_SNAPSHOT,
+		Action:    raftv1.Event_EVENT_SNAPSHOT_COMPACTED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_Snapshot{
-			Snapshot: &raft.RaftSnapshotEvent{
+		Event: &raftv1.RaftEvent_Snapshot{
+			Snapshot: &raftv1.RaftSnapshotEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				FromIndex: info.From,
@@ -368,12 +368,12 @@ func (r *RaftSystemListener) SnapshotCompacted(info raftio.SnapshotInfo) {
 }
 
 func (r *RaftSystemListener) LogCompacted(info raftio.EntryInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_LOG_ENTRY,
-		Action:    raft.Event_LOG_COMPACTED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_LOG_ENTRY,
+		Action:    raftv1.Event_EVENT_LOG_COMPACTED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_LogEntry{
-			LogEntry: &raft.RaftLogEntryEvent{
+		Event: &raftv1.RaftEvent_LogEntry{
+			LogEntry: &raftv1.RaftLogEntryEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				Index:     info.Index,
@@ -392,12 +392,12 @@ func (r *RaftSystemListener) LogCompacted(info raftio.EntryInfo) {
 }
 
 func (r *RaftSystemListener) LogDBCompacted(info raftio.EntryInfo) {
-	payload := &raft.RaftEvent{
-		Typ:       raft.EventType_LOG_ENTRY,
-		Action:    raft.Event_LOGDB_COMPACTED,
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_LOG_ENTRY,
+		Action:    raftv1.Event_EVENT_LOGDB_COMPACTED,
 		Timestamp: timestamppb.Now(),
-		Event: &raft.RaftEvent_LogEntry{
-			LogEntry: &raft.RaftLogEntryEvent{
+		Event: &raftv1.RaftEvent_LogEntry{
+			LogEntry: &raftv1.RaftLogEntryEvent{
 				ShardId:   info.ClusterID,
 				ReplicaId: info.NodeID,
 				Index:     info.Index,
