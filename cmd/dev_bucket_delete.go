@@ -10,16 +10,16 @@ package cmd
 
 import (
 	"context"
-	"time"
+	"net/http"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/golang/protobuf/proto"
+	"github.com/bufbuild/connect-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // kvPutCmd represents the bucketPut command
@@ -51,23 +51,14 @@ func bucketDelete(cmd *cobra.Command, args []string) {
 		logger.Fatal().Msg("account id cannot be zero")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10000*time.Millisecond)
-	defer cancel()
+	client := kvstorev1connect.NewKvStoreServiceClient(http.DefaultClient, "http://localhost:8080")
 
-	conn, err := grpc.DialContext(ctx, serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
-	if err != nil {
-		logger.Fatal().Err(err).Msg("error dialing server")
-	}
-
-	client := kvstorev1.NewKvStoreServiceClient(conn)
-
-	logger.Info().Msg("deleting bucket")
-	descriptor, err := client.DeleteBucket(context.Background(), &kvstorev1.DeleteBucketRequest{
+	descriptor, err := client.DeleteBucket(context.Background(), connect.NewRequest(&kvstorev1.DeleteBucketRequest{
 		AccountId: accountId,
-		Name:      bucketName})
+		Name:      bucketName}))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't delete bucket")
 	}
 
-	print(proto.MarshalTextString(descriptor))
+	print(protojson.Format(descriptor.Msg))
 }
