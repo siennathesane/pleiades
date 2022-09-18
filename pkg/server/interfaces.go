@@ -13,7 +13,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 )
 
 type IRaft interface {
@@ -50,18 +50,18 @@ type IHost interface {
 }
 
 type ITransactionManager interface {
-	CloseTransaction(ctx context.Context, transaction *database.Transaction) error
-	Commit(ctx context.Context, transaction *database.Transaction) *database.Transaction
-	GetNoOpTransaction(shardId uint64) *database.Transaction
-	GetTransaction(ctx context.Context, shardId uint64) (*database.Transaction, error)
+	CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error
+	Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction
+	GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction
+	GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error)
 }
 
 type IKVStore interface {
-	CreateAccount(request *database.CreateAccountRequest) (*database.CreateAccountReply, error)
-	DeleteAccount(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error)
-	CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error)
-	DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error)
-	GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error)
-	PutKey(request *database.PutKeyRequest) (*database.PutKeyReply, error)
-	DeleteKey(request *database.DeleteKeyRequest) (*database.DeleteKeyReply, error)
+	CreateAccount(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error)
+	DeleteAccount(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error)
+	CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error)
+	DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error)
+	GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error)
+	PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error)
+	DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error)
 }

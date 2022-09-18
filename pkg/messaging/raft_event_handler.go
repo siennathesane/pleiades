@@ -12,7 +12,7 @@ package messaging
 import (
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/raft"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -44,7 +44,7 @@ func (r *RaftEventHandler) WaitForMembershipChange(shardId, replicaId uint64, ti
 		//	return errors.New("listener timeout")
 		//}
 
-		payload := &raft.RaftEvent{}
+		payload := &raftv1.RaftEvent{}
 		err := payload.UnmarshalVT(event.Data)
 		if err != nil {
 			r.logger.Error().
@@ -56,7 +56,7 @@ func (r *RaftEventHandler) WaitForMembershipChange(shardId, replicaId uint64, ti
 			continue
 		}
 
-		if payload.GetAction() == raft.Event_MEMBERSHIP_CHANGED {
+		if payload.GetAction() == raftv1.Event_EVENT_MEMBERSHIP_CHANGED {
 			nodeEvent := payload.GetNode()
 			// this is just defensive, it shouldn't be nil
 			if nodeEvent == nil {

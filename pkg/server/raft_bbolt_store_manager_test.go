@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -73,7 +73,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 	testOwner := "test@test.com"
 
 	// no transaction
-	resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	resp, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -84,7 +84,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 
 	// create 20 new accounts
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
-		resp, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+		resp, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -103,7 +103,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 	testOwner := "test@test.com"
 
 	// no transaction
-	_, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	_, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -111,7 +111,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 	t.Require().NoError(err, "there must not be an error when creating an account")
 
 	// no transaction
-	resp, err := storeManager.DeleteAccount(&database.DeleteAccountRequest{
+	resp, err := storeManager.DeleteAccount(&kvstorev1.DeleteAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -122,7 +122,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 
 	// create and delete 20 new accounts
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
-		createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+		createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -132,7 +132,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 		t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 		t.Require().NotEmpty(i, createAccountReply.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
 
-		deleteAccountReply, err := storeManager.DeleteAccount(&database.DeleteAccountRequest{
+		deleteAccountReply, err := storeManager.DeleteAccount(&kvstorev1.DeleteAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -151,7 +151,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -161,7 +161,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -174,7 +174,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 	//create 20 new buckets
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
 		testBucketName = utils.RandomString(10)
-		resp, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+		resp, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 			AccountId:   testBaseAccountId,
 			Owner:       testOwner,
 			Name:        testBucketName,
@@ -195,7 +195,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -205,7 +205,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -216,7 +216,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 	t.Require().NotEmpty(createBucketReply.GetBucketDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	deleteBucketReply, err := storeManager.DeleteBucket(&database.DeleteBucketRequest{
+	deleteBucketReply, err := storeManager.DeleteBucket(&kvstorev1.DeleteBucketRequest{
 		AccountId:   testBaseAccountId,
 		Name:        testBucketName,
 		Transaction: nil,
@@ -228,7 +228,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 	//create 20 new buckets
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
 		testBucketName = utils.RandomString(10)
-		bucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+		bucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 			AccountId:   testBaseAccountId,
 			Owner:       testOwner,
 			Name:        testBucketName,
@@ -239,7 +239,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 		t.Require().NotEmpty(bucketReply.GetBucketDescriptor(), "the bucket descriptor must not be empty")
 		t.Require().Empty(bucketReply.GetBucketDescriptor().GetKeyCount(), "the key count must be zero")
 
-		deleteBucket, err := storeManager.DeleteBucket(&database.DeleteBucketRequest{
+		deleteBucket, err := storeManager.DeleteBucket(&kvstorev1.DeleteBucketRequest{
 			AccountId:   testBaseAccountId,
 			Name:        testBucketName,
 			Transaction: nil,
@@ -258,7 +258,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := storeManager.CreateAccount(&database.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -268,7 +268,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := storeManager.CreateBucket(&database.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -279,7 +279,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	t.Require().NotEmpty(createBucketReply.GetBucketDescriptor(), "the account descriptor must not be empty")
 
 	testPutValue, _ := utils.RandomBytes(128)
-	testKvp := &database.KeyValue{
+	testKvp := &kvstorev1.KeyValue{
 		Key:            "test-key",
 		CreateRevision: 0,
 		ModRevision:    0,
@@ -288,7 +288,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 		Lease:          0,
 	}
 
-	putKeyReply, err := storeManager.PutKey(&database.PutKeyRequest{
+	putKeyReply, err := storeManager.PutKey(&kvstorev1.PutKeyRequest{
 		AccountId:    testBaseAccountId,
 		BucketName:   testBucketName,
 		KeyValuePair: testKvp,
@@ -297,7 +297,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	t.Require().NoError(err, "there must not be an error when putting a key")
 	t.Require().NotNil(putKeyReply, "the key response must not be empty")
 
-	getKeyReply, err := storeManager.GetKey(&database.GetKeyRequest{
+	getKeyReply, err := storeManager.GetKey(&kvstorev1.GetKeyRequest{
 		AccountId:  testBaseAccountId,
 		BucketName: testBucketName,
 		Key:        testKvp.Key,
@@ -307,7 +307,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
 	t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
 
-	deleteKeyReply, err := storeManager.DeleteKey(&database.DeleteKeyRequest{
+	deleteKeyReply, err := storeManager.DeleteKey(&kvstorev1.DeleteKeyRequest{
 		AccountId:   testBaseAccountId,
 		BucketName:  testBucketName,
 		Key:         testKvp.Key,
@@ -320,7 +320,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	// handle the lifecycle for 20 random keys
 	for i := 0; i < 20; i++ {
 		testPutValue, _ = utils.RandomBytes(128)
-		testKvp = &database.KeyValue{
+		testKvp = &kvstorev1.KeyValue{
 			Key:            fmt.Sprintf("test-key-%d", i),
 			CreateRevision: 0,
 			ModRevision:    0,
@@ -329,7 +329,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 			Lease:          0,
 		}
 
-		putKeyReply, err = storeManager.PutKey(&database.PutKeyRequest{
+		putKeyReply, err = storeManager.PutKey(&kvstorev1.PutKeyRequest{
 			AccountId:    testBaseAccountId,
 			BucketName:   testBucketName,
 			KeyValuePair: testKvp,
@@ -338,7 +338,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 		t.Require().NoError(err, "there must not be an error when putting a key")
 		t.Require().NotNil(putKeyReply, "the key response must not be empty")
 
-		getKeyReply, err = storeManager.GetKey(&database.GetKeyRequest{
+		getKeyReply, err = storeManager.GetKey(&kvstorev1.GetKeyRequest{
 			AccountId:  testBaseAccountId,
 			BucketName: testBucketName,
 			Key:        testKvp.Key,
@@ -348,7 +348,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 		t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
 		t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
 
-		deleteKeyReply, err = storeManager.DeleteKey(&database.DeleteKeyRequest{
+		deleteKeyReply, err = storeManager.DeleteKey(&kvstorev1.DeleteKeyRequest{
 			AccountId:   testBaseAccountId,
 			BucketName:  testBucketName,
 			Key:         testKvp.Key,

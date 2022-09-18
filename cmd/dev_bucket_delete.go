@@ -12,9 +12,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/server"
 	"github.com/golang/protobuf/proto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -27,7 +26,7 @@ import (
 var bucketDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete a bucket",
-	Run: bucketDelete,
+	Run:   bucketDelete,
 }
 
 func init() {
@@ -60,16 +59,15 @@ func bucketDelete(cmd *cobra.Command, args []string) {
 		logger.Fatal().Err(err).Msg("error dialing server")
 	}
 
-	client := server.NewKVStoreServiceClient(conn)
+	client := kvstorev1.NewKvStoreServiceClient(conn)
 
 	logger.Info().Msg("deleting bucket")
-	descriptor, err := client.DeleteBucket(context.Background(), &database.DeleteBucketRequest{
+	descriptor, err := client.DeleteBucket(context.Background(), &kvstorev1.DeleteBucketRequest{
 		AccountId: accountId,
-		Name: bucketName})
+		Name:      bucketName})
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't delete bucket")
 	}
 
 	print(proto.MarshalTextString(descriptor))
 }
-

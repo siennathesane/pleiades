@@ -13,36 +13,36 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/raft"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 )
 
-var _ RaftHostServer = (*raftHostGrpcAdapter)(nil)
+var _ raftv1.HostServiceServer = (*raftHostGrpcAdapter)(nil)
 
 type raftHostGrpcAdapter struct {
 	logger zerolog.Logger
 	host   IHost
 }
 
-func (r *raftHostGrpcAdapter) Compact(ctx context.Context, request *raft.CompactRequest) (*raft.CompactReply, error) {
+func (r *raftHostGrpcAdapter) Compact(ctx context.Context, request *raftv1.CompactRequest) (*raftv1.CompactResponse, error) {
 	if err := r.checkRequestConfig(request.GetShardId(), request.GetReplicaId()); err != nil {
-		return &raft.CompactReply{}, err
+		return &raftv1.CompactResponse{}, err
 	}
 	err := r.host.Compact(request.GetShardId(), request.GetReplicaId())
-	return &raft.CompactReply{}, err
+	return &raftv1.CompactResponse{}, err
 }
 
-func (r *raftHostGrpcAdapter) GetHostConfig(ctx context.Context, request *raft.GetHostConfigRequest) (*raft.GetHostConfigReply, error) {
+func (r *raftHostGrpcAdapter) GetHostConfig(ctx context.Context, request *raftv1.GetHostConfigRequest) (*raftv1.GetHostConfigResponse, error) {
 	hc := r.host.HostConfig()
-	return &raft.GetHostConfigReply{
-		Config: &raft.HostConfig{
+	return &raftv1.GetHostConfigResponse{
+		Config: &raftv1.HostConfig{
 			DeploymentId:                hc.DeploymentID,
 			WalDir:                      hc.WALDir,
 			HostDir:                     hc.NodeHostDir,
 			RoundTripTimeInMilliseconds: hc.RTTMillisecond,
 			RaftAddress:                 hc.RaftAddress,
-			AddressByHostID:             hc.AddressByNodeHostID,
+			AddressByHostId:             hc.AddressByNodeHostID,
 			ListenAddress:               hc.ListenAddress,
 			MutualTls:                   hc.MutualTLS,
 			CaFile:                      hc.CAFile,
@@ -54,22 +54,22 @@ func (r *raftHostGrpcAdapter) GetHostConfig(ctx context.Context, request *raft.G
 	}, nil
 }
 
-func (r *raftHostGrpcAdapter) Snapshot(ctx context.Context, request *raft.SnapshotRequest) (*raft.SnapshotReply, error) {
+func (r *raftHostGrpcAdapter) Snapshot(ctx context.Context, request *raftv1.SnapshotRequest) (*raftv1.SnapshotResponse, error) {
 	if request.GetShardId() <= systemShardStop {
-		return &raft.SnapshotReply{}, ErrSystemShardRange
+		return &raftv1.SnapshotResponse{}, ErrSystemShardRange
 	}
 
 	timeout := time.Duration(request.Timeout) * time.Millisecond
 
 	idx, err := r.host.Snapshot(request.GetShardId(), SnapshotOption{}, timeout)
-	return &raft.SnapshotReply{
+	return &raftv1.SnapshotResponse{
 		SnapshotIndexCaptured: idx,
 	}, err
 }
 
-func (r *raftHostGrpcAdapter) Stop(ctx context.Context, request *raft.StopRequest) (*raft.StopReply, error) {
+func (r *raftHostGrpcAdapter) Stop(ctx context.Context, request *raftv1.StopRequest) (*raftv1.StopResponse, error) {
 	r.host.Stop()
-	return &raft.StopReply{}, nil
+	return &raftv1.StopResponse{}, nil
 }
 
 func (r *raftHostGrpcAdapter) mustEmbedUnimplementedRaftHostServer() {

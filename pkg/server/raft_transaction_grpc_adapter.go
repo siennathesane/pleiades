@@ -12,53 +12,53 @@ package server
 import (
 	"context"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
 )
 
-var _ TransactionsServer = (*raftTransactionGrpcAdapter)(nil)
+var _ kvstorev1.TransactionsServiceServer = (*raftTransactionGrpcAdapter)(nil)
 
 // todo (sienna): add caching for better session comparisons
 type raftTransactionGrpcAdapter struct {
-	logger zerolog.Logger
+	logger             zerolog.Logger
 	transactionManager ITransactionManager
 }
 
-func (r *raftTransactionGrpcAdapter) NewTransaction(ctx context.Context, request *database.NewTransactionRequest) (*database.NewTransactionReply, error) {
+func (r *raftTransactionGrpcAdapter) NewTransaction(ctx context.Context, request *kvstorev1.NewTransactionRequest) (*kvstorev1.NewTransactionResponse, error) {
 	if request.GetShardId() <= systemShardStop {
-		return &database.NewTransactionReply{}, ErrSystemShardRange
+		return &kvstorev1.NewTransactionResponse{}, ErrSystemShardRange
 	}
 
 	transaction, err := r.transactionManager.GetTransaction(ctx, request.GetShardId())
 	if err != nil {
 		r.logger.Error().Err(err).Uint64("shard", request.GetShardId()).Msg("cannot create transaction")
 	}
-	return &database.NewTransactionReply{Transaction: transaction}, nil
+	return &kvstorev1.NewTransactionResponse{Transaction: transaction}, nil
 }
 
-func (r *raftTransactionGrpcAdapter) CloseTransaction(ctx context.Context, request *database.CloseTransactionRequest) (*database.CloseTransactionReply, error) {
+func (r *raftTransactionGrpcAdapter) CloseTransaction(ctx context.Context, request *kvstorev1.CloseTransactionRequest) (*kvstorev1.CloseTransactionResponse, error) {
 	transaction := request.GetTransaction()
 	if err := r.checkTransaction(transaction); err != nil {
-		return &database.CloseTransactionReply{}, err
+		return &kvstorev1.CloseTransactionResponse{}, err
 	}
 
 	err := r.transactionManager.CloseTransaction(ctx, transaction)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't close transaction")
 	}
-	return &database.CloseTransactionReply{}, err
+	return &kvstorev1.CloseTransactionResponse{}, err
 }
 
-func (r *raftTransactionGrpcAdapter) Commit(ctx context.Context, request *database.CommitRequest) (*database.CommitReply, error) {
+func (r *raftTransactionGrpcAdapter) Commit(ctx context.Context, request *kvstorev1.CommitRequest) (*kvstorev1.CommitResponse, error) {
 	transaction := request.GetTransaction()
 	if err := r.checkTransaction(transaction); err != nil {
-		return &database.CommitReply{}, err
+		return &kvstorev1.CommitResponse{}, err
 	}
 
 	t := r.transactionManager.Commit(ctx, transaction)
 
-	return &database.CommitReply{Transaction: t}, nil
+	return &kvstorev1.CommitResponse{Transaction: t}, nil
 }
 
 func (r *raftTransactionGrpcAdapter) mustEmbedUnimplementedTransactionsServer() {
@@ -67,7 +67,7 @@ func (r *raftTransactionGrpcAdapter) mustEmbedUnimplementedTransactionsServer() 
 }
 
 // todo (sienna): replace this with dclient.Session.ValidForProposal later.
-func (r *raftTransactionGrpcAdapter) checkTransaction(t *database.Transaction) error {
+func (r *raftTransactionGrpcAdapter) checkTransaction(t *kvstorev1.Transaction) error {
 	// I don't think this can happen because it's a pointer, but better to be safe than sorry
 	if t == nil {
 		r.logger.Error().Err(errNilTransaction).Msg("attempted close of an empty transaction")
