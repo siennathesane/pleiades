@@ -14,7 +14,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mxplusb/pleiades/api/v1/database"
+	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/cockroachdb/errors"
 	"github.com/planetscale/vtprotobuf/codec/grpc"
 	"github.com/rs/zerolog"
@@ -69,21 +69,21 @@ func (b *bboltStore) close() error {
 	return b.db.Close()
 }
 
-func (b *bboltStore) CreateAccountBucket(request *database.CreateAccountRequest) (*database.CreateAccountReply, error) {
+func (b *bboltStore) CreateAccountBucket(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.CreateAccountReply{}, ErrInvalidAccount
+		return &kvstorev1.CreateAccountResponse{}, ErrInvalidAccount
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		b.logger.Trace().Msg("empty owner value")
-		return &database.CreateAccountReply{}, ErrInvalidOwner
+		return &kvstorev1.CreateAccountResponse{}, ErrInvalidOwner
 	}
 
 	now := timestamppb.Now()
-	acctDescriptor := &database.AccountDescriptor{
+	acctDescriptor := &kvstorev1.AccountDescriptor{
 		AccountId:   account,
 		Owner:       owner,
 		Created:     now,
@@ -118,27 +118,27 @@ func (b *bboltStore) CreateAccountBucket(request *database.CreateAccountRequest)
 		b.logger.Error().Err(err).Msg("can't create bucket")
 	}
 
-	return &database.CreateAccountReply{
+	return &kvstorev1.CreateAccountResponse{
 		AccountDescriptor: acctDescriptor,
 	}, err
 }
 
-func (b *bboltStore) GetAccountInfo(request *database.GetAccountDescriptorRequest) (*database.GetAccountDescriptorReply, error) {
+func (b *bboltStore) GetAccountInfo(request *kvstorev1.GetAccountDescriptorRequest) (*kvstorev1.GetAccountDescriptorResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b *bboltStore) DeleteAccountBucket(request *database.DeleteAccountRequest) (*database.DeleteAccountReply, error) {
+func (b *bboltStore) DeleteAccountBucket(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.DeleteAccountReply{}, ErrInvalidAccount
+		return &kvstorev1.DeleteAccountResponse{}, ErrInvalidAccount
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		b.logger.Trace().Msg("empty owner value")
-		return &database.DeleteAccountReply{}, ErrInvalidOwner
+		return &kvstorev1.DeleteAccountResponse{}, ErrInvalidOwner
 	}
 
 	err := b.db.Update(func(tx *bbolt.Tx) error {
@@ -162,7 +162,7 @@ func (b *bboltStore) DeleteAccountBucket(request *database.DeleteAccountRequest)
 
 		return nil
 	})
-	resp := &database.DeleteAccountReply{
+	resp := &kvstorev1.DeleteAccountResponse{
 		Ok: true,
 	}
 
@@ -173,27 +173,27 @@ func (b *bboltStore) DeleteAccountBucket(request *database.DeleteAccountRequest)
 	return resp, err
 }
 
-func (b *bboltStore) CreateBucket(request *database.CreateBucketRequest) (*database.CreateBucketReply, error) {
+func (b *bboltStore) CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.CreateBucketReply{}, ErrInvalidAccount
+		return &kvstorev1.CreateBucketResponse{}, ErrInvalidAccount
 	}
 
 	newBucketName := request.GetName()
 	if newBucketName == "" {
 		b.logger.Trace().Msg("empty bucket name")
-		return &database.CreateBucketReply{}, ErrEmptyBucketName
+		return &kvstorev1.CreateBucketResponse{}, ErrEmptyBucketName
 	}
 
 	owner := request.GetOwner()
 	if owner == "" {
 		b.logger.Trace().Msg("empty owner value")
-		return &database.CreateBucketReply{}, ErrInvalidOwner
+		return &kvstorev1.CreateBucketResponse{}, ErrInvalidOwner
 	}
 
 	now := timestamppb.Now()
-	descriptor := &database.BucketDescriptor{
+	descriptor := &kvstorev1.BucketDescriptor{
 		Owner:       owner,
 		Size:        0,
 		KeyCount:    0,
@@ -213,7 +213,7 @@ func (b *bboltStore) CreateBucket(request *database.CreateBucketRequest) (*datab
 		}
 
 		// get the account descriptor
-		acctDescriptor := &database.AccountDescriptor{}
+		acctDescriptor := &kvstorev1.AccountDescriptor{}
 		_acctDescriptor := accountBucket.Get([]byte(descriptorKey))
 
 		if err := proto.Unmarshal(_acctDescriptor, acctDescriptor); err != nil {
@@ -251,22 +251,22 @@ func (b *bboltStore) CreateBucket(request *database.CreateBucketRequest) (*datab
 		b.logger.Error().Err(err).Msg("can't create bucket")
 	}
 
-	return &database.CreateBucketReply{
+	return &kvstorev1.CreateBucketResponse{
 		BucketDescriptor: descriptor,
 	}, err
 }
 
-func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*database.DeleteBucketReply, error) {
+func (b *bboltStore) DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.DeleteBucketReply{}, ErrInvalidAccount
+		return &kvstorev1.DeleteBucketResponse{}, ErrInvalidAccount
 	}
 
 	targetBucketName := request.GetName()
 	if targetBucketName == "" {
 		b.logger.Trace().Msg("empty bucket targetBucketName")
-		return &database.DeleteBucketReply{}, ErrInvalidBucketName
+		return &kvstorev1.DeleteBucketResponse{}, ErrInvalidBucketName
 	}
 
 	now := timestamppb.Now()
@@ -283,7 +283,7 @@ func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*datab
 		}
 
 		// get the account descriptor
-		acctDescriptor := &database.AccountDescriptor{}
+		acctDescriptor := &kvstorev1.AccountDescriptor{}
 		_acctDescriptor := accountBucket.Get([]byte(descriptorKey))
 
 		if err := proto.Unmarshal(_acctDescriptor, acctDescriptor); err != nil {
@@ -294,7 +294,7 @@ func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*datab
 		bucketSize := uint64(0)
 		bucket := tx.Bucket([]byte(targetBucketName))
 		if bucket != nil {
-			bucketDesc := &database.BucketDescriptor{}
+			bucketDesc := &kvstorev1.BucketDescriptor{}
 			bucketDescBytes := bucket.Get([]byte(descriptorKey))
 			if err := proto.Unmarshal(bucketDescBytes, bucketDesc); err != nil {
 				b.logger.Error().Err(err).Msg("can't unmarshal bucket descriptor")
@@ -360,7 +360,7 @@ func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*datab
 		return errors.Wrap(err, "error updating account descriptor")
 	})
 
-	rep := &database.DeleteBucketReply{
+	rep := &kvstorev1.DeleteBucketResponse{
 		Ok: true,
 	}
 	if err != nil {
@@ -371,26 +371,26 @@ func (b *bboltStore) DeleteBucket(request *database.DeleteBucketRequest) (*datab
 	return rep, err
 }
 
-func (b *bboltStore) GetKey(request *database.GetKeyRequest) (*database.GetKeyReply, error) {
+func (b *bboltStore) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.GetKeyReply{}, ErrInvalidAccount
+		return &kvstorev1.GetKeyResponse{}, ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		b.logger.Trace().Msg("empty bucket name")
-		return &database.GetKeyReply{}, ErrInvalidBucketName
+		return &kvstorev1.GetKeyResponse{}, ErrInvalidBucketName
 	}
 
 	keyName := request.GetKey()
 	if keyName == "" {
 		b.logger.Trace().Msg("empty key identifier")
-		return &database.GetKeyReply{}, errors.New("empty key identifier")
+		return &kvstorev1.GetKeyResponse{}, errors.New("empty key identifier")
 	}
 
-	kvp := &database.KeyValue{}
+	kvp := &kvstorev1.KeyValue{}
 	err := b.db.View(func(tx *bbolt.Tx) error {
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, account)
@@ -420,28 +420,28 @@ func (b *bboltStore) GetKey(request *database.GetKeyRequest) (*database.GetKeyRe
 		b.logger.Error().Err(err).Uint64("account-id", account).Str("bucket", bucketName).Msg("error fetching key")
 	}
 
-	return &database.GetKeyReply{
+	return &kvstorev1.GetKeyResponse{
 		KeyValuePair: kvp,
 	}, errors.Wrap(err, "error fetching key")
 }
 
-func (b *bboltStore) PutKey(request *database.PutKeyRequest) (*database.PutKeyReply, error) {
+func (b *bboltStore) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.PutKeyReply{}, ErrInvalidAccount
+		return &kvstorev1.PutKeyResponse{}, ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		b.logger.Error().Msg("empty bucket name")
-		return &database.PutKeyReply{}, ErrInvalidBucketName
+		return &kvstorev1.PutKeyResponse{}, ErrInvalidBucketName
 	}
 
 	keyValuePair := request.GetKeyValuePair()
 	if keyValuePair.GetKey() == "" {
 		b.logger.Error().Msg("empty key identifier")
-		return &database.PutKeyReply{}, errors.New("empty key identifier")
+		return &kvstorev1.PutKeyResponse{}, errors.New("empty key identifier")
 	}
 
 	now := time.Now()
@@ -465,7 +465,7 @@ func (b *bboltStore) PutKey(request *database.PutKeyRequest) (*database.PutKeyRe
 		// compare-and-swap and update some fields
 		payload := bucket.Get([]byte(keyValuePair.GetKey()))
 		if payload != nil {
-			tmp := &database.KeyValue{}
+			tmp := &kvstorev1.KeyValue{}
 			if err := tmp.UnmarshalVT(payload); err != nil {
 				b.logger.Error().Err(err).Msg("key can't be unmarshalled, overwriting")
 				goto overwrite
@@ -504,29 +504,29 @@ func (b *bboltStore) PutKey(request *database.PutKeyRequest) (*database.PutKeyRe
 	if err != nil {
 		b.logger.Error().Err(errors.Wrap(err, "error storing key")).Uint64("account-id", account).Str("bucket", bucketName).Msg("error storing key")
 		// reset so we don't send data twice
-		keyValuePair = &database.KeyValue{}
+		keyValuePair = &kvstorev1.KeyValue{}
 	}
 
-	return &database.PutKeyReply{}, errors.Wrap(err, "error storing key")
+	return &kvstorev1.PutKeyResponse{}, errors.Wrap(err, "error storing key")
 }
 
-func (b *bboltStore) DeleteKey(request *database.DeleteKeyRequest) (*database.DeleteKeyReply, error) {
+func (b *bboltStore) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		b.logger.Trace().Msg("empty account value")
-		return &database.DeleteKeyReply{}, ErrInvalidAccount
+		return &kvstorev1.DeleteKeyResponse{}, ErrInvalidAccount
 	}
 
 	bucketName := request.GetBucketName()
 	if bucketName == "" {
 		b.logger.Trace().Msg("empty bucket name")
-		return &database.DeleteKeyReply{}, ErrInvalidBucketName
+		return &kvstorev1.DeleteKeyResponse{}, ErrInvalidBucketName
 	}
 
 	keyName := request.GetKey()
 	if keyName == "" {
 		b.logger.Trace().Msg("empty key identifier")
-		return &database.DeleteKeyReply{}, errors.New("empty key identifier")
+		return &kvstorev1.DeleteKeyResponse{}, errors.New("empty key identifier")
 	}
 
 	err := b.db.Update(func(tx *bbolt.Tx) error {
@@ -553,7 +553,7 @@ func (b *bboltStore) DeleteKey(request *database.DeleteKeyRequest) (*database.De
 		return errors.Wrap(err, "can't delete key")
 	})
 
-	resp := &database.DeleteKeyReply{Ok: true}
+	resp := &kvstorev1.DeleteKeyResponse{Ok: true}
 
 	if err != nil {
 		b.logger.Error().Err(err).Msg("can't delete key")

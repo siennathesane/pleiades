@@ -10,6 +10,8 @@
 package server
 
 import (
+	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
+	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
@@ -53,7 +55,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger: logger,
 		host:   rh,
 	}
-	RegisterRaftHostServer(gServer, rhAdapter)
+	raftv1.RegisterHostServiceServer(gServer, rhAdapter)
 	srv.raftHost = rh
 
 	sm := newShardManager(nh, logger)
@@ -61,7 +63,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger:       logger,
 		shardManager: sm,
 	}
-	RegisterShardManagerServer(gServer, smAdapter)
+	raftv1.RegisterShardServiceServer(gServer, smAdapter)
 	srv.raftShard = sm
 
 	tm := newTransactionManager(nh, logger)
@@ -69,7 +71,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger:             logger,
 		transactionManager: tm,
 	}
-	RegisterTransactionsServer(gServer, tmAdapter)
+	kvstorev1.RegisterTransactionsServiceServer(gServer, tmAdapter)
 	srv.raftTransactionManager = tm
 
 	store := newBboltStoreManager(tm, nh, logger)
@@ -77,7 +79,7 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 		logger:       logger,
 		storeManager: store,
 	}
-	RegisterKVStoreServiceServer(gServer, storeAdapter)
+	kvstorev1.RegisterKvStoreServiceServer(gServer, storeAdapter)
 	srv.bboltStoreManager = store
 
 	srv.nh = nh

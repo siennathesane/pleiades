@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mxplusb/pleiades/api/v1/raft"
+	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/rs/zerolog"
@@ -73,13 +73,13 @@ func (t *RaftEventHandlerTestSuite) TestWaitForMembershipChange() {
 
 	go func() {
 		for i := uint64(0); i < 500; i++ {
-			payload := &raft.RaftEvent{
-				Typ:       raft.EventType_NODE,
-				Action:    raft.Event_MEMBERSHIP_CHANGED,
+			payload := &raftv1.RaftEvent{
+				Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+				Action:    raftv1.Event_EVENT_MEMBERSHIP_CHANGED,
 				Timestamp: timestamppb.Now(),
-				Event:     &raft.RaftEvent_Node{Node: &raft.RaftNodeEvent{
+				Event: &raftv1.RaftEvent_Node{Node: &raftv1.RaftNodeEvent{
 					ShardId:   i,
-					ReplicaId: i*10,
+					ReplicaId: i * 10,
 				}},
 			}
 			buf, _ := payload.MarshalVT()
@@ -91,6 +91,5 @@ func (t *RaftEventHandlerTestSuite) TestWaitForMembershipChange() {
 
 	err := eh.WaitForMembershipChange(testShardId, testReplicaId, utils.Timeout(100*time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when waiting for a specific membership change message")
-
 
 }

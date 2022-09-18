@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mxplusb/pleiades/api/v1/raft"
+	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -57,7 +57,7 @@ func (t *raftHostGrpcAdapterTestSuite) SetupTest() {
 		logger: t.logger,
 	}
 
-	RegisterRaftHostServer(t.srv, &raftHostGrpcAdapter{
+	raftv1.RegisterHostServiceServer(t.srv, &raftHostGrpcAdapter{
 		logger: t.logger,
 		host:   t.rh,
 	})
@@ -112,10 +112,10 @@ func (t *raftHostGrpcAdapterTestSuite) TestCompact() {
 		cs.ProposalCompleted()
 	}
 
-	client := NewRaftHostClient(t.conn)
+	client := raftv1.NewHostServiceClient(t.conn)
 
 	// todo (sienna): figure out why it's being rejected.
-	_, err = client.Compact(context.Background(), &raft.CompactRequest{
+	_, err = client.Compact(context.Background(), &raftv1.CompactRequest{
 		ReplicaId: shardConfig.NodeID,
 		ShardId:   shardConfig.ClusterID,
 	})
@@ -123,8 +123,8 @@ func (t *raftHostGrpcAdapterTestSuite) TestCompact() {
 }
 
 func (t *raftHostGrpcAdapterTestSuite) TestGetHostConfig() {
-	client := NewRaftHostClient(t.conn)
-	resp, err := client.GetHostConfig(context.Background(), &raft.GetHostConfigRequest{})
+	client := raftv1.NewHostServiceClient(t.conn)
+	resp, err := client.GetHostConfig(context.Background(), &raftv1.GetHostConfigRequest{})
 	t.Require().NoError(err, "there must not be an error getting the host config")
 	t.Require().NotEmpty(resp, "the response must not be empty")
 }
@@ -156,10 +156,10 @@ func (t *raftHostGrpcAdapterTestSuite) TestSnapshot() {
 		cs.ProposalCompleted()
 	}
 
-	client := NewRaftHostClient(t.conn)
+	client := raftv1.NewHostServiceClient(t.conn)
 
 	// todo (sienna): figure out why it's failing to write to disk
-	_, err = client.Snapshot(context.Background(), &raft.SnapshotRequest{
+	_, err = client.Snapshot(context.Background(), &raftv1.SnapshotRequest{
 		ShardId:   shardConfig.ClusterID,
 		Timeout: int64(t.defaultTimeout),
 	})
@@ -167,8 +167,7 @@ func (t *raftHostGrpcAdapterTestSuite) TestSnapshot() {
 }
 
 func (t *raftHostGrpcAdapterTestSuite) TestStop() {
-	client := NewRaftHostClient(t.conn)
-	_, err := client.Stop(context.Background(), &raft.StopRequest{})
+	client := raftv1.NewHostServiceClient(t.conn)
+	_, err := client.Stop(context.Background(), &raftv1.StopRequest{})
 	t.Require().NoError(err, "there must not be an error when trying to stop the host")
 }
-
