@@ -12,9 +12,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/api/v1/database"
+	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/server"
 	"github.com/golang/protobuf/proto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -27,7 +26,7 @@ import (
 var accountDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete an account",
-	Run: deleteAccountCmd,
+	Run:   deleteAccountCmd,
 }
 
 func init() {
@@ -60,10 +59,10 @@ func deleteAccountCmd(cmd *cobra.Command, args []string) {
 		logger.Fatal().Err(err).Msg("error dialing server")
 	}
 
-	client := server.NewKVStoreServiceClient(conn)
+	client := kvstorev1.NewKvStoreServiceClient(conn)
 
 	logger.Info().Uint64("account-id", accountId).Msg("deleting account")
-	descriptor, err := client.DeleteAccount(context.Background(), &database.DeleteAccountRequest{AccountId: accountId, Owner: accountOwner})
+	descriptor, err := client.DeleteAccount(context.Background(), &kvstorev1.DeleteAccountRequest{AccountId: accountId, Owner: accountOwner})
 	if err != nil {
 		logger.Fatal().Err(err).Uint64("account-id", accountId).Msg("can't create account")
 	}
