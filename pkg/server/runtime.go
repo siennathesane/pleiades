@@ -10,15 +10,16 @@
 package server
 
 import (
-	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
-	raftv1 "github.com/mxplusb/api/raft/v1"
+	"net/http"
+
+	"github.com/mxplusb/api/kvstore/v1/kvstorev1connect"
+	"github.com/mxplusb/api/raft/v1/raftv1connect"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	"github.com/rs/zerolog"
-	"google.golang.org/grpc"
 )
 
 func init() {
@@ -40,7 +41,7 @@ type Server struct {
 	bboltStoreManager      IKVStore
 }
 
-func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger) (*Server, error) {
+func New(nhc dconfig.NodeHostConfig, mux *http.ServeMux, logger zerolog.Logger) (*Server, error) {
 	srv := &Server{
 		logger: logger.With().Str("component", "server").Logger(),
 	}
@@ -51,35 +52,39 @@ func New(nhc dconfig.NodeHostConfig, gServer *grpc.Server, logger zerolog.Logger
 	}
 
 	rh := newRaftHost(nh, logger)
-	rhAdapter := &raftHostGrpcAdapter{
+	rhAdapter := &raftHostConnectAdapter{
 		logger: logger,
 		host:   rh,
 	}
-	raftv1.RegisterHostServiceServer(gServer, rhAdapter)
+	path, handler := raftv1connect.NewHostServiceHandler(rhAdapter)
+	mux.Handle(path, handler)
 	srv.raftHost = rh
 
 	sm := newShardManager(nh, logger)
-	smAdapter := &raftShardGrpcAdapter{
+	smAdapter := &raftShardConnectAdapter{
 		logger:       logger,
 		shardManager: sm,
 	}
-	raftv1.RegisterShardServiceServer(gServer, smAdapter)
+	path, handler = raftv1connect.NewShardServiceHandler(smAdapter)
+	mux.Handle(path, handler)
 	srv.raftShard = sm
 
 	tm := newTransactionManager(nh, logger)
-	tmAdapter := &raftTransactionGrpcAdapter{
+	tmAdapter := &kvstoreTransactionConnectAdapter{
 		logger:             logger,
 		transactionManager: tm,
 	}
-	kvstorev1.RegisterTransactionsServiceServer(gServer, tmAdapter)
+	path, handler = kvstorev1connect.NewTransactionsServiceHandler(tmAdapter)
+	mux.Handle(path, handler)
 	srv.raftTransactionManager = tm
 
 	store := newBboltStoreManager(tm, nh, logger)
-	storeAdapter := &raftBBoltStoreManagerGrpcAdapter{
+	storeAdapter := &kvstoreBboltConnectAdapter{
 		logger:       logger,
 		storeManager: store,
 	}
-	kvstorev1.RegisterKvStoreServiceServer(gServer, storeAdapter)
+	path, handler = kvstorev1connect.NewKvStoreServiceHandler(storeAdapter)
+	mux.Handle(path, handler)
 	srv.bboltStoreManager = store
 
 	srv.nh = nh
