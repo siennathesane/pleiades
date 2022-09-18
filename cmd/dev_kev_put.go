@@ -10,16 +10,17 @@ package cmd
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/golang/protobuf/proto"
+	"github.com/bufbuild/connect-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // kvGetCmd represents the kvGet command
@@ -59,19 +60,10 @@ func putKey(cmd *cobra.Command, args []string) {
 		logger.Fatal().Msg("account id cannot be zero")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10000*time.Millisecond)
-	defer cancel()
-
-	conn, err := grpc.DialContext(ctx, serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
-	if err != nil {
-		logger.Fatal().Err(err).Msg("error dialing server")
-	}
-
-	client := kvstorev1.NewKvStoreServiceClient(conn)
+	client := kvstorev1connect.NewKvStoreServiceClient(http.DefaultClient, "http://localhost:8080")
 
 	now := time.Now().UnixMilli()
-	logger.Info().Str("key", key).Msg("putting key")
-	descriptor, err := client.PutKey(context.Background(), &kvstorev1.PutKeyRequest{
+	descriptor, err := client.PutKey(context.Background(), connect.NewRequest(&kvstorev1.PutKeyRequest{
 		AccountId:  accountId,
 		BucketName: bucketName,
 		KeyValuePair: &kvstorev1.KeyValue{
@@ -81,10 +73,10 @@ func putKey(cmd *cobra.Command, args []string) {
 			Version:        keyVersion,
 			Value:          payload,
 			Lease:          0,
-		}})
+		}}))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't put key")
 	}
 
-	print(proto.MarshalTextString(descriptor))
+	print(protojson.Format(descriptor.Msg))
 }
