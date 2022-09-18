@@ -10,7 +10,7 @@
 package cmd
 
 import (
-	"net"
+	"net/http"
 	"os"
 	"sync"
 	"time"
@@ -21,7 +21,8 @@ import (
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 // serverCmd represents the server command
@@ -63,7 +64,7 @@ func startServer(cmd *cobra.Command, args []string) {
 	if debug {
 		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
 	} else {
-		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
+		logger = configuration.NewRootLogger().Level(zerolog.InfoLevel)
 	}
 
 	logger.Info().Msg("hello from boulder")
@@ -71,10 +72,6 @@ func startServer(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't parse flags")
-	}
-
-	if debug {
-
 	}
 
 	nhc := dconfig.NodeHostConfig{
@@ -105,11 +102,9 @@ func startServer(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	var opts []grpc.ServerOption
+	mux := http.NewServeMux()
 
-	gServer := grpc.NewServer(opts...)
-
-	s, err := server.New(nhc, gServer, logger)
+	s, err := server.New(nhc, mux, logger)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't create pleiades server")
 	}
@@ -128,15 +123,11 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	logger.Debug().Msg("state machines finished, starting server")
 
-	listen, err := net.Listen("tcp", config.Server.Host.GrpcListenAddress)
-	if err != nil {
-		logger.Fatal().Err(err).Str("listen-addr", config.Server.Host.GrpcListenAddress).Msg("can't start listener")
-	}
-
-	err = gServer.Serve(listen)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("can't run grpc server")
-	}
+	http.ListenAndServe(
+		"localhost:8080",
+		// Use h2c so we can serve HTTP/2 without TLS.
+		h2c.NewHandler(mux, &http2.Server{}),
+	)
 
 	s.Stop()
 }
