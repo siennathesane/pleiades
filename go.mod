@@ -3,6 +3,7 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
+	github.com/mxplusb/api v0.0.0-20220917235348-156e0fd00fac
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13
 	github.com/go-git/go-git/v5 v5.4.2
@@ -28,7 +29,6 @@ require (
 )
 
 require (
-	github.com/mxplusb/api v0.0.0-20220917222456-7aaed79b95d5 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20220714114130-e85cedf506cd // indirect
 	github.com/VictoriaMetrics/metrics v1.6.2 // indirect
@@ -94,7 +94,6 @@ require (
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
