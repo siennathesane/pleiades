@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private KeyValue() {
-    key_ = "";
+    key_ = com.google.protobuf.ByteString.EMPTY;
     value_ = com.google.protobuf.ByteString.EMPTY;
   }
 
@@ -51,9 +51,8 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            key_ = s;
+            key_ = input.readBytes();
             break;
           }
           case 16: {
@@ -68,7 +67,7 @@ private static final long serialVersionUID = 0L;
           }
           case 32: {
 
-            version_ = input.readInt64();
+            version_ = input.readUInt64();
             break;
           }
           case 42: {
@@ -116,49 +115,18 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int KEY_FIELD_NUMBER = 1;
-  private volatile java.lang.Object key_;
+  private com.google.protobuf.ByteString key_;
   /**
    * <pre>
    * key is the key in bytes. An empty key is not allowed.
    * </pre>
    *
-   * <code>string key = 1 [json_name = "key"];</code>
+   * <code>bytes key = 1 [json_name = "key"];</code>
    * @return The key.
    */
   @java.lang.Override
-  public java.lang.String getKey() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      key_ = s;
-      return s;
-    }
-  }
-  /**
-   * <pre>
-   * key is the key in bytes. An empty key is not allowed.
-   * </pre>
-   *
-   * <code>string key = 1 [json_name = "key"];</code>
-   * @return The bytes for key.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getKeyBytes() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      key_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   public static final int CREATE_REVISION_FIELD_NUMBER = 2;
@@ -200,7 +168,7 @@ private static final long serialVersionUID = 0L;
    * increases its version.
    * </pre>
    *
-   * <code>int64 version = 4 [json_name = "version"];</code>
+   * <code>uint64 version = 4 [json_name = "version"];</code>
    * @return The version.
    */
   @java.lang.Override
@@ -254,8 +222,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(1, key_);
     }
     if (createRevision_ != 0L) {
       output.writeInt64(2, createRevision_);
@@ -264,7 +232,7 @@ private static final long serialVersionUID = 0L;
       output.writeInt64(3, modRevision_);
     }
     if (version_ != 0L) {
-      output.writeInt64(4, version_);
+      output.writeUInt64(4, version_);
     }
     if (!value_.isEmpty()) {
       output.writeBytes(5, value_);
@@ -281,8 +249,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
+    if (!key_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(1, key_);
     }
     if (createRevision_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
@@ -294,7 +263,7 @@ private static final long serialVersionUID = 0L;
     }
     if (version_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, version_);
+        .computeUInt64Size(4, version_);
     }
     if (!value_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -491,7 +460,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      key_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
       createRevision_ = 0L;
 
@@ -583,9 +552,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(io.a13s.api.kvstore.v1.KeyValue other) {
       if (other == io.a13s.api.kvstore.v1.KeyValue.getDefaultInstance()) return this;
-      if (!other.getKey().isEmpty()) {
-        key_ = other.key_;
-        onChanged();
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
       if (other.getCreateRevision() != 0L) {
         setCreateRevision(other.getCreateRevision());
@@ -631,59 +599,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object key_ = "";
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
      * key is the key in bytes. An empty key is not allowed.
      * </pre>
      *
-     * <code>string key = 1 [json_name = "key"];</code>
+     * <code>bytes key = 1 [json_name = "key"];</code>
      * @return The key.
      */
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        key_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
      * <pre>
      * key is the key in bytes. An empty key is not allowed.
      * </pre>
      *
-     * <code>string key = 1 [json_name = "key"];</code>
-     * @return The bytes for key.
-     */
-    public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <pre>
-     * key is the key in bytes. An empty key is not allowed.
-     * </pre>
-     *
-     * <code>string key = 1 [json_name = "key"];</code>
+     * <code>bytes key = 1 [json_name = "key"];</code>
      * @param value The key to set.
      * @return This builder for chaining.
      */
-    public Builder setKey(
-        java.lang.String value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -697,32 +635,12 @@ private static final long serialVersionUID = 0L;
      * key is the key in bytes. An empty key is not allowed.
      * </pre>
      *
-     * <code>string key = 1 [json_name = "key"];</code>
+     * <code>bytes key = 1 [json_name = "key"];</code>
      * @return This builder for chaining.
      */
     public Builder clearKey() {
       
       key_ = getDefaultInstance().getKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * key is the key in bytes. An empty key is not allowed.
-     * </pre>
-     *
-     * <code>string key = 1 [json_name = "key"];</code>
-     * @param value The bytes for key to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      key_ = value;
       onChanged();
       return this;
     }
@@ -821,7 +739,7 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>int64 version = 4 [json_name = "version"];</code>
+     * <code>uint64 version = 4 [json_name = "version"];</code>
      * @return The version.
      */
     @java.lang.Override
@@ -835,7 +753,7 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>int64 version = 4 [json_name = "version"];</code>
+     * <code>uint64 version = 4 [json_name = "version"];</code>
      * @param value The version to set.
      * @return This builder for chaining.
      */
@@ -852,7 +770,7 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>int64 version = 4 [json_name = "version"];</code>
+     * <code>uint64 version = 4 [json_name = "version"];</code>
      * @return This builder for chaining.
      */
     public Builder clearVersion() {

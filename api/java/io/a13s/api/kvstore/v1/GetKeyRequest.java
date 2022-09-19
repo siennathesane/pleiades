@@ -40,6 +40,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -65,6 +66,11 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             key_ = s;
+            break;
+          }
+          case 32: {
+            bitField0_ |= 0x00000001;
+            version_ = input.readUInt32();
             break;
           }
           default: {
@@ -101,6 +107,7 @@ private static final long serialVersionUID = 0L;
             io.a13s.api.kvstore.v1.GetKeyRequest.class, io.a13s.api.kvstore.v1.GetKeyRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int ACCOUNT_ID_FIELD_NUMBER = 1;
   private long accountId_;
   /**
@@ -188,6 +195,25 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int VERSION_FIELD_NUMBER = 4;
+  private int version_;
+  /**
+   * <code>optional uint32 version = 4 [json_name = "version"];</code>
+   * @return Whether the version field is set.
+   */
+  @java.lang.Override
+  public boolean hasVersion() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <code>optional uint32 version = 4 [json_name = "version"];</code>
+   * @return The version.
+   */
+  @java.lang.Override
+  public int getVersion() {
+    return version_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -211,6 +237,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, key_);
     }
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeUInt32(4, version_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -229,6 +258,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, key_);
+    }
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(4, version_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -251,6 +284,11 @@ private static final long serialVersionUID = 0L;
         .equals(other.getBucketName())) return false;
     if (!getKey()
         .equals(other.getKey())) return false;
+    if (hasVersion() != other.hasVersion()) return false;
+    if (hasVersion()) {
+      if (getVersion()
+          != other.getVersion()) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -269,6 +307,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getBucketName().hashCode();
     hash = (37 * hash) + KEY_FIELD_NUMBER;
     hash = (53 * hash) + getKey().hashCode();
+    if (hasVersion()) {
+      hash = (37 * hash) + VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getVersion();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -408,6 +450,8 @@ private static final long serialVersionUID = 0L;
 
       key_ = "";
 
+      version_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -434,9 +478,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public io.a13s.api.kvstore.v1.GetKeyRequest buildPartial() {
       io.a13s.api.kvstore.v1.GetKeyRequest result = new io.a13s.api.kvstore.v1.GetKeyRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.accountId_ = accountId_;
       result.bucketName_ = bucketName_;
       result.key_ = key_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.version_ = version_;
+        to_bitField0_ |= 0x00000001;
+      }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -496,6 +547,9 @@ private static final long serialVersionUID = 0L;
         key_ = other.key_;
         onChanged();
       }
+      if (other.hasVersion()) {
+        setVersion(other.getVersion());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -524,6 +578,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long accountId_ ;
     /**
@@ -704,6 +759,45 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       key_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int version_ ;
+    /**
+     * <code>optional uint32 version = 4 [json_name = "version"];</code>
+     * @return Whether the version field is set.
+     */
+    @java.lang.Override
+    public boolean hasVersion() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional uint32 version = 4 [json_name = "version"];</code>
+     * @return The version.
+     */
+    @java.lang.Override
+    public int getVersion() {
+      return version_;
+    }
+    /**
+     * <code>optional uint32 version = 4 [json_name = "version"];</code>
+     * @param value The version to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVersion(int value) {
+      bitField0_ |= 0x00000001;
+      version_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional uint32 version = 4 [json_name = "version"];</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearVersion() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      version_ = 0;
       onChanged();
       return this;
     }

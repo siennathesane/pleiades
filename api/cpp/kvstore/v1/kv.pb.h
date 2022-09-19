@@ -113,6 +113,15 @@ extern KVStoreWrapperDefaultTypeInternal _KVStoreWrapper_default_instance_;
 class KeyValue;
 struct KeyValueDefaultTypeInternal;
 extern KeyValueDefaultTypeInternal _KeyValue_default_instance_;
+class KeyValueDescriptor;
+struct KeyValueDescriptorDefaultTypeInternal;
+extern KeyValueDescriptorDefaultTypeInternal _KeyValueDescriptor_default_instance_;
+class ListKeyVersionsRequest;
+struct ListKeyVersionsRequestDefaultTypeInternal;
+extern ListKeyVersionsRequestDefaultTypeInternal _ListKeyVersionsRequest_default_instance_;
+class ListKeyVersionsResponse;
+struct ListKeyVersionsResponseDefaultTypeInternal;
+extern ListKeyVersionsResponseDefaultTypeInternal _ListKeyVersionsResponse_default_instance_;
 class PutKeyRequest;
 struct PutKeyRequestDefaultTypeInternal;
 extern PutKeyRequestDefaultTypeInternal _PutKeyRequest_default_instance_;
@@ -143,6 +152,9 @@ template<> ::kvstore::v1::GetKeyRequest* Arena::CreateMaybeMessage<::kvstore::v1
 template<> ::kvstore::v1::GetKeyResponse* Arena::CreateMaybeMessage<::kvstore::v1::GetKeyResponse>(Arena*);
 template<> ::kvstore::v1::KVStoreWrapper* Arena::CreateMaybeMessage<::kvstore::v1::KVStoreWrapper>(Arena*);
 template<> ::kvstore::v1::KeyValue* Arena::CreateMaybeMessage<::kvstore::v1::KeyValue>(Arena*);
+template<> ::kvstore::v1::KeyValueDescriptor* Arena::CreateMaybeMessage<::kvstore::v1::KeyValueDescriptor>(Arena*);
+template<> ::kvstore::v1::ListKeyVersionsRequest* Arena::CreateMaybeMessage<::kvstore::v1::ListKeyVersionsRequest>(Arena*);
+template<> ::kvstore::v1::ListKeyVersionsResponse* Arena::CreateMaybeMessage<::kvstore::v1::ListKeyVersionsResponse>(Arena*);
 template<> ::kvstore::v1::PutKeyRequest* Arena::CreateMaybeMessage<::kvstore::v1::PutKeyRequest>(Arena*);
 template<> ::kvstore::v1::PutKeyResponse* Arena::CreateMaybeMessage<::kvstore::v1::PutKeyResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
@@ -3152,21 +3164,21 @@ class GetBucketDescriptorRequest final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kNameFieldNumber = 2,
+    kBucketNameFieldNumber = 2,
     kAccountIdFieldNumber = 1,
   };
-  // string name = 2 [json_name = "name"];
-  void clear_name();
-  const std::string& name() const;
+  // string bucket_name = 2 [json_name = "bucketName"];
+  void clear_bucket_name();
+  const std::string& bucket_name() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_name(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_name();
-  PROTOBUF_NODISCARD std::string* release_name();
-  void set_allocated_name(std::string* name);
+  void set_bucket_name(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_bucket_name();
+  PROTOBUF_NODISCARD std::string* release_bucket_name();
+  void set_allocated_bucket_name(std::string* bucket_name);
   private:
-  const std::string& _internal_name() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(const std::string& value);
-  std::string* _internal_mutable_name();
+  const std::string& _internal_bucket_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_bucket_name(const std::string& value);
+  std::string* _internal_mutable_bucket_name();
   public:
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -3185,7 +3197,7 @@ class GetBucketDescriptorRequest final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr bucket_name_;
   uint64_t account_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
@@ -3466,6 +3478,7 @@ class GetKeyRequest final :
     kBucketNameFieldNumber = 2,
     kKeyFieldNumber = 3,
     kAccountIdFieldNumber = 1,
+    kVersionFieldNumber = 4,
   };
   // string bucket_name = 2 [json_name = "bucketName"];
   void clear_bucket_name();
@@ -3504,6 +3517,19 @@ class GetKeyRequest final :
   void _internal_set_account_id(uint64_t value);
   public:
 
+  // optional uint32 version = 4 [json_name = "version"];
+  bool has_version() const;
+  private:
+  bool _internal_has_version() const;
+  public:
+  void clear_version();
+  uint32_t version() const;
+  void set_version(uint32_t value);
+  private:
+  uint32_t _internal_version() const;
+  void _internal_set_version(uint32_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:kvstore.v1.GetKeyRequest)
  private:
   class _Internal;
@@ -3511,10 +3537,12 @@ class GetKeyRequest final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr bucket_name_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr key_;
   uint64_t account_id_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  uint32_t version_;
   friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
 };
 // -------------------------------------------------------------------
@@ -4380,6 +4408,484 @@ class DeleteKeyResponse final :
 };
 // -------------------------------------------------------------------
 
+class KeyValueDescriptor final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:kvstore.v1.KeyValueDescriptor) */ {
+ public:
+  inline KeyValueDescriptor() : KeyValueDescriptor(nullptr) {}
+  ~KeyValueDescriptor() override;
+  explicit PROTOBUF_CONSTEXPR KeyValueDescriptor(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  KeyValueDescriptor(const KeyValueDescriptor& from);
+  KeyValueDescriptor(KeyValueDescriptor&& from) noexcept
+    : KeyValueDescriptor() {
+    *this = ::std::move(from);
+  }
+
+  inline KeyValueDescriptor& operator=(const KeyValueDescriptor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline KeyValueDescriptor& operator=(KeyValueDescriptor&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const KeyValueDescriptor& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const KeyValueDescriptor* internal_default_instance() {
+    return reinterpret_cast<const KeyValueDescriptor*>(
+               &_KeyValueDescriptor_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    21;
+
+  friend void swap(KeyValueDescriptor& a, KeyValueDescriptor& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(KeyValueDescriptor* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(KeyValueDescriptor* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  KeyValueDescriptor* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<KeyValueDescriptor>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const KeyValueDescriptor& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const KeyValueDescriptor& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(KeyValueDescriptor* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "kvstore.v1.KeyValueDescriptor";
+  }
+  protected:
+  explicit KeyValueDescriptor(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kVersionsFieldNumber = 1,
+    kCurrentKeyFieldNumber = 2,
+  };
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  int versions_size() const;
+  private:
+  int _internal_versions_size() const;
+  public:
+  void clear_versions();
+  private:
+  uint32_t _internal_versions(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      _internal_versions() const;
+  void _internal_add_versions(uint32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      _internal_mutable_versions();
+  public:
+  uint32_t versions(int index) const;
+  void set_versions(int index, uint32_t value);
+  void add_versions(uint32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      versions() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      mutable_versions();
+
+  // bytes current_key = 2 [json_name = "currentKey"];
+  void clear_current_key();
+  const std::string& current_key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_current_key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_current_key();
+  PROTOBUF_NODISCARD std::string* release_current_key();
+  void set_allocated_current_key(std::string* current_key);
+  private:
+  const std::string& _internal_current_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_current_key(const std::string& value);
+  std::string* _internal_mutable_current_key();
+  public:
+
+  // @@protoc_insertion_point(class_scope:kvstore.v1.KeyValueDescriptor)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t > versions_;
+  mutable std::atomic<int> _versions_cached_byte_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr current_key_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ListKeyVersionsRequest final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:kvstore.v1.ListKeyVersionsRequest) */ {
+ public:
+  inline ListKeyVersionsRequest() : ListKeyVersionsRequest(nullptr) {}
+  ~ListKeyVersionsRequest() override;
+  explicit PROTOBUF_CONSTEXPR ListKeyVersionsRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ListKeyVersionsRequest(const ListKeyVersionsRequest& from);
+  ListKeyVersionsRequest(ListKeyVersionsRequest&& from) noexcept
+    : ListKeyVersionsRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline ListKeyVersionsRequest& operator=(const ListKeyVersionsRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ListKeyVersionsRequest& operator=(ListKeyVersionsRequest&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ListKeyVersionsRequest& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ListKeyVersionsRequest* internal_default_instance() {
+    return reinterpret_cast<const ListKeyVersionsRequest*>(
+               &_ListKeyVersionsRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    22;
+
+  friend void swap(ListKeyVersionsRequest& a, ListKeyVersionsRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ListKeyVersionsRequest* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ListKeyVersionsRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ListKeyVersionsRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ListKeyVersionsRequest>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ListKeyVersionsRequest& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ListKeyVersionsRequest& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ListKeyVersionsRequest* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "kvstore.v1.ListKeyVersionsRequest";
+  }
+  protected:
+  explicit ListKeyVersionsRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kKeyFieldNumber = 1,
+  };
+  // bytes key = 1 [json_name = "key"];
+  void clear_key();
+  const std::string& key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_key();
+  PROTOBUF_NODISCARD std::string* release_key();
+  void set_allocated_key(std::string* key);
+  private:
+  const std::string& _internal_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_key(const std::string& value);
+  std::string* _internal_mutable_key();
+  public:
+
+  // @@protoc_insertion_point(class_scope:kvstore.v1.ListKeyVersionsRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr key_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ListKeyVersionsResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:kvstore.v1.ListKeyVersionsResponse) */ {
+ public:
+  inline ListKeyVersionsResponse() : ListKeyVersionsResponse(nullptr) {}
+  ~ListKeyVersionsResponse() override;
+  explicit PROTOBUF_CONSTEXPR ListKeyVersionsResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ListKeyVersionsResponse(const ListKeyVersionsResponse& from);
+  ListKeyVersionsResponse(ListKeyVersionsResponse&& from) noexcept
+    : ListKeyVersionsResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline ListKeyVersionsResponse& operator=(const ListKeyVersionsResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ListKeyVersionsResponse& operator=(ListKeyVersionsResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ListKeyVersionsResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ListKeyVersionsResponse* internal_default_instance() {
+    return reinterpret_cast<const ListKeyVersionsResponse*>(
+               &_ListKeyVersionsResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    23;
+
+  friend void swap(ListKeyVersionsResponse& a, ListKeyVersionsResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ListKeyVersionsResponse* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ListKeyVersionsResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ListKeyVersionsResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ListKeyVersionsResponse>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ListKeyVersionsResponse& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ListKeyVersionsResponse& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ListKeyVersionsResponse* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "kvstore.v1.ListKeyVersionsResponse";
+  }
+  protected:
+  explicit ListKeyVersionsResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kVersionsFieldNumber = 1,
+  };
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  int versions_size() const;
+  private:
+  int _internal_versions_size() const;
+  public:
+  void clear_versions();
+  private:
+  uint32_t _internal_versions(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      _internal_versions() const;
+  void _internal_add_versions(uint32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      _internal_mutable_versions();
+  public:
+  uint32_t versions(int index) const;
+  void set_versions(int index, uint32_t value);
+  void add_versions(uint32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      versions() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      mutable_versions();
+
+  // @@protoc_insertion_point(class_scope:kvstore.v1.ListKeyVersionsResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t > versions_;
+  mutable std::atomic<int> _versions_cached_byte_size_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
+};
+// -------------------------------------------------------------------
+
 class KeyValue final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:kvstore.v1.KeyValue) */ {
  public:
@@ -4428,7 +4934,7 @@ class KeyValue final :
                &_KeyValue_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    24;
 
   friend void swap(KeyValue& a, KeyValue& b) {
     a.Swap(&b);
@@ -4506,7 +5012,7 @@ class KeyValue final :
     kVersionFieldNumber = 4,
     kLeaseFieldNumber = 6,
   };
-  // string key = 1 [json_name = "key"];
+  // bytes key = 1 [json_name = "key"];
   void clear_key();
   const std::string& key() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -4552,13 +5058,13 @@ class KeyValue final :
   void _internal_set_mod_revision(int64_t value);
   public:
 
-  // int64 version = 4 [json_name = "version"];
+  // uint64 version = 4 [json_name = "version"];
   void clear_version();
-  int64_t version() const;
-  void set_version(int64_t value);
+  uint64_t version() const;
+  void set_version(uint64_t value);
   private:
-  int64_t _internal_version() const;
-  void _internal_set_version(int64_t value);
+  uint64_t _internal_version() const;
+  void _internal_set_version(uint64_t value);
   public:
 
   // int64 lease = 6 [json_name = "lease"];
@@ -4581,7 +5087,7 @@ class KeyValue final :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr value_;
   int64_t create_revision_;
   int64_t mod_revision_;
-  int64_t version_;
+  uint64_t version_;
   int64_t lease_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
@@ -4636,7 +5142,7 @@ class Event final :
                &_Event_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    25;
 
   friend void swap(Event& a, Event& b) {
     a.Swap(&b);
@@ -8285,54 +8791,54 @@ inline void GetBucketDescriptorRequest::set_account_id(uint64_t value) {
   // @@protoc_insertion_point(field_set:kvstore.v1.GetBucketDescriptorRequest.account_id)
 }
 
-// string name = 2 [json_name = "name"];
-inline void GetBucketDescriptorRequest::clear_name() {
-  name_.ClearToEmpty();
+// string bucket_name = 2 [json_name = "bucketName"];
+inline void GetBucketDescriptorRequest::clear_bucket_name() {
+  bucket_name_.ClearToEmpty();
 }
-inline const std::string& GetBucketDescriptorRequest::name() const {
-  // @@protoc_insertion_point(field_get:kvstore.v1.GetBucketDescriptorRequest.name)
-  return _internal_name();
+inline const std::string& GetBucketDescriptorRequest::bucket_name() const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.GetBucketDescriptorRequest.bucket_name)
+  return _internal_bucket_name();
 }
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
-void GetBucketDescriptorRequest::set_name(ArgT0&& arg0, ArgT... args) {
+void GetBucketDescriptorRequest::set_bucket_name(ArgT0&& arg0, ArgT... args) {
  
- name_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:kvstore.v1.GetBucketDescriptorRequest.name)
+ bucket_name_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:kvstore.v1.GetBucketDescriptorRequest.bucket_name)
 }
-inline std::string* GetBucketDescriptorRequest::mutable_name() {
-  std::string* _s = _internal_mutable_name();
-  // @@protoc_insertion_point(field_mutable:kvstore.v1.GetBucketDescriptorRequest.name)
+inline std::string* GetBucketDescriptorRequest::mutable_bucket_name() {
+  std::string* _s = _internal_mutable_bucket_name();
+  // @@protoc_insertion_point(field_mutable:kvstore.v1.GetBucketDescriptorRequest.bucket_name)
   return _s;
 }
-inline const std::string& GetBucketDescriptorRequest::_internal_name() const {
-  return name_.Get();
+inline const std::string& GetBucketDescriptorRequest::_internal_bucket_name() const {
+  return bucket_name_.Get();
 }
-inline void GetBucketDescriptorRequest::_internal_set_name(const std::string& value) {
+inline void GetBucketDescriptorRequest::_internal_set_bucket_name(const std::string& value) {
   
-  name_.Set(value, GetArenaForAllocation());
+  bucket_name_.Set(value, GetArenaForAllocation());
 }
-inline std::string* GetBucketDescriptorRequest::_internal_mutable_name() {
+inline std::string* GetBucketDescriptorRequest::_internal_mutable_bucket_name() {
   
-  return name_.Mutable(GetArenaForAllocation());
+  return bucket_name_.Mutable(GetArenaForAllocation());
 }
-inline std::string* GetBucketDescriptorRequest::release_name() {
-  // @@protoc_insertion_point(field_release:kvstore.v1.GetBucketDescriptorRequest.name)
-  return name_.Release();
+inline std::string* GetBucketDescriptorRequest::release_bucket_name() {
+  // @@protoc_insertion_point(field_release:kvstore.v1.GetBucketDescriptorRequest.bucket_name)
+  return bucket_name_.Release();
 }
-inline void GetBucketDescriptorRequest::set_allocated_name(std::string* name) {
-  if (name != nullptr) {
+inline void GetBucketDescriptorRequest::set_allocated_bucket_name(std::string* bucket_name) {
+  if (bucket_name != nullptr) {
     
   } else {
     
   }
-  name_.SetAllocated(name, GetArenaForAllocation());
+  bucket_name_.SetAllocated(bucket_name, GetArenaForAllocation());
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (name_.IsDefault()) {
-    name_.Set("", GetArenaForAllocation());
+  if (bucket_name_.IsDefault()) {
+    bucket_name_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:kvstore.v1.GetBucketDescriptorRequest.name)
+  // @@protoc_insertion_point(field_set_allocated:kvstore.v1.GetBucketDescriptorRequest.bucket_name)
 }
 
 // -------------------------------------------------------------------
@@ -8551,6 +9057,34 @@ inline void GetKeyRequest::set_allocated_key(std::string* key) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.GetKeyRequest.key)
+}
+
+// optional uint32 version = 4 [json_name = "version"];
+inline bool GetKeyRequest::_internal_has_version() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  return value;
+}
+inline bool GetKeyRequest::has_version() const {
+  return _internal_has_version();
+}
+inline void GetKeyRequest::clear_version() {
+  version_ = 0u;
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline uint32_t GetKeyRequest::_internal_version() const {
+  return version_;
+}
+inline uint32_t GetKeyRequest::version() const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.GetKeyRequest.version)
+  return _internal_version();
+}
+inline void GetKeyRequest::_internal_set_version(uint32_t value) {
+  _has_bits_[0] |= 0x00000001u;
+  version_ = value;
+}
+inline void GetKeyRequest::set_version(uint32_t value) {
+  _internal_set_version(value);
+  // @@protoc_insertion_point(field_set:kvstore.v1.GetKeyRequest.version)
 }
 
 // -------------------------------------------------------------------
@@ -9305,9 +9839,215 @@ inline void DeleteKeyResponse::set_allocated_transaction(::kvstore::v1::Transact
 
 // -------------------------------------------------------------------
 
+// KeyValueDescriptor
+
+// repeated uint32 versions = 1 [json_name = "versions"];
+inline int KeyValueDescriptor::_internal_versions_size() const {
+  return versions_.size();
+}
+inline int KeyValueDescriptor::versions_size() const {
+  return _internal_versions_size();
+}
+inline void KeyValueDescriptor::clear_versions() {
+  versions_.Clear();
+}
+inline uint32_t KeyValueDescriptor::_internal_versions(int index) const {
+  return versions_.Get(index);
+}
+inline uint32_t KeyValueDescriptor::versions(int index) const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.KeyValueDescriptor.versions)
+  return _internal_versions(index);
+}
+inline void KeyValueDescriptor::set_versions(int index, uint32_t value) {
+  versions_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kvstore.v1.KeyValueDescriptor.versions)
+}
+inline void KeyValueDescriptor::_internal_add_versions(uint32_t value) {
+  versions_.Add(value);
+}
+inline void KeyValueDescriptor::add_versions(uint32_t value) {
+  _internal_add_versions(value);
+  // @@protoc_insertion_point(field_add:kvstore.v1.KeyValueDescriptor.versions)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+KeyValueDescriptor::_internal_versions() const {
+  return versions_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+KeyValueDescriptor::versions() const {
+  // @@protoc_insertion_point(field_list:kvstore.v1.KeyValueDescriptor.versions)
+  return _internal_versions();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+KeyValueDescriptor::_internal_mutable_versions() {
+  return &versions_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+KeyValueDescriptor::mutable_versions() {
+  // @@protoc_insertion_point(field_mutable_list:kvstore.v1.KeyValueDescriptor.versions)
+  return _internal_mutable_versions();
+}
+
+// bytes current_key = 2 [json_name = "currentKey"];
+inline void KeyValueDescriptor::clear_current_key() {
+  current_key_.ClearToEmpty();
+}
+inline const std::string& KeyValueDescriptor::current_key() const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.KeyValueDescriptor.current_key)
+  return _internal_current_key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void KeyValueDescriptor::set_current_key(ArgT0&& arg0, ArgT... args) {
+ 
+ current_key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:kvstore.v1.KeyValueDescriptor.current_key)
+}
+inline std::string* KeyValueDescriptor::mutable_current_key() {
+  std::string* _s = _internal_mutable_current_key();
+  // @@protoc_insertion_point(field_mutable:kvstore.v1.KeyValueDescriptor.current_key)
+  return _s;
+}
+inline const std::string& KeyValueDescriptor::_internal_current_key() const {
+  return current_key_.Get();
+}
+inline void KeyValueDescriptor::_internal_set_current_key(const std::string& value) {
+  
+  current_key_.Set(value, GetArenaForAllocation());
+}
+inline std::string* KeyValueDescriptor::_internal_mutable_current_key() {
+  
+  return current_key_.Mutable(GetArenaForAllocation());
+}
+inline std::string* KeyValueDescriptor::release_current_key() {
+  // @@protoc_insertion_point(field_release:kvstore.v1.KeyValueDescriptor.current_key)
+  return current_key_.Release();
+}
+inline void KeyValueDescriptor::set_allocated_current_key(std::string* current_key) {
+  if (current_key != nullptr) {
+    
+  } else {
+    
+  }
+  current_key_.SetAllocated(current_key, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (current_key_.IsDefault()) {
+    current_key_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KeyValueDescriptor.current_key)
+}
+
+// -------------------------------------------------------------------
+
+// ListKeyVersionsRequest
+
+// bytes key = 1 [json_name = "key"];
+inline void ListKeyVersionsRequest::clear_key() {
+  key_.ClearToEmpty();
+}
+inline const std::string& ListKeyVersionsRequest::key() const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.ListKeyVersionsRequest.key)
+  return _internal_key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ListKeyVersionsRequest::set_key(ArgT0&& arg0, ArgT... args) {
+ 
+ key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:kvstore.v1.ListKeyVersionsRequest.key)
+}
+inline std::string* ListKeyVersionsRequest::mutable_key() {
+  std::string* _s = _internal_mutable_key();
+  // @@protoc_insertion_point(field_mutable:kvstore.v1.ListKeyVersionsRequest.key)
+  return _s;
+}
+inline const std::string& ListKeyVersionsRequest::_internal_key() const {
+  return key_.Get();
+}
+inline void ListKeyVersionsRequest::_internal_set_key(const std::string& value) {
+  
+  key_.Set(value, GetArenaForAllocation());
+}
+inline std::string* ListKeyVersionsRequest::_internal_mutable_key() {
+  
+  return key_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ListKeyVersionsRequest::release_key() {
+  // @@protoc_insertion_point(field_release:kvstore.v1.ListKeyVersionsRequest.key)
+  return key_.Release();
+}
+inline void ListKeyVersionsRequest::set_allocated_key(std::string* key) {
+  if (key != nullptr) {
+    
+  } else {
+    
+  }
+  key_.SetAllocated(key, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (key_.IsDefault()) {
+    key_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:kvstore.v1.ListKeyVersionsRequest.key)
+}
+
+// -------------------------------------------------------------------
+
+// ListKeyVersionsResponse
+
+// repeated uint32 versions = 1 [json_name = "versions"];
+inline int ListKeyVersionsResponse::_internal_versions_size() const {
+  return versions_.size();
+}
+inline int ListKeyVersionsResponse::versions_size() const {
+  return _internal_versions_size();
+}
+inline void ListKeyVersionsResponse::clear_versions() {
+  versions_.Clear();
+}
+inline uint32_t ListKeyVersionsResponse::_internal_versions(int index) const {
+  return versions_.Get(index);
+}
+inline uint32_t ListKeyVersionsResponse::versions(int index) const {
+  // @@protoc_insertion_point(field_get:kvstore.v1.ListKeyVersionsResponse.versions)
+  return _internal_versions(index);
+}
+inline void ListKeyVersionsResponse::set_versions(int index, uint32_t value) {
+  versions_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kvstore.v1.ListKeyVersionsResponse.versions)
+}
+inline void ListKeyVersionsResponse::_internal_add_versions(uint32_t value) {
+  versions_.Add(value);
+}
+inline void ListKeyVersionsResponse::add_versions(uint32_t value) {
+  _internal_add_versions(value);
+  // @@protoc_insertion_point(field_add:kvstore.v1.ListKeyVersionsResponse.versions)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+ListKeyVersionsResponse::_internal_versions() const {
+  return versions_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+ListKeyVersionsResponse::versions() const {
+  // @@protoc_insertion_point(field_list:kvstore.v1.ListKeyVersionsResponse.versions)
+  return _internal_versions();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+ListKeyVersionsResponse::_internal_mutable_versions() {
+  return &versions_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+ListKeyVersionsResponse::mutable_versions() {
+  // @@protoc_insertion_point(field_mutable_list:kvstore.v1.ListKeyVersionsResponse.versions)
+  return _internal_mutable_versions();
+}
+
+// -------------------------------------------------------------------
+
 // KeyValue
 
-// string key = 1 [json_name = "key"];
+// bytes key = 1 [json_name = "key"];
 inline void KeyValue::clear_key() {
   key_.ClearToEmpty();
 }
@@ -9319,7 +10059,7 @@ template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void KeyValue::set_key(ArgT0&& arg0, ArgT... args) {
  
- key_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+ key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:kvstore.v1.KeyValue.key)
 }
 inline std::string* KeyValue::mutable_key() {
@@ -9397,22 +10137,22 @@ inline void KeyValue::set_mod_revision(int64_t value) {
   // @@protoc_insertion_point(field_set:kvstore.v1.KeyValue.mod_revision)
 }
 
-// int64 version = 4 [json_name = "version"];
+// uint64 version = 4 [json_name = "version"];
 inline void KeyValue::clear_version() {
-  version_ = int64_t{0};
+  version_ = uint64_t{0u};
 }
-inline int64_t KeyValue::_internal_version() const {
+inline uint64_t KeyValue::_internal_version() const {
   return version_;
 }
-inline int64_t KeyValue::version() const {
+inline uint64_t KeyValue::version() const {
   // @@protoc_insertion_point(field_get:kvstore.v1.KeyValue.version)
   return _internal_version();
 }
-inline void KeyValue::_internal_set_version(int64_t value) {
+inline void KeyValue::_internal_set_version(uint64_t value) {
   
   version_ = value;
 }
-inline void KeyValue::set_version(int64_t value) {
+inline void KeyValue::set_version(uint64_t value) {
   _internal_set_version(value);
   // @@protoc_insertion_point(field_set:kvstore.v1.KeyValue.version)
 }
@@ -9694,6 +10434,12 @@ inline void Event::set_allocated_prev_kv(::kvstore::v1::KeyValue* prev_kv) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -206,7 +206,7 @@ struct BucketDescriptorDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BucketDescriptorDefaultTypeInternal _BucketDescriptor_default_instance_;
 PROTOBUF_CONSTEXPR GetBucketDescriptorRequest::GetBucketDescriptorRequest(
     ::_pbi::ConstantInitialized)
-  : name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , account_id_(uint64_t{0u}){}
 struct GetBucketDescriptorRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetBucketDescriptorRequestDefaultTypeInternal()
@@ -233,7 +233,8 @@ PROTOBUF_CONSTEXPR GetKeyRequest::GetKeyRequest(
     ::_pbi::ConstantInitialized)
   : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , account_id_(uint64_t{0u}){}
+  , account_id_(uint64_t{0u})
+  , version_(0u){}
 struct GetKeyRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetKeyRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -310,13 +311,52 @@ struct DeleteKeyResponseDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteKeyResponseDefaultTypeInternal _DeleteKeyResponse_default_instance_;
+PROTOBUF_CONSTEXPR KeyValueDescriptor::KeyValueDescriptor(
+    ::_pbi::ConstantInitialized)
+  : versions_()
+  , _versions_cached_byte_size_(0)
+  , current_key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
+struct KeyValueDescriptorDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR KeyValueDescriptorDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~KeyValueDescriptorDefaultTypeInternal() {}
+  union {
+    KeyValueDescriptor _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 KeyValueDescriptorDefaultTypeInternal _KeyValueDescriptor_default_instance_;
+PROTOBUF_CONSTEXPR ListKeyVersionsRequest::ListKeyVersionsRequest(
+    ::_pbi::ConstantInitialized)
+  : key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
+struct ListKeyVersionsRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ListKeyVersionsRequestDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ListKeyVersionsRequestDefaultTypeInternal() {}
+  union {
+    ListKeyVersionsRequest _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ListKeyVersionsRequestDefaultTypeInternal _ListKeyVersionsRequest_default_instance_;
+PROTOBUF_CONSTEXPR ListKeyVersionsResponse::ListKeyVersionsResponse(
+    ::_pbi::ConstantInitialized)
+  : versions_()
+  , _versions_cached_byte_size_(0){}
+struct ListKeyVersionsResponseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ListKeyVersionsResponseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ListKeyVersionsResponseDefaultTypeInternal() {}
+  union {
+    ListKeyVersionsResponse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ListKeyVersionsResponseDefaultTypeInternal _ListKeyVersionsResponse_default_instance_;
 PROTOBUF_CONSTEXPR KeyValue::KeyValue(
     ::_pbi::ConstantInitialized)
   : key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , value_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , create_revision_(int64_t{0})
   , mod_revision_(int64_t{0})
-  , version_(int64_t{0})
+  , version_(uint64_t{0u})
   , lease_(int64_t{0}){}
 struct KeyValueDefaultTypeInternal {
   PROTOBUF_CONSTEXPR KeyValueDefaultTypeInternal()
@@ -344,7 +384,7 @@ struct EventDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 EventDefaultTypeInternal _Event_default_instance_;
 }  // namespace v1
 }  // namespace kvstore
-static ::_pb::Metadata file_level_metadata_kvstore_2fv1_2fkv_2eproto[23];
+static ::_pb::Metadata file_level_metadata_kvstore_2fv1_2fkv_2eproto[26];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_kvstore_2fv1_2fkv_2eproto[2];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_kvstore_2fv1_2fkv_2eproto = nullptr;
 
@@ -491,7 +531,7 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, bucket_name_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -499,7 +539,7 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorResponse, bucket_descriptor_),
-  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -508,6 +548,11 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, account_id_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, bucket_name_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, version_),
+  ~0u,
+  ~0u,
+  ~0u,
+  0,
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -551,6 +596,28 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, ok_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, transaction_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, versions_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, current_key_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsRequest, key_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsResponse, versions_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -591,14 +658,17 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 124, -1, -1, sizeof(::kvstore::v1::BucketDescriptor)},
   { 135, -1, -1, sizeof(::kvstore::v1::GetBucketDescriptorRequest)},
   { 143, -1, -1, sizeof(::kvstore::v1::GetBucketDescriptorResponse)},
-  { 150, -1, -1, sizeof(::kvstore::v1::GetKeyRequest)},
-  { 159, -1, -1, sizeof(::kvstore::v1::GetKeyResponse)},
-  { 166, -1, -1, sizeof(::kvstore::v1::PutKeyRequest)},
-  { 176, -1, -1, sizeof(::kvstore::v1::PutKeyResponse)},
-  { 183, -1, -1, sizeof(::kvstore::v1::DeleteKeyRequest)},
-  { 193, -1, -1, sizeof(::kvstore::v1::DeleteKeyResponse)},
-  { 201, -1, -1, sizeof(::kvstore::v1::KeyValue)},
-  { 213, 222, -1, sizeof(::kvstore::v1::Event)},
+  { 150, 160, -1, sizeof(::kvstore::v1::GetKeyRequest)},
+  { 164, -1, -1, sizeof(::kvstore::v1::GetKeyResponse)},
+  { 171, -1, -1, sizeof(::kvstore::v1::PutKeyRequest)},
+  { 181, -1, -1, sizeof(::kvstore::v1::PutKeyResponse)},
+  { 188, -1, -1, sizeof(::kvstore::v1::DeleteKeyRequest)},
+  { 198, -1, -1, sizeof(::kvstore::v1::DeleteKeyResponse)},
+  { 206, -1, -1, sizeof(::kvstore::v1::KeyValueDescriptor)},
+  { 214, -1, -1, sizeof(::kvstore::v1::ListKeyVersionsRequest)},
+  { 221, -1, -1, sizeof(::kvstore::v1::ListKeyVersionsResponse)},
+  { 228, -1, -1, sizeof(::kvstore::v1::KeyValue)},
+  { 240, 249, -1, sizeof(::kvstore::v1::Event)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -623,6 +693,9 @@ static const ::_pb::Message* const file_default_instances[] = {
   &::kvstore::v1::_PutKeyResponse_default_instance_._instance,
   &::kvstore::v1::_DeleteKeyRequest_default_instance_._instance,
   &::kvstore::v1::_DeleteKeyResponse_default_instance_._instance,
+  &::kvstore::v1::_KeyValueDescriptor_default_instance_._instance,
+  &::kvstore::v1::_ListKeyVersionsRequest_default_instance_._instance,
+  &::kvstore::v1::_ListKeyVersionsResponse_default_instance_._instance,
   &::kvstore::v1::_KeyValue_default_instance_._instance,
   &::kvstore::v1::_Event_default_instance_._instance,
 };
@@ -737,45 +810,51 @@ const char descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto[] PROTOBUF_SECTIO
   "R\010keyCount\0224\n\007created\030\004 \001(\0132\032.google.pro"
   "tobuf.TimestampR\007created\022=\n\014last_updated"
   "\030\005 \001(\0132\032.google.protobuf.TimestampR\013last"
-  "Updated\"O\n\032GetBucketDescriptorRequest\022\035\n"
-  "\naccount_id\030\001 \001(\004R\taccountId\022\022\n\004name\030\002 \001"
-  "(\tR\004name\"h\n\033GetBucketDescriptorResponse\022"
-  "I\n\021bucket_descriptor\030\001 \001(\0132\034.kvstore.v1."
-  "BucketDescriptorR\020bucketDescriptor\"a\n\rGe"
-  "tKeyRequest\022\035\n\naccount_id\030\001 \001(\004R\taccount"
-  "Id\022\037\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003k"
-  "ey\030\003 \001(\tR\003key\"L\n\016GetKeyResponse\022:\n\016key_v"
-  "alue_pair\030\001 \001(\0132\024.kvstore.v1.KeyValueR\014k"
-  "eyValuePair\"\306\001\n\rPutKeyRequest\022\035\n\naccount"
-  "_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001("
-  "\tR\nbucketName\022:\n\016key_value_pair\030\003 \001(\0132\024."
-  "kvstore.v1.KeyValueR\014keyValuePair\0229\n\013tra"
-  "nsaction\030\004 \001(\0132\027.kvstore.v1.TransactionR"
-  "\013transaction\"K\n\016PutKeyResponse\0229\n\013transa"
-  "ction\030\001 \001(\0132\027.kvstore.v1.TransactionR\013tr"
-  "ansaction\"\237\001\n\020DeleteKeyRequest\022\035\n\naccoun"
-  "t_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001"
-  "(\tR\nbucketName\022\020\n\003key\030\003 \001(\tR\003key\0229\n\013tran"
-  "saction\030\004 \001(\0132\027.kvstore.v1.TransactionR\013"
-  "transaction\"^\n\021DeleteKeyResponse\022\016\n\002ok\030\001"
-  " \001(\010R\002ok\0229\n\013transaction\030\003 \001(\0132\027.kvstore."
-  "v1.TransactionR\013transaction\"\256\001\n\010KeyValue"
-  "\022\020\n\003key\030\001 \001(\tR\003key\022\'\n\017create_revision\030\002 "
-  "\001(\003R\016createRevision\022!\n\014mod_revision\030\003 \001("
-  "\003R\013modRevision\022\030\n\007version\030\004 \001(\003R\007version"
-  "\022\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005l"
-  "ease\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v"
-  "1.KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.k"
-  "vstore.v1.KeyValueR\002kv\0222\n\007prev_kv\030\003 \001(\0132"
-  "\024.kvstore.v1.KeyValueH\000R\006prevKv\210\001\001B\n\n\010_p"
-  "rev_kv*\215\001\n\020KeyOperationType\022\"\n\036KEY_OPERA"
-  "TION_TYPE_UNSPECIFIED\020\000\022\032\n\026KEY_OPERATION"
-  "_TYPE_GET\020\001\022\032\n\026KEY_OPERATION_TYPE_PUT\020\002\022"
-  "\035\n\031KEY_OPERATION_TYPE_DELETE\020\003B\214\001\n\026io.a1"
-  "3s.api.kvstore.v1B\007KvProtoP\001Z a13s.io/ap"
-  "i/kvstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V"
-  "1\312\002\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352"
-  "\002\013Kvstore::V1b\006proto3"
+  "Updated\"\\\n\032GetBucketDescriptorRequest\022\035\n"
+  "\naccount_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_n"
+  "ame\030\002 \001(\tR\nbucketName\"h\n\033GetBucketDescri"
+  "ptorResponse\022I\n\021bucket_descriptor\030\001 \001(\0132"
+  "\034.kvstore.v1.BucketDescriptorR\020bucketDes"
+  "criptor\"\214\001\n\rGetKeyRequest\022\035\n\naccount_id\030"
+  "\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001(\tR\nb"
+  "ucketName\022\020\n\003key\030\003 \001(\tR\003key\022\035\n\007version\030\004"
+  " \001(\rH\000R\007version\210\001\001B\n\n\010_version\"L\n\016GetKey"
+  "Response\022:\n\016key_value_pair\030\001 \001(\0132\024.kvsto"
+  "re.v1.KeyValueR\014keyValuePair\"\306\001\n\rPutKeyR"
+  "equest\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037\n"
+  "\013bucket_name\030\002 \001(\tR\nbucketName\022:\n\016key_va"
+  "lue_pair\030\003 \001(\0132\024.kvstore.v1.KeyValueR\014ke"
+  "yValuePair\0229\n\013transaction\030\004 \001(\0132\027.kvstor"
+  "e.v1.TransactionR\013transaction\"K\n\016PutKeyR"
+  "esponse\0229\n\013transaction\030\001 \001(\0132\027.kvstore.v"
+  "1.TransactionR\013transaction\"\237\001\n\020DeleteKey"
+  "Request\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037"
+  "\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003key\030\003"
+  " \001(\tR\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore"
+  ".v1.TransactionR\013transaction\"^\n\021DeleteKe"
+  "yResponse\022\016\n\002ok\030\001 \001(\010R\002ok\0229\n\013transaction"
+  "\030\003 \001(\0132\027.kvstore.v1.TransactionR\013transac"
+  "tion\"Q\n\022KeyValueDescriptor\022\032\n\010versions\030\001"
+  " \003(\rR\010versions\022\037\n\013current_key\030\002 \001(\014R\ncur"
+  "rentKey\"*\n\026ListKeyVersionsRequest\022\020\n\003key"
+  "\030\001 \001(\014R\003key\"5\n\027ListKeyVersionsResponse\022\032"
+  "\n\010versions\030\001 \003(\rR\010versions\"\256\001\n\010KeyValue\022"
+  "\020\n\003key\030\001 \001(\014R\003key\022\'\n\017create_revision\030\002 \001"
+  "(\003R\016createRevision\022!\n\014mod_revision\030\003 \001(\003"
+  "R\013modRevision\022\030\n\007version\030\004 \001(\004R\007version\022"
+  "\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005le"
+  "ase\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v1"
+  ".KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.kv"
+  "store.v1.KeyValueR\002kv\0222\n\007prev_kv\030\003 \001(\0132\024"
+  ".kvstore.v1.KeyValueH\000R\006prevKv\210\001\001B\n\n\010_pr"
+  "ev_kv*\215\001\n\020KeyOperationType\022\"\n\036KEY_OPERAT"
+  "ION_TYPE_UNSPECIFIED\020\000\022\032\n\026KEY_OPERATION_"
+  "TYPE_GET\020\001\022\032\n\026KEY_OPERATION_TYPE_PUT\020\002\022\035"
+  "\n\031KEY_OPERATION_TYPE_DELETE\020\003B\214\001\n\026io.a13"
+  "s.api.kvstore.v1B\007KvProtoP\001Z a13s.io/api"
+  "/kvstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V1"
+  "\312\002\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352\002"
+  "\013Kvstore::V1b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_kvstore_2fv1_2fkv_2eproto_deps[3] = {
   &::descriptor_table_errors_2fv1_2ferrors_2eproto,
@@ -784,9 +863,9 @@ static const ::_pbi::DescriptorTable* const descriptor_table_kvstore_2fv1_2fkv_2
 };
 static ::_pbi::once_flag descriptor_table_kvstore_2fv1_2fkv_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_kvstore_2fv1_2fkv_2eproto = {
-    false, false, 5901, descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto,
+    false, false, 6140, descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto,
     "kvstore/v1/kv.proto",
-    &descriptor_table_kvstore_2fv1_2fkv_2eproto_once, descriptor_table_kvstore_2fv1_2fkv_2eproto_deps, 3, 23,
+    &descriptor_table_kvstore_2fv1_2fkv_2eproto_once, descriptor_table_kvstore_2fv1_2fkv_2eproto_deps, 3, 26,
     schemas, file_default_instances, TableStruct_kvstore_2fv1_2fkv_2eproto::offsets,
     file_level_metadata_kvstore_2fv1_2fkv_2eproto, file_level_enum_descriptors_kvstore_2fv1_2fkv_2eproto,
     file_level_service_descriptors_kvstore_2fv1_2fkv_2eproto,
@@ -5423,12 +5502,12 @@ GetBucketDescriptorRequest::GetBucketDescriptorRequest(::PROTOBUF_NAMESPACE_ID::
 GetBucketDescriptorRequest::GetBucketDescriptorRequest(const GetBucketDescriptorRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  name_.InitDefault();
+  bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    name_.Set("", GetArenaForAllocation());
+    bucket_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_name().empty()) {
-    name_.Set(from._internal_name(), 
+  if (!from._internal_bucket_name().empty()) {
+    bucket_name_.Set(from._internal_bucket_name(), 
       GetArenaForAllocation());
   }
   account_id_ = from.account_id_;
@@ -5436,9 +5515,9 @@ GetBucketDescriptorRequest::GetBucketDescriptorRequest(const GetBucketDescriptor
 }
 
 inline void GetBucketDescriptorRequest::SharedCtor() {
-name_.InitDefault();
+bucket_name_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  name_.Set("", GetArenaForAllocation());
+  bucket_name_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 account_id_ = uint64_t{0u};
 }
@@ -5454,7 +5533,7 @@ GetBucketDescriptorRequest::~GetBucketDescriptorRequest() {
 
 inline void GetBucketDescriptorRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  name_.Destroy();
+  bucket_name_.Destroy();
 }
 
 void GetBucketDescriptorRequest::SetCachedSize(int size) const {
@@ -5467,7 +5546,7 @@ void GetBucketDescriptorRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmpty();
+  bucket_name_.ClearToEmpty();
   account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -5486,13 +5565,13 @@ const char* GetBucketDescriptorRequest::_InternalParse(const char* ptr, ::_pbi::
         } else
           goto handle_unusual;
         continue;
-      // string name = 2 [json_name = "name"];
+      // string bucket_name = 2 [json_name = "bucketName"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_name();
+          auto str = _internal_mutable_bucket_name();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "kvstore.v1.GetBucketDescriptorRequest.name"));
+          CHK_(::_pbi::VerifyUTF8(str, "kvstore.v1.GetBucketDescriptorRequest.bucket_name"));
         } else
           goto handle_unusual;
         continue;
@@ -5531,14 +5610,14 @@ uint8_t* GetBucketDescriptorRequest::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteUInt64ToArray(1, this->_internal_account_id(), target);
   }
 
-  // string name = 2 [json_name = "name"];
-  if (!this->_internal_name().empty()) {
+  // string bucket_name = 2 [json_name = "bucketName"];
+  if (!this->_internal_bucket_name().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      this->_internal_bucket_name().data(), static_cast<int>(this->_internal_bucket_name().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kvstore.v1.GetBucketDescriptorRequest.name");
+      "kvstore.v1.GetBucketDescriptorRequest.bucket_name");
     target = stream->WriteStringMaybeAliased(
-        2, this->_internal_name(), target);
+        2, this->_internal_bucket_name(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -5557,11 +5636,11 @@ size_t GetBucketDescriptorRequest::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string name = 2 [json_name = "name"];
-  if (!this->_internal_name().empty()) {
+  // string bucket_name = 2 [json_name = "bucketName"];
+  if (!this->_internal_bucket_name().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_name());
+        this->_internal_bucket_name());
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -5591,8 +5670,8 @@ void GetBucketDescriptorRequest::MergeFrom(const GetBucketDescriptorRequest& fro
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_name().empty()) {
-    _internal_set_name(from._internal_name());
+  if (!from._internal_bucket_name().empty()) {
+    _internal_set_bucket_name(from._internal_bucket_name());
   }
   if (from._internal_account_id() != 0) {
     _internal_set_account_id(from._internal_account_id());
@@ -5617,8 +5696,8 @@ void GetBucketDescriptorRequest::InternalSwap(GetBucketDescriptorRequest* other)
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &name_, lhs_arena,
-      &other->name_, rhs_arena
+      &bucket_name_, lhs_arena,
+      &other->bucket_name_, rhs_arena
   );
   swap(account_id_, other->account_id_);
 }
@@ -5820,6 +5899,10 @@ void GetBucketDescriptorResponse::InternalSwap(GetBucketDescriptorResponse* othe
 
 class GetKeyRequest::_Internal {
  public:
+  using HasBits = decltype(std::declval<GetKeyRequest>()._has_bits_);
+  static void set_has_version(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
+  }
 };
 
 GetKeyRequest::GetKeyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
@@ -5829,7 +5912,8 @@ GetKeyRequest::GetKeyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetKeyRequest)
 }
 GetKeyRequest::GetKeyRequest(const GetKeyRequest& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
@@ -5847,7 +5931,9 @@ GetKeyRequest::GetKeyRequest(const GetKeyRequest& from)
     key_.Set(from._internal_key(), 
       GetArenaForAllocation());
   }
-  account_id_ = from.account_id_;
+  ::memcpy(&account_id_, &from.account_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&account_id_)) + sizeof(version_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetKeyRequest)
 }
 
@@ -5860,7 +5946,10 @@ key_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
   key_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-account_id_ = uint64_t{0u};
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&account_id_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&account_id_)) + sizeof(version_));
 }
 
 GetKeyRequest::~GetKeyRequest() {
@@ -5891,11 +5980,14 @@ void GetKeyRequest::Clear() {
   bucket_name_.ClearToEmpty();
   key_.ClearToEmpty();
   account_id_ = uint64_t{0u};
+  version_ = 0u;
+  _has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  _Internal::HasBits has_bits{};
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
@@ -5928,6 +6020,15 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
         } else
           goto handle_unusual;
         continue;
+      // optional uint32 version = 4 [json_name = "version"];
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          _Internal::set_has_version(&has_bits);
+          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
       default:
         goto handle_unusual;
     }  // switch
@@ -5944,6 +6045,7 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
     CHK_(ptr != nullptr);
   }  // while
 message_done:
+  _has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -5983,6 +6085,12 @@ uint8_t* GetKeyRequest::_InternalSerialize(
         3, this->_internal_key(), target);
   }
 
+  // optional uint32 version = 4 [json_name = "version"];
+  if (_internal_has_version()) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(4, this->_internal_version(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -6018,6 +6126,12 @@ size_t GetKeyRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
+  // optional uint32 version = 4 [json_name = "version"];
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_version());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
@@ -6049,6 +6163,9 @@ void GetKeyRequest::MergeFrom(const GetKeyRequest& from) {
   if (from._internal_account_id() != 0) {
     _internal_set_account_id(from._internal_account_id());
   }
+  if (from._internal_has_version()) {
+    _internal_set_version(from._internal_version());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -6068,6 +6185,7 @@ void GetKeyRequest::InternalSwap(GetKeyRequest* other) {
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &bucket_name_, lhs_arena,
       &other->bucket_name_, rhs_arena
@@ -6076,7 +6194,12 @@ void GetKeyRequest::InternalSwap(GetKeyRequest* other) {
       &key_, lhs_arena,
       &other->key_, rhs_arena
   );
-  swap(account_id_, other->account_id_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(GetKeyRequest, version_)
+      + sizeof(GetKeyRequest::version_)
+      - PROTOBUF_FIELD_OFFSET(GetKeyRequest, account_id_)>(
+          reinterpret_cast<char*>(&account_id_),
+          reinterpret_cast<char*>(&other->account_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetKeyRequest::GetMetadata() const {
@@ -7330,6 +7453,609 @@ void DeleteKeyResponse::InternalSwap(DeleteKeyResponse* other) {
 
 // ===================================================================
 
+class KeyValueDescriptor::_Internal {
+ public:
+};
+
+KeyValueDescriptor::KeyValueDescriptor(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  versions_(arena) {
+  SharedCtor();
+  // @@protoc_insertion_point(arena_constructor:kvstore.v1.KeyValueDescriptor)
+}
+KeyValueDescriptor::KeyValueDescriptor(const KeyValueDescriptor& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      versions_(from.versions_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  current_key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    current_key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_current_key().empty()) {
+    current_key_.Set(from._internal_current_key(), 
+      GetArenaForAllocation());
+  }
+  // @@protoc_insertion_point(copy_constructor:kvstore.v1.KeyValueDescriptor)
+}
+
+inline void KeyValueDescriptor::SharedCtor() {
+current_key_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  current_key_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+KeyValueDescriptor::~KeyValueDescriptor() {
+  // @@protoc_insertion_point(destructor:kvstore.v1.KeyValueDescriptor)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void KeyValueDescriptor::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  current_key_.Destroy();
+}
+
+void KeyValueDescriptor::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void KeyValueDescriptor::Clear() {
+// @@protoc_insertion_point(message_clear_start:kvstore.v1.KeyValueDescriptor)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  versions_.Clear();
+  current_key_.ClearToEmpty();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* KeyValueDescriptor::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated uint32 versions = 1 [json_name = "versions"];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedUInt32Parser(_internal_mutable_versions(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<uint8_t>(tag) == 8) {
+          _internal_add_versions(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // bytes current_key = 2 [json_name = "currentKey"];
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_current_key();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* KeyValueDescriptor::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kvstore.v1.KeyValueDescriptor)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  {
+    int byte_size = _versions_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteUInt32Packed(
+          1, _internal_versions(), byte_size, target);
+    }
+  }
+
+  // bytes current_key = 2 [json_name = "currentKey"];
+  if (!this->_internal_current_key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        2, this->_internal_current_key(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:kvstore.v1.KeyValueDescriptor)
+  return target;
+}
+
+size_t KeyValueDescriptor::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:kvstore.v1.KeyValueDescriptor)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  {
+    size_t data_size = ::_pbi::WireFormatLite::
+      UInt32Size(this->versions_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::_pbi::ToCachedSize(data_size);
+    _versions_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // bytes current_key = 2 [json_name = "currentKey"];
+  if (!this->_internal_current_key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_current_key());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData KeyValueDescriptor::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    KeyValueDescriptor::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*KeyValueDescriptor::GetClassData() const { return &_class_data_; }
+
+void KeyValueDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<KeyValueDescriptor *>(to)->MergeFrom(
+      static_cast<const KeyValueDescriptor &>(from));
+}
+
+
+void KeyValueDescriptor::MergeFrom(const KeyValueDescriptor& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KeyValueDescriptor)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  versions_.MergeFrom(from.versions_);
+  if (!from._internal_current_key().empty()) {
+    _internal_set_current_key(from._internal_current_key());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void KeyValueDescriptor::CopyFrom(const KeyValueDescriptor& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kvstore.v1.KeyValueDescriptor)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool KeyValueDescriptor::IsInitialized() const {
+  return true;
+}
+
+void KeyValueDescriptor::InternalSwap(KeyValueDescriptor* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  versions_.InternalSwap(&other->versions_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &current_key_, lhs_arena,
+      &other->current_key_, rhs_arena
+  );
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata KeyValueDescriptor::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_kvstore_2fv1_2fkv_2eproto_getter, &descriptor_table_kvstore_2fv1_2fkv_2eproto_once,
+      file_level_metadata_kvstore_2fv1_2fkv_2eproto[21]);
+}
+
+// ===================================================================
+
+class ListKeyVersionsRequest::_Internal {
+ public:
+};
+
+ListKeyVersionsRequest::ListKeyVersionsRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  // @@protoc_insertion_point(arena_constructor:kvstore.v1.ListKeyVersionsRequest)
+}
+ListKeyVersionsRequest::ListKeyVersionsRequest(const ListKeyVersionsRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_key().empty()) {
+    key_.Set(from._internal_key(), 
+      GetArenaForAllocation());
+  }
+  // @@protoc_insertion_point(copy_constructor:kvstore.v1.ListKeyVersionsRequest)
+}
+
+inline void ListKeyVersionsRequest::SharedCtor() {
+key_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  key_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+ListKeyVersionsRequest::~ListKeyVersionsRequest() {
+  // @@protoc_insertion_point(destructor:kvstore.v1.ListKeyVersionsRequest)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ListKeyVersionsRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  key_.Destroy();
+}
+
+void ListKeyVersionsRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ListKeyVersionsRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:kvstore.v1.ListKeyVersionsRequest)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  key_.ClearToEmpty();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ListKeyVersionsRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // bytes key = 1 [json_name = "key"];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          auto str = _internal_mutable_key();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ListKeyVersionsRequest::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kvstore.v1.ListKeyVersionsRequest)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bytes key = 1 [json_name = "key"];
+  if (!this->_internal_key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_key(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:kvstore.v1.ListKeyVersionsRequest)
+  return target;
+}
+
+size_t ListKeyVersionsRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:kvstore.v1.ListKeyVersionsRequest)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bytes key = 1 [json_name = "key"];
+  if (!this->_internal_key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_key());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ListKeyVersionsRequest::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ListKeyVersionsRequest::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ListKeyVersionsRequest::GetClassData() const { return &_class_data_; }
+
+void ListKeyVersionsRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ListKeyVersionsRequest *>(to)->MergeFrom(
+      static_cast<const ListKeyVersionsRequest &>(from));
+}
+
+
+void ListKeyVersionsRequest::MergeFrom(const ListKeyVersionsRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_key().empty()) {
+    _internal_set_key(from._internal_key());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ListKeyVersionsRequest::CopyFrom(const ListKeyVersionsRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kvstore.v1.ListKeyVersionsRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ListKeyVersionsRequest::IsInitialized() const {
+  return true;
+}
+
+void ListKeyVersionsRequest::InternalSwap(ListKeyVersionsRequest* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &key_, lhs_arena,
+      &other->key_, rhs_arena
+  );
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ListKeyVersionsRequest::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_kvstore_2fv1_2fkv_2eproto_getter, &descriptor_table_kvstore_2fv1_2fkv_2eproto_once,
+      file_level_metadata_kvstore_2fv1_2fkv_2eproto[22]);
+}
+
+// ===================================================================
+
+class ListKeyVersionsResponse::_Internal {
+ public:
+};
+
+ListKeyVersionsResponse::ListKeyVersionsResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  versions_(arena) {
+  SharedCtor();
+  // @@protoc_insertion_point(arena_constructor:kvstore.v1.ListKeyVersionsResponse)
+}
+ListKeyVersionsResponse::ListKeyVersionsResponse(const ListKeyVersionsResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      versions_(from.versions_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:kvstore.v1.ListKeyVersionsResponse)
+}
+
+inline void ListKeyVersionsResponse::SharedCtor() {
+}
+
+ListKeyVersionsResponse::~ListKeyVersionsResponse() {
+  // @@protoc_insertion_point(destructor:kvstore.v1.ListKeyVersionsResponse)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ListKeyVersionsResponse::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void ListKeyVersionsResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ListKeyVersionsResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:kvstore.v1.ListKeyVersionsResponse)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  versions_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ListKeyVersionsResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated uint32 versions = 1 [json_name = "versions"];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedUInt32Parser(_internal_mutable_versions(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<uint8_t>(tag) == 8) {
+          _internal_add_versions(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ListKeyVersionsResponse::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kvstore.v1.ListKeyVersionsResponse)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  {
+    int byte_size = _versions_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteUInt32Packed(
+          1, _internal_versions(), byte_size, target);
+    }
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:kvstore.v1.ListKeyVersionsResponse)
+  return target;
+}
+
+size_t ListKeyVersionsResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:kvstore.v1.ListKeyVersionsResponse)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated uint32 versions = 1 [json_name = "versions"];
+  {
+    size_t data_size = ::_pbi::WireFormatLite::
+      UInt32Size(this->versions_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::_pbi::ToCachedSize(data_size);
+    _versions_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ListKeyVersionsResponse::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ListKeyVersionsResponse::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ListKeyVersionsResponse::GetClassData() const { return &_class_data_; }
+
+void ListKeyVersionsResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ListKeyVersionsResponse *>(to)->MergeFrom(
+      static_cast<const ListKeyVersionsResponse &>(from));
+}
+
+
+void ListKeyVersionsResponse::MergeFrom(const ListKeyVersionsResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  versions_.MergeFrom(from.versions_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ListKeyVersionsResponse::CopyFrom(const ListKeyVersionsResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kvstore.v1.ListKeyVersionsResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ListKeyVersionsResponse::IsInitialized() const {
+  return true;
+}
+
+void ListKeyVersionsResponse::InternalSwap(ListKeyVersionsResponse* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  versions_.InternalSwap(&other->versions_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ListKeyVersionsResponse::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_kvstore_2fv1_2fkv_2eproto_getter, &descriptor_table_kvstore_2fv1_2fkv_2eproto_once,
+      file_level_metadata_kvstore_2fv1_2fkv_2eproto[23]);
+}
+
+// ===================================================================
+
 class KeyValue::_Internal {
  public:
 };
@@ -7419,13 +8145,12 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // string key = 1 [json_name = "key"];
+      // bytes key = 1 [json_name = "key"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           auto str = _internal_mutable_key();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "kvstore.v1.KeyValue.key"));
         } else
           goto handle_unusual;
         continue;
@@ -7445,7 +8170,7 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
         } else
           goto handle_unusual;
         continue;
-      // int64 version = 4 [json_name = "version"];
+      // uint64 version = 4 [json_name = "version"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
           version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
@@ -7499,13 +8224,9 @@ uint8_t* KeyValue::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string key = 1 [json_name = "key"];
+  // bytes key = 1 [json_name = "key"];
   if (!this->_internal_key().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_key().data(), static_cast<int>(this->_internal_key().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kvstore.v1.KeyValue.key");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         1, this->_internal_key(), target);
   }
 
@@ -7521,10 +8242,10 @@ uint8_t* KeyValue::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteInt64ToArray(3, this->_internal_mod_revision(), target);
   }
 
-  // int64 version = 4 [json_name = "version"];
+  // uint64 version = 4 [json_name = "version"];
   if (this->_internal_version() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt64ToArray(4, this->_internal_version(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(4, this->_internal_version(), target);
   }
 
   // bytes value = 5 [json_name = "value"];
@@ -7555,10 +8276,10 @@ size_t KeyValue::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string key = 1 [json_name = "key"];
+  // bytes key = 1 [json_name = "key"];
   if (!this->_internal_key().empty()) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_key());
   }
 
@@ -7579,9 +8300,9 @@ size_t KeyValue::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_mod_revision());
   }
 
-  // int64 version = 4 [json_name = "version"];
+  // uint64 version = 4 [json_name = "version"];
   if (this->_internal_version() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_version());
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_version());
   }
 
   // int64 lease = 6 [json_name = "lease"];
@@ -7667,7 +8388,7 @@ void KeyValue::InternalSwap(KeyValue* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata KeyValue::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kvstore_2fv1_2fkv_2eproto_getter, &descriptor_table_kvstore_2fv1_2fkv_2eproto_once,
-      file_level_metadata_kvstore_2fv1_2fkv_2eproto[21]);
+      file_level_metadata_kvstore_2fv1_2fkv_2eproto[24]);
 }
 
 // ===================================================================
@@ -7940,7 +8661,7 @@ void Event::InternalSwap(Event* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata Event::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_kvstore_2fv1_2fkv_2eproto_getter, &descriptor_table_kvstore_2fv1_2fkv_2eproto_once,
-      file_level_metadata_kvstore_2fv1_2fkv_2eproto[22]);
+      file_level_metadata_kvstore_2fv1_2fkv_2eproto[25]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -8030,6 +8751,18 @@ Arena::CreateMaybeMessage< ::kvstore::v1::DeleteKeyRequest >(Arena* arena) {
 template<> PROTOBUF_NOINLINE ::kvstore::v1::DeleteKeyResponse*
 Arena::CreateMaybeMessage< ::kvstore::v1::DeleteKeyResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::kvstore::v1::DeleteKeyResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::kvstore::v1::KeyValueDescriptor*
+Arena::CreateMaybeMessage< ::kvstore::v1::KeyValueDescriptor >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::kvstore::v1::KeyValueDescriptor >(arena);
+}
+template<> PROTOBUF_NOINLINE ::kvstore::v1::ListKeyVersionsRequest*
+Arena::CreateMaybeMessage< ::kvstore::v1::ListKeyVersionsRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::kvstore::v1::ListKeyVersionsRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::kvstore::v1::ListKeyVersionsResponse*
+Arena::CreateMaybeMessage< ::kvstore::v1::ListKeyVersionsResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::kvstore::v1::ListKeyVersionsResponse >(arena);
 }
 template<> PROTOBUF_NOINLINE ::kvstore::v1::KeyValue*
 Arena::CreateMaybeMessage< ::kvstore::v1::KeyValue >(Arena* arena) {

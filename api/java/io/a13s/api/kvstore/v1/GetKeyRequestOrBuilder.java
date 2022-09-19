@@ -36,4 +36,15 @@ public interface GetKeyRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getKeyBytes();
+
+  /**
+   * <code>optional uint32 version = 4 [json_name = "version"];</code>
+   * @return Whether the version field is set.
+   */
+  boolean hasVersion();
+  /**
+   * <code>optional uint32 version = 4 [json_name = "version"];</code>
+   * @return The version.
+   */
+  int getVersion();
 }

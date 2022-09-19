@@ -243,7 +243,7 @@ export const GetBucketDescriptorRequest = proto3.makeMessageType(
   "kvstore.v1.GetBucketDescriptorRequest",
   () => [
     { no: 1, name: "account_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
-    { no: 2, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "bucket_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ],
 );
 
@@ -266,6 +266,7 @@ export const GetKeyRequest = proto3.makeMessageType(
     { no: 1, name: "account_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 2, name: "bucket_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "version", kind: "scalar", T: 13 /* ScalarType.UINT32 */, opt: true },
   ],
 );
 
@@ -327,15 +328,46 @@ export const DeleteKeyResponse = proto3.makeMessageType(
 );
 
 /**
+ * @generated from message kvstore.v1.KeyValueDescriptor
+ */
+export const KeyValueDescriptor = proto3.makeMessageType(
+  "kvstore.v1.KeyValueDescriptor",
+  () => [
+    { no: 1, name: "versions", kind: "scalar", T: 13 /* ScalarType.UINT32 */, repeated: true },
+    { no: 2, name: "current_key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
+  ],
+);
+
+/**
+ * @generated from message kvstore.v1.ListKeyVersionsRequest
+ */
+export const ListKeyVersionsRequest = proto3.makeMessageType(
+  "kvstore.v1.ListKeyVersionsRequest",
+  () => [
+    { no: 1, name: "key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
+  ],
+);
+
+/**
+ * @generated from message kvstore.v1.ListKeyVersionsResponse
+ */
+export const ListKeyVersionsResponse = proto3.makeMessageType(
+  "kvstore.v1.ListKeyVersionsResponse",
+  () => [
+    { no: 1, name: "versions", kind: "scalar", T: 13 /* ScalarType.UINT32 */, repeated: true },
+  ],
+);
+
+/**
  * @generated from message kvstore.v1.KeyValue
  */
 export const KeyValue = proto3.makeMessageType(
   "kvstore.v1.KeyValue",
   () => [
-    { no: 1, name: "key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 1, name: "key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 2, name: "create_revision", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 3, name: "mod_revision", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
-    { no: 4, name: "version", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 4, name: "version", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 5, name: "value", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 6, name: "lease", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
   ],

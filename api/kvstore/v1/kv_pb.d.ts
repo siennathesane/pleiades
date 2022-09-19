@@ -713,9 +713,9 @@ export declare class GetBucketDescriptorRequest extends Message<GetBucketDescrip
   accountId: bigint;
 
   /**
-   * @generated from field: string name = 2;
+   * @generated from field: string bucket_name = 2;
    */
-  name: string;
+  bucketName: string;
 
   constructor(data?: PartialMessage<GetBucketDescriptorRequest>);
 
@@ -774,6 +774,11 @@ export declare class GetKeyRequest extends Message<GetKeyRequest> {
    * @generated from field: string key = 3;
    */
   key: string;
+
+  /**
+   * @generated from field: optional uint32 version = 4;
+   */
+  version?: number;
 
   constructor(data?: PartialMessage<GetKeyRequest>);
 
@@ -946,15 +951,92 @@ export declare class DeleteKeyResponse extends Message<DeleteKeyResponse> {
 }
 
 /**
+ * @generated from message kvstore.v1.KeyValueDescriptor
+ */
+export declare class KeyValueDescriptor extends Message<KeyValueDescriptor> {
+  /**
+   * @generated from field: repeated uint32 versions = 1;
+   */
+  versions: number[];
+
+  /**
+   * @generated from field: bytes current_key = 2;
+   */
+  currentKey: Uint8Array;
+
+  constructor(data?: PartialMessage<KeyValueDescriptor>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "kvstore.v1.KeyValueDescriptor";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): KeyValueDescriptor;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): KeyValueDescriptor;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): KeyValueDescriptor;
+
+  static equals(a: KeyValueDescriptor | PlainMessage<KeyValueDescriptor> | undefined, b: KeyValueDescriptor | PlainMessage<KeyValueDescriptor> | undefined): boolean;
+}
+
+/**
+ * @generated from message kvstore.v1.ListKeyVersionsRequest
+ */
+export declare class ListKeyVersionsRequest extends Message<ListKeyVersionsRequest> {
+  /**
+   * @generated from field: bytes key = 1;
+   */
+  key: Uint8Array;
+
+  constructor(data?: PartialMessage<ListKeyVersionsRequest>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "kvstore.v1.ListKeyVersionsRequest";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListKeyVersionsRequest;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListKeyVersionsRequest;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListKeyVersionsRequest;
+
+  static equals(a: ListKeyVersionsRequest | PlainMessage<ListKeyVersionsRequest> | undefined, b: ListKeyVersionsRequest | PlainMessage<ListKeyVersionsRequest> | undefined): boolean;
+}
+
+/**
+ * @generated from message kvstore.v1.ListKeyVersionsResponse
+ */
+export declare class ListKeyVersionsResponse extends Message<ListKeyVersionsResponse> {
+  /**
+   * @generated from field: repeated uint32 versions = 1;
+   */
+  versions: number[];
+
+  constructor(data?: PartialMessage<ListKeyVersionsResponse>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "kvstore.v1.ListKeyVersionsResponse";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListKeyVersionsResponse;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListKeyVersionsResponse;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListKeyVersionsResponse;
+
+  static equals(a: ListKeyVersionsResponse | PlainMessage<ListKeyVersionsResponse> | undefined, b: ListKeyVersionsResponse | PlainMessage<ListKeyVersionsResponse> | undefined): boolean;
+}
+
+/**
  * @generated from message kvstore.v1.KeyValue
  */
 export declare class KeyValue extends Message<KeyValue> {
   /**
    * key is the key in bytes. An empty key is not allowed.
    *
-   * @generated from field: string key = 1;
+   * @generated from field: bytes key = 1;
    */
-  key: string;
+  key: Uint8Array;
 
   /**
    * create_revision is the revision of last creation on this key.
@@ -975,7 +1057,7 @@ export declare class KeyValue extends Message<KeyValue> {
    * the version to zero and any modification of the key
    * increases its version.
    *
-   * @generated from field: int64 version = 4;
+   * @generated from field: uint64 version = 4;
    */
   version: bigint;
 

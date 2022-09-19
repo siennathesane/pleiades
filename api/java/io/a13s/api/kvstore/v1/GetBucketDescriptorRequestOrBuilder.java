@@ -14,14 +14,14 @@ public interface GetBucketDescriptorRequestOrBuilder extends
   long getAccountId();
 
   /**
-   * <code>string name = 2 [json_name = "name"];</code>
-   * @return The name.
+   * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
+   * @return The bucketName.
    */
-  java.lang.String getName();
+  java.lang.String getBucketName();
   /**
-   * <code>string name = 2 [json_name = "name"];</code>
-   * @return The bytes for name.
+   * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
+   * @return The bytes for bucketName.
    */
   com.google.protobuf.ByteString
-      getNameBytes();
+      getBucketNameBytes();
 }

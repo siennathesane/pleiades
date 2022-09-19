@@ -4,26 +4,26 @@
 package io.a13s.api.kvstore.v1;
 
 /**
- * Protobuf type {@code kvstore.v1.GetBucketDescriptorRequest}
+ * Protobuf type {@code kvstore.v1.ListKeyVersionsRequest}
  */
-public final class GetBucketDescriptorRequest extends
+public final class ListKeyVersionsRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:kvstore.v1.GetBucketDescriptorRequest)
-    GetBucketDescriptorRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:kvstore.v1.ListKeyVersionsRequest)
+    ListKeyVersionsRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use GetBucketDescriptorRequest.newBuilder() to construct.
-  private GetBucketDescriptorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use ListKeyVersionsRequest.newBuilder() to construct.
+  private ListKeyVersionsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private GetBucketDescriptorRequest() {
-    bucketName_ = "";
+  private ListKeyVersionsRequest() {
+    key_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new GetBucketDescriptorRequest();
+    return new ListKeyVersionsRequest();
   }
 
   @java.lang.Override
@@ -31,7 +31,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GetBucketDescriptorRequest(
+  private ListKeyVersionsRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -49,15 +49,9 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
 
-            accountId_ = input.readUInt64();
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            bucketName_ = s;
+            key_ = input.readBytes();
             break;
           }
           default: {
@@ -83,64 +77,26 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_GetBucketDescriptorRequest_descriptor;
+    return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_GetBucketDescriptorRequest_fieldAccessorTable
+    return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_ListKeyVersionsRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.class, io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.Builder.class);
+            io.a13s.api.kvstore.v1.ListKeyVersionsRequest.class, io.a13s.api.kvstore.v1.ListKeyVersionsRequest.Builder.class);
   }
 
-  public static final int ACCOUNT_ID_FIELD_NUMBER = 1;
-  private long accountId_;
+  public static final int KEY_FIELD_NUMBER = 1;
+  private com.google.protobuf.ByteString key_;
   /**
-   * <code>uint64 account_id = 1 [json_name = "accountId"];</code>
-   * @return The accountId.
+   * <code>bytes key = 1 [json_name = "key"];</code>
+   * @return The key.
    */
   @java.lang.Override
-  public long getAccountId() {
-    return accountId_;
-  }
-
-  public static final int BUCKET_NAME_FIELD_NUMBER = 2;
-  private volatile java.lang.Object bucketName_;
-  /**
-   * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-   * @return The bucketName.
-   */
-  @java.lang.Override
-  public java.lang.String getBucketName() {
-    java.lang.Object ref = bucketName_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      bucketName_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-   * @return The bytes for bucketName.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getBucketNameBytes() {
-    java.lang.Object ref = bucketName_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      bucketName_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -157,11 +113,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (accountId_ != 0L) {
-      output.writeUInt64(1, accountId_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bucketName_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, bucketName_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(1, key_);
     }
     unknownFields.writeTo(output);
   }
@@ -172,12 +125,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (accountId_ != 0L) {
+    if (!key_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt64Size(1, accountId_);
-    }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bucketName_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, bucketName_);
+        .computeBytesSize(1, key_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -189,15 +139,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof io.a13s.api.kvstore.v1.GetBucketDescriptorRequest)) {
+    if (!(obj instanceof io.a13s.api.kvstore.v1.ListKeyVersionsRequest)) {
       return super.equals(obj);
     }
-    io.a13s.api.kvstore.v1.GetBucketDescriptorRequest other = (io.a13s.api.kvstore.v1.GetBucketDescriptorRequest) obj;
+    io.a13s.api.kvstore.v1.ListKeyVersionsRequest other = (io.a13s.api.kvstore.v1.ListKeyVersionsRequest) obj;
 
-    if (getAccountId()
-        != other.getAccountId()) return false;
-    if (!getBucketName()
-        .equals(other.getBucketName())) return false;
+    if (!getKey()
+        .equals(other.getKey())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -209,79 +157,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + ACCOUNT_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getAccountId());
-    hash = (37 * hash) + BUCKET_NAME_FIELD_NUMBER;
-    hash = (53 * hash) + getBucketName().hashCode();
+    hash = (37 * hash) + KEY_FIELD_NUMBER;
+    hash = (53 * hash) + getKey().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(byte[] data)
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(java.io.InputStream input)
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseDelimitedFrom(java.io.InputStream input)
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseDelimitedFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parseFrom(
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -294,7 +239,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(io.a13s.api.kvstore.v1.GetBucketDescriptorRequest prototype) {
+  public static Builder newBuilder(io.a13s.api.kvstore.v1.ListKeyVersionsRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -310,26 +255,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code kvstore.v1.GetBucketDescriptorRequest}
+   * Protobuf type {@code kvstore.v1.ListKeyVersionsRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:kvstore.v1.GetBucketDescriptorRequest)
-      io.a13s.api.kvstore.v1.GetBucketDescriptorRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:kvstore.v1.ListKeyVersionsRequest)
+      io.a13s.api.kvstore.v1.ListKeyVersionsRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_GetBucketDescriptorRequest_descriptor;
+      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_GetBucketDescriptorRequest_fieldAccessorTable
+      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_ListKeyVersionsRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.class, io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.Builder.class);
+              io.a13s.api.kvstore.v1.ListKeyVersionsRequest.class, io.a13s.api.kvstore.v1.ListKeyVersionsRequest.Builder.class);
     }
 
-    // Construct using io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.newBuilder()
+    // Construct using io.a13s.api.kvstore.v1.ListKeyVersionsRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -347,9 +292,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      accountId_ = 0L;
-
-      bucketName_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
       return this;
     }
@@ -357,17 +300,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_GetBucketDescriptorRequest_descriptor;
+      return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor;
     }
 
     @java.lang.Override
-    public io.a13s.api.kvstore.v1.GetBucketDescriptorRequest getDefaultInstanceForType() {
-      return io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.getDefaultInstance();
+    public io.a13s.api.kvstore.v1.ListKeyVersionsRequest getDefaultInstanceForType() {
+      return io.a13s.api.kvstore.v1.ListKeyVersionsRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public io.a13s.api.kvstore.v1.GetBucketDescriptorRequest build() {
-      io.a13s.api.kvstore.v1.GetBucketDescriptorRequest result = buildPartial();
+    public io.a13s.api.kvstore.v1.ListKeyVersionsRequest build() {
+      io.a13s.api.kvstore.v1.ListKeyVersionsRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -375,10 +318,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public io.a13s.api.kvstore.v1.GetBucketDescriptorRequest buildPartial() {
-      io.a13s.api.kvstore.v1.GetBucketDescriptorRequest result = new io.a13s.api.kvstore.v1.GetBucketDescriptorRequest(this);
-      result.accountId_ = accountId_;
-      result.bucketName_ = bucketName_;
+    public io.a13s.api.kvstore.v1.ListKeyVersionsRequest buildPartial() {
+      io.a13s.api.kvstore.v1.ListKeyVersionsRequest result = new io.a13s.api.kvstore.v1.ListKeyVersionsRequest(this);
+      result.key_ = key_;
       onBuilt();
       return result;
     }
@@ -417,22 +359,18 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof io.a13s.api.kvstore.v1.GetBucketDescriptorRequest) {
-        return mergeFrom((io.a13s.api.kvstore.v1.GetBucketDescriptorRequest)other);
+      if (other instanceof io.a13s.api.kvstore.v1.ListKeyVersionsRequest) {
+        return mergeFrom((io.a13s.api.kvstore.v1.ListKeyVersionsRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(io.a13s.api.kvstore.v1.GetBucketDescriptorRequest other) {
-      if (other == io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.getDefaultInstance()) return this;
-      if (other.getAccountId() != 0L) {
-        setAccountId(other.getAccountId());
-      }
-      if (!other.getBucketName().isEmpty()) {
-        bucketName_ = other.bucketName_;
-        onChanged();
+    public Builder mergeFrom(io.a13s.api.kvstore.v1.ListKeyVersionsRequest other) {
+      if (other == io.a13s.api.kvstore.v1.ListKeyVersionsRequest.getDefaultInstance()) return this;
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -449,11 +387,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.kvstore.v1.GetBucketDescriptorRequest parsedMessage = null;
+      io.a13s.api.kvstore.v1.ListKeyVersionsRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.kvstore.v1.GetBucketDescriptorRequest) e.getUnfinishedMessage();
+        parsedMessage = (io.a13s.api.kvstore.v1.ListKeyVersionsRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -463,109 +401,36 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long accountId_ ;
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>uint64 account_id = 1 [json_name = "accountId"];</code>
-     * @return The accountId.
+     * <code>bytes key = 1 [json_name = "key"];</code>
+     * @return The key.
      */
     @java.lang.Override
-    public long getAccountId() {
-      return accountId_;
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
-     * <code>uint64 account_id = 1 [json_name = "accountId"];</code>
-     * @param value The accountId to set.
+     * <code>bytes key = 1 [json_name = "key"];</code>
+     * @param value The key to set.
      * @return This builder for chaining.
      */
-    public Builder setAccountId(long value) {
-      
-      accountId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>uint64 account_id = 1 [json_name = "accountId"];</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearAccountId() {
-      
-      accountId_ = 0L;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object bucketName_ = "";
-    /**
-     * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-     * @return The bucketName.
-     */
-    public java.lang.String getBucketName() {
-      java.lang.Object ref = bucketName_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bucketName_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-     * @return The bytes for bucketName.
-     */
-    public com.google.protobuf.ByteString
-        getBucketNameBytes() {
-      java.lang.Object ref = bucketName_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bucketName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-     * @param value The bucketName to set.
-     * @return This builder for chaining.
-     */
-    public Builder setBucketName(
-        java.lang.String value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      bucketName_ = value;
+      key_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
+     * <code>bytes key = 1 [json_name = "key"];</code>
      * @return This builder for chaining.
      */
-    public Builder clearBucketName() {
+    public Builder clearKey() {
       
-      bucketName_ = getDefaultInstance().getBucketName();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string bucket_name = 2 [json_name = "bucketName"];</code>
-     * @param value The bytes for bucketName to set.
-     * @return This builder for chaining.
-     */
-    public Builder setBucketNameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      bucketName_ = value;
+      key_ = getDefaultInstance().getKey();
       onChanged();
       return this;
     }
@@ -582,41 +447,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:kvstore.v1.GetBucketDescriptorRequest)
+    // @@protoc_insertion_point(builder_scope:kvstore.v1.ListKeyVersionsRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:kvstore.v1.GetBucketDescriptorRequest)
-  private static final io.a13s.api.kvstore.v1.GetBucketDescriptorRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:kvstore.v1.ListKeyVersionsRequest)
+  private static final io.a13s.api.kvstore.v1.ListKeyVersionsRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new io.a13s.api.kvstore.v1.GetBucketDescriptorRequest();
+    DEFAULT_INSTANCE = new io.a13s.api.kvstore.v1.ListKeyVersionsRequest();
   }
 
-  public static io.a13s.api.kvstore.v1.GetBucketDescriptorRequest getDefaultInstance() {
+  public static io.a13s.api.kvstore.v1.ListKeyVersionsRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<GetBucketDescriptorRequest>
-      PARSER = new com.google.protobuf.AbstractParser<GetBucketDescriptorRequest>() {
+  private static final com.google.protobuf.Parser<ListKeyVersionsRequest>
+      PARSER = new com.google.protobuf.AbstractParser<ListKeyVersionsRequest>() {
     @java.lang.Override
-    public GetBucketDescriptorRequest parsePartialFrom(
+    public ListKeyVersionsRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GetBucketDescriptorRequest(input, extensionRegistry);
+      return new ListKeyVersionsRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<GetBucketDescriptorRequest> parser() {
+  public static com.google.protobuf.Parser<ListKeyVersionsRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<GetBucketDescriptorRequest> getParserForType() {
+  public com.google.protobuf.Parser<ListKeyVersionsRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public io.a13s.api.kvstore.v1.GetBucketDescriptorRequest getDefaultInstanceForType() {
+  public io.a13s.api.kvstore.v1.ListKeyVersionsRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

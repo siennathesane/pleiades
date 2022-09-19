@@ -120,6 +120,21 @@ public final class KvProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_kvstore_v1_DeleteKeyResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kvstore_v1_KeyValueDescriptor_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kvstore_v1_KeyValueDescriptor_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kvstore_v1_ListKeyVersionsRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_kvstore_v1_ListKeyVersionsResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_kvstore_v1_ListKeyVersionsResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_kvstore_v1_KeyValue_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -247,45 +262,51 @@ public final class KvProto {
       "R\010keyCount\0224\n\007created\030\004 \001(\0132\032.google.pro" +
       "tobuf.TimestampR\007created\022=\n\014last_updated" +
       "\030\005 \001(\0132\032.google.protobuf.TimestampR\013last" +
-      "Updated\"O\n\032GetBucketDescriptorRequest\022\035\n" +
-      "\naccount_id\030\001 \001(\004R\taccountId\022\022\n\004name\030\002 \001" +
-      "(\tR\004name\"h\n\033GetBucketDescriptorResponse\022" +
-      "I\n\021bucket_descriptor\030\001 \001(\0132\034.kvstore.v1." +
-      "BucketDescriptorR\020bucketDescriptor\"a\n\rGe" +
-      "tKeyRequest\022\035\n\naccount_id\030\001 \001(\004R\taccount" +
-      "Id\022\037\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003k" +
-      "ey\030\003 \001(\tR\003key\"L\n\016GetKeyResponse\022:\n\016key_v" +
-      "alue_pair\030\001 \001(\0132\024.kvstore.v1.KeyValueR\014k" +
-      "eyValuePair\"\306\001\n\rPutKeyRequest\022\035\n\naccount" +
-      "_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001(" +
-      "\tR\nbucketName\022:\n\016key_value_pair\030\003 \001(\0132\024." +
-      "kvstore.v1.KeyValueR\014keyValuePair\0229\n\013tra" +
-      "nsaction\030\004 \001(\0132\027.kvstore.v1.TransactionR" +
-      "\013transaction\"K\n\016PutKeyResponse\0229\n\013transa" +
-      "ction\030\001 \001(\0132\027.kvstore.v1.TransactionR\013tr" +
-      "ansaction\"\237\001\n\020DeleteKeyRequest\022\035\n\naccoun" +
-      "t_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001" +
-      "(\tR\nbucketName\022\020\n\003key\030\003 \001(\tR\003key\0229\n\013tran" +
-      "saction\030\004 \001(\0132\027.kvstore.v1.TransactionR\013" +
-      "transaction\"^\n\021DeleteKeyResponse\022\016\n\002ok\030\001" +
-      " \001(\010R\002ok\0229\n\013transaction\030\003 \001(\0132\027.kvstore." +
-      "v1.TransactionR\013transaction\"\256\001\n\010KeyValue" +
-      "\022\020\n\003key\030\001 \001(\tR\003key\022\'\n\017create_revision\030\002 " +
-      "\001(\003R\016createRevision\022!\n\014mod_revision\030\003 \001(" +
-      "\003R\013modRevision\022\030\n\007version\030\004 \001(\003R\007version" +
-      "\022\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005l" +
-      "ease\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v" +
-      "1.KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.k" +
-      "vstore.v1.KeyValueR\002kv\0222\n\007prev_kv\030\003 \001(\0132" +
-      "\024.kvstore.v1.KeyValueH\000R\006prevKv\210\001\001B\n\n\010_p" +
-      "rev_kv*\215\001\n\020KeyOperationType\022\"\n\036KEY_OPERA" +
-      "TION_TYPE_UNSPECIFIED\020\000\022\032\n\026KEY_OPERATION" +
-      "_TYPE_GET\020\001\022\032\n\026KEY_OPERATION_TYPE_PUT\020\002\022" +
-      "\035\n\031KEY_OPERATION_TYPE_DELETE\020\003B\214\001\n\026io.a1" +
-      "3s.api.kvstore.v1B\007KvProtoP\001Z a13s.io/ap" +
-      "i/kvstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V" +
-      "1\312\002\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352" +
-      "\002\013Kvstore::V1b\006proto3"
+      "Updated\"\\\n\032GetBucketDescriptorRequest\022\035\n" +
+      "\naccount_id\030\001 \001(\004R\taccountId\022\037\n\013bucket_n" +
+      "ame\030\002 \001(\tR\nbucketName\"h\n\033GetBucketDescri" +
+      "ptorResponse\022I\n\021bucket_descriptor\030\001 \001(\0132" +
+      "\034.kvstore.v1.BucketDescriptorR\020bucketDes" +
+      "criptor\"\214\001\n\rGetKeyRequest\022\035\n\naccount_id\030" +
+      "\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001(\tR\nb" +
+      "ucketName\022\020\n\003key\030\003 \001(\tR\003key\022\035\n\007version\030\004" +
+      " \001(\rH\000R\007version\210\001\001B\n\n\010_version\"L\n\016GetKey" +
+      "Response\022:\n\016key_value_pair\030\001 \001(\0132\024.kvsto" +
+      "re.v1.KeyValueR\014keyValuePair\"\306\001\n\rPutKeyR" +
+      "equest\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037\n" +
+      "\013bucket_name\030\002 \001(\tR\nbucketName\022:\n\016key_va" +
+      "lue_pair\030\003 \001(\0132\024.kvstore.v1.KeyValueR\014ke" +
+      "yValuePair\0229\n\013transaction\030\004 \001(\0132\027.kvstor" +
+      "e.v1.TransactionR\013transaction\"K\n\016PutKeyR" +
+      "esponse\0229\n\013transaction\030\001 \001(\0132\027.kvstore.v" +
+      "1.TransactionR\013transaction\"\237\001\n\020DeleteKey" +
+      "Request\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037" +
+      "\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003key\030\003" +
+      " \001(\tR\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore" +
+      ".v1.TransactionR\013transaction\"^\n\021DeleteKe" +
+      "yResponse\022\016\n\002ok\030\001 \001(\010R\002ok\0229\n\013transaction" +
+      "\030\003 \001(\0132\027.kvstore.v1.TransactionR\013transac" +
+      "tion\"Q\n\022KeyValueDescriptor\022\032\n\010versions\030\001" +
+      " \003(\rR\010versions\022\037\n\013current_key\030\002 \001(\014R\ncur" +
+      "rentKey\"*\n\026ListKeyVersionsRequest\022\020\n\003key" +
+      "\030\001 \001(\014R\003key\"5\n\027ListKeyVersionsResponse\022\032" +
+      "\n\010versions\030\001 \003(\rR\010versions\"\256\001\n\010KeyValue\022" +
+      "\020\n\003key\030\001 \001(\014R\003key\022\'\n\017create_revision\030\002 \001" +
+      "(\003R\016createRevision\022!\n\014mod_revision\030\003 \001(\003" +
+      "R\013modRevision\022\030\n\007version\030\004 \001(\004R\007version\022" +
+      "\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005le" +
+      "ase\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v1" +
+      ".KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.kv" +
+      "store.v1.KeyValueR\002kv\0222\n\007prev_kv\030\003 \001(\0132\024" +
+      ".kvstore.v1.KeyValueH\000R\006prevKv\210\001\001B\n\n\010_pr" +
+      "ev_kv*\215\001\n\020KeyOperationType\022\"\n\036KEY_OPERAT" +
+      "ION_TYPE_UNSPECIFIED\020\000\022\032\n\026KEY_OPERATION_" +
+      "TYPE_GET\020\001\022\032\n\026KEY_OPERATION_TYPE_PUT\020\002\022\035" +
+      "\n\031KEY_OPERATION_TYPE_DELETE\020\003B\214\001\n\026io.a13" +
+      "s.api.kvstore.v1B\007KvProtoP\001Z a13s.io/api" +
+      "/kvstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V1" +
+      "\312\002\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352\002" +
+      "\013Kvstore::V1b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -377,7 +398,7 @@ public final class KvProto {
     internal_static_kvstore_v1_GetBucketDescriptorRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kvstore_v1_GetBucketDescriptorRequest_descriptor,
-        new java.lang.String[] { "AccountId", "Name", });
+        new java.lang.String[] { "AccountId", "BucketName", });
     internal_static_kvstore_v1_GetBucketDescriptorResponse_descriptor =
       getDescriptor().getMessageTypes().get(14);
     internal_static_kvstore_v1_GetBucketDescriptorResponse_fieldAccessorTable = new
@@ -389,7 +410,7 @@ public final class KvProto {
     internal_static_kvstore_v1_GetKeyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kvstore_v1_GetKeyRequest_descriptor,
-        new java.lang.String[] { "AccountId", "BucketName", "Key", });
+        new java.lang.String[] { "AccountId", "BucketName", "Key", "Version", "Version", });
     internal_static_kvstore_v1_GetKeyResponse_descriptor =
       getDescriptor().getMessageTypes().get(16);
     internal_static_kvstore_v1_GetKeyResponse_fieldAccessorTable = new
@@ -420,14 +441,32 @@ public final class KvProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kvstore_v1_DeleteKeyResponse_descriptor,
         new java.lang.String[] { "Ok", "Transaction", });
-    internal_static_kvstore_v1_KeyValue_descriptor =
+    internal_static_kvstore_v1_KeyValueDescriptor_descriptor =
       getDescriptor().getMessageTypes().get(21);
+    internal_static_kvstore_v1_KeyValueDescriptor_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kvstore_v1_KeyValueDescriptor_descriptor,
+        new java.lang.String[] { "Versions", "CurrentKey", });
+    internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_kvstore_v1_ListKeyVersionsRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kvstore_v1_ListKeyVersionsRequest_descriptor,
+        new java.lang.String[] { "Key", });
+    internal_static_kvstore_v1_ListKeyVersionsResponse_descriptor =
+      getDescriptor().getMessageTypes().get(23);
+    internal_static_kvstore_v1_ListKeyVersionsResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_kvstore_v1_ListKeyVersionsResponse_descriptor,
+        new java.lang.String[] { "Versions", });
+    internal_static_kvstore_v1_KeyValue_descriptor =
+      getDescriptor().getMessageTypes().get(24);
     internal_static_kvstore_v1_KeyValue_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kvstore_v1_KeyValue_descriptor,
         new java.lang.String[] { "Key", "CreateRevision", "ModRevision", "Version", "Value", "Lease", });
     internal_static_kvstore_v1_Event_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(25);
     internal_static_kvstore_v1_Event_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_kvstore_v1_Event_descriptor,

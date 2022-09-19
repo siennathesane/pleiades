@@ -12,20 +12,10 @@ public interface KeyValueOrBuilder extends
    * key is the key in bytes. An empty key is not allowed.
    * </pre>
    *
-   * <code>string key = 1 [json_name = "key"];</code>
+   * <code>bytes key = 1 [json_name = "key"];</code>
    * @return The key.
    */
-  java.lang.String getKey();
-  /**
-   * <pre>
-   * key is the key in bytes. An empty key is not allowed.
-   * </pre>
-   *
-   * <code>string key = 1 [json_name = "key"];</code>
-   * @return The bytes for key.
-   */
-  com.google.protobuf.ByteString
-      getKeyBytes();
+  com.google.protobuf.ByteString getKey();
 
   /**
    * <pre>
@@ -54,7 +44,7 @@ public interface KeyValueOrBuilder extends
    * increases its version.
    * </pre>
    *
-   * <code>int64 version = 4 [json_name = "version"];</code>
+   * <code>uint64 version = 4 [json_name = "version"];</code>
    * @return The version.
    */
   long getVersion();
