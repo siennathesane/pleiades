@@ -5009,8 +5009,8 @@ class KeyValue final :
     kValueFieldNumber = 5,
     kCreateRevisionFieldNumber = 2,
     kModRevisionFieldNumber = 3,
-    kVersionFieldNumber = 4,
     kLeaseFieldNumber = 6,
+    kVersionFieldNumber = 4,
   };
   // bytes key = 1 [json_name = "key"];
   void clear_key();
@@ -5058,15 +5058,6 @@ class KeyValue final :
   void _internal_set_mod_revision(int64_t value);
   public:
 
-  // uint64 version = 4 [json_name = "version"];
-  void clear_version();
-  uint64_t version() const;
-  void set_version(uint64_t value);
-  private:
-  uint64_t _internal_version() const;
-  void _internal_set_version(uint64_t value);
-  public:
-
   // int64 lease = 6 [json_name = "lease"];
   void clear_lease();
   int64_t lease() const;
@@ -5074,6 +5065,15 @@ class KeyValue final :
   private:
   int64_t _internal_lease() const;
   void _internal_set_lease(int64_t value);
+  public:
+
+  // uint32 version = 4 [json_name = "version"];
+  void clear_version();
+  uint32_t version() const;
+  void set_version(uint32_t value);
+  private:
+  uint32_t _internal_version() const;
+  void _internal_set_version(uint32_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:kvstore.v1.KeyValue)
@@ -5087,8 +5087,8 @@ class KeyValue final :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr value_;
   int64_t create_revision_;
   int64_t mod_revision_;
-  uint64_t version_;
   int64_t lease_;
+  uint32_t version_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_kvstore_2fv1_2fkv_2eproto;
 };
@@ -10137,22 +10137,22 @@ inline void KeyValue::set_mod_revision(int64_t value) {
   // @@protoc_insertion_point(field_set:kvstore.v1.KeyValue.mod_revision)
 }
 
-// uint64 version = 4 [json_name = "version"];
+// uint32 version = 4 [json_name = "version"];
 inline void KeyValue::clear_version() {
-  version_ = uint64_t{0u};
+  version_ = 0u;
 }
-inline uint64_t KeyValue::_internal_version() const {
+inline uint32_t KeyValue::_internal_version() const {
   return version_;
 }
-inline uint64_t KeyValue::version() const {
+inline uint32_t KeyValue::version() const {
   // @@protoc_insertion_point(field_get:kvstore.v1.KeyValue.version)
   return _internal_version();
 }
-inline void KeyValue::_internal_set_version(uint64_t value) {
+inline void KeyValue::_internal_set_version(uint32_t value) {
   
   version_ = value;
 }
-inline void KeyValue::set_version(uint64_t value) {
+inline void KeyValue::set_version(uint32_t value) {
   _internal_set_version(value);
   // @@protoc_insertion_point(field_set:kvstore.v1.KeyValue.version)
 }

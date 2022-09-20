@@ -356,8 +356,8 @@ PROTOBUF_CONSTEXPR KeyValue::KeyValue(
   , value_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , create_revision_(int64_t{0})
   , mod_revision_(int64_t{0})
-  , version_(uint64_t{0u})
-  , lease_(int64_t{0}){}
+  , lease_(int64_t{0})
+  , version_(0u){}
 struct KeyValueDefaultTypeInternal {
   PROTOBUF_CONSTEXPR KeyValueDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -841,7 +841,7 @@ const char descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto[] PROTOBUF_SECTIO
   "\n\010versions\030\001 \003(\rR\010versions\"\256\001\n\010KeyValue\022"
   "\020\n\003key\030\001 \001(\014R\003key\022\'\n\017create_revision\030\002 \001"
   "(\003R\016createRevision\022!\n\014mod_revision\030\003 \001(\003"
-  "R\013modRevision\022\030\n\007version\030\004 \001(\004R\007version\022"
+  "R\013modRevision\022\030\n\007version\030\004 \001(\rR\007version\022"
   "\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005le"
   "ase\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v1"
   ".KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.kv"
@@ -8076,8 +8076,8 @@ KeyValue::KeyValue(const KeyValue& from)
       GetArenaForAllocation());
   }
   ::memcpy(&create_revision_, &from.create_revision_,
-    static_cast<size_t>(reinterpret_cast<char*>(&lease_) -
-    reinterpret_cast<char*>(&create_revision_)) + sizeof(lease_));
+    static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.KeyValue)
 }
 
@@ -8092,8 +8092,8 @@ value_.InitDefault();
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&create_revision_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&lease_) -
-    reinterpret_cast<char*>(&create_revision_)) + sizeof(lease_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
+    reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
 }
 
 KeyValue::~KeyValue() {
@@ -8124,8 +8124,8 @@ void KeyValue::Clear() {
   key_.ClearToEmpty();
   value_.ClearToEmpty();
   ::memset(&create_revision_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&lease_) -
-      reinterpret_cast<char*>(&create_revision_)) + sizeof(lease_));
+      reinterpret_cast<char*>(&version_) -
+      reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -8160,10 +8160,10 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
         } else
           goto handle_unusual;
         continue;
-      // uint64 version = 4 [json_name = "version"];
+      // uint32 version = 4 [json_name = "version"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -8232,10 +8232,10 @@ uint8_t* KeyValue::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteInt64ToArray(3, this->_internal_mod_revision(), target);
   }
 
-  // uint64 version = 4 [json_name = "version"];
+  // uint32 version = 4 [json_name = "version"];
   if (this->_internal_version() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(4, this->_internal_version(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(4, this->_internal_version(), target);
   }
 
   // bytes value = 5 [json_name = "value"];
@@ -8290,14 +8290,14 @@ size_t KeyValue::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_mod_revision());
   }
 
-  // uint64 version = 4 [json_name = "version"];
-  if (this->_internal_version() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_version());
-  }
-
   // int64 lease = 6 [json_name = "lease"];
   if (this->_internal_lease() != 0) {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_lease());
+  }
+
+  // uint32 version = 4 [json_name = "version"];
+  if (this->_internal_version() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_version());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -8334,11 +8334,11 @@ void KeyValue::MergeFrom(const KeyValue& from) {
   if (from._internal_mod_revision() != 0) {
     _internal_set_mod_revision(from._internal_mod_revision());
   }
-  if (from._internal_version() != 0) {
-    _internal_set_version(from._internal_version());
-  }
   if (from._internal_lease() != 0) {
     _internal_set_lease(from._internal_lease());
+  }
+  if (from._internal_version() != 0) {
+    _internal_set_version(from._internal_version());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -8368,8 +8368,8 @@ void KeyValue::InternalSwap(KeyValue* other) {
       &other->value_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(KeyValue, lease_)
-      + sizeof(KeyValue::lease_)
+      PROTOBUF_FIELD_OFFSET(KeyValue, version_)
+      + sizeof(KeyValue::version_)
       - PROTOBUF_FIELD_OFFSET(KeyValue, create_revision_)>(
           reinterpret_cast<char*>(&create_revision_),
           reinterpret_cast<char*>(&other->create_revision_));

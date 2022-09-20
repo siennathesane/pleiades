@@ -367,7 +367,7 @@ export const KeyValue = proto3.makeMessageType(
     { no: 1, name: "key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 2, name: "create_revision", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 3, name: "mod_revision", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
-    { no: 4, name: "version", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 4, name: "version", kind: "scalar", T: 13 /* ScalarType.UINT32 */ },
     { no: 5, name: "value", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 6, name: "lease", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
   ],

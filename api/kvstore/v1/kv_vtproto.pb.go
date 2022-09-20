@@ -7283,7 +7283,7 @@ func (m *KeyValue) UnmarshalVT(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Version |= uint64(b&0x7F) << shift
+				m.Version |= uint32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

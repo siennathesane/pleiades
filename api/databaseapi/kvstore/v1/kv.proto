@@ -207,7 +207,7 @@ message KeyValue {
   // version is the version of the key. A deletion resets
   // the version to zero and any modification of the key
   // increases its version.
-  uint64 version = 4;
+  uint32 version = 4;
   // value is the value held by the key, in bytes.
   bytes value = 5;
   // lease is the ID of the lease that attached to key.

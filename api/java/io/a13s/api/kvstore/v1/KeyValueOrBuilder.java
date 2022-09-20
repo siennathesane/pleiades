@@ -44,10 +44,10 @@ public interface KeyValueOrBuilder extends
    * increases its version.
    * </pre>
    *
-   * <code>uint64 version = 4 [json_name = "version"];</code>
+   * <code>uint32 version = 4 [json_name = "version"];</code>
    * @return The version.
    */
-  long getVersion();
+  int getVersion();
 
   /**
    * <pre>

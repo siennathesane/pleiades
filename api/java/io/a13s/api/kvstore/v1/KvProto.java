@@ -293,7 +293,7 @@ public final class KvProto {
       "\n\010versions\030\001 \003(\rR\010versions\"\256\001\n\010KeyValue\022" +
       "\020\n\003key\030\001 \001(\014R\003key\022\'\n\017create_revision\030\002 \001" +
       "(\003R\016createRevision\022!\n\014mod_revision\030\003 \001(\003" +
-      "R\013modRevision\022\030\n\007version\030\004 \001(\004R\007version\022" +
+      "R\013modRevision\022\030\n\007version\030\004 \001(\rR\007version\022" +
       "\024\n\005value\030\005 \001(\014R\005value\022\024\n\005lease\030\006 \001(\003R\005le" +
       "ase\"\237\001\n\005Event\0220\n\004type\030\001 \001(\0162\034.kvstore.v1" +
       ".KeyOperationTypeR\004type\022$\n\002kv\030\002 \001(\0132\024.kv" +

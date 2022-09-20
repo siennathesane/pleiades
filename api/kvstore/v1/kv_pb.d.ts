@@ -1057,9 +1057,9 @@ export declare class KeyValue extends Message<KeyValue> {
    * the version to zero and any modification of the key
    * increases its version.
    *
-   * @generated from field: uint64 version = 4;
+   * @generated from field: uint32 version = 4;
    */
-  version: bigint;
+  version: number;
 
   /**
    * value is the value held by the key, in bytes.

@@ -67,7 +67,7 @@ private static final long serialVersionUID = 0L;
           }
           case 32: {
 
-            version_ = input.readUInt64();
+            version_ = input.readUInt32();
             break;
           }
           case 42: {
@@ -160,7 +160,7 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int VERSION_FIELD_NUMBER = 4;
-  private long version_;
+  private int version_;
   /**
    * <pre>
    * version is the version of the key. A deletion resets
@@ -168,11 +168,11 @@ private static final long serialVersionUID = 0L;
    * increases its version.
    * </pre>
    *
-   * <code>uint64 version = 4 [json_name = "version"];</code>
+   * <code>uint32 version = 4 [json_name = "version"];</code>
    * @return The version.
    */
   @java.lang.Override
-  public long getVersion() {
+  public int getVersion() {
     return version_;
   }
 
@@ -231,8 +231,8 @@ private static final long serialVersionUID = 0L;
     if (modRevision_ != 0L) {
       output.writeInt64(3, modRevision_);
     }
-    if (version_ != 0L) {
-      output.writeUInt64(4, version_);
+    if (version_ != 0) {
+      output.writeUInt32(4, version_);
     }
     if (!value_.isEmpty()) {
       output.writeBytes(5, value_);
@@ -261,9 +261,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(3, modRevision_);
     }
-    if (version_ != 0L) {
+    if (version_ != 0) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt64Size(4, version_);
+        .computeUInt32Size(4, version_);
     }
     if (!value_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
@@ -320,8 +320,7 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getModRevision());
     hash = (37 * hash) + VERSION_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getVersion());
+    hash = (53 * hash) + getVersion();
     hash = (37 * hash) + VALUE_FIELD_NUMBER;
     hash = (53 * hash) + getValue().hashCode();
     hash = (37 * hash) + LEASE_FIELD_NUMBER;
@@ -466,7 +465,7 @@ private static final long serialVersionUID = 0L;
 
       modRevision_ = 0L;
 
-      version_ = 0L;
+      version_ = 0;
 
       value_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -561,7 +560,7 @@ private static final long serialVersionUID = 0L;
       if (other.getModRevision() != 0L) {
         setModRevision(other.getModRevision());
       }
-      if (other.getVersion() != 0L) {
+      if (other.getVersion() != 0) {
         setVersion(other.getVersion());
       }
       if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
@@ -731,7 +730,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long version_ ;
+    private int version_ ;
     /**
      * <pre>
      * version is the version of the key. A deletion resets
@@ -739,11 +738,11 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>uint64 version = 4 [json_name = "version"];</code>
+     * <code>uint32 version = 4 [json_name = "version"];</code>
      * @return The version.
      */
     @java.lang.Override
-    public long getVersion() {
+    public int getVersion() {
       return version_;
     }
     /**
@@ -753,11 +752,11 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>uint64 version = 4 [json_name = "version"];</code>
+     * <code>uint32 version = 4 [json_name = "version"];</code>
      * @param value The version to set.
      * @return This builder for chaining.
      */
-    public Builder setVersion(long value) {
+    public Builder setVersion(int value) {
       
       version_ = value;
       onChanged();
@@ -770,12 +769,12 @@ private static final long serialVersionUID = 0L;
      * increases its version.
      * </pre>
      *
-     * <code>uint64 version = 4 [json_name = "version"];</code>
+     * <code>uint32 version = 4 [json_name = "version"];</code>
      * @return This builder for chaining.
      */
     public Builder clearVersion() {
       
-      version_ = 0L;
+      version_ = 0;
       onChanged();
       return this;
     }
