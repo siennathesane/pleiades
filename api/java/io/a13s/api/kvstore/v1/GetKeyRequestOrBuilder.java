@@ -26,16 +26,10 @@ public interface GetKeyRequestOrBuilder extends
       getBucketNameBytes();
 
   /**
-   * <code>string key = 3 [json_name = "key"];</code>
+   * <code>bytes key = 3 [json_name = "key"];</code>
    * @return The key.
    */
-  java.lang.String getKey();
-  /**
-   * <code>string key = 3 [json_name = "key"];</code>
-   * @return The bytes for key.
-   */
-  com.google.protobuf.ByteString
-      getKeyBytes();
+  com.google.protobuf.ByteString getKey();
 
   /**
    * <code>optional uint32 version = 4 [json_name = "version"];</code>

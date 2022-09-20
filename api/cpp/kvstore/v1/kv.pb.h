@@ -3494,7 +3494,7 @@ class GetKeyRequest final :
   std::string* _internal_mutable_bucket_name();
   public:
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   void clear_key();
   const std::string& key() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -4188,7 +4188,7 @@ class DeleteKeyRequest final :
   std::string* _internal_mutable_bucket_name();
   public:
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   void clear_key();
   const std::string& key() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -9009,7 +9009,7 @@ inline void GetKeyRequest::set_allocated_bucket_name(std::string* bucket_name) {
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.GetKeyRequest.bucket_name)
 }
 
-// string key = 3 [json_name = "key"];
+// bytes key = 3 [json_name = "key"];
 inline void GetKeyRequest::clear_key() {
   key_.ClearToEmpty();
 }
@@ -9021,7 +9021,7 @@ template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void GetKeyRequest::set_key(ArgT0&& arg0, ArgT... args) {
  
- key_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+ key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:kvstore.v1.GetKeyRequest.key)
 }
 inline std::string* GetKeyRequest::mutable_key() {
@@ -9593,7 +9593,7 @@ inline void DeleteKeyRequest::set_allocated_bucket_name(std::string* bucket_name
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.DeleteKeyRequest.bucket_name)
 }
 
-// string key = 3 [json_name = "key"];
+// bytes key = 3 [json_name = "key"];
 inline void DeleteKeyRequest::clear_key() {
   key_.ClearToEmpty();
 }
@@ -9605,7 +9605,7 @@ template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void DeleteKeyRequest::set_key(ArgT0&& arg0, ArgT... args) {
  
- key_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+ key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:kvstore.v1.DeleteKeyRequest.key)
 }
 inline std::string* DeleteKeyRequest::mutable_key() {

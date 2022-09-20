@@ -265,7 +265,7 @@ export const GetKeyRequest = proto3.makeMessageType(
   () => [
     { no: 1, name: "account_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 2, name: "bucket_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 4, name: "version", kind: "scalar", T: 13 /* ScalarType.UINT32 */, opt: true },
   ],
 );
@@ -311,7 +311,7 @@ export const DeleteKeyRequest = proto3.makeMessageType(
   () => [
     { no: 1, name: "account_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 2, name: "bucket_name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "key", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "key", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
     { no: 4, name: "transaction", kind: "message", T: Transaction },
   ],
 );

@@ -153,7 +153,7 @@ message GetBucketDescriptorResponse {
 message GetKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
-  string key = 3;
+  bytes key = 3;
   optional uint32 version = 4;
 }
 
@@ -175,7 +175,7 @@ message PutKeyResponse {
 message DeleteKeyRequest {
   uint64 account_id = 1;
   string bucket_name = 2;
-  string key = 3;
+  bytes key = 3;
   Transaction transaction = 4;
 }
 

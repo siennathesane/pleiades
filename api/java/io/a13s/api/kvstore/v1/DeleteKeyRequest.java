@@ -17,7 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private DeleteKeyRequest() {
     bucketName_ = "";
-    key_ = "";
+    key_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -62,9 +62,8 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
 
-            key_ = s;
+            key_ = input.readBytes();
             break;
           }
           case 34: {
@@ -164,41 +163,14 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int KEY_FIELD_NUMBER = 3;
-  private volatile java.lang.Object key_;
+  private com.google.protobuf.ByteString key_;
   /**
-   * <code>string key = 3 [json_name = "key"];</code>
+   * <code>bytes key = 3 [json_name = "key"];</code>
    * @return The key.
    */
   @java.lang.Override
-  public java.lang.String getKey() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      key_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string key = 3 [json_name = "key"];</code>
-   * @return The bytes for key.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getKeyBytes() {
-    java.lang.Object ref = key_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      key_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public com.google.protobuf.ByteString getKey() {
+    return key_;
   }
 
   public static final int TRANSACTION_FIELD_NUMBER = 4;
@@ -247,8 +219,8 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bucketName_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, bucketName_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, key_);
+    if (!key_.isEmpty()) {
+      output.writeBytes(3, key_);
     }
     if (transaction_ != null) {
       output.writeMessage(4, getTransaction());
@@ -269,8 +241,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bucketName_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, bucketName_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(key_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, key_);
+    if (!key_.isEmpty()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBytesSize(3, key_);
     }
     if (transaction_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -461,7 +434,7 @@ private static final long serialVersionUID = 0L;
 
       bucketName_ = "";
 
-      key_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
 
       if (transactionBuilder_ == null) {
         transaction_ = null;
@@ -558,9 +531,8 @@ private static final long serialVersionUID = 0L;
         bucketName_ = other.bucketName_;
         onChanged();
       }
-      if (!other.getKey().isEmpty()) {
-        key_ = other.key_;
-        onChanged();
+      if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+        setKey(other.getKey());
       }
       if (other.hasTransaction()) {
         mergeTransaction(other.getTransaction());
@@ -701,47 +673,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object key_ = "";
+    private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>string key = 3 [json_name = "key"];</code>
+     * <code>bytes key = 3 [json_name = "key"];</code>
      * @return The key.
      */
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        key_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
+    @java.lang.Override
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
     }
     /**
-     * <code>string key = 3 [json_name = "key"];</code>
-     * @return The bytes for key.
-     */
-    public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string key = 3 [json_name = "key"];</code>
+     * <code>bytes key = 3 [json_name = "key"];</code>
      * @param value The key to set.
      * @return This builder for chaining.
      */
-    public Builder setKey(
-        java.lang.String value) {
+    public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -751,28 +697,12 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string key = 3 [json_name = "key"];</code>
+     * <code>bytes key = 3 [json_name = "key"];</code>
      * @return This builder for chaining.
      */
     public Builder clearKey() {
       
       key_ = getDefaultInstance().getKey();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string key = 3 [json_name = "key"];</code>
-     * @param value The bytes for key to set.
-     * @return This builder for chaining.
-     */
-    public Builder setKeyBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      key_ = value;
       onChanged();
       return this;
     }

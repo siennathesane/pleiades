@@ -771,9 +771,9 @@ export declare class GetKeyRequest extends Message<GetKeyRequest> {
   bucketName: string;
 
   /**
-   * @generated from field: string key = 3;
+   * @generated from field: bytes key = 3;
    */
-  key: string;
+  key: Uint8Array;
 
   /**
    * @generated from field: optional uint32 version = 4;
@@ -897,9 +897,9 @@ export declare class DeleteKeyRequest extends Message<DeleteKeyRequest> {
   bucketName: string;
 
   /**
-   * @generated from field: string key = 3;
+   * @generated from field: bytes key = 3;
    */
-  key: string;
+  key: Uint8Array;
 
   /**
    * @generated from field: kvstore.v1.Transaction transaction = 4;

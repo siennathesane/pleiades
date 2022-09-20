@@ -817,7 +817,7 @@ const char descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto[] PROTOBUF_SECTIO
   "\034.kvstore.v1.BucketDescriptorR\020bucketDes"
   "criptor\"\214\001\n\rGetKeyRequest\022\035\n\naccount_id\030"
   "\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001(\tR\nb"
-  "ucketName\022\020\n\003key\030\003 \001(\tR\003key\022\035\n\007version\030\004"
+  "ucketName\022\020\n\003key\030\003 \001(\014R\003key\022\035\n\007version\030\004"
   " \001(\rH\000R\007version\210\001\001B\n\n\010_version\"L\n\016GetKey"
   "Response\022:\n\016key_value_pair\030\001 \001(\0132\024.kvsto"
   "re.v1.KeyValueR\014keyValuePair\"\306\001\n\rPutKeyR"
@@ -830,7 +830,7 @@ const char descriptor_table_protodef_kvstore_2fv1_2fkv_2eproto[] PROTOBUF_SECTIO
   "1.TransactionR\013transaction\"\237\001\n\020DeleteKey"
   "Request\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037"
   "\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003key\030\003"
-  " \001(\tR\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore"
+  " \001(\014R\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore"
   ".v1.TransactionR\013transaction\"^\n\021DeleteKe"
   "yResponse\022\016\n\002ok\030\001 \001(\010R\002ok\0229\n\013transaction"
   "\030\003 \001(\0132\027.kvstore.v1.TransactionR\013transac"
@@ -6010,13 +6010,12 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
         } else
           goto handle_unusual;
         continue;
-      // string key = 3 [json_name = "key"];
+      // bytes key = 3 [json_name = "key"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           auto str = _internal_mutable_key();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "kvstore.v1.GetKeyRequest.key"));
         } else
           goto handle_unusual;
         continue;
@@ -6075,13 +6074,9 @@ uint8_t* GetKeyRequest::_InternalSerialize(
         2, this->_internal_bucket_name(), target);
   }
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   if (!this->_internal_key().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_key().data(), static_cast<int>(this->_internal_key().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kvstore.v1.GetKeyRequest.key");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         3, this->_internal_key(), target);
   }
 
@@ -6114,10 +6109,10 @@ size_t GetKeyRequest::ByteSizeLong() const {
         this->_internal_bucket_name());
   }
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   if (!this->_internal_key().empty()) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_key());
   }
 
@@ -7029,13 +7024,12 @@ const char* DeleteKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseConte
         } else
           goto handle_unusual;
         continue;
-      // string key = 3 [json_name = "key"];
+      // bytes key = 3 [json_name = "key"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           auto str = _internal_mutable_key();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "kvstore.v1.DeleteKeyRequest.key"));
         } else
           goto handle_unusual;
         continue;
@@ -7092,13 +7086,9 @@ uint8_t* DeleteKeyRequest::_InternalSerialize(
         2, this->_internal_bucket_name(), target);
   }
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   if (!this->_internal_key().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_key().data(), static_cast<int>(this->_internal_key().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "kvstore.v1.DeleteKeyRequest.key");
-    target = stream->WriteStringMaybeAliased(
+    target = stream->WriteBytesMaybeAliased(
         3, this->_internal_key(), target);
   }
 
@@ -7132,10 +7122,10 @@ size_t DeleteKeyRequest::ByteSizeLong() const {
         this->_internal_bucket_name());
   }
 
-  // string key = 3 [json_name = "key"];
+  // bytes key = 3 [json_name = "key"];
   if (!this->_internal_key().empty()) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_key());
   }
 

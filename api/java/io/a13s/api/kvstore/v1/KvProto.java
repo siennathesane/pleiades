@@ -269,7 +269,7 @@ public final class KvProto {
       "\034.kvstore.v1.BucketDescriptorR\020bucketDes" +
       "criptor\"\214\001\n\rGetKeyRequest\022\035\n\naccount_id\030" +
       "\001 \001(\004R\taccountId\022\037\n\013bucket_name\030\002 \001(\tR\nb" +
-      "ucketName\022\020\n\003key\030\003 \001(\tR\003key\022\035\n\007version\030\004" +
+      "ucketName\022\020\n\003key\030\003 \001(\014R\003key\022\035\n\007version\030\004" +
       " \001(\rH\000R\007version\210\001\001B\n\n\010_version\"L\n\016GetKey" +
       "Response\022:\n\016key_value_pair\030\001 \001(\0132\024.kvsto" +
       "re.v1.KeyValueR\014keyValuePair\"\306\001\n\rPutKeyR" +
@@ -282,7 +282,7 @@ public final class KvProto {
       "1.TransactionR\013transaction\"\237\001\n\020DeleteKey" +
       "Request\022\035\n\naccount_id\030\001 \001(\004R\taccountId\022\037" +
       "\n\013bucket_name\030\002 \001(\tR\nbucketName\022\020\n\003key\030\003" +
-      " \001(\tR\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore" +
+      " \001(\014R\003key\0229\n\013transaction\030\004 \001(\0132\027.kvstore" +
       ".v1.TransactionR\013transaction\"^\n\021DeleteKe" +
       "yResponse\022\016\n\002ok\030\001 \001(\010R\002ok\0229\n\013transaction" +
       "\030\003 \001(\0132\027.kvstore.v1.TransactionR\013transac" +
