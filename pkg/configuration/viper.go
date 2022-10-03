@@ -6,23 +6,22 @@
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
-package cmd
+
+package configuration
 
 import (
-	"github.com/spf13/cobra"
+	vip "github.com/spf13/viper"
 )
-
-// bucketCmd represents the bucket command
-var bucketCmd = &cobra.Command{
-	Use:   "bucket",
-	Short: "operations on buckets!",
-}
 
 var (
-	bucketName string
+	viper *vip.Viper
 )
 
+
 func init() {
-	devCmd.AddCommand(bucketCmd)
-	bucketCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
+	viper = vip.New()
+}
+
+func Get() *vip.Viper {
+	return viper
 }
