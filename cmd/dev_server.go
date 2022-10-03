@@ -19,7 +19,7 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	dconfig "github.com/lni/dragonboat/v3/config"
-	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -48,57 +48,64 @@ var reset = true
 func init() {
 	devCmd.AddCommand(serverCmd)
 
-	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.BasePath, "datastore-base-path", serverConfig.Datastore.BasePath, "set the default base directory")
-	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.LogDir, "datastore-logs-dir", serverConfig.Datastore.LogDir, "logs for state machines")
-	serverCmd.LocalFlags().StringVar(&serverConfig.Datastore.DataDir, "datastore-data-dir", serverConfig.Datastore.DataDir, "data files for state machines")
+	serverCmd.PersistentFlags().Uint64("deployment-id", 1, "identifier for this deployment")
+	config.BindPFlag("server.host.deploymentId", devCmd.PersistentFlags().Lookup("deployment-id"))
 
-	serverCmd.LocalFlags().Uint64Var(&serverConfig.Host.DeploymentId, "deployment-id", serverConfig.Host.DeploymentId, "deployment id for this host")
-	serverCmd.LocalFlags().StringVar(&serverConfig.Host.GrpcListenAddress, "grpc-listen-addr", serverConfig.Host.GrpcListenAddress, "grpc listen address")
-	serverCmd.LocalFlags().StringVar(&serverConfig.Host.ListenAddress, "listen-addr", serverConfig.Host.ListenAddress, "listen address")
-	serverCmd.LocalFlags().BoolVar(&serverConfig.Host.NotifyCommit, "notify-commit", serverConfig.Host.NotifyCommit, "enable notification on commit")
-	serverCmd.LocalFlags().Uint64Var(&serverConfig.Host.Rtt, "rtt", serverConfig.Host.DeploymentId, "average round-trip-time in milliseconds")
+	serverCmd.PersistentFlags().String("grpc-addr", "0.0.0.0:5050", "grpc listener address")
+	config.BindPFlag("server.host.grpcListenAddress", devCmd.PersistentFlags().Lookup("grpc-addr"))
+
+	serverCmd.PersistentFlags().String("raft-addr", "0.0.0.0:5051", "raft listener address")
+	config.BindPFlag("server.host.listenAddress", devCmd.PersistentFlags().Lookup("raft-addr"))
+
+	serverCmd.PersistentFlags().Bool("notify-commit", false, "enable raft commit notifications")
+	config.BindPFlag("server.host.notifyCommit", devCmd.PersistentFlags().Lookup("notify-commit"))
+
+	serverCmd.PersistentFlags().Uint64("round-trip", 1, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
+	config.BindPFlag("server.host.rtt", devCmd.PersistentFlags().Lookup("round-trip"))
+
+	serverCmd.PersistentFlags().Bool("reset", false, "clean reset the dev server at init")
+	config.BindPFlag("server.reset", devCmd.PersistentFlags().Lookup("reset"))
 }
 
 func startServer(cmd *cobra.Command, args []string) {
-	var logger zerolog.Logger
-	if debug {
-		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
-	} else {
-		logger = configuration.NewRootLogger().Level(zerolog.InfoLevel)
-	}
-
-	logger.Info().Msg("hello from boulder")
-
 	err := cmd.Flags().Parse(args)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("can't parse flags")
+		log.Fatal().Err(err).Msg("can't parse flags")
+	}
+
+	logger := setupLogger(cmd, args)
+
+	var serverConfig configuration.ServerConfig
+	err = config.Unmarshal(&serverConfig)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't unmarshal configuration")
 	}
 
 	nhc := dconfig.NodeHostConfig{
-		DeploymentID:   config.Server.Host.DeploymentId,
-		WALDir:         config.Server.Datastore.LogDir,
-		NodeHostDir:    config.Server.Datastore.DataDir,
-		RTTMillisecond: config.Server.Host.Rtt,
-		RaftAddress:    config.Server.Host.ListenAddress,
+		DeploymentID:   serverConfig.Host.DeploymentId,
+		WALDir:         serverConfig.Datastore.LogDir,
+		NodeHostDir:    serverConfig.Datastore.DataDir,
+		RTTMillisecond: serverConfig.Host.Rtt,
+		RaftAddress:    serverConfig.Host.ListenAddress,
 		EnableMetrics:  true,
-		NotifyCommit:   config.Server.Host.NotifyCommit,
+		NotifyCommit:   serverConfig.Host.NotifyCommit,
 	}
 
-	if config.Server.Host.MutualTLS {
-		nhc.MutualTLS = config.Server.Host.MutualTLS
-		nhc.CAFile = config.Server.Host.CaFile
-		nhc.CertFile = config.Server.Host.CertFile
-		nhc.KeyFile = config.Server.Host.KeyFile
+	if serverConfig.Host.MutualTLS {
+		nhc.MutualTLS = serverConfig.Host.MutualTLS
+		nhc.CAFile = serverConfig.Host.CaFile
+		nhc.CertFile = serverConfig.Host.CertFile
+		nhc.KeyFile = serverConfig.Host.KeyFile
 	}
 
-	if reset {
-		err := os.RemoveAll(config.Server.Datastore.LogDir)
+	if config.GetBool("reset") {
+		err := os.RemoveAll(serverConfig.Datastore.LogDir)
 		if err != nil {
-			logger.Fatal().Err(err).Str("dir", config.Server.Datastore.LogDir).Msg("can't remove directory")
+			logger.Fatal().Err(err).Str("dir", serverConfig.Datastore.LogDir).Msg("can't remove directory")
 		}
-		err = os.RemoveAll(config.Server.Datastore.DataDir)
+		err = os.RemoveAll(serverConfig.Datastore.DataDir)
 		if err != nil {
-			logger.Fatal().Err(err).Str("dir", config.Server.Datastore.DataDir).Msg("can't remove directory")
+			logger.Fatal().Err(err).Str("dir", serverConfig.Datastore.DataDir).Msg("can't remove directory")
 		}
 	}
 
@@ -124,7 +131,7 @@ func startServer(cmd *cobra.Command, args []string) {
 	logger.Debug().Msg("state machines finished, starting server")
 
 	http.ListenAndServe(
-		"localhost:8080",
+		config.GetString("server.host.listenAddr"),
 		// Use h2c so we can serve HTTP/2 without TLS.
 		h2c.NewHandler(mux, &http2.Server{}),
 	)
