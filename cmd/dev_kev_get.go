@@ -14,9 +14,7 @@ import (
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/mxplusb/api/kvstore/v1/kvstorev1connect"
-	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/bufbuild/connect-go"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -38,15 +36,10 @@ func init() {
 func getKey(cmd *cobra.Command, args []string) {
 	err := cmd.Flags().Parse(args)
 	if err != nil {
-		log.Logger.Fatal().Err(err).Msg("can't parse flags")
+		log.Fatal().Err(err).Msg("can't parse flags")
 	}
 
-	var logger zerolog.Logger
-	if debug {
-		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
-	} else {
-		logger = configuration.NewRootLogger()
-	}
+	logger := setupLogger(cmd, args)
 	logger = logger.With().Uint64("account-id", accountId).Str("bucket", bucketName).Logger()
 
 	if accountId == 0 {
