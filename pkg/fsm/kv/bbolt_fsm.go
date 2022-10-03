@@ -66,7 +66,11 @@ func newBBoltStateMachine(shardId, replicaId uint64) *BBoltStateMachine {
 // Open the bbolt backend and read the last index.
 func (b *BBoltStateMachine) Open(stopc <-chan struct{}) (uint64, error) {
 
-	basePath := viper.GetString("datastore.basePath")
+	basePath := configuration.Get().GetString("server.datastore.dataDir")
+	if basePath == "" {
+		// this shouldn't be possible, but just in case it's imported somewhere and gets missed
+		b.logger.Fatal().Msg("base-path cannot be empty!")
+	}
 	basePath = filepath.Join(basePath, fmt.Sprintf("shard-%d-replica-%d.db", b.ShardId, b.ReplicaId))
 
 	store, err := newBboltStore(b.ShardId, b.ReplicaId, basePath, b.logger)
