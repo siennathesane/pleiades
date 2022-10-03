@@ -40,8 +40,8 @@ type Host struct {
 	CertFile          string `flag:"cert-file" default:"/etc/pleiades/cert.pem" usage:"location of the tls cert file" json:"certFile" yaml:"certFile" mapstructure:"certFile"`
 	DeploymentId      uint64 `flag:"deployment-id" default:"1" usage:"deployment id of this host" json:"deploymentId" yaml:"deploymentId" mapstructure:"deploymentId"`
 	KeyFile           string `flag:"key-file" default:"/etc/pleiades/key.pem" usage:"location of the tls key file" json:"keyFile" yaml:"keyFile" mapstructure:"keyFile"`
-	ListenAddress     string `flag:"listen-address" default:"0.0.0.0:5001" usage:"address to listen on" json:"listenAddress" yaml:"listenAddress" mapstructure:"listenAddress"`
-	GrpcListenAddress string `flag:"grpc-listen-address" default:"0.0.0.0:5000" usage:"address to listen on" json:"grpcListenAddress" yaml:"grpcListenAddress" mapstructure:"grpcListenAddress"`
+	ListenAddress     string `flag:"listen-address" default:"0.0.0.0:5051" usage:"address to listen on" json:"listenAddress" yaml:"listenAddress" mapstructure:"listenAddress"`
+	GrpcListenAddress string `flag:"grpc-listen-address" default:"0.0.0.0:5050" usage:"address to listen on" json:"grpcListenAddress" yaml:"grpcListenAddress" mapstructure:"grpcListenAddress"`
 	MutualTLS         bool   `flag:"mtls" default:"false" usage:"require mutual tls?" mapstructure:"mtls"`
 	NotifyCommit      bool   `flag:"notify-commit" default:"false" usage:"notify consumers of when the data is committed?" json:"notifyCommit" yaml:"notifyCommit" mapstructure:"notifyCommit"`
 	Rtt               uint64 `flag:"rtt" default:"10" usage:"average round trip time, plus processing, in milliseconds to other hosts in the data centre" json:"rtt" yaml:"rtt" mapstructure:"rtt"`
