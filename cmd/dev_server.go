@@ -48,23 +48,32 @@ var reset = true
 func init() {
 	devCmd.AddCommand(serverCmd)
 
-	serverCmd.PersistentFlags().Uint64("deployment-id", 1, "identifier for this deployment")
-	config.BindPFlag("server.host.deploymentId", devCmd.PersistentFlags().Lookup("deployment-id"))
+	serverCmd.LocalFlags().Uint64("deployment-id", 1, "identifier for this deployment")
+	config.BindPFlag("server.host.deploymentId", serverCmd.LocalFlags().Lookup("deployment-id"))
 
-	serverCmd.PersistentFlags().String("grpc-addr", "0.0.0.0:5050", "grpc listener address")
-	config.BindPFlag("server.host.grpcListenAddress", devCmd.PersistentFlags().Lookup("grpc-addr"))
+	serverCmd.LocalFlags().String("grpc-addr", "0.0.0.0:5050", "grpc listener address")
+	config.BindPFlag("server.host.grpcListenAddress", serverCmd.LocalFlags().Lookup("grpc-addr"))
 
-	serverCmd.PersistentFlags().String("raft-addr", "0.0.0.0:5051", "raft listener address")
-	config.BindPFlag("server.host.listenAddress", devCmd.PersistentFlags().Lookup("raft-addr"))
+	serverCmd.LocalFlags().String("raft-addr", "0.0.0.0:5051", "raft listener address")
+	config.BindPFlag("server.host.listenAddress", serverCmd.LocalFlags().Lookup("raft-addr"))
 
-	serverCmd.PersistentFlags().Bool("notify-commit", false, "enable raft commit notifications")
-	config.BindPFlag("server.host.notifyCommit", devCmd.PersistentFlags().Lookup("notify-commit"))
+	serverCmd.LocalFlags().Bool("notify-commit", false, "enable raft commit notifications")
+	config.BindPFlag("server.host.notifyCommit", serverCmd.LocalFlags().Lookup("notify-commit"))
 
-	serverCmd.PersistentFlags().Uint64("round-trip", 1, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
-	config.BindPFlag("server.host.rtt", devCmd.PersistentFlags().Lookup("round-trip"))
+	serverCmd.LocalFlags().Uint64("round-trip", 1, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
+	config.BindPFlag("server.host.rtt", serverCmd.LocalFlags().Lookup("round-trip"))
 
-	serverCmd.PersistentFlags().Bool("reset", false, "clean reset the dev server at init")
-	config.BindPFlag("server.reset", devCmd.PersistentFlags().Lookup("reset"))
+	serverCmd.LocalFlags().String("base-path", config.GetString("server.datastore.basePath"), "base directory for data")
+	config.BindPFlag("server.datastore.basePath", serverCmd.LocalFlags().Lookup("base-path"))
+
+	serverCmd.LocalFlags().String("log-dir", "logs", "directory for raft logs, relative to base-path")
+	config.BindPFlag("server.datastore.logDir", serverCmd.LocalFlags().Lookup("log-dir"))
+
+	serverCmd.LocalFlags().String("data-dir", "data", "directory for data, relative to base-path")
+	config.BindPFlag("server.datastore.dataDir", serverCmd.LocalFlags().Lookup("data-dir"))
+
+	serverCmd.LocalFlags().Bool("reset", false, "clean reset the dev server at init")
+	config.BindPFlag("server.reset", serverCmd.LocalFlags().Lookup("reset"))
 }
 
 func startServer(cmd *cobra.Command, args []string) {
@@ -75,37 +84,37 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	logger := setupLogger(cmd, args)
 
-	var serverConfig configuration.ServerConfig
+	var serverConfig configuration.Configuration
 	err = config.Unmarshal(&serverConfig)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't unmarshal configuration")
 	}
 
 	nhc := dconfig.NodeHostConfig{
-		DeploymentID:   serverConfig.Host.DeploymentId,
-		WALDir:         serverConfig.Datastore.LogDir,
-		NodeHostDir:    serverConfig.Datastore.DataDir,
-		RTTMillisecond: serverConfig.Host.Rtt,
-		RaftAddress:    serverConfig.Host.ListenAddress,
+		DeploymentID:   serverConfig.Server.Host.DeploymentId,
+		WALDir:         serverConfig.Server.Datastore.LogDir,
+		NodeHostDir:    serverConfig.Server.Datastore.DataDir,
+		RTTMillisecond: serverConfig.Server.Host.Rtt,
+		RaftAddress:    serverConfig.Server.Host.ListenAddress,
 		EnableMetrics:  true,
-		NotifyCommit:   serverConfig.Host.NotifyCommit,
+		NotifyCommit:   serverConfig.Server.Host.NotifyCommit,
 	}
 
-	if serverConfig.Host.MutualTLS {
-		nhc.MutualTLS = serverConfig.Host.MutualTLS
-		nhc.CAFile = serverConfig.Host.CaFile
-		nhc.CertFile = serverConfig.Host.CertFile
-		nhc.KeyFile = serverConfig.Host.KeyFile
+	if serverConfig.Server.Host.MutualTLS {
+		nhc.MutualTLS = serverConfig.Server.Host.MutualTLS
+		nhc.CAFile = serverConfig.Server.Host.CaFile
+		nhc.CertFile = serverConfig.Server.Host.CertFile
+		nhc.KeyFile = serverConfig.Server.Host.KeyFile
 	}
 
 	if config.GetBool("reset") {
-		err := os.RemoveAll(serverConfig.Datastore.LogDir)
+		err := os.RemoveAll(serverConfig.Server.Datastore.LogDir)
 		if err != nil {
-			logger.Fatal().Err(err).Str("dir", serverConfig.Datastore.LogDir).Msg("can't remove directory")
+			logger.Fatal().Err(err).Str("dir", serverConfig.Server.Datastore.LogDir).Msg("can't remove directory")
 		}
-		err = os.RemoveAll(serverConfig.Datastore.DataDir)
+		err = os.RemoveAll(serverConfig.Server.Datastore.DataDir)
 		if err != nil {
-			logger.Fatal().Err(err).Str("dir", serverConfig.Datastore.DataDir).Msg("can't remove directory")
+			logger.Fatal().Err(err).Str("dir", serverConfig.Server.Datastore.DataDir).Msg("can't remove directory")
 		}
 	}
 
