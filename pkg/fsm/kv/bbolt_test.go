@@ -344,7 +344,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 
 	now := time.Now().UnixMilli()
 	expectedKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		CreateRevision: now,
 		ModRevision:    now,
 		Version:        1,
@@ -376,7 +376,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	resp, err := b.GetKey(&kvstorev1.GetKeyRequest{
 		AccountId:  1,
 		BucketName: "empty",
-		Key:        "no",
+		Key:        []byte("no"),
 	})
 	t.Require().Error(err, "there must be an error when search for a non-existent key in a non-existent account in a non-existent bucket")
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
@@ -385,7 +385,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	resp, err = b.GetKey(&kvstorev1.GetKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: "empty",
-		Key:        "no",
+		Key:        []byte("no"),
 	})
 	t.Require().Error(err, "there must be an error when search for a non-existent key in a non-existent bucket")
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
@@ -394,7 +394,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	resp, err = b.GetKey(&kvstorev1.GetKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: testBucketName,
-		Key:        "no",
+		Key:        []byte("no"),
 	})
 	t.Require().Error(err, "there must be an error when search for a non-existent key")
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
@@ -458,7 +458,7 @@ func (t *BBoltTestSuite) TestPutKey() {
 	t.Require().Error(err, "there must be an error putting a partial payload")
 
 	expectedKvp := &kvstorev1.KeyValue{
-		Key:            "",
+		Key:            []byte(""),
 		CreateRevision: 0,
 		ModRevision:    0,
 		Version:        0,
@@ -470,7 +470,7 @@ func (t *BBoltTestSuite) TestPutKey() {
 	_, err = b.PutKey(expectedRequest)
 	t.Require().Error(err, "there must be an error putting an empty kvp")
 
-	expectedKvp.Key = "test-key"
+	expectedKvp.Key = []byte("test-key")
 	_, err = b.PutKey(expectedRequest)
 	t.Require().NoError(err, "there must not be an error putting an empty value")
 
@@ -546,7 +546,7 @@ func (t *BBoltTestSuite) TestDeleteKey() {
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
 	expectedKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		Value:          []byte("test-value"),
 	}
 
@@ -712,25 +712,30 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		bytes, err := utils.RandomBytes(utils.RandomInt(0, 2<<4))
 		require.NoError(t, err, "there must not be an error when generating random bytes")
 
+		// we can't test an empty key
+		if keyName == "" {
+			return
+		}
+
 		putReq := &kvstorev1.PutKeyRequest{
 			AccountId: accountId,
 			BucketName: testBucketName,
 			KeyValuePair: &kvstorev1.KeyValue{
-				Key:            keyName,
+				Key:            []byte(keyName),
 				Value:          bytes,
 			},
 		}
 
 		_, err = b.PutKey(putReq)
 
-		if !errors.Is(err, errors.New("empty key identifier")) {
+		if !errors.Is(err, errors.New("key required")) {
 			require.NoError(t, err, "there must not be an error putting a key")
 		}
 
 		getReq := &kvstorev1.GetKeyRequest{
 			AccountId: accountId,
 			BucketName: testBucketName,
-			Key: keyName,
+			Key: []byte(keyName),
 		}
 
 		resp, err := b.GetKey(getReq)
@@ -738,7 +743,7 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 			return // can't compare empty keys
 		}
 		require.NoError(t, err, "there must not be an error getting a key")
-		require.Equal(t, keyName, resp.GetKeyValuePair().GetKey(), "the key must be found and equal")
+		require.Equal(t, []byte(keyName), resp.GetKeyValuePair().GetKey(), "the key must be found and equal")
 
 		// skip empty payload
 		if len(bytes) == 0 {
@@ -751,7 +756,7 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		delResp, err := b.DeleteKey(&kvstorev1.DeleteKeyRequest{
 			AccountId: accountId,
 			BucketName: testBucketName,
-			Key: keyName,
+			Key: []byte(keyName),
 		})
 		if errors.Is(err, errors.New("empty key identifier")) {
 			return // can't compare empty keys

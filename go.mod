@@ -3,7 +3,7 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
-	github.com/mxplusb/api v0.0.0-20220917235348-156e0fd00fac
+	github.com/mxplusb/api v0.0.0-20221004045337-06114f97d3cc
 	github.com/bufbuild/connect-go v0.4.0
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13

@@ -13,6 +13,7 @@ import (
 	"encoding/binary"
 	"os"
 	"path/filepath"
+	"sort"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
@@ -39,19 +40,46 @@ func NewShardStore(logger zerolog.Logger) (*ShardStore, error) {
 
 type ShardStore struct {
 	logger zerolog.Logger
-	db *bbolt.DB
+	db     *bbolt.DB
 }
 
-func (s *ShardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
-	req := &raftv1.NewShardRequest{}
-	err :=  s.db.View(func(tx *bbolt.Tx) error {
+func (s *ShardStore) GetAll() ([]*raftv1.ShardState, error) {
+	reqs := make([]*raftv1.ShardState, 0)
+	err := s.db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(shardConfigBucket))
+		if bucket == nil {
+			return errors.New("no shards configured")
+		}
+
+		return bucket.ForEach(func(k, v []byte) error {
+			req := &raftv1.ShardState{}
+			err := req.UnmarshalVT(v)
+			if err != nil {
+				s.logger.Trace().Err(err).Msg("can't unmarshal shard configuration")
+			}
+			reqs = append(reqs, req)
+
+			return nil
+		})
+	})
+
+	sort.SliceStable(reqs, func(i, j int) bool {
+		return reqs[i].GetShardId() < reqs[j].GetShardId()
+	})
+
+	return reqs, err
+}
+
+func (s *ShardStore) Get(shardId uint64) (*raftv1.ShardState, error) {
+	req := &raftv1.ShardState{}
+	err := s.db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(shardConfigBucket))
 		if bucket == nil {
 			return errors.New("no shards configured")
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,shardId)
+		binary.LittleEndian.PutUint64(shardIdBuf, shardId)
 
 		payload := bucket.Get(shardIdBuf)
 		if payload == nil {
@@ -67,7 +95,7 @@ func (s *ShardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
 	return req, err
 }
 
-func (s *ShardStore) Put(req *raftv1.NewShardRequest) error {
+func (s *ShardStore) Put(req *raftv1.ShardState) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(shardConfigBucket))
 		if err != nil {
@@ -82,7 +110,7 @@ func (s *ShardStore) Put(req *raftv1.NewShardRequest) error {
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,req.GetShardId())
+		binary.LittleEndian.PutUint64(shardIdBuf, req.GetShardId())
 
 		return bucket.Put(shardIdBuf, payload)
 	})
@@ -96,7 +124,7 @@ func (s *ShardStore) Delete(shardId uint64) error {
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,shardId)
+		binary.LittleEndian.PutUint64(shardIdBuf, shardId)
 
 		return bucket.Delete(shardIdBuf)
 	})
