@@ -19,10 +19,10 @@ import (
 	"time"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -51,7 +51,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
 	t.defaultTimeout = 300 * time.Millisecond
 
 	// ensure that bbolt uses the temp directory
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	t.nh = buildTestNodeHost(t.T())
 	t.tm = newTransactionManager(t.nh, t.logger)
