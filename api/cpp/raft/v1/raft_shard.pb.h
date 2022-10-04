@@ -3914,6 +3914,7 @@ class StopReplicaRequest final :
 
   enum : int {
     kShardIdFieldNumber = 1,
+    kReplicaIdFieldNumber = 2,
   };
   // uint64 shard_id = 1 [json_name = "shardId"];
   void clear_shard_id();
@@ -3922,6 +3923,15 @@ class StopReplicaRequest final :
   private:
   uint64_t _internal_shard_id() const;
   void _internal_set_shard_id(uint64_t value);
+  public:
+
+  // uint64 replica_id = 2 [json_name = "replicaId"];
+  void clear_replica_id();
+  uint64_t replica_id() const;
+  void set_replica_id(uint64_t value);
+  private:
+  uint64_t _internal_replica_id() const;
+  void _internal_set_replica_id(uint64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:raft.v1.StopReplicaRequest)
@@ -3933,6 +3943,7 @@ class StopReplicaRequest final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     uint64_t shard_id_;
+    uint64_t replica_id_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -5382,6 +5393,26 @@ inline void StopReplicaRequest::_internal_set_shard_id(uint64_t value) {
 inline void StopReplicaRequest::set_shard_id(uint64_t value) {
   _internal_set_shard_id(value);
   // @@protoc_insertion_point(field_set:raft.v1.StopReplicaRequest.shard_id)
+}
+
+// uint64 replica_id = 2 [json_name = "replicaId"];
+inline void StopReplicaRequest::clear_replica_id() {
+  _impl_.replica_id_ = uint64_t{0u};
+}
+inline uint64_t StopReplicaRequest::_internal_replica_id() const {
+  return _impl_.replica_id_;
+}
+inline uint64_t StopReplicaRequest::replica_id() const {
+  // @@protoc_insertion_point(field_get:raft.v1.StopReplicaRequest.replica_id)
+  return _internal_replica_id();
+}
+inline void StopReplicaRequest::_internal_set_replica_id(uint64_t value) {
+  
+  _impl_.replica_id_ = value;
+}
+inline void StopReplicaRequest::set_replica_id(uint64_t value) {
+  _internal_set_replica_id(value);
+  // @@protoc_insertion_point(field_set:raft.v1.StopReplicaRequest.replica_id)
 }
 
 // -------------------------------------------------------------------

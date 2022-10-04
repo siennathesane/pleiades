@@ -249,15 +249,16 @@ public final class RaftShardProto {
       "ObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard" +
       "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004typ" +
       "e\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type" +
-      "\"\036\n\034StartReplicaObserverResponse\"/\n\022Stop" +
+      "\"\036\n\034StartReplicaObserverResponse\"N\n\022Stop" +
       "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI" +
-      "d\"\025\n\023StopReplicaResponse*n\n\020StateMachine" +
-      "Type\022\"\n\036STATE_MACHINE_TYPE_UNSPECIFIED\020\000" +
-      "\022\033\n\027STATE_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_M" +
-      "ACHINE_TYPE_KV\020\002B~\n\023io.a13s.api.raft.v1B" +
-      "\016RaftShardProtoP\001Z\032a13s.io/api/raft/v1;r" +
-      "aftv1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V" +
-      "1\\GPBMetadata\352\002\010Raft::V1b\006proto3"
+      "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\"\025\n\023Stop" +
+      "ReplicaResponse*n\n\020StateMachineType\022\"\n\036S" +
+      "TATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE" +
+      "_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TY" +
+      "PE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016RaftShar" +
+      "dProtoP\001Z\032a13s.io/api/raft/v1;raftv1\242\002\003R" +
+      "XX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMeta" +
+      "data\352\002\010Raft::V1b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -443,7 +444,7 @@ public final class RaftShardProto {
     internal_static_raft_v1_StopReplicaRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StopReplicaRequest_descriptor,
-        new java.lang.String[] { "ShardId", });
+        new java.lang.String[] { "ShardId", "ReplicaId", });
     internal_static_raft_v1_StopReplicaResponse_descriptor =
       getDescriptor().getMessageTypes().get(22);
     internal_static_raft_v1_StopReplicaResponse_fieldAccessorTable = new

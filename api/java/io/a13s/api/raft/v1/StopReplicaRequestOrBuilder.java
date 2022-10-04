@@ -16,4 +16,10 @@ public interface StopReplicaRequestOrBuilder extends
    * @return The shardId.
    */
   long getShardId();
+
+  /**
+   * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+   * @return The replicaId.
+   */
+  long getReplicaId();
 }

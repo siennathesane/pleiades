@@ -116,6 +116,7 @@ message StartReplicaObserverResponse {}
 message StopReplicaRequest {
   // shard_id is the unique value used to identify a Raft cluster.
   uint64 shard_id = 1;
+  uint64 replica_id = 2;
 }
 
 message StopReplicaResponse {}

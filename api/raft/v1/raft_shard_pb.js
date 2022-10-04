@@ -252,6 +252,7 @@ export const StopReplicaRequest = proto3.makeMessageType(
   "raft.v1.StopReplicaRequest",
   () => [
     { no: 1, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 2, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
   ],
 );
 

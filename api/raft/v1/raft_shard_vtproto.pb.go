@@ -404,6 +404,9 @@ func (this *StopReplicaRequest) EqualVT(that *StopReplicaRequest) bool {
 	if this.ShardId != that.ShardId {
 		return false
 	}
+	if this.ReplicaId != that.ReplicaId {
+		return false
+	}
 	return string(this.unknownFields) == string(that.unknownFields)
 }
 
@@ -1500,6 +1503,11 @@ func (m *StopReplicaRequest) MarshalToSizedBufferVT(dAtA []byte) (int, error) {
 		i -= len(m.unknownFields)
 		copy(dAtA[i:], m.unknownFields)
 	}
+	if m.ReplicaId != 0 {
+		i = encodeVarint(dAtA, i, uint64(m.ReplicaId))
+		i--
+		dAtA[i] = 0x10
+	}
 	if m.ShardId != 0 {
 		i = encodeVarint(dAtA, i, uint64(m.ShardId))
 		i--
@@ -1993,6 +2001,9 @@ func (m *StopReplicaRequest) SizeVT() (n int) {
 	_ = l
 	if m.ShardId != 0 {
 		n += 1 + sov(uint64(m.ShardId))
+	}
+	if m.ReplicaId != 0 {
+		n += 1 + sov(uint64(m.ReplicaId))
 	}
 	if m.unknownFields != nil {
 		n += len(m.unknownFields)
@@ -4850,6 +4861,25 @@ func (m *StopReplicaRequest) UnmarshalVT(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.ShardId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReplicaId", wireType)
+			}
+			m.ReplicaId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ReplicaId |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

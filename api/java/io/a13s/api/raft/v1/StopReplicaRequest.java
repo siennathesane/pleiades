@@ -53,6 +53,11 @@ private static final long serialVersionUID = 0L;
             shardId_ = input.readUInt64();
             break;
           }
+          case 16: {
+
+            replicaId_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -102,6 +107,17 @@ private static final long serialVersionUID = 0L;
     return shardId_;
   }
 
+  public static final int REPLICA_ID_FIELD_NUMBER = 2;
+  private long replicaId_;
+  /**
+   * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+   * @return The replicaId.
+   */
+  @java.lang.Override
+  public long getReplicaId() {
+    return replicaId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -119,6 +135,9 @@ private static final long serialVersionUID = 0L;
     if (shardId_ != 0L) {
       output.writeUInt64(1, shardId_);
     }
+    if (replicaId_ != 0L) {
+      output.writeUInt64(2, replicaId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -131,6 +150,10 @@ private static final long serialVersionUID = 0L;
     if (shardId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(1, shardId_);
+    }
+    if (replicaId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(2, replicaId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -149,6 +172,8 @@ private static final long serialVersionUID = 0L;
 
     if (getShardId()
         != other.getShardId()) return false;
+    if (getReplicaId()
+        != other.getReplicaId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -163,6 +188,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + SHARD_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getShardId());
+    hash = (37 * hash) + REPLICA_ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getReplicaId());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -298,6 +326,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       shardId_ = 0L;
 
+      replicaId_ = 0L;
+
       return this;
     }
 
@@ -325,6 +355,7 @@ private static final long serialVersionUID = 0L;
     public io.a13s.api.raft.v1.StopReplicaRequest buildPartial() {
       io.a13s.api.raft.v1.StopReplicaRequest result = new io.a13s.api.raft.v1.StopReplicaRequest(this);
       result.shardId_ = shardId_;
+      result.replicaId_ = replicaId_;
       onBuilt();
       return result;
     }
@@ -375,6 +406,9 @@ private static final long serialVersionUID = 0L;
       if (other == io.a13s.api.raft.v1.StopReplicaRequest.getDefaultInstance()) return this;
       if (other.getShardId() != 0L) {
         setShardId(other.getShardId());
+      }
+      if (other.getReplicaId() != 0L) {
+        setReplicaId(other.getReplicaId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -444,6 +478,37 @@ private static final long serialVersionUID = 0L;
     public Builder clearShardId() {
       
       shardId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long replicaId_ ;
+    /**
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @return The replicaId.
+     */
+    @java.lang.Override
+    public long getReplicaId() {
+      return replicaId_;
+    }
+    /**
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @param value The replicaId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReplicaId(long value) {
+      
+      replicaId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearReplicaId() {
+      
+      replicaId_ = 0L;
       onChanged();
       return this;
     }

@@ -675,6 +675,11 @@ export declare class StopReplicaRequest extends Message<StopReplicaRequest> {
    */
   shardId: bigint;
 
+  /**
+   * @generated from field: uint64 replica_id = 2;
+   */
+  replicaId: bigint;
+
   constructor(data?: PartialMessage<StopReplicaRequest>);
 
   static readonly runtime: typeof proto3;
