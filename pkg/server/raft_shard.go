@@ -128,7 +128,7 @@ func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost 
 		return err
 	}
 
-	err = c.storeShardState(shardId, timeout)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -159,7 +159,7 @@ func (c *raftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, 
 		return err
 	}
 
-	err = c.storeShardState(shardId, timeout)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -190,7 +190,7 @@ func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, n
 		return err
 	}
 
-	err = c.storeShardState(shardId, timeout)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -251,7 +251,7 @@ func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 		return err
 	}
 
-	err = c.storeShardState(shardId, timeout)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -283,7 +283,7 @@ func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 		return err
 	}
 
-	err = c.storeShardState(shardId, 100*time.Millisecond)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -316,7 +316,7 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 		return err
 	}
 
-	err = c.storeShardState(shardId, 100*time.Millisecond)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		l.Error().Err(err).Msg("can't store shard state")
 	}
@@ -333,7 +333,7 @@ func (c *raftShardManager) StopReplica(shardId uint64, replicaId uint64) (*Opera
 		return nil, errors.Wrap(err, "failed to stop replica")
 	}
 
-	err = c.storeShardState(shardId, 100*time.Millisecond)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		c.logger.Error().Err(err).Msg("can't store shard state")
 	}
@@ -370,7 +370,7 @@ func (c *raftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeo
 		return err
 	}
 
-	err = c.storeShardState(shardId, 100*time.Millisecond)
+	err = c.storeShardState(shardId)
 	if err != nil {
 		c.logger.Error().Err(err).Msg("can't store shard state")
 	}
@@ -388,8 +388,8 @@ func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *raftShardManager) storeShardState(shardId uint64, timeout time.Duration) error {
-	ctx, cancel := context.WithTimeout(context.TODO(), 100*time.Millisecond)
+func (c *raftShardManager) storeShardState(shardId uint64) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 
 	memberState, err := c.nh.SyncGetClusterMembership(ctx, shardId)
@@ -414,7 +414,6 @@ func (c *raftShardManager) storeShardState(shardId uint64, timeout time.Duration
 		}(),
 		Type: 0,
 	})
-	return nil
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {

@@ -43,8 +43,8 @@ func (t *shardManagerTestSuite) SetupSuite() {
 	configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
 	t.logger = utils.NewTestLogger(t.T())
 
-	t.defaultTimeout = 300 * time.Millisecond
-	t.extendedDefaultTimeout = 500 * time.Millisecond
+	t.defaultTimeout = 100 * time.Millisecond
+	t.extendedDefaultTimeout = 300 * time.Millisecond
 }
 
 func (t *shardManagerTestSuite) TestAddReplica() {
