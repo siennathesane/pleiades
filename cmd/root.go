@@ -10,8 +10,12 @@ package cmd
 
 import (
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mitchellh/go-homedir"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -41,28 +45,39 @@ func Execute() {
 }
 
 var (
-	debug bool
-	defaultBasePath string
-	config          = &configuration.Configuration{
-		ConfigFilePath: configuration.DefaultBaseConfigPath,
-	}
+	config *viper.Viper
 )
 
 func init() {
-	defaultBasePath = configuration.DefaultBaseConfigPath
+	config = configuration.Get()
 
-	viper.SetConfigName("pleiades")        // name of config file (without extension)
-	viper.SetConfigType("yaml")            // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath("/etc/pleiades/")  // path to look for the config file in
-	viper.AddConfigPath("$HOME/.pleiades") // call multiple times to add many search paths
-	viper.AddConfigPath(".")               // optionally look for config in the working directory
+	viper.SetConfigName("pleiades")                          // name of config file (without extension)
+	viper.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
+
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		dir, _ := homedir.Dir()
+		viper.AddConfigPath(filepath.Join(dir, "Library", "pleiades"))
+	} else {
+		viper.AddConfigPath(configuration.DefaultBaseConfigPath) // path to look for the config file in
+	}
+
+	viper.AddConfigPath("$HOME/.pleiades")                   // call multiple times to add many search paths
+	viper.AddConfigPath(".")                                 // optionally look for config in the working directory
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "enable debug logging")
+	rootCmd.PersistentFlags().Bool("debug", false, "enable debug logging")
+}
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
+func setupLogger(cmd *cobra.Command, args []string) zerolog.Logger {
+	var logger zerolog.Logger
+	if config.GetBool("debug") {
+		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
+	} else {
+		logger = configuration.NewRootLogger().Level(zerolog.InfoLevel)
+	}
+	return logger
 }

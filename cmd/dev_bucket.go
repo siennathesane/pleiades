@@ -15,7 +15,7 @@ import (
 // bucketCmd represents the bucket command
 var bucketCmd = &cobra.Command{
 	Use:   "bucket",
-	Short: "A brief description of your command",
+	Short: "operations on buckets!",
 }
 
 var (
