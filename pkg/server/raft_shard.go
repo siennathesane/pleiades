@@ -388,6 +388,7 @@ func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
+// todo (sienna): implement this via the message bus instead of inlining it
 func (c *raftShardManager) storeShardState(shardId uint64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
