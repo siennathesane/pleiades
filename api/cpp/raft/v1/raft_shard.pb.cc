@@ -22,12 +22,77 @@ namespace _pbi = _pb::internal;
 
 namespace raft {
 namespace v1 {
+PROTOBUF_CONSTEXPR ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse(
+    ::_pbi::ConstantInitialized) {}
+struct ShardState_ReplicasEntry_DoNotUseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardState_ReplicasEntry_DoNotUseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardState_ReplicasEntry_DoNotUseDefaultTypeInternal() {}
+  union {
+    ShardState_ReplicasEntry_DoNotUse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardState_ReplicasEntry_DoNotUseDefaultTypeInternal _ShardState_ReplicasEntry_DoNotUse_default_instance_;
+PROTOBUF_CONSTEXPR ShardState_ObserversEntry_DoNotUse::ShardState_ObserversEntry_DoNotUse(
+    ::_pbi::ConstantInitialized) {}
+struct ShardState_ObserversEntry_DoNotUseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardState_ObserversEntry_DoNotUseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardState_ObserversEntry_DoNotUseDefaultTypeInternal() {}
+  union {
+    ShardState_ObserversEntry_DoNotUse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardState_ObserversEntry_DoNotUseDefaultTypeInternal _ShardState_ObserversEntry_DoNotUse_default_instance_;
+PROTOBUF_CONSTEXPR ShardState_WitnessesEntry_DoNotUse::ShardState_WitnessesEntry_DoNotUse(
+    ::_pbi::ConstantInitialized) {}
+struct ShardState_WitnessesEntry_DoNotUseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardState_WitnessesEntry_DoNotUseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardState_WitnessesEntry_DoNotUseDefaultTypeInternal() {}
+  union {
+    ShardState_WitnessesEntry_DoNotUse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardState_WitnessesEntry_DoNotUseDefaultTypeInternal _ShardState_WitnessesEntry_DoNotUse_default_instance_;
+PROTOBUF_CONSTEXPR ShardState_RemovedEntry_DoNotUse::ShardState_RemovedEntry_DoNotUse(
+    ::_pbi::ConstantInitialized) {}
+struct ShardState_RemovedEntry_DoNotUseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardState_RemovedEntry_DoNotUseDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardState_RemovedEntry_DoNotUseDefaultTypeInternal() {}
+  union {
+    ShardState_RemovedEntry_DoNotUse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardState_RemovedEntry_DoNotUseDefaultTypeInternal _ShardState_RemovedEntry_DoNotUse_default_instance_;
+PROTOBUF_CONSTEXPR ShardState::ShardState(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.replicas_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.observers_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.witnesses_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.removed_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.last_updated_)*/nullptr
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.config_change_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct ShardStateDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardStateDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardStateDefaultTypeInternal() {}
+  union {
+    ShardState _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardStateDefaultTypeInternal _ShardState_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaRequest::AddReplicaRequest(
-    ::_pbi::ConstantInitialized)
-  : hostname_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , replica_id_(uint64_t{0u})
-  , shard_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.hostname_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AddReplicaRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -38,7 +103,7 @@ struct AddReplicaRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaRequestDefaultTypeInternal _AddReplicaRequest_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaResponse::AddReplicaResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct AddReplicaResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -49,11 +114,12 @@ struct AddReplicaResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaResponseDefaultTypeInternal _AddReplicaResponse_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaObserverRequest::AddReplicaObserverRequest(
-    ::_pbi::ConstantInitialized)
-  : hostname_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.hostname_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AddReplicaObserverRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaObserverRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -64,7 +130,7 @@ struct AddReplicaObserverRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaObserverRequestDefaultTypeInternal _AddReplicaObserverRequest_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaObserverResponse::AddReplicaObserverResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct AddReplicaObserverResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaObserverResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -75,11 +141,12 @@ struct AddReplicaObserverResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaObserverResponseDefaultTypeInternal _AddReplicaObserverResponse_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaWitnessRequest::AddReplicaWitnessRequest(
-    ::_pbi::ConstantInitialized)
-  : hostname_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.hostname_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AddReplicaWitnessRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaWitnessRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -90,7 +157,7 @@ struct AddReplicaWitnessRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaWitnessRequestDefaultTypeInternal _AddReplicaWitnessRequest_default_instance_;
 PROTOBUF_CONSTEXPR AddReplicaWitnessResponse::AddReplicaWitnessResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct AddReplicaWitnessResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AddReplicaWitnessResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -101,10 +168,11 @@ struct AddReplicaWitnessResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AddReplicaWitnessResponseDefaultTypeInternal _AddReplicaWitnessResponse_default_instance_;
 PROTOBUF_CONSTEXPR RemoveReplicaRequest::RemoveReplicaRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RemoveReplicaRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RemoveReplicaRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -115,7 +183,7 @@ struct RemoveReplicaRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RemoveReplicaRequestDefaultTypeInternal _RemoveReplicaRequest_default_instance_;
 PROTOBUF_CONSTEXPR RemoveReplicaResponse::RemoveReplicaResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct RemoveReplicaResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RemoveReplicaResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -126,10 +194,11 @@ struct RemoveReplicaResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RemoveReplicaResponseDefaultTypeInternal _RemoveReplicaResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetLeaderIdRequest::GetLeaderIdRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetLeaderIdRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetLeaderIdRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -140,9 +209,10 @@ struct GetLeaderIdRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetLeaderIdRequestDefaultTypeInternal _GetLeaderIdRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetLeaderIdResponse::GetLeaderIdResponse(
-    ::_pbi::ConstantInitialized)
-  : leader_(uint64_t{0u})
-  , available_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.leader_)*/uint64_t{0u}
+  , /*decltype(_impl_.available_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetLeaderIdResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetLeaderIdResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -153,8 +223,9 @@ struct GetLeaderIdResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetLeaderIdResponseDefaultTypeInternal _GetLeaderIdResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersRequest::GetShardMembersRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetShardMembersRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -165,7 +236,7 @@ struct GetShardMembersRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersRequestDefaultTypeInternal _GetShardMembersRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersResponse_ReplicasEntry_DoNotUse::GetShardMembersResponse_ReplicasEntry_DoNotUse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct GetShardMembersResponse_ReplicasEntry_DoNotUseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersResponse_ReplicasEntry_DoNotUseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -176,7 +247,7 @@ struct GetShardMembersResponse_ReplicasEntry_DoNotUseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersResponse_ReplicasEntry_DoNotUseDefaultTypeInternal _GetShardMembersResponse_ReplicasEntry_DoNotUse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersResponse_ObserversEntry_DoNotUse::GetShardMembersResponse_ObserversEntry_DoNotUse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct GetShardMembersResponse_ObserversEntry_DoNotUseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersResponse_ObserversEntry_DoNotUseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -187,7 +258,7 @@ struct GetShardMembersResponse_ObserversEntry_DoNotUseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersResponse_ObserversEntry_DoNotUseDefaultTypeInternal _GetShardMembersResponse_ObserversEntry_DoNotUse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersResponse_WitnessesEntry_DoNotUse::GetShardMembersResponse_WitnessesEntry_DoNotUse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct GetShardMembersResponse_WitnessesEntry_DoNotUseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersResponse_WitnessesEntry_DoNotUseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -198,7 +269,7 @@ struct GetShardMembersResponse_WitnessesEntry_DoNotUseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersResponse_WitnessesEntry_DoNotUseDefaultTypeInternal _GetShardMembersResponse_WitnessesEntry_DoNotUse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersResponse_RemovedEntry_DoNotUse::GetShardMembersResponse_RemovedEntry_DoNotUse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct GetShardMembersResponse_RemovedEntry_DoNotUseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersResponse_RemovedEntry_DoNotUseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -209,12 +280,13 @@ struct GetShardMembersResponse_RemovedEntry_DoNotUseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersResponse_RemovedEntry_DoNotUseDefaultTypeInternal _GetShardMembersResponse_RemovedEntry_DoNotUse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembersResponse::GetShardMembersResponse(
-    ::_pbi::ConstantInitialized)
-  : replicas_(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{})
-  , observers_(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{})
-  , witnesses_(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{})
-  , removed_(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{})
-  , config_change_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.replicas_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.observers_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.witnesses_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.removed_)*/{::_pbi::ConstantInitialized()}
+  , /*decltype(_impl_.config_change_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetShardMembersResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembersResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -225,13 +297,13 @@ struct GetShardMembersResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembersResponseDefaultTypeInternal _GetShardMembersResponse_default_instance_;
 PROTOBUF_CONSTEXPR NewShardRequest::NewShardRequest(
-    ::_pbi::ConstantInitialized)
-  : hostname_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , timeout_(int64_t{0})
-  , type_(0)
-{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.hostname_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct NewShardRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NewShardRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -242,7 +314,7 @@ struct NewShardRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NewShardRequestDefaultTypeInternal _NewShardRequest_default_instance_;
 PROTOBUF_CONSTEXPR NewShardResponse::NewShardResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct NewShardResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NewShardResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -253,9 +325,10 @@ struct NewShardResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NewShardResponseDefaultTypeInternal _NewShardResponse_default_instance_;
 PROTOBUF_CONSTEXPR RemoveDataRequest::RemoveDataRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RemoveDataRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RemoveDataRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -266,7 +339,7 @@ struct RemoveDataRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RemoveDataRequestDefaultTypeInternal _RemoveDataRequest_default_instance_;
 PROTOBUF_CONSTEXPR RemoveDataResponse::RemoveDataResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct RemoveDataResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RemoveDataResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -277,11 +350,11 @@ struct RemoveDataResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RemoveDataResponseDefaultTypeInternal _RemoveDataResponse_default_instance_;
 PROTOBUF_CONSTEXPR StartReplicaRequest::StartReplicaRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , type_(0)
-{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct StartReplicaRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -292,7 +365,7 @@ struct StartReplicaRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StartReplicaRequestDefaultTypeInternal _StartReplicaRequest_default_instance_;
 PROTOBUF_CONSTEXPR StartReplicaResponse::StartReplicaResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct StartReplicaResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -303,11 +376,11 @@ struct StartReplicaResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StartReplicaResponseDefaultTypeInternal _StartReplicaResponse_default_instance_;
 PROTOBUF_CONSTEXPR StartReplicaObserverRequest::StartReplicaObserverRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , type_(0)
-{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct StartReplicaObserverRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaObserverRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -318,7 +391,7 @@ struct StartReplicaObserverRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StartReplicaObserverRequestDefaultTypeInternal _StartReplicaObserverRequest_default_instance_;
 PROTOBUF_CONSTEXPR StartReplicaObserverResponse::StartReplicaObserverResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct StartReplicaObserverResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaObserverResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -329,8 +402,9 @@ struct StartReplicaObserverResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StartReplicaObserverResponseDefaultTypeInternal _StartReplicaObserverResponse_default_instance_;
 PROTOBUF_CONSTEXPR StopReplicaRequest::StopReplicaRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct StopReplicaRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StopReplicaRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -341,7 +415,7 @@ struct StopReplicaRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopReplicaRequestDefaultTypeInternal _StopReplicaRequest_default_instance_;
 PROTOBUF_CONSTEXPR StopReplicaResponse::StopReplicaResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct StopReplicaResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StopReplicaResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -353,21 +427,75 @@ struct StopReplicaResponseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopReplicaResponseDefaultTypeInternal _StopReplicaResponse_default_instance_;
 }  // namespace v1
 }  // namespace raft
-static ::_pb::Metadata file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[26];
+static ::_pb::Metadata file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[31];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto[1];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_raft_2fv1_2fraft_5fshard_2eproto = nullptr;
 
 const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, key_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, value_),
+  0,
+  1,
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ObserversEntry_DoNotUse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ObserversEntry_DoNotUse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ObserversEntry_DoNotUse, key_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ObserversEntry_DoNotUse, value_),
+  0,
+  1,
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_WitnessesEntry_DoNotUse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_WitnessesEntry_DoNotUse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_WitnessesEntry_DoNotUse, key_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_WitnessesEntry_DoNotUse, value_),
+  0,
+  1,
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_RemovedEntry_DoNotUse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_RemovedEntry_DoNotUse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_RemovedEntry_DoNotUse, key_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_RemovedEntry_DoNotUse, value_),
+  0,
+  1,
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.last_updated_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.config_change_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.replicas_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.observers_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.witnesses_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.removed_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState, _impl_.type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, hostname_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.hostname_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -380,10 +508,10 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, hostname_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, _impl_.hostname_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaObserverResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -396,10 +524,10 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, hostname_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, _impl_.hostname_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaWitnessResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -412,9 +540,9 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveReplicaResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -427,24 +555,24 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdResponse, leader_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdResponse, available_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdResponse, _impl_.leader_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetLeaderIdResponse, _impl_.available_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersRequest, shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersRequest, _impl_.shard_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -491,22 +619,22 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, config_change_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, replicas_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, observers_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, witnesses_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, removed_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, _impl_.config_change_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, _impl_.replicas_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, _impl_.observers_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, _impl_.witnesses_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembersResponse, _impl_.removed_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, type_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, hostname_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _impl_.hostname_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::NewShardResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -519,8 +647,8 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveDataRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveDataRequest, replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveDataRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveDataRequest, _impl_.replica_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RemoveDataResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -533,9 +661,9 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, type_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -548,9 +676,9 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, type_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.type_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -563,7 +691,7 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::StopReplicaRequest, shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StopReplicaRequest, _impl_.shard_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StopReplicaResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -572,35 +700,45 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _inlined_string_donated_
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::raft::v1::AddReplicaRequest)},
-  { 10, -1, -1, sizeof(::raft::v1::AddReplicaResponse)},
-  { 16, -1, -1, sizeof(::raft::v1::AddReplicaObserverRequest)},
-  { 26, -1, -1, sizeof(::raft::v1::AddReplicaObserverResponse)},
-  { 32, -1, -1, sizeof(::raft::v1::AddReplicaWitnessRequest)},
-  { 42, -1, -1, sizeof(::raft::v1::AddReplicaWitnessResponse)},
-  { 48, -1, -1, sizeof(::raft::v1::RemoveReplicaRequest)},
-  { 57, -1, -1, sizeof(::raft::v1::RemoveReplicaResponse)},
-  { 63, -1, -1, sizeof(::raft::v1::GetLeaderIdRequest)},
-  { 72, -1, -1, sizeof(::raft::v1::GetLeaderIdResponse)},
-  { 80, -1, -1, sizeof(::raft::v1::GetShardMembersRequest)},
-  { 87, 95, -1, sizeof(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse)},
-  { 97, 105, -1, sizeof(::raft::v1::GetShardMembersResponse_ObserversEntry_DoNotUse)},
-  { 107, 115, -1, sizeof(::raft::v1::GetShardMembersResponse_WitnessesEntry_DoNotUse)},
-  { 117, 125, -1, sizeof(::raft::v1::GetShardMembersResponse_RemovedEntry_DoNotUse)},
-  { 127, -1, -1, sizeof(::raft::v1::GetShardMembersResponse)},
-  { 138, -1, -1, sizeof(::raft::v1::NewShardRequest)},
-  { 149, -1, -1, sizeof(::raft::v1::NewShardResponse)},
-  { 155, -1, -1, sizeof(::raft::v1::RemoveDataRequest)},
-  { 163, -1, -1, sizeof(::raft::v1::RemoveDataResponse)},
-  { 169, -1, -1, sizeof(::raft::v1::StartReplicaRequest)},
-  { 178, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
-  { 184, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
-  { 193, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
-  { 199, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
-  { 206, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
+  { 0, 8, -1, sizeof(::raft::v1::ShardState_ReplicasEntry_DoNotUse)},
+  { 10, 18, -1, sizeof(::raft::v1::ShardState_ObserversEntry_DoNotUse)},
+  { 20, 28, -1, sizeof(::raft::v1::ShardState_WitnessesEntry_DoNotUse)},
+  { 30, 38, -1, sizeof(::raft::v1::ShardState_RemovedEntry_DoNotUse)},
+  { 40, -1, -1, sizeof(::raft::v1::ShardState)},
+  { 54, -1, -1, sizeof(::raft::v1::AddReplicaRequest)},
+  { 64, -1, -1, sizeof(::raft::v1::AddReplicaResponse)},
+  { 70, -1, -1, sizeof(::raft::v1::AddReplicaObserverRequest)},
+  { 80, -1, -1, sizeof(::raft::v1::AddReplicaObserverResponse)},
+  { 86, -1, -1, sizeof(::raft::v1::AddReplicaWitnessRequest)},
+  { 96, -1, -1, sizeof(::raft::v1::AddReplicaWitnessResponse)},
+  { 102, -1, -1, sizeof(::raft::v1::RemoveReplicaRequest)},
+  { 111, -1, -1, sizeof(::raft::v1::RemoveReplicaResponse)},
+  { 117, -1, -1, sizeof(::raft::v1::GetLeaderIdRequest)},
+  { 126, -1, -1, sizeof(::raft::v1::GetLeaderIdResponse)},
+  { 134, -1, -1, sizeof(::raft::v1::GetShardMembersRequest)},
+  { 141, 149, -1, sizeof(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse)},
+  { 151, 159, -1, sizeof(::raft::v1::GetShardMembersResponse_ObserversEntry_DoNotUse)},
+  { 161, 169, -1, sizeof(::raft::v1::GetShardMembersResponse_WitnessesEntry_DoNotUse)},
+  { 171, 179, -1, sizeof(::raft::v1::GetShardMembersResponse_RemovedEntry_DoNotUse)},
+  { 181, -1, -1, sizeof(::raft::v1::GetShardMembersResponse)},
+  { 192, -1, -1, sizeof(::raft::v1::NewShardRequest)},
+  { 203, -1, -1, sizeof(::raft::v1::NewShardResponse)},
+  { 209, -1, -1, sizeof(::raft::v1::RemoveDataRequest)},
+  { 217, -1, -1, sizeof(::raft::v1::RemoveDataResponse)},
+  { 223, -1, -1, sizeof(::raft::v1::StartReplicaRequest)},
+  { 232, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
+  { 238, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
+  { 247, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
+  { 253, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
+  { 260, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
+  &::raft::v1::_ShardState_ReplicasEntry_DoNotUse_default_instance_._instance,
+  &::raft::v1::_ShardState_ObserversEntry_DoNotUse_default_instance_._instance,
+  &::raft::v1::_ShardState_WitnessesEntry_DoNotUse_default_instance_._instance,
+  &::raft::v1::_ShardState_RemovedEntry_DoNotUse_default_instance_._instance,
+  &::raft::v1::_ShardState_default_instance_._instance,
   &::raft::v1::_AddReplicaRequest_default_instance_._instance,
   &::raft::v1::_AddReplicaResponse_default_instance_._instance,
   &::raft::v1::_AddReplicaObserverRequest_default_instance_._instance,
@@ -630,74 +768,95 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\030raft/v1/raft_shard.proto\022\007raft.v1\"\203\001\n\021"
-  "AddReplicaRequest\022\035\n\nreplica_id\030\001 \001(\004R\tr"
-  "eplicaId\022\031\n\010shard_id\030\002 \001(\004R\007shardId\022\032\n\010h"
-  "ostname\030\004 \001(\tR\010hostname\022\030\n\007timeout\030\005 \001(\003"
-  "R\007timeout\"\024\n\022AddReplicaResponse\"\213\001\n\031AddR"
-  "eplicaObserverRequest\022\031\n\010shard_id\030\001 \001(\004R"
-  "\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022"
-  "\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007timeout\030\004"
-  " \001(\003R\007timeout\"\034\n\032AddReplicaObserverRespo"
-  "nse\"\212\001\n\030AddReplicaWitnessRequest\022\031\n\010shar"
-  "d_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R"
-  "\treplicaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030"
-  "\n\007timeout\030\004 \001(\003R\007timeout\"\033\n\031AddReplicaWi"
-  "tnessResponse\"j\n\024RemoveReplicaRequest\022\031\n"
-  "\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002"
-  " \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R\007timeou"
-  "t\"\027\n\025RemoveReplicaResponse\"h\n\022GetLeaderI"
-  "dRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nr"
-  "eplica_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 "
-  "\001(\003R\007timeout\"K\n\023GetLeaderIdResponse\022\026\n\006l"
-  "eader\030\001 \001(\004R\006leader\022\034\n\tavailable\030\002 \001(\010R\t"
-  "available\"3\n\026GetShardMembersRequest\022\031\n\010s"
-  "hard_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetShardMembe"
-  "rsResponse\022(\n\020config_change_id\030\001 \001(\004R\016co"
-  "nfigChangeId\022J\n\010replicas\030\002 \003(\0132..raft.v1"
-  ".GetShardMembersResponse.ReplicasEntryR\010"
-  "replicas\022M\n\tobservers\030\003 \003(\0132/.raft.v1.Ge"
-  "tShardMembersResponse.ObserversEntryR\tob"
-  "servers\022M\n\twitnesses\030\004 \003(\0132/.raft.v1.Get"
-  "ShardMembersResponse.WitnessesEntryR\twit"
-  "nesses\022G\n\007removed\030\005 \003(\0132-.raft.v1.GetSha"
-  "rdMembersResponse.RemovedEntryR\007removed\032"
-  ";\n\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005va"
-  "lue\030\002 \001(\tR\005value:\0028\001\032<\n\016ObserversEntry\022\020"
+  "\n\030raft/v1/raft_shard.proto\022\007raft.v1\032\037goo"
+  "gle/protobuf/timestamp.proto\"\263\005\n\nShardSt"
+  "ate\022=\n\014last_updated\030\001 \001(\0132\032.google.proto"
+  "buf.TimestampR\013lastUpdated\022\031\n\010shard_id\030\002"
+  " \001(\004R\007shardId\022(\n\020config_change_id\030\003 \001(\004R"
+  "\016configChangeId\022=\n\010replicas\030\004 \003(\0132!.raft"
+  ".v1.ShardState.ReplicasEntryR\010replicas\022@"
+  "\n\tobservers\030\005 \003(\0132\".raft.v1.ShardState.O"
+  "bserversEntryR\tobservers\022@\n\twitnesses\030\006 "
+  "\003(\0132\".raft.v1.ShardState.WitnessesEntryR"
+  "\twitnesses\022:\n\007removed\030\007 \003(\0132 .raft.v1.Sh"
+  "ardState.RemovedEntryR\007removed\022-\n\004type\030\010"
+  " \001(\0162\031.raft.v1.StateMachineTypeR\004type\032;\n"
+  "\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005valu"
+  "e\030\002 \001(\tR\005value:\0028\001\032<\n\016ObserversEntry\022\020\n\003"
+  "key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001"
+  "\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005"
+  "value\030\002 \001(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020"
   "\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\002"
-  "8\001\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024"
-  "\n\005value\030\002 \001(\tR\005value:\0028\001\032:\n\014RemovedEntry"
-  "\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value"
-  ":\0028\001\"\260\001\n\017NewShardRequest\022\031\n\010shard_id\030\001 \001"
-  "(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplica"
-  "Id\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateMachineT"
-  "ypeR\004type\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n"
-  "\007timeout\030\005 \001(\003R\007timeout\"\022\n\020NewShardRespo"
-  "nse\"M\n\021RemoveDataRequest\022\031\n\010shard_id\030\001 \001"
-  "(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplica"
-  "Id\"\024\n\022RemoveDataResponse\"~\n\023StartReplica"
-  "Request\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nre"
-  "plica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162"
-  "\031.raft.v1.StateMachineTypeR\004type\"\026\n\024Star"
-  "tReplicaResponse\"\206\001\n\033StartReplicaObserve"
-  "rRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nr"
-  "eplica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\016"
-  "2\031.raft.v1.StateMachineTypeR\004type\"\036\n\034Sta"
-  "rtReplicaObserverResponse\"/\n\022StopReplica"
-  "Request\022\031\n\010shard_id\030\001 \001(\004R\007shardId\"\025\n\023St"
-  "opReplicaResponse*n\n\020StateMachineType\022\"\n"
-  "\036STATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027STA"
-  "TE_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_"
-  "TYPE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016RaftSh"
-  "ardProtoP\001Z\032a13s.io/api/raft/v1;raftv1\242\002"
-  "\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMe"
-  "tadata\352\002\010Raft::V1b\006proto3"
+  "8\001\"\203\001\n\021AddReplicaRequest\022\035\n\nreplica_id\030\001"
+  " \001(\004R\treplicaId\022\031\n\010shard_id\030\002 \001(\004R\007shard"
+  "Id\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n\007timeou"
+  "t\030\005 \001(\003R\007timeout\"\024\n\022AddReplicaResponse\"\213"
+  "\001\n\031AddReplicaObserverRequest\022\031\n\010shard_id"
+  "\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\trep"
+  "licaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007ti"
+  "meout\030\004 \001(\003R\007timeout\"\034\n\032AddReplicaObserv"
+  "erResponse\"\212\001\n\030AddReplicaWitnessRequest\022"
+  "\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id"
+  "\030\002 \001(\004R\treplicaId\022\032\n\010hostname\030\003 \001(\tR\010hos"
+  "tname\022\030\n\007timeout\030\004 \001(\003R\007timeout\"\033\n\031AddRe"
+  "plicaWitnessResponse\"j\n\024RemoveReplicaReq"
+  "uest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepli"
+  "ca_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R"
+  "\007timeout\"\027\n\025RemoveReplicaResponse\"h\n\022Get"
+  "LeaderIdRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard"
+  "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\030\n\007tim"
+  "eout\030\003 \001(\003R\007timeout\"K\n\023GetLeaderIdRespon"
+  "se\022\026\n\006leader\030\001 \001(\004R\006leader\022\034\n\tavailable\030"
+  "\002 \001(\010R\tavailable\"3\n\026GetShardMembersReque"
+  "st\022\031\n\010shard_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetSha"
+  "rdMembersResponse\022(\n\020config_change_id\030\001 "
+  "\001(\004R\016configChangeId\022J\n\010replicas\030\002 \003(\0132.."
+  "raft.v1.GetShardMembersResponse.Replicas"
+  "EntryR\010replicas\022M\n\tobservers\030\003 \003(\0132/.raf"
+  "t.v1.GetShardMembersResponse.ObserversEn"
+  "tryR\tobservers\022M\n\twitnesses\030\004 \003(\0132/.raft"
+  ".v1.GetShardMembersResponse.WitnessesEnt"
+  "ryR\twitnesses\022G\n\007removed\030\005 \003(\0132-.raft.v1"
+  ".GetShardMembersResponse.RemovedEntryR\007r"
+  "emoved\032;\n\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003ke"
+  "y\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032<\n\016Observers"
+  "Entry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005"
+  "value:\0028\001\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004"
+  "R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032:\n\014Remov"
+  "edEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\t"
+  "R\005value:\0028\001\"\260\001\n\017NewShardRequest\022\031\n\010shard"
+  "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t"
+  "replicaId\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateM"
+  "achineTypeR\004type\022\032\n\010hostname\030\004 \001(\tR\010host"
+  "name\022\030\n\007timeout\030\005 \001(\003R\007timeout\"\022\n\020NewSha"
+  "rdResponse\"M\n\021RemoveDataRequest\022\031\n\010shard"
+  "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t"
+  "replicaId\"\024\n\022RemoveDataResponse\"~\n\023Start"
+  "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI"
+  "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004type"
+  "\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type\""
+  "\026\n\024StartReplicaResponse\"\206\001\n\033StartReplica"
+  "ObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard"
+  "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004typ"
+  "e\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type"
+  "\"\036\n\034StartReplicaObserverResponse\"/\n\022Stop"
+  "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI"
+  "d\"\025\n\023StopReplicaResponse*n\n\020StateMachine"
+  "Type\022\"\n\036STATE_MACHINE_TYPE_UNSPECIFIED\020\000"
+  "\022\033\n\027STATE_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_M"
+  "ACHINE_TYPE_KV\020\002B~\n\023io.a13s.api.raft.v1B"
+  "\016RaftShardProtoP\001Z\032a13s.io/api/raft/v1;r"
+  "aftv1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V"
+  "1\\GPBMetadata\352\002\010Raft::V1b\006proto3"
   ;
+static const ::_pbi::DescriptorTable* const descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps[1] = {
+  &::descriptor_table_google_2fprotobuf_2ftimestamp_2eproto,
+};
 static ::_pbi::once_flag descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_raft_2fv1_2fraft_5fshard_2eproto = {
-    false, false, 2465, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
+    false, false, 3192, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
     "raft/v1/raft_shard.proto",
-    &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, nullptr, 0, 26,
+    &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps, 1, 31,
     schemas, file_default_instances, TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets,
     file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto, file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto,
     file_level_service_descriptors_raft_2fv1_2fraft_5fshard_2eproto,
@@ -728,6 +887,582 @@ bool StateMachineType_IsValid(int value) {
 
 // ===================================================================
 
+ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse() {}
+ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+    : SuperType(arena) {}
+void ShardState_ReplicasEntry_DoNotUse::MergeFrom(const ShardState_ReplicasEntry_DoNotUse& other) {
+  MergeFromInternal(other);
+}
+::PROTOBUF_NAMESPACE_ID::Metadata ShardState_ReplicasEntry_DoNotUse::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[0]);
+}
+
+// ===================================================================
+
+ShardState_ObserversEntry_DoNotUse::ShardState_ObserversEntry_DoNotUse() {}
+ShardState_ObserversEntry_DoNotUse::ShardState_ObserversEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+    : SuperType(arena) {}
+void ShardState_ObserversEntry_DoNotUse::MergeFrom(const ShardState_ObserversEntry_DoNotUse& other) {
+  MergeFromInternal(other);
+}
+::PROTOBUF_NAMESPACE_ID::Metadata ShardState_ObserversEntry_DoNotUse::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[1]);
+}
+
+// ===================================================================
+
+ShardState_WitnessesEntry_DoNotUse::ShardState_WitnessesEntry_DoNotUse() {}
+ShardState_WitnessesEntry_DoNotUse::ShardState_WitnessesEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+    : SuperType(arena) {}
+void ShardState_WitnessesEntry_DoNotUse::MergeFrom(const ShardState_WitnessesEntry_DoNotUse& other) {
+  MergeFromInternal(other);
+}
+::PROTOBUF_NAMESPACE_ID::Metadata ShardState_WitnessesEntry_DoNotUse::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[2]);
+}
+
+// ===================================================================
+
+ShardState_RemovedEntry_DoNotUse::ShardState_RemovedEntry_DoNotUse() {}
+ShardState_RemovedEntry_DoNotUse::ShardState_RemovedEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+    : SuperType(arena) {}
+void ShardState_RemovedEntry_DoNotUse::MergeFrom(const ShardState_RemovedEntry_DoNotUse& other) {
+  MergeFromInternal(other);
+}
+::PROTOBUF_NAMESPACE_ID::Metadata ShardState_RemovedEntry_DoNotUse::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[3]);
+}
+
+// ===================================================================
+
+class ShardState::_Internal {
+ public:
+  static const ::PROTOBUF_NAMESPACE_ID::Timestamp& last_updated(const ShardState* msg);
+};
+
+const ::PROTOBUF_NAMESPACE_ID::Timestamp&
+ShardState::_Internal::last_updated(const ShardState* msg) {
+  return *msg->_impl_.last_updated_;
+}
+void ShardState::clear_last_updated() {
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
+  }
+  _impl_.last_updated_ = nullptr;
+}
+ShardState::ShardState(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  if (arena != nullptr && !is_message_owned) {
+    arena->OwnCustomDestructor(this, &ShardState::ArenaDtor);
+  }
+  // @@protoc_insertion_point(arena_constructor:raft.v1.ShardState)
+}
+ShardState::ShardState(const ShardState& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ShardState* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      /*decltype(_impl_.replicas_)*/{}
+    , /*decltype(_impl_.observers_)*/{}
+    , /*decltype(_impl_.witnesses_)*/{}
+    , /*decltype(_impl_.removed_)*/{}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.config_change_id_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.replicas_.MergeFrom(from._impl_.replicas_);
+  _this->_impl_.observers_.MergeFrom(from._impl_.observers_);
+  _this->_impl_.witnesses_.MergeFrom(from._impl_.witnesses_);
+  _this->_impl_.removed_.MergeFrom(from._impl_.removed_);
+  if (from._internal_has_last_updated()) {
+    _this->_impl_.last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.last_updated_);
+  }
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+  // @@protoc_insertion_point(copy_constructor:raft.v1.ShardState)
+}
+
+inline void ShardState::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      /*decltype(_impl_.replicas_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.observers_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.witnesses_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.removed_)*/{::_pbi::ArenaInitialized(), arena}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.config_change_id_){uint64_t{0u}}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+ShardState::~ShardState() {
+  // @@protoc_insertion_point(destructor:raft.v1.ShardState)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    ArenaDtor(this);
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ShardState::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.replicas_.Destruct();
+  _impl_.replicas_.~MapField();
+  _impl_.observers_.Destruct();
+  _impl_.observers_.~MapField();
+  _impl_.witnesses_.Destruct();
+  _impl_.witnesses_.~MapField();
+  _impl_.removed_.Destruct();
+  _impl_.removed_.~MapField();
+  if (this != internal_default_instance()) delete _impl_.last_updated_;
+}
+
+void ShardState::ArenaDtor(void* object) {
+  ShardState* _this = reinterpret_cast< ShardState* >(object);
+  _this->_impl_.replicas_.Destruct();
+  _this->_impl_.observers_.Destruct();
+  _this->_impl_.witnesses_.Destruct();
+  _this->_impl_.removed_.Destruct();
+}
+void ShardState::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void ShardState::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.v1.ShardState)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.replicas_.Clear();
+  _impl_.observers_.Clear();
+  _impl_.witnesses_.Clear();
+  _impl_.removed_.Clear();
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
+  }
+  _impl_.last_updated_ = nullptr;
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ShardState::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .google.protobuf.Timestamp last_updated = 1 [json_name = "lastUpdated"];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_last_updated(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint64 shard_id = 2 [json_name = "shardId"];
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint64 config_change_id = 3 [json_name = "configChangeId"];
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          _impl_.config_change_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // map<uint64, string> replicas = 4 [json_name = "replicas"];
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(&_impl_.replicas_, ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // map<uint64, string> observers = 5 [json_name = "observers"];
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(&_impl_.observers_, ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // map<uint64, string> witnesses = 6 [json_name = "witnesses"];
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(&_impl_.witnesses_, ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<50>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // map<uint64, string> removed = 7 [json_name = "removed"];
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(&_impl_.removed_, ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<58>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // .raft.v1.StateMachineType type = 8 [json_name = "type"];
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_type(static_cast<::raft::v1::StateMachineType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ShardState::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:raft.v1.ShardState)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .google.protobuf.Timestamp last_updated = 1 [json_name = "lastUpdated"];
+  if (this->_internal_has_last_updated()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(1, _Internal::last_updated(this),
+        _Internal::last_updated(this).GetCachedSize(), target, stream);
+  }
+
+  // uint64 shard_id = 2 [json_name = "shardId"];
+  if (this->_internal_shard_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(2, this->_internal_shard_id(), target);
+  }
+
+  // uint64 config_change_id = 3 [json_name = "configChangeId"];
+  if (this->_internal_config_change_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(3, this->_internal_config_change_id(), target);
+  }
+
+  // map<uint64, string> replicas = 4 [json_name = "replicas"];
+  if (!this->_internal_replicas().empty()) {
+    using MapType = ::_pb::Map<uint64_t, std::string>;
+    using WireHelper = ShardState_ReplicasEntry_DoNotUse::Funcs;
+    const auto& map_field = this->_internal_replicas();
+    auto check_utf8 = [](const MapType::value_type& entry) {
+      (void)entry;
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+        entry.second.data(), static_cast<int>(entry.second.length()),
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+        "raft.v1.ShardState.ReplicasEntry.value");
+    };
+
+    if (stream->IsSerializationDeterministic() && map_field.size() > 1) {
+      for (const auto& entry : ::_pbi::MapSorterFlat<MapType>(map_field)) {
+        target = WireHelper::InternalSerialize(4, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    } else {
+      for (const auto& entry : map_field) {
+        target = WireHelper::InternalSerialize(4, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    }
+  }
+
+  // map<uint64, string> observers = 5 [json_name = "observers"];
+  if (!this->_internal_observers().empty()) {
+    using MapType = ::_pb::Map<uint64_t, std::string>;
+    using WireHelper = ShardState_ObserversEntry_DoNotUse::Funcs;
+    const auto& map_field = this->_internal_observers();
+    auto check_utf8 = [](const MapType::value_type& entry) {
+      (void)entry;
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+        entry.second.data(), static_cast<int>(entry.second.length()),
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+        "raft.v1.ShardState.ObserversEntry.value");
+    };
+
+    if (stream->IsSerializationDeterministic() && map_field.size() > 1) {
+      for (const auto& entry : ::_pbi::MapSorterFlat<MapType>(map_field)) {
+        target = WireHelper::InternalSerialize(5, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    } else {
+      for (const auto& entry : map_field) {
+        target = WireHelper::InternalSerialize(5, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    }
+  }
+
+  // map<uint64, string> witnesses = 6 [json_name = "witnesses"];
+  if (!this->_internal_witnesses().empty()) {
+    using MapType = ::_pb::Map<uint64_t, std::string>;
+    using WireHelper = ShardState_WitnessesEntry_DoNotUse::Funcs;
+    const auto& map_field = this->_internal_witnesses();
+    auto check_utf8 = [](const MapType::value_type& entry) {
+      (void)entry;
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+        entry.second.data(), static_cast<int>(entry.second.length()),
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+        "raft.v1.ShardState.WitnessesEntry.value");
+    };
+
+    if (stream->IsSerializationDeterministic() && map_field.size() > 1) {
+      for (const auto& entry : ::_pbi::MapSorterFlat<MapType>(map_field)) {
+        target = WireHelper::InternalSerialize(6, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    } else {
+      for (const auto& entry : map_field) {
+        target = WireHelper::InternalSerialize(6, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    }
+  }
+
+  // map<uint64, string> removed = 7 [json_name = "removed"];
+  if (!this->_internal_removed().empty()) {
+    using MapType = ::_pb::Map<uint64_t, std::string>;
+    using WireHelper = ShardState_RemovedEntry_DoNotUse::Funcs;
+    const auto& map_field = this->_internal_removed();
+    auto check_utf8 = [](const MapType::value_type& entry) {
+      (void)entry;
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+        entry.second.data(), static_cast<int>(entry.second.length()),
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+        "raft.v1.ShardState.RemovedEntry.value");
+    };
+
+    if (stream->IsSerializationDeterministic() && map_field.size() > 1) {
+      for (const auto& entry : ::_pbi::MapSorterFlat<MapType>(map_field)) {
+        target = WireHelper::InternalSerialize(7, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    } else {
+      for (const auto& entry : map_field) {
+        target = WireHelper::InternalSerialize(7, entry.first, entry.second, target, stream);
+        check_utf8(entry);
+      }
+    }
+  }
+
+  // .raft.v1.StateMachineType type = 8 [json_name = "type"];
+  if (this->_internal_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      8, this->_internal_type(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:raft.v1.ShardState)
+  return target;
+}
+
+size_t ShardState::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.v1.ShardState)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // map<uint64, string> replicas = 4 [json_name = "replicas"];
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_replicas_size());
+  for (::PROTOBUF_NAMESPACE_ID::Map< uint64_t, std::string >::const_iterator
+      it = this->_internal_replicas().begin();
+      it != this->_internal_replicas().end(); ++it) {
+    total_size += ShardState_ReplicasEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
+  }
+
+  // map<uint64, string> observers = 5 [json_name = "observers"];
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_observers_size());
+  for (::PROTOBUF_NAMESPACE_ID::Map< uint64_t, std::string >::const_iterator
+      it = this->_internal_observers().begin();
+      it != this->_internal_observers().end(); ++it) {
+    total_size += ShardState_ObserversEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
+  }
+
+  // map<uint64, string> witnesses = 6 [json_name = "witnesses"];
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_witnesses_size());
+  for (::PROTOBUF_NAMESPACE_ID::Map< uint64_t, std::string >::const_iterator
+      it = this->_internal_witnesses().begin();
+      it != this->_internal_witnesses().end(); ++it) {
+    total_size += ShardState_WitnessesEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
+  }
+
+  // map<uint64, string> removed = 7 [json_name = "removed"];
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(this->_internal_removed_size());
+  for (::PROTOBUF_NAMESPACE_ID::Map< uint64_t, std::string >::const_iterator
+      it = this->_internal_removed().begin();
+      it != this->_internal_removed().end(); ++it) {
+    total_size += ShardState_RemovedEntry_DoNotUse::Funcs::ByteSizeLong(it->first, it->second);
+  }
+
+  // .google.protobuf.Timestamp last_updated = 1 [json_name = "lastUpdated"];
+  if (this->_internal_has_last_updated()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.last_updated_);
+  }
+
+  // uint64 shard_id = 2 [json_name = "shardId"];
+  if (this->_internal_shard_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
+  }
+
+  // uint64 config_change_id = 3 [json_name = "configChangeId"];
+  if (this->_internal_config_change_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_config_change_id());
+  }
+
+  // .raft.v1.StateMachineType type = 8 [json_name = "type"];
+  if (this->_internal_type() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ShardState::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ShardState::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ShardState::GetClassData() const { return &_class_data_; }
+
+
+void ShardState::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ShardState*>(&to_msg);
+  auto& from = static_cast<const ShardState&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.ShardState)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_impl_.replicas_.MergeFrom(from._impl_.replicas_);
+  _this->_impl_.observers_.MergeFrom(from._impl_.observers_);
+  _this->_impl_.witnesses_.MergeFrom(from._impl_.witnesses_);
+  _this->_impl_.removed_.MergeFrom(from._impl_.removed_);
+  if (from._internal_has_last_updated()) {
+    _this->_internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_last_updated());
+  }
+  if (from._internal_shard_id() != 0) {
+    _this->_internal_set_shard_id(from._internal_shard_id());
+  }
+  if (from._internal_config_change_id() != 0) {
+    _this->_internal_set_config_change_id(from._internal_config_change_id());
+  }
+  if (from._internal_type() != 0) {
+    _this->_internal_set_type(from._internal_type());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ShardState::CopyFrom(const ShardState& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.v1.ShardState)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ShardState::IsInitialized() const {
+  return true;
+}
+
+void ShardState::InternalSwap(ShardState* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.replicas_.InternalSwap(&other->_impl_.replicas_);
+  _impl_.observers_.InternalSwap(&other->_impl_.observers_);
+  _impl_.witnesses_.InternalSwap(&other->_impl_.witnesses_);
+  _impl_.removed_.InternalSwap(&other->_impl_.removed_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ShardState, _impl_.type_)
+      + sizeof(ShardState::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(ShardState, _impl_.last_updated_)>(
+          reinterpret_cast<char*>(&_impl_.last_updated_),
+          reinterpret_cast<char*>(&other->_impl_.last_updated_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ShardState::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[4]);
+}
+
+// ===================================================================
+
 class AddReplicaRequest::_Internal {
  public:
 };
@@ -735,35 +1470,49 @@ class AddReplicaRequest::_Internal {
 AddReplicaRequest::AddReplicaRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.AddReplicaRequest)
 }
 AddReplicaRequest::AddReplicaRequest(const AddReplicaRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AddReplicaRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  hostname_.InitDefault();
+  _impl_.hostname_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    hostname_.Set("", GetArenaForAllocation());
+    _impl_.hostname_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_hostname().empty()) {
-    hostname_.Set(from._internal_hostname(), 
-      GetArenaForAllocation());
+    _this->_impl_.hostname_.Set(from._internal_hostname(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&replica_id_, &from.replica_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&replica_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.replica_id_, &from._impl_.replica_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaRequest)
 }
 
-inline void AddReplicaRequest::SharedCtor() {
-hostname_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  hostname_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&replica_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&replica_id_)) + sizeof(timeout_));
+inline void AddReplicaRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.hostname_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.hostname_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 AddReplicaRequest::~AddReplicaRequest() {
@@ -777,11 +1526,11 @@ AddReplicaRequest::~AddReplicaRequest() {
 
 inline void AddReplicaRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  hostname_.Destroy();
+  _impl_.hostname_.Destroy();
 }
 
 void AddReplicaRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void AddReplicaRequest::Clear() {
@@ -790,10 +1539,10 @@ void AddReplicaRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  hostname_.ClearToEmpty();
-  ::memset(&replica_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&replica_id_)) + sizeof(timeout_));
+  _impl_.hostname_.ClearToEmpty();
+  ::memset(&_impl_.replica_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -806,7 +1555,7 @@ const char* AddReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 replica_id = 1 [json_name = "replicaId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -814,7 +1563,7 @@ const char* AddReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 shard_id = 2 [json_name = "shardId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -832,7 +1581,7 @@ const char* AddReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // int64 timeout = 5 [json_name = "timeout"];
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -932,41 +1681,37 @@ size_t AddReplicaRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AddReplicaRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     AddReplicaRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaRequest::GetClassData() const { return &_class_data_; }
 
-void AddReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<AddReplicaRequest *>(to)->MergeFrom(
-      static_cast<const AddReplicaRequest &>(from));
-}
 
-
-void AddReplicaRequest::MergeFrom(const AddReplicaRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void AddReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AddReplicaRequest*>(&to_msg);
+  auto& from = static_cast<const AddReplicaRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_hostname().empty()) {
-    _internal_set_hostname(from._internal_hostname());
+    _this->_internal_set_hostname(from._internal_hostname());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AddReplicaRequest::CopyFrom(const AddReplicaRequest& from) {
@@ -986,21 +1731,21 @@ void AddReplicaRequest::InternalSwap(AddReplicaRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &hostname_, lhs_arena,
-      &other->hostname_, rhs_arena
+      &_impl_.hostname_, lhs_arena,
+      &other->_impl_.hostname_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AddReplicaRequest, timeout_)
-      + sizeof(AddReplicaRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(AddReplicaRequest, replica_id_)>(
-          reinterpret_cast<char*>(&replica_id_),
-          reinterpret_cast<char*>(&other->replica_id_));
+      PROTOBUF_FIELD_OFFSET(AddReplicaRequest, _impl_.timeout_)
+      + sizeof(AddReplicaRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(AddReplicaRequest, _impl_.replica_id_)>(
+          reinterpret_cast<char*>(&_impl_.replica_id_),
+          reinterpret_cast<char*>(&other->_impl_.replica_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[0]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[5]);
 }
 
 // ===================================================================
@@ -1016,6 +1761,7 @@ AddReplicaResponse::AddReplicaResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 AddReplicaResponse::AddReplicaResponse(const AddReplicaResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  AddReplicaResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaResponse)
 }
@@ -1039,7 +1785,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaResponse::GetClassDa
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[1]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[6]);
 }
 
 // ===================================================================
@@ -1051,35 +1797,49 @@ class AddReplicaObserverRequest::_Internal {
 AddReplicaObserverRequest::AddReplicaObserverRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.AddReplicaObserverRequest)
 }
 AddReplicaObserverRequest::AddReplicaObserverRequest(const AddReplicaObserverRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AddReplicaObserverRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  hostname_.InitDefault();
+  _impl_.hostname_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    hostname_.Set("", GetArenaForAllocation());
+    _impl_.hostname_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_hostname().empty()) {
-    hostname_.Set(from._internal_hostname(), 
-      GetArenaForAllocation());
+    _this->_impl_.hostname_.Set(from._internal_hostname(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaObserverRequest)
 }
 
-inline void AddReplicaObserverRequest::SharedCtor() {
-hostname_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  hostname_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+inline void AddReplicaObserverRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.hostname_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.hostname_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 AddReplicaObserverRequest::~AddReplicaObserverRequest() {
@@ -1093,11 +1853,11 @@ AddReplicaObserverRequest::~AddReplicaObserverRequest() {
 
 inline void AddReplicaObserverRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  hostname_.Destroy();
+  _impl_.hostname_.Destroy();
 }
 
 void AddReplicaObserverRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void AddReplicaObserverRequest::Clear() {
@@ -1106,10 +1866,10 @@ void AddReplicaObserverRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  hostname_.ClearToEmpty();
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  _impl_.hostname_.ClearToEmpty();
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1122,7 +1882,7 @@ const char* AddReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi::P
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1130,7 +1890,7 @@ const char* AddReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi::P
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1148,7 +1908,7 @@ const char* AddReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi::P
       // int64 timeout = 4 [json_name = "timeout"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1248,41 +2008,37 @@ size_t AddReplicaObserverRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AddReplicaObserverRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     AddReplicaObserverRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaObserverRequest::GetClassData() const { return &_class_data_; }
 
-void AddReplicaObserverRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<AddReplicaObserverRequest *>(to)->MergeFrom(
-      static_cast<const AddReplicaObserverRequest &>(from));
-}
 
-
-void AddReplicaObserverRequest::MergeFrom(const AddReplicaObserverRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaObserverRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void AddReplicaObserverRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AddReplicaObserverRequest*>(&to_msg);
+  auto& from = static_cast<const AddReplicaObserverRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaObserverRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_hostname().empty()) {
-    _internal_set_hostname(from._internal_hostname());
+    _this->_internal_set_hostname(from._internal_hostname());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AddReplicaObserverRequest::CopyFrom(const AddReplicaObserverRequest& from) {
@@ -1302,21 +2058,21 @@ void AddReplicaObserverRequest::InternalSwap(AddReplicaObserverRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &hostname_, lhs_arena,
-      &other->hostname_, rhs_arena
+      &_impl_.hostname_, lhs_arena,
+      &other->_impl_.hostname_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AddReplicaObserverRequest, timeout_)
-      + sizeof(AddReplicaObserverRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(AddReplicaObserverRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(AddReplicaObserverRequest, _impl_.timeout_)
+      + sizeof(AddReplicaObserverRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(AddReplicaObserverRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaObserverRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[2]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[7]);
 }
 
 // ===================================================================
@@ -1332,6 +2088,7 @@ AddReplicaObserverResponse::AddReplicaObserverResponse(::PROTOBUF_NAMESPACE_ID::
 }
 AddReplicaObserverResponse::AddReplicaObserverResponse(const AddReplicaObserverResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  AddReplicaObserverResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaObserverResponse)
 }
@@ -1355,7 +2112,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaObserverResponse::Ge
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaObserverResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[3]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[8]);
 }
 
 // ===================================================================
@@ -1367,35 +2124,49 @@ class AddReplicaWitnessRequest::_Internal {
 AddReplicaWitnessRequest::AddReplicaWitnessRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.AddReplicaWitnessRequest)
 }
 AddReplicaWitnessRequest::AddReplicaWitnessRequest(const AddReplicaWitnessRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AddReplicaWitnessRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  hostname_.InitDefault();
+  _impl_.hostname_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    hostname_.Set("", GetArenaForAllocation());
+    _impl_.hostname_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_hostname().empty()) {
-    hostname_.Set(from._internal_hostname(), 
-      GetArenaForAllocation());
+    _this->_impl_.hostname_.Set(from._internal_hostname(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaWitnessRequest)
 }
 
-inline void AddReplicaWitnessRequest::SharedCtor() {
-hostname_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  hostname_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+inline void AddReplicaWitnessRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.hostname_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.hostname_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 AddReplicaWitnessRequest::~AddReplicaWitnessRequest() {
@@ -1409,11 +2180,11 @@ AddReplicaWitnessRequest::~AddReplicaWitnessRequest() {
 
 inline void AddReplicaWitnessRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  hostname_.Destroy();
+  _impl_.hostname_.Destroy();
 }
 
 void AddReplicaWitnessRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void AddReplicaWitnessRequest::Clear() {
@@ -1422,10 +2193,10 @@ void AddReplicaWitnessRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  hostname_.ClearToEmpty();
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  _impl_.hostname_.ClearToEmpty();
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1438,7 +2209,7 @@ const char* AddReplicaWitnessRequest::_InternalParse(const char* ptr, ::_pbi::Pa
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1446,7 +2217,7 @@ const char* AddReplicaWitnessRequest::_InternalParse(const char* ptr, ::_pbi::Pa
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1464,7 +2235,7 @@ const char* AddReplicaWitnessRequest::_InternalParse(const char* ptr, ::_pbi::Pa
       // int64 timeout = 4 [json_name = "timeout"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1564,41 +2335,37 @@ size_t AddReplicaWitnessRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AddReplicaWitnessRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     AddReplicaWitnessRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaWitnessRequest::GetClassData() const { return &_class_data_; }
 
-void AddReplicaWitnessRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<AddReplicaWitnessRequest *>(to)->MergeFrom(
-      static_cast<const AddReplicaWitnessRequest &>(from));
-}
 
-
-void AddReplicaWitnessRequest::MergeFrom(const AddReplicaWitnessRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaWitnessRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void AddReplicaWitnessRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AddReplicaWitnessRequest*>(&to_msg);
+  auto& from = static_cast<const AddReplicaWitnessRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.AddReplicaWitnessRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_hostname().empty()) {
-    _internal_set_hostname(from._internal_hostname());
+    _this->_internal_set_hostname(from._internal_hostname());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AddReplicaWitnessRequest::CopyFrom(const AddReplicaWitnessRequest& from) {
@@ -1618,21 +2385,21 @@ void AddReplicaWitnessRequest::InternalSwap(AddReplicaWitnessRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &hostname_, lhs_arena,
-      &other->hostname_, rhs_arena
+      &_impl_.hostname_, lhs_arena,
+      &other->_impl_.hostname_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AddReplicaWitnessRequest, timeout_)
-      + sizeof(AddReplicaWitnessRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(AddReplicaWitnessRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(AddReplicaWitnessRequest, _impl_.timeout_)
+      + sizeof(AddReplicaWitnessRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(AddReplicaWitnessRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaWitnessRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[4]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[9]);
 }
 
 // ===================================================================
@@ -1648,6 +2415,7 @@ AddReplicaWitnessResponse::AddReplicaWitnessResponse(::PROTOBUF_NAMESPACE_ID::Ar
 }
 AddReplicaWitnessResponse::AddReplicaWitnessResponse(const AddReplicaWitnessResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  AddReplicaWitnessResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaWitnessResponse)
 }
@@ -1671,7 +2439,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaWitnessResponse::Get
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaWitnessResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[5]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[10]);
 }
 
 // ===================================================================
@@ -1683,23 +2451,35 @@ class RemoveReplicaRequest::_Internal {
 RemoveReplicaRequest::RemoveReplicaRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RemoveReplicaRequest)
 }
 RemoveReplicaRequest::RemoveReplicaRequest(const RemoveReplicaRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RemoveReplicaRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.RemoveReplicaRequest)
 }
 
-inline void RemoveReplicaRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+inline void RemoveReplicaRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RemoveReplicaRequest::~RemoveReplicaRequest() {
@@ -1716,7 +2496,7 @@ inline void RemoveReplicaRequest::SharedDtor() {
 }
 
 void RemoveReplicaRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RemoveReplicaRequest::Clear() {
@@ -1725,9 +2505,9 @@ void RemoveReplicaRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1740,7 +2520,7 @@ const char* RemoveReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseC
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1748,7 +2528,7 @@ const char* RemoveReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseC
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1756,7 +2536,7 @@ const char* RemoveReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseC
       // int64 timeout = 3 [json_name = "timeout"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1839,38 +2619,34 @@ size_t RemoveReplicaRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RemoveReplicaRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RemoveReplicaRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveReplicaRequest::GetClassData() const { return &_class_data_; }
 
-void RemoveReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RemoveReplicaRequest *>(to)->MergeFrom(
-      static_cast<const RemoveReplicaRequest &>(from));
-}
 
-
-void RemoveReplicaRequest::MergeFrom(const RemoveReplicaRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RemoveReplicaRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void RemoveReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RemoveReplicaRequest*>(&to_msg);
+  auto& from = static_cast<const RemoveReplicaRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RemoveReplicaRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RemoveReplicaRequest::CopyFrom(const RemoveReplicaRequest& from) {
@@ -1888,17 +2664,17 @@ void RemoveReplicaRequest::InternalSwap(RemoveReplicaRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RemoveReplicaRequest, timeout_)
-      + sizeof(RemoveReplicaRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(RemoveReplicaRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(RemoveReplicaRequest, _impl_.timeout_)
+      + sizeof(RemoveReplicaRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(RemoveReplicaRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[6]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[11]);
 }
 
 // ===================================================================
@@ -1914,6 +2690,7 @@ RemoveReplicaResponse::RemoveReplicaResponse(::PROTOBUF_NAMESPACE_ID::Arena* are
 }
 RemoveReplicaResponse::RemoveReplicaResponse(const RemoveReplicaResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  RemoveReplicaResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.RemoveReplicaResponse)
 }
@@ -1937,7 +2714,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveReplicaResponse::GetClas
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[7]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[12]);
 }
 
 // ===================================================================
@@ -1949,23 +2726,35 @@ class GetLeaderIdRequest::_Internal {
 GetLeaderIdRequest::GetLeaderIdRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.GetLeaderIdRequest)
 }
 GetLeaderIdRequest::GetLeaderIdRequest(const GetLeaderIdRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetLeaderIdRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetLeaderIdRequest)
 }
 
-inline void GetLeaderIdRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+inline void GetLeaderIdRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetLeaderIdRequest::~GetLeaderIdRequest() {
@@ -1982,7 +2771,7 @@ inline void GetLeaderIdRequest::SharedDtor() {
 }
 
 void GetLeaderIdRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetLeaderIdRequest::Clear() {
@@ -1991,9 +2780,9 @@ void GetLeaderIdRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2006,7 +2795,7 @@ const char* GetLeaderIdRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2014,7 +2803,7 @@ const char* GetLeaderIdRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2022,7 +2811,7 @@ const char* GetLeaderIdRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
       // int64 timeout = 3 [json_name = "timeout"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2105,38 +2894,34 @@ size_t GetLeaderIdRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetLeaderIdRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetLeaderIdRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetLeaderIdRequest::GetClassData() const { return &_class_data_; }
 
-void GetLeaderIdRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetLeaderIdRequest *>(to)->MergeFrom(
-      static_cast<const GetLeaderIdRequest &>(from));
-}
 
-
-void GetLeaderIdRequest::MergeFrom(const GetLeaderIdRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetLeaderIdRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetLeaderIdRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetLeaderIdRequest*>(&to_msg);
+  auto& from = static_cast<const GetLeaderIdRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetLeaderIdRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetLeaderIdRequest::CopyFrom(const GetLeaderIdRequest& from) {
@@ -2154,17 +2939,17 @@ void GetLeaderIdRequest::InternalSwap(GetLeaderIdRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(GetLeaderIdRequest, timeout_)
-      + sizeof(GetLeaderIdRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(GetLeaderIdRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(GetLeaderIdRequest, _impl_.timeout_)
+      + sizeof(GetLeaderIdRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(GetLeaderIdRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetLeaderIdRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[8]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[13]);
 }
 
 // ===================================================================
@@ -2176,23 +2961,33 @@ class GetLeaderIdResponse::_Internal {
 GetLeaderIdResponse::GetLeaderIdResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.GetLeaderIdResponse)
 }
 GetLeaderIdResponse::GetLeaderIdResponse(const GetLeaderIdResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetLeaderIdResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.leader_){}
+    , decltype(_impl_.available_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&leader_, &from.leader_,
-    static_cast<size_t>(reinterpret_cast<char*>(&available_) -
-    reinterpret_cast<char*>(&leader_)) + sizeof(available_));
+  ::memcpy(&_impl_.leader_, &from._impl_.leader_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.available_) -
+    reinterpret_cast<char*>(&_impl_.leader_)) + sizeof(_impl_.available_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetLeaderIdResponse)
 }
 
-inline void GetLeaderIdResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&leader_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&available_) -
-    reinterpret_cast<char*>(&leader_)) + sizeof(available_));
+inline void GetLeaderIdResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.leader_){uint64_t{0u}}
+    , decltype(_impl_.available_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetLeaderIdResponse::~GetLeaderIdResponse() {
@@ -2209,7 +3004,7 @@ inline void GetLeaderIdResponse::SharedDtor() {
 }
 
 void GetLeaderIdResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetLeaderIdResponse::Clear() {
@@ -2218,9 +3013,9 @@ void GetLeaderIdResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&leader_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&available_) -
-      reinterpret_cast<char*>(&leader_)) + sizeof(available_));
+  ::memset(&_impl_.leader_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.available_) -
+      reinterpret_cast<char*>(&_impl_.leader_)) + sizeof(_impl_.available_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2233,7 +3028,7 @@ const char* GetLeaderIdResponse::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // uint64 leader = 1 [json_name = "leader"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          leader_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.leader_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2241,7 +3036,7 @@ const char* GetLeaderIdResponse::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // bool available = 2 [json_name = "available"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          available_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.available_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2313,35 +3108,31 @@ size_t GetLeaderIdResponse::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetLeaderIdResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetLeaderIdResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetLeaderIdResponse::GetClassData() const { return &_class_data_; }
 
-void GetLeaderIdResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetLeaderIdResponse *>(to)->MergeFrom(
-      static_cast<const GetLeaderIdResponse &>(from));
-}
 
-
-void GetLeaderIdResponse::MergeFrom(const GetLeaderIdResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetLeaderIdResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetLeaderIdResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetLeaderIdResponse*>(&to_msg);
+  auto& from = static_cast<const GetLeaderIdResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetLeaderIdResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_leader() != 0) {
-    _internal_set_leader(from._internal_leader());
+    _this->_internal_set_leader(from._internal_leader());
   }
   if (from._internal_available() != 0) {
-    _internal_set_available(from._internal_available());
+    _this->_internal_set_available(from._internal_available());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetLeaderIdResponse::CopyFrom(const GetLeaderIdResponse& from) {
@@ -2359,17 +3150,17 @@ void GetLeaderIdResponse::InternalSwap(GetLeaderIdResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(GetLeaderIdResponse, available_)
-      + sizeof(GetLeaderIdResponse::available_)
-      - PROTOBUF_FIELD_OFFSET(GetLeaderIdResponse, leader_)>(
-          reinterpret_cast<char*>(&leader_),
-          reinterpret_cast<char*>(&other->leader_));
+      PROTOBUF_FIELD_OFFSET(GetLeaderIdResponse, _impl_.available_)
+      + sizeof(GetLeaderIdResponse::_impl_.available_)
+      - PROTOBUF_FIELD_OFFSET(GetLeaderIdResponse, _impl_.leader_)>(
+          reinterpret_cast<char*>(&_impl_.leader_),
+          reinterpret_cast<char*>(&other->_impl_.leader_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetLeaderIdResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[9]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[14]);
 }
 
 // ===================================================================
@@ -2381,18 +3172,29 @@ class GetShardMembersRequest::_Internal {
 GetShardMembersRequest::GetShardMembersRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.GetShardMembersRequest)
 }
 GetShardMembersRequest::GetShardMembersRequest(const GetShardMembersRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetShardMembersRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  shard_id_ = from.shard_id_;
+  _this->_impl_.shard_id_ = from._impl_.shard_id_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetShardMembersRequest)
 }
 
-inline void GetShardMembersRequest::SharedCtor() {
-shard_id_ = uint64_t{0u};
+inline void GetShardMembersRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetShardMembersRequest::~GetShardMembersRequest() {
@@ -2409,7 +3211,7 @@ inline void GetShardMembersRequest::SharedDtor() {
 }
 
 void GetShardMembersRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetShardMembersRequest::Clear() {
@@ -2418,7 +3220,7 @@ void GetShardMembersRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  shard_id_ = uint64_t{0u};
+  _impl_.shard_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2431,7 +3233,7 @@ const char* GetShardMembersRequest::_InternalParse(const char* ptr, ::_pbi::Pars
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2492,32 +3294,28 @@ size_t GetShardMembersRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetShardMembersRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetShardMembersRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetShardMembersRequest::GetClassData() const { return &_class_data_; }
 
-void GetShardMembersRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetShardMembersRequest *>(to)->MergeFrom(
-      static_cast<const GetShardMembersRequest &>(from));
-}
 
-
-void GetShardMembersRequest::MergeFrom(const GetShardMembersRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembersRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetShardMembersRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetShardMembersRequest*>(&to_msg);
+  auto& from = static_cast<const GetShardMembersRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembersRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetShardMembersRequest::CopyFrom(const GetShardMembersRequest& from) {
@@ -2534,13 +3332,13 @@ bool GetShardMembersRequest::IsInitialized() const {
 void GetShardMembersRequest::InternalSwap(GetShardMembersRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(shard_id_, other->shard_id_);
+  swap(_impl_.shard_id_, other->_impl_.shard_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[10]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[15]);
 }
 
 // ===================================================================
@@ -2554,7 +3352,7 @@ void GetShardMembersResponse_ReplicasEntry_DoNotUse::MergeFrom(const GetShardMem
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_ReplicasEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[11]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[16]);
 }
 
 // ===================================================================
@@ -2568,7 +3366,7 @@ void GetShardMembersResponse_ObserversEntry_DoNotUse::MergeFrom(const GetShardMe
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_ObserversEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[12]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[17]);
 }
 
 // ===================================================================
@@ -2582,7 +3380,7 @@ void GetShardMembersResponse_WitnessesEntry_DoNotUse::MergeFrom(const GetShardMe
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_WitnessesEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[13]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[18]);
 }
 
 // ===================================================================
@@ -2596,7 +3394,7 @@ void GetShardMembersResponse_RemovedEntry_DoNotUse::MergeFrom(const GetShardMemb
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_RemovedEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[14]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[19]);
 }
 
 // ===================================================================
@@ -2607,12 +3405,8 @@ class GetShardMembersResponse::_Internal {
 
 GetShardMembersResponse::GetShardMembersResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  replicas_(arena),
-  observers_(arena),
-  witnesses_(arena),
-  removed_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   if (arena != nullptr && !is_message_owned) {
     arena->OwnCustomDestructor(this, &GetShardMembersResponse::ArenaDtor);
   }
@@ -2620,17 +3414,36 @@ GetShardMembersResponse::GetShardMembersResponse(::PROTOBUF_NAMESPACE_ID::Arena*
 }
 GetShardMembersResponse::GetShardMembersResponse(const GetShardMembersResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetShardMembersResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      /*decltype(_impl_.replicas_)*/{}
+    , /*decltype(_impl_.observers_)*/{}
+    , /*decltype(_impl_.witnesses_)*/{}
+    , /*decltype(_impl_.removed_)*/{}
+    , decltype(_impl_.config_change_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  replicas_.MergeFrom(from.replicas_);
-  observers_.MergeFrom(from.observers_);
-  witnesses_.MergeFrom(from.witnesses_);
-  removed_.MergeFrom(from.removed_);
-  config_change_id_ = from.config_change_id_;
+  _this->_impl_.replicas_.MergeFrom(from._impl_.replicas_);
+  _this->_impl_.observers_.MergeFrom(from._impl_.observers_);
+  _this->_impl_.witnesses_.MergeFrom(from._impl_.witnesses_);
+  _this->_impl_.removed_.MergeFrom(from._impl_.removed_);
+  _this->_impl_.config_change_id_ = from._impl_.config_change_id_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetShardMembersResponse)
 }
 
-inline void GetShardMembersResponse::SharedCtor() {
-config_change_id_ = uint64_t{0u};
+inline void GetShardMembersResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      /*decltype(_impl_.replicas_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.observers_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.witnesses_)*/{::_pbi::ArenaInitialized(), arena}
+    , /*decltype(_impl_.removed_)*/{::_pbi::ArenaInitialized(), arena}
+    , decltype(_impl_.config_change_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetShardMembersResponse::~GetShardMembersResponse() {
@@ -2645,21 +3458,25 @@ GetShardMembersResponse::~GetShardMembersResponse() {
 
 inline void GetShardMembersResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  replicas_.Destruct();
-  observers_.Destruct();
-  witnesses_.Destruct();
-  removed_.Destruct();
+  _impl_.replicas_.Destruct();
+  _impl_.replicas_.~MapField();
+  _impl_.observers_.Destruct();
+  _impl_.observers_.~MapField();
+  _impl_.witnesses_.Destruct();
+  _impl_.witnesses_.~MapField();
+  _impl_.removed_.Destruct();
+  _impl_.removed_.~MapField();
 }
 
 void GetShardMembersResponse::ArenaDtor(void* object) {
   GetShardMembersResponse* _this = reinterpret_cast< GetShardMembersResponse* >(object);
-  _this->replicas_.Destruct();
-  _this->observers_.Destruct();
-  _this->witnesses_.Destruct();
-  _this->removed_.Destruct();
+  _this->_impl_.replicas_.Destruct();
+  _this->_impl_.observers_.Destruct();
+  _this->_impl_.witnesses_.Destruct();
+  _this->_impl_.removed_.Destruct();
 }
 void GetShardMembersResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetShardMembersResponse::Clear() {
@@ -2668,11 +3485,11 @@ void GetShardMembersResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  replicas_.Clear();
-  observers_.Clear();
-  witnesses_.Clear();
-  removed_.Clear();
-  config_change_id_ = uint64_t{0u};
+  _impl_.replicas_.Clear();
+  _impl_.observers_.Clear();
+  _impl_.witnesses_.Clear();
+  _impl_.removed_.Clear();
+  _impl_.config_change_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2685,7 +3502,7 @@ const char* GetShardMembersResponse::_InternalParse(const char* ptr, ::_pbi::Par
       // uint64 config_change_id = 1 [json_name = "configChangeId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          config_change_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.config_change_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2696,7 +3513,7 @@ const char* GetShardMembersResponse::_InternalParse(const char* ptr, ::_pbi::Par
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(&replicas_, ptr);
+            ptr = ctx->ParseMessage(&_impl_.replicas_, ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
@@ -2709,7 +3526,7 @@ const char* GetShardMembersResponse::_InternalParse(const char* ptr, ::_pbi::Par
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(&observers_, ptr);
+            ptr = ctx->ParseMessage(&_impl_.observers_, ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
@@ -2722,7 +3539,7 @@ const char* GetShardMembersResponse::_InternalParse(const char* ptr, ::_pbi::Par
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(&witnesses_, ptr);
+            ptr = ctx->ParseMessage(&_impl_.witnesses_, ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
@@ -2735,7 +3552,7 @@ const char* GetShardMembersResponse::_InternalParse(const char* ptr, ::_pbi::Par
           ptr -= 1;
           do {
             ptr += 1;
-            ptr = ctx->ParseMessage(&removed_, ptr);
+            ptr = ctx->ParseMessage(&_impl_.removed_, ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
@@ -2938,36 +3755,32 @@ size_t GetShardMembersResponse::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_config_change_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetShardMembersResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetShardMembersResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetShardMembersResponse::GetClassData() const { return &_class_data_; }
 
-void GetShardMembersResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetShardMembersResponse *>(to)->MergeFrom(
-      static_cast<const GetShardMembersResponse &>(from));
-}
 
-
-void GetShardMembersResponse::MergeFrom(const GetShardMembersResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembersResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetShardMembersResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetShardMembersResponse*>(&to_msg);
+  auto& from = static_cast<const GetShardMembersResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembersResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  replicas_.MergeFrom(from.replicas_);
-  observers_.MergeFrom(from.observers_);
-  witnesses_.MergeFrom(from.witnesses_);
-  removed_.MergeFrom(from.removed_);
+  _this->_impl_.replicas_.MergeFrom(from._impl_.replicas_);
+  _this->_impl_.observers_.MergeFrom(from._impl_.observers_);
+  _this->_impl_.witnesses_.MergeFrom(from._impl_.witnesses_);
+  _this->_impl_.removed_.MergeFrom(from._impl_.removed_);
   if (from._internal_config_change_id() != 0) {
-    _internal_set_config_change_id(from._internal_config_change_id());
+    _this->_internal_set_config_change_id(from._internal_config_change_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetShardMembersResponse::CopyFrom(const GetShardMembersResponse& from) {
@@ -2984,17 +3797,17 @@ bool GetShardMembersResponse::IsInitialized() const {
 void GetShardMembersResponse::InternalSwap(GetShardMembersResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  replicas_.InternalSwap(&other->replicas_);
-  observers_.InternalSwap(&other->observers_);
-  witnesses_.InternalSwap(&other->witnesses_);
-  removed_.InternalSwap(&other->removed_);
-  swap(config_change_id_, other->config_change_id_);
+  _impl_.replicas_.InternalSwap(&other->_impl_.replicas_);
+  _impl_.observers_.InternalSwap(&other->_impl_.observers_);
+  _impl_.witnesses_.InternalSwap(&other->_impl_.witnesses_);
+  _impl_.removed_.InternalSwap(&other->_impl_.removed_);
+  swap(_impl_.config_change_id_, other->_impl_.config_change_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[15]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[20]);
 }
 
 // ===================================================================
@@ -3006,35 +3819,51 @@ class NewShardRequest::_Internal {
 NewShardRequest::NewShardRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.NewShardRequest)
 }
 NewShardRequest::NewShardRequest(const NewShardRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  NewShardRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.timeout_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  hostname_.InitDefault();
+  _impl_.hostname_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    hostname_.Set("", GetArenaForAllocation());
+    _impl_.hostname_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_hostname().empty()) {
-    hostname_.Set(from._internal_hostname(), 
-      GetArenaForAllocation());
+    _this->_impl_.hostname_.Set(from._internal_hostname(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.NewShardRequest)
 }
 
-inline void NewShardRequest::SharedCtor() {
-hostname_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  hostname_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+inline void NewShardRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.hostname_){}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.hostname_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.hostname_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 NewShardRequest::~NewShardRequest() {
@@ -3048,11 +3877,11 @@ NewShardRequest::~NewShardRequest() {
 
 inline void NewShardRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  hostname_.Destroy();
+  _impl_.hostname_.Destroy();
 }
 
 void NewShardRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void NewShardRequest::Clear() {
@@ -3061,10 +3890,10 @@ void NewShardRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  hostname_.ClearToEmpty();
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&type_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  _impl_.hostname_.ClearToEmpty();
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3077,7 +3906,7 @@ const char* NewShardRequest::_InternalParse(const char* ptr, ::_pbi::ParseContex
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3085,7 +3914,7 @@ const char* NewShardRequest::_InternalParse(const char* ptr, ::_pbi::ParseContex
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3112,7 +3941,7 @@ const char* NewShardRequest::_InternalParse(const char* ptr, ::_pbi::ParseContex
       // int64 timeout = 5 [json_name = "timeout"];
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3225,44 +4054,40 @@ size_t NewShardRequest::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData NewShardRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     NewShardRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NewShardRequest::GetClassData() const { return &_class_data_; }
 
-void NewShardRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<NewShardRequest *>(to)->MergeFrom(
-      static_cast<const NewShardRequest &>(from));
-}
 
-
-void NewShardRequest::MergeFrom(const NewShardRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.NewShardRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void NewShardRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<NewShardRequest*>(&to_msg);
+  auto& from = static_cast<const NewShardRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.NewShardRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_hostname().empty()) {
-    _internal_set_hostname(from._internal_hostname());
+    _this->_internal_set_hostname(from._internal_hostname());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
   if (from._internal_type() != 0) {
-    _internal_set_type(from._internal_type());
+    _this->_internal_set_type(from._internal_type());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void NewShardRequest::CopyFrom(const NewShardRequest& from) {
@@ -3282,21 +4107,21 @@ void NewShardRequest::InternalSwap(NewShardRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &hostname_, lhs_arena,
-      &other->hostname_, rhs_arena
+      &_impl_.hostname_, lhs_arena,
+      &other->_impl_.hostname_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(NewShardRequest, type_)
-      + sizeof(NewShardRequest::type_)
-      - PROTOBUF_FIELD_OFFSET(NewShardRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(NewShardRequest, _impl_.type_)
+      + sizeof(NewShardRequest::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(NewShardRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NewShardRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[16]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[21]);
 }
 
 // ===================================================================
@@ -3312,6 +4137,7 @@ NewShardResponse::NewShardResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 NewShardResponse::NewShardResponse(const NewShardResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  NewShardResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.NewShardResponse)
 }
@@ -3335,7 +4161,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NewShardResponse::GetClassData
 ::PROTOBUF_NAMESPACE_ID::Metadata NewShardResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[17]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[22]);
 }
 
 // ===================================================================
@@ -3347,23 +4173,33 @@ class RemoveDataRequest::_Internal {
 RemoveDataRequest::RemoveDataRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RemoveDataRequest)
 }
 RemoveDataRequest::RemoveDataRequest(const RemoveDataRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RemoveDataRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&replica_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.replica_id_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.replica_id_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.RemoveDataRequest)
 }
 
-inline void RemoveDataRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&replica_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+inline void RemoveDataRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RemoveDataRequest::~RemoveDataRequest() {
@@ -3380,7 +4216,7 @@ inline void RemoveDataRequest::SharedDtor() {
 }
 
 void RemoveDataRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RemoveDataRequest::Clear() {
@@ -3389,9 +4225,9 @@ void RemoveDataRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&replica_id_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.replica_id_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.replica_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3404,7 +4240,7 @@ const char* RemoveDataRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3412,7 +4248,7 @@ const char* RemoveDataRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3484,35 +4320,31 @@ size_t RemoveDataRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_replica_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RemoveDataRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RemoveDataRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveDataRequest::GetClassData() const { return &_class_data_; }
 
-void RemoveDataRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RemoveDataRequest *>(to)->MergeFrom(
-      static_cast<const RemoveDataRequest &>(from));
-}
 
-
-void RemoveDataRequest::MergeFrom(const RemoveDataRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RemoveDataRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void RemoveDataRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RemoveDataRequest*>(&to_msg);
+  auto& from = static_cast<const RemoveDataRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RemoveDataRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RemoveDataRequest::CopyFrom(const RemoveDataRequest& from) {
@@ -3530,17 +4362,17 @@ void RemoveDataRequest::InternalSwap(RemoveDataRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RemoveDataRequest, replica_id_)
-      + sizeof(RemoveDataRequest::replica_id_)
-      - PROTOBUF_FIELD_OFFSET(RemoveDataRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(RemoveDataRequest, _impl_.replica_id_)
+      + sizeof(RemoveDataRequest::_impl_.replica_id_)
+      - PROTOBUF_FIELD_OFFSET(RemoveDataRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveDataRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[18]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[23]);
 }
 
 // ===================================================================
@@ -3556,6 +4388,7 @@ RemoveDataResponse::RemoveDataResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 RemoveDataResponse::RemoveDataResponse(const RemoveDataResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  RemoveDataResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.RemoveDataResponse)
 }
@@ -3579,7 +4412,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveDataResponse::GetClassDa
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveDataResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[19]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[24]);
 }
 
 // ===================================================================
@@ -3591,23 +4424,35 @@ class StartReplicaRequest::_Internal {
 StartReplicaRequest::StartReplicaRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.StartReplicaRequest)
 }
 StartReplicaRequest::StartReplicaRequest(const StartReplicaRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  StartReplicaRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaRequest)
 }
 
-inline void StartReplicaRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+inline void StartReplicaRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 StartReplicaRequest::~StartReplicaRequest() {
@@ -3624,7 +4469,7 @@ inline void StartReplicaRequest::SharedDtor() {
 }
 
 void StartReplicaRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void StartReplicaRequest::Clear() {
@@ -3633,9 +4478,9 @@ void StartReplicaRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&type_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3648,7 +4493,7 @@ const char* StartReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3656,7 +4501,7 @@ const char* StartReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3750,38 +4595,34 @@ size_t StartReplicaRequest::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData StartReplicaRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     StartReplicaRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaRequest::GetClassData() const { return &_class_data_; }
 
-void StartReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<StartReplicaRequest *>(to)->MergeFrom(
-      static_cast<const StartReplicaRequest &>(from));
-}
 
-
-void StartReplicaRequest::MergeFrom(const StartReplicaRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StartReplicaRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void StartReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<StartReplicaRequest*>(&to_msg);
+  auto& from = static_cast<const StartReplicaRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StartReplicaRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_type() != 0) {
-    _internal_set_type(from._internal_type());
+    _this->_internal_set_type(from._internal_type());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void StartReplicaRequest::CopyFrom(const StartReplicaRequest& from) {
@@ -3799,17 +4640,17 @@ void StartReplicaRequest::InternalSwap(StartReplicaRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(StartReplicaRequest, type_)
-      + sizeof(StartReplicaRequest::type_)
-      - PROTOBUF_FIELD_OFFSET(StartReplicaRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(StartReplicaRequest, _impl_.type_)
+      + sizeof(StartReplicaRequest::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(StartReplicaRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[20]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[25]);
 }
 
 // ===================================================================
@@ -3825,6 +4666,7 @@ StartReplicaResponse::StartReplicaResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena
 }
 StartReplicaResponse::StartReplicaResponse(const StartReplicaResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  StartReplicaResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaResponse)
 }
@@ -3848,7 +4690,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaResponse::GetClass
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[21]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[26]);
 }
 
 // ===================================================================
@@ -3860,23 +4702,35 @@ class StartReplicaObserverRequest::_Internal {
 StartReplicaObserverRequest::StartReplicaObserverRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.StartReplicaObserverRequest)
 }
 StartReplicaObserverRequest::StartReplicaObserverRequest(const StartReplicaObserverRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  StartReplicaObserverRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.type_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaObserverRequest)
 }
 
-inline void StartReplicaObserverRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+inline void StartReplicaObserverRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.type_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 StartReplicaObserverRequest::~StartReplicaObserverRequest() {
@@ -3893,7 +4747,7 @@ inline void StartReplicaObserverRequest::SharedDtor() {
 }
 
 void StartReplicaObserverRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void StartReplicaObserverRequest::Clear() {
@@ -3902,9 +4756,9 @@ void StartReplicaObserverRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&type_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(type_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.type_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3917,7 +4771,7 @@ const char* StartReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi:
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3925,7 +4779,7 @@ const char* StartReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi:
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -4019,38 +4873,34 @@ size_t StartReplicaObserverRequest::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData StartReplicaObserverRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     StartReplicaObserverRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaObserverRequest::GetClassData() const { return &_class_data_; }
 
-void StartReplicaObserverRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<StartReplicaObserverRequest *>(to)->MergeFrom(
-      static_cast<const StartReplicaObserverRequest &>(from));
-}
 
-
-void StartReplicaObserverRequest::MergeFrom(const StartReplicaObserverRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StartReplicaObserverRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void StartReplicaObserverRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<StartReplicaObserverRequest*>(&to_msg);
+  auto& from = static_cast<const StartReplicaObserverRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StartReplicaObserverRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_type() != 0) {
-    _internal_set_type(from._internal_type());
+    _this->_internal_set_type(from._internal_type());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void StartReplicaObserverRequest::CopyFrom(const StartReplicaObserverRequest& from) {
@@ -4068,17 +4918,17 @@ void StartReplicaObserverRequest::InternalSwap(StartReplicaObserverRequest* othe
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, type_)
-      + sizeof(StartReplicaObserverRequest::type_)
-      - PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, _impl_.type_)
+      + sizeof(StartReplicaObserverRequest::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaObserverRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[22]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[27]);
 }
 
 // ===================================================================
@@ -4094,6 +4944,7 @@ StartReplicaObserverResponse::StartReplicaObserverResponse(::PROTOBUF_NAMESPACE_
 }
 StartReplicaObserverResponse::StartReplicaObserverResponse(const StartReplicaObserverResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  StartReplicaObserverResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaObserverResponse)
 }
@@ -4117,7 +4968,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaObserverResponse::
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaObserverResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[23]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[28]);
 }
 
 // ===================================================================
@@ -4129,18 +4980,29 @@ class StopReplicaRequest::_Internal {
 StopReplicaRequest::StopReplicaRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.StopReplicaRequest)
 }
 StopReplicaRequest::StopReplicaRequest(const StopReplicaRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  StopReplicaRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  shard_id_ = from.shard_id_;
+  _this->_impl_.shard_id_ = from._impl_.shard_id_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.StopReplicaRequest)
 }
 
-inline void StopReplicaRequest::SharedCtor() {
-shard_id_ = uint64_t{0u};
+inline void StopReplicaRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 StopReplicaRequest::~StopReplicaRequest() {
@@ -4157,7 +5019,7 @@ inline void StopReplicaRequest::SharedDtor() {
 }
 
 void StopReplicaRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void StopReplicaRequest::Clear() {
@@ -4166,7 +5028,7 @@ void StopReplicaRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  shard_id_ = uint64_t{0u};
+  _impl_.shard_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4179,7 +5041,7 @@ const char* StopReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCon
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -4240,32 +5102,28 @@ size_t StopReplicaRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData StopReplicaRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     StopReplicaRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StopReplicaRequest::GetClassData() const { return &_class_data_; }
 
-void StopReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<StopReplicaRequest *>(to)->MergeFrom(
-      static_cast<const StopReplicaRequest &>(from));
-}
 
-
-void StopReplicaRequest::MergeFrom(const StopReplicaRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StopReplicaRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void StopReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<StopReplicaRequest*>(&to_msg);
+  auto& from = static_cast<const StopReplicaRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.StopReplicaRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void StopReplicaRequest::CopyFrom(const StopReplicaRequest& from) {
@@ -4282,13 +5140,13 @@ bool StopReplicaRequest::IsInitialized() const {
 void StopReplicaRequest::InternalSwap(StopReplicaRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(shard_id_, other->shard_id_);
+  swap(_impl_.shard_id_, other->_impl_.shard_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata StopReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[24]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[29]);
 }
 
 // ===================================================================
@@ -4304,6 +5162,7 @@ StopReplicaResponse::StopReplicaResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 StopReplicaResponse::StopReplicaResponse(const StopReplicaResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  StopReplicaResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.StopReplicaResponse)
 }
@@ -4327,13 +5186,33 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StopReplicaResponse::GetClassD
 ::PROTOBUF_NAMESPACE_ID::Metadata StopReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[25]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[30]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace v1
 }  // namespace raft
 PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardState_ReplicasEntry_DoNotUse*
+Arena::CreateMaybeMessage< ::raft::v1::ShardState_ReplicasEntry_DoNotUse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardState_ReplicasEntry_DoNotUse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardState_ObserversEntry_DoNotUse*
+Arena::CreateMaybeMessage< ::raft::v1::ShardState_ObserversEntry_DoNotUse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardState_ObserversEntry_DoNotUse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardState_WitnessesEntry_DoNotUse*
+Arena::CreateMaybeMessage< ::raft::v1::ShardState_WitnessesEntry_DoNotUse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardState_WitnessesEntry_DoNotUse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardState_RemovedEntry_DoNotUse*
+Arena::CreateMaybeMessage< ::raft::v1::ShardState_RemovedEntry_DoNotUse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardState_RemovedEntry_DoNotUse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardState*
+Arena::CreateMaybeMessage< ::raft::v1::ShardState >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardState >(arena);
+}
 template<> PROTOBUF_NOINLINE ::raft::v1::AddReplicaRequest*
 Arena::CreateMaybeMessage< ::raft::v1::AddReplicaRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::raft::v1::AddReplicaRequest >(arena);

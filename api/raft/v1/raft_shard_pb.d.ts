@@ -3,7 +3,7 @@
 /* eslint-disable */
 /* @ts-nocheck */
 
-import type {BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage} from "@bufbuild/protobuf";
+import type {BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage, Timestamp} from "@bufbuild/protobuf";
 import {Message, proto3} from "@bufbuild/protobuf";
 
 /**
@@ -24,6 +24,65 @@ export declare enum StateMachineType {
    * @generated from enum value: STATE_MACHINE_TYPE_KV = 2;
    */
   KV = 2,
+}
+
+/**
+ * @generated from message raft.v1.ShardState
+ */
+export declare class ShardState extends Message<ShardState> {
+  /**
+   * @generated from field: google.protobuf.Timestamp last_updated = 1;
+   */
+  lastUpdated?: Timestamp;
+
+  /**
+   * @generated from field: uint64 shard_id = 2;
+   */
+  shardId: bigint;
+
+  /**
+   * @generated from field: uint64 config_change_id = 3;
+   */
+  configChangeId: bigint;
+
+  /**
+   * @generated from field: map<uint64, string> replicas = 4;
+   */
+  replicas: { [key: string]: string };
+
+  /**
+   * @generated from field: map<uint64, string> observers = 5;
+   */
+  observers: { [key: string]: string };
+
+  /**
+   * @generated from field: map<uint64, string> witnesses = 6;
+   */
+  witnesses: { [key: string]: string };
+
+  /**
+   * @generated from field: map<uint64, string> removed = 7;
+   */
+  removed: { [key: string]: string };
+
+  /**
+   * @generated from field: raft.v1.StateMachineType type = 8;
+   */
+  type: StateMachineType;
+
+  constructor(data?: PartialMessage<ShardState>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "raft.v1.ShardState";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ShardState;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ShardState;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ShardState;
+
+  static equals(a: ShardState | PlainMessage<ShardState> | undefined, b: ShardState | PlainMessage<ShardState> | undefined): boolean;
 }
 
 /**

@@ -23,13 +23,13 @@ namespace _pbi = _pb::internal;
 namespace raft {
 namespace v1 {
 PROTOBUF_CONSTEXPR RaftEvent::RaftEvent(
-    ::_pbi::ConstantInitialized)
-  : timestamp_(nullptr)
-  , typ_(0)
-
-  , action_(0)
-
-  , _oneof_case_{}{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.timestamp_)*/nullptr
+  , /*decltype(_impl_.typ_)*/0
+  , /*decltype(_impl_.action_)*/0
+  , /*decltype(_impl_.event_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}
+  , /*decltype(_impl_._oneof_case_)*/{}} {}
 struct RaftEventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftEventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -40,10 +40,11 @@ struct RaftEventDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RaftEventDefaultTypeInternal _RaftEvent_default_instance_;
 PROTOBUF_CONSTEXPR RaftLogEntryEvent::RaftLogEntryEvent(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , index_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.index_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RaftLogEntryEventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftLogEntryEventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -54,11 +55,12 @@ struct RaftLogEntryEventDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RaftLogEntryEventDefaultTypeInternal _RaftLogEntryEvent_default_instance_;
 PROTOBUF_CONSTEXPR RaftSnapshotEvent::RaftSnapshotEvent(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u})
-  , from_index_(uint64_t{0u})
-  , to_index_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.from_index_)*/uint64_t{0u}
+  , /*decltype(_impl_.to_index_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RaftSnapshotEventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftSnapshotEventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -69,9 +71,10 @@ struct RaftSnapshotEventDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RaftSnapshotEventDefaultTypeInternal _RaftSnapshotEvent_default_instance_;
 PROTOBUF_CONSTEXPR RaftConnectionEvent::RaftConnectionEvent(
-    ::_pbi::ConstantInitialized)
-  : address_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , is_snapshot_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.address_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.is_snapshot_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RaftConnectionEventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftConnectionEventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -82,9 +85,10 @@ struct RaftConnectionEventDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RaftConnectionEventDefaultTypeInternal _RaftConnectionEvent_default_instance_;
 PROTOBUF_CONSTEXPR RaftNodeEvent::RaftNodeEvent(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , replica_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RaftNodeEventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftNodeEventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -95,7 +99,7 @@ struct RaftNodeEventDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RaftNodeEventDefaultTypeInternal _RaftNodeEvent_default_instance_;
 PROTOBUF_CONSTEXPR RaftHostShutdown::RaftHostShutdown(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct RaftHostShutdownDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RaftHostShutdownDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -115,53 +119,53 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fevent_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _internal_metadata_),
   ~0u,  // no _extensions_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _oneof_case_[0]),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_._oneof_case_[0]),
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, typ_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, action_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, timestamp_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_.typ_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_.action_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_.timestamp_),
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, event_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_.event_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, index_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLogEntryEvent, _impl_.index_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, from_index_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, to_index_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, _impl_.from_index_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftSnapshotEvent, _impl_.to_index_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftConnectionEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftConnectionEvent, address_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftConnectionEvent, is_snapshot_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftConnectionEvent, _impl_.address_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftConnectionEvent, _impl_.is_snapshot_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftNodeEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftNodeEvent, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftNodeEvent, replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftNodeEvent, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::RaftNodeEvent, _impl_.replica_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftHostShutdown, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -313,33 +317,33 @@ class RaftEvent::_Internal {
 
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 RaftEvent::_Internal::timestamp(const RaftEvent* msg) {
-  return *msg->timestamp_;
+  return *msg->_impl_.timestamp_;
 }
 const ::raft::v1::RaftLogEntryEvent&
 RaftEvent::_Internal::log_entry(const RaftEvent* msg) {
-  return *msg->event_.log_entry_;
+  return *msg->_impl_.event_.log_entry_;
 }
 const ::raft::v1::RaftSnapshotEvent&
 RaftEvent::_Internal::snapshot(const RaftEvent* msg) {
-  return *msg->event_.snapshot_;
+  return *msg->_impl_.event_.snapshot_;
 }
 const ::raft::v1::RaftConnectionEvent&
 RaftEvent::_Internal::connection(const RaftEvent* msg) {
-  return *msg->event_.connection_;
+  return *msg->_impl_.event_.connection_;
 }
 const ::raft::v1::RaftNodeEvent&
 RaftEvent::_Internal::node(const RaftEvent* msg) {
-  return *msg->event_.node_;
+  return *msg->_impl_.event_.node_;
 }
 const ::raft::v1::RaftHostShutdown&
 RaftEvent::_Internal::host_shutdown(const RaftEvent* msg) {
-  return *msg->event_.host_shutdown_;
+  return *msg->_impl_.event_.host_shutdown_;
 }
 void RaftEvent::clear_timestamp() {
-  if (GetArenaForAllocation() == nullptr && timestamp_ != nullptr) {
-    delete timestamp_;
+  if (GetArenaForAllocation() == nullptr && _impl_.timestamp_ != nullptr) {
+    delete _impl_.timestamp_;
   }
-  timestamp_ = nullptr;
+  _impl_.timestamp_ = nullptr;
 }
 void RaftEvent::set_allocated_log_entry(::raft::v1::RaftLogEntryEvent* log_entry) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -352,7 +356,7 @@ void RaftEvent::set_allocated_log_entry(::raft::v1::RaftLogEntryEvent* log_entry
           message_arena, log_entry, submessage_arena);
     }
     set_has_log_entry();
-    event_.log_entry_ = log_entry;
+    _impl_.event_.log_entry_ = log_entry;
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.log_entry)
 }
@@ -367,7 +371,7 @@ void RaftEvent::set_allocated_snapshot(::raft::v1::RaftSnapshotEvent* snapshot) 
           message_arena, snapshot, submessage_arena);
     }
     set_has_snapshot();
-    event_.snapshot_ = snapshot;
+    _impl_.event_.snapshot_ = snapshot;
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.snapshot)
 }
@@ -382,7 +386,7 @@ void RaftEvent::set_allocated_connection(::raft::v1::RaftConnectionEvent* connec
           message_arena, connection, submessage_arena);
     }
     set_has_connection();
-    event_.connection_ = connection;
+    _impl_.event_.connection_ = connection;
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.connection)
 }
@@ -397,7 +401,7 @@ void RaftEvent::set_allocated_node(::raft::v1::RaftNodeEvent* node) {
           message_arena, node, submessage_arena);
     }
     set_has_node();
-    event_.node_ = node;
+    _impl_.event_.node_ = node;
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.node)
 }
@@ -412,47 +416,59 @@ void RaftEvent::set_allocated_host_shutdown(::raft::v1::RaftHostShutdown* host_s
           message_arena, host_shutdown, submessage_arena);
     }
     set_has_host_shutdown();
-    event_.host_shutdown_ = host_shutdown;
+    _impl_.event_.host_shutdown_ = host_shutdown;
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.host_shutdown)
 }
 RaftEvent::RaftEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RaftEvent)
 }
 RaftEvent::RaftEvent(const RaftEvent& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RaftEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.timestamp_){nullptr}
+    , decltype(_impl_.typ_){}
+    , decltype(_impl_.action_){}
+    , decltype(_impl_.event_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , /*decltype(_impl_._oneof_case_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_timestamp()) {
-    timestamp_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.timestamp_);
-  } else {
-    timestamp_ = nullptr;
+    _this->_impl_.timestamp_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.timestamp_);
   }
-  ::memcpy(&typ_, &from.typ_,
-    static_cast<size_t>(reinterpret_cast<char*>(&action_) -
-    reinterpret_cast<char*>(&typ_)) + sizeof(action_));
+  ::memcpy(&_impl_.typ_, &from._impl_.typ_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.action_) -
+    reinterpret_cast<char*>(&_impl_.typ_)) + sizeof(_impl_.action_));
   clear_has_event();
   switch (from.event_case()) {
     case kLogEntry: {
-      _internal_mutable_log_entry()->::raft::v1::RaftLogEntryEvent::MergeFrom(from._internal_log_entry());
+      _this->_internal_mutable_log_entry()->::raft::v1::RaftLogEntryEvent::MergeFrom(
+          from._internal_log_entry());
       break;
     }
     case kSnapshot: {
-      _internal_mutable_snapshot()->::raft::v1::RaftSnapshotEvent::MergeFrom(from._internal_snapshot());
+      _this->_internal_mutable_snapshot()->::raft::v1::RaftSnapshotEvent::MergeFrom(
+          from._internal_snapshot());
       break;
     }
     case kConnection: {
-      _internal_mutable_connection()->::raft::v1::RaftConnectionEvent::MergeFrom(from._internal_connection());
+      _this->_internal_mutable_connection()->::raft::v1::RaftConnectionEvent::MergeFrom(
+          from._internal_connection());
       break;
     }
     case kNode: {
-      _internal_mutable_node()->::raft::v1::RaftNodeEvent::MergeFrom(from._internal_node());
+      _this->_internal_mutable_node()->::raft::v1::RaftNodeEvent::MergeFrom(
+          from._internal_node());
       break;
     }
     case kHostShutdown: {
-      _internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(from._internal_host_shutdown());
+      _this->_internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(
+          from._internal_host_shutdown());
       break;
     }
     case EVENT_NOT_SET: {
@@ -462,12 +478,19 @@ RaftEvent::RaftEvent(const RaftEvent& from)
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftEvent)
 }
 
-inline void RaftEvent::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&timestamp_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&action_) -
-    reinterpret_cast<char*>(&timestamp_)) + sizeof(action_));
-clear_has_event();
+inline void RaftEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.timestamp_){nullptr}
+    , decltype(_impl_.typ_){0}
+    , decltype(_impl_.action_){0}
+    , decltype(_impl_.event_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , /*decltype(_impl_._oneof_case_)*/{}
+  };
+  clear_has_event();
 }
 
 RaftEvent::~RaftEvent() {
@@ -481,14 +504,14 @@ RaftEvent::~RaftEvent() {
 
 inline void RaftEvent::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete timestamp_;
+  if (this != internal_default_instance()) delete _impl_.timestamp_;
   if (has_event()) {
     clear_event();
   }
 }
 
 void RaftEvent::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RaftEvent::clear_event() {
@@ -496,31 +519,31 @@ void RaftEvent::clear_event() {
   switch (event_case()) {
     case kLogEntry: {
       if (GetArenaForAllocation() == nullptr) {
-        delete event_.log_entry_;
+        delete _impl_.event_.log_entry_;
       }
       break;
     }
     case kSnapshot: {
       if (GetArenaForAllocation() == nullptr) {
-        delete event_.snapshot_;
+        delete _impl_.event_.snapshot_;
       }
       break;
     }
     case kConnection: {
       if (GetArenaForAllocation() == nullptr) {
-        delete event_.connection_;
+        delete _impl_.event_.connection_;
       }
       break;
     }
     case kNode: {
       if (GetArenaForAllocation() == nullptr) {
-        delete event_.node_;
+        delete _impl_.event_.node_;
       }
       break;
     }
     case kHostShutdown: {
       if (GetArenaForAllocation() == nullptr) {
-        delete event_.host_shutdown_;
+        delete _impl_.event_.host_shutdown_;
       }
       break;
     }
@@ -528,7 +551,7 @@ void RaftEvent::clear_event() {
       break;
     }
   }
-  _oneof_case_[0] = EVENT_NOT_SET;
+  _impl_._oneof_case_[0] = EVENT_NOT_SET;
 }
 
 
@@ -538,13 +561,13 @@ void RaftEvent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && timestamp_ != nullptr) {
-    delete timestamp_;
+  if (GetArenaForAllocation() == nullptr && _impl_.timestamp_ != nullptr) {
+    delete _impl_.timestamp_;
   }
-  timestamp_ = nullptr;
-  ::memset(&typ_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&action_) -
-      reinterpret_cast<char*>(&typ_)) + sizeof(action_));
+  _impl_.timestamp_ = nullptr;
+  ::memset(&_impl_.typ_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.action_) -
+      reinterpret_cast<char*>(&_impl_.typ_)) + sizeof(_impl_.action_));
   clear_event();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -726,7 +749,7 @@ size_t RaftEvent::ByteSizeLong() const {
   if (this->_internal_has_timestamp()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *timestamp_);
+        *_impl_.timestamp_);
   }
 
   // .raft.v1.EventType typ = 1 [json_name = "typ"];
@@ -746,98 +769,100 @@ size_t RaftEvent::ByteSizeLong() const {
     case kLogEntry: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *event_.log_entry_);
+          *_impl_.event_.log_entry_);
       break;
     }
     // .raft.v1.RaftSnapshotEvent snapshot = 5 [json_name = "snapshot"];
     case kSnapshot: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *event_.snapshot_);
+          *_impl_.event_.snapshot_);
       break;
     }
     // .raft.v1.RaftConnectionEvent connection = 6 [json_name = "connection"];
     case kConnection: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *event_.connection_);
+          *_impl_.event_.connection_);
       break;
     }
     // .raft.v1.RaftNodeEvent node = 7 [json_name = "node"];
     case kNode: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *event_.node_);
+          *_impl_.event_.node_);
       break;
     }
     // .raft.v1.RaftHostShutdown host_shutdown = 8 [json_name = "hostShutdown"];
     case kHostShutdown: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *event_.host_shutdown_);
+          *_impl_.event_.host_shutdown_);
       break;
     }
     case EVENT_NOT_SET: {
       break;
     }
   }
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftEvent::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RaftEvent::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftEvent::GetClassData() const { return &_class_data_; }
 
-void RaftEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RaftEvent *>(to)->MergeFrom(
-      static_cast<const RaftEvent &>(from));
-}
 
-
-void RaftEvent::MergeFrom(const RaftEvent& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftEvent)
-  GOOGLE_DCHECK_NE(&from, this);
+void RaftEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RaftEvent*>(&to_msg);
+  auto& from = static_cast<const RaftEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_timestamp()) {
-    _internal_mutable_timestamp()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_timestamp());
+    _this->_internal_mutable_timestamp()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_timestamp());
   }
   if (from._internal_typ() != 0) {
-    _internal_set_typ(from._internal_typ());
+    _this->_internal_set_typ(from._internal_typ());
   }
   if (from._internal_action() != 0) {
-    _internal_set_action(from._internal_action());
+    _this->_internal_set_action(from._internal_action());
   }
   switch (from.event_case()) {
     case kLogEntry: {
-      _internal_mutable_log_entry()->::raft::v1::RaftLogEntryEvent::MergeFrom(from._internal_log_entry());
+      _this->_internal_mutable_log_entry()->::raft::v1::RaftLogEntryEvent::MergeFrom(
+          from._internal_log_entry());
       break;
     }
     case kSnapshot: {
-      _internal_mutable_snapshot()->::raft::v1::RaftSnapshotEvent::MergeFrom(from._internal_snapshot());
+      _this->_internal_mutable_snapshot()->::raft::v1::RaftSnapshotEvent::MergeFrom(
+          from._internal_snapshot());
       break;
     }
     case kConnection: {
-      _internal_mutable_connection()->::raft::v1::RaftConnectionEvent::MergeFrom(from._internal_connection());
+      _this->_internal_mutable_connection()->::raft::v1::RaftConnectionEvent::MergeFrom(
+          from._internal_connection());
       break;
     }
     case kNode: {
-      _internal_mutable_node()->::raft::v1::RaftNodeEvent::MergeFrom(from._internal_node());
+      _this->_internal_mutable_node()->::raft::v1::RaftNodeEvent::MergeFrom(
+          from._internal_node());
       break;
     }
     case kHostShutdown: {
-      _internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(from._internal_host_shutdown());
+      _this->_internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(
+          from._internal_host_shutdown());
       break;
     }
     case EVENT_NOT_SET: {
       break;
     }
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RaftEvent::CopyFrom(const RaftEvent& from) {
@@ -855,13 +880,13 @@ void RaftEvent::InternalSwap(RaftEvent* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RaftEvent, action_)
-      + sizeof(RaftEvent::action_)
-      - PROTOBUF_FIELD_OFFSET(RaftEvent, timestamp_)>(
-          reinterpret_cast<char*>(&timestamp_),
-          reinterpret_cast<char*>(&other->timestamp_));
-  swap(event_, other->event_);
-  swap(_oneof_case_[0], other->_oneof_case_[0]);
+      PROTOBUF_FIELD_OFFSET(RaftEvent, _impl_.action_)
+      + sizeof(RaftEvent::_impl_.action_)
+      - PROTOBUF_FIELD_OFFSET(RaftEvent, _impl_.timestamp_)>(
+          reinterpret_cast<char*>(&_impl_.timestamp_),
+          reinterpret_cast<char*>(&other->_impl_.timestamp_));
+  swap(_impl_.event_, other->_impl_.event_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RaftEvent::GetMetadata() const {
@@ -879,23 +904,35 @@ class RaftLogEntryEvent::_Internal {
 RaftLogEntryEvent::RaftLogEntryEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RaftLogEntryEvent)
 }
 RaftLogEntryEvent::RaftLogEntryEvent(const RaftLogEntryEvent& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RaftLogEntryEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.index_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&index_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(index_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.index_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.index_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftLogEntryEvent)
 }
 
-inline void RaftLogEntryEvent::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&index_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(index_));
+inline void RaftLogEntryEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.index_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RaftLogEntryEvent::~RaftLogEntryEvent() {
@@ -912,7 +949,7 @@ inline void RaftLogEntryEvent::SharedDtor() {
 }
 
 void RaftLogEntryEvent::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RaftLogEntryEvent::Clear() {
@@ -921,9 +958,9 @@ void RaftLogEntryEvent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&index_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(index_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.index_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.index_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -936,7 +973,7 @@ const char* RaftLogEntryEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -944,7 +981,7 @@ const char* RaftLogEntryEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -952,7 +989,7 @@ const char* RaftLogEntryEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 index = 3 [json_name = "index"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1035,38 +1072,34 @@ size_t RaftLogEntryEvent::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_index());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftLogEntryEvent::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RaftLogEntryEvent::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftLogEntryEvent::GetClassData() const { return &_class_data_; }
 
-void RaftLogEntryEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RaftLogEntryEvent *>(to)->MergeFrom(
-      static_cast<const RaftLogEntryEvent &>(from));
-}
 
-
-void RaftLogEntryEvent::MergeFrom(const RaftLogEntryEvent& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftLogEntryEvent)
-  GOOGLE_DCHECK_NE(&from, this);
+void RaftLogEntryEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RaftLogEntryEvent*>(&to_msg);
+  auto& from = static_cast<const RaftLogEntryEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftLogEntryEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_index() != 0) {
-    _internal_set_index(from._internal_index());
+    _this->_internal_set_index(from._internal_index());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RaftLogEntryEvent::CopyFrom(const RaftLogEntryEvent& from) {
@@ -1084,11 +1117,11 @@ void RaftLogEntryEvent::InternalSwap(RaftLogEntryEvent* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RaftLogEntryEvent, index_)
-      + sizeof(RaftLogEntryEvent::index_)
-      - PROTOBUF_FIELD_OFFSET(RaftLogEntryEvent, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(RaftLogEntryEvent, _impl_.index_)
+      + sizeof(RaftLogEntryEvent::_impl_.index_)
+      - PROTOBUF_FIELD_OFFSET(RaftLogEntryEvent, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RaftLogEntryEvent::GetMetadata() const {
@@ -1106,23 +1139,37 @@ class RaftSnapshotEvent::_Internal {
 RaftSnapshotEvent::RaftSnapshotEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RaftSnapshotEvent)
 }
 RaftSnapshotEvent::RaftSnapshotEvent(const RaftSnapshotEvent& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RaftSnapshotEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , decltype(_impl_.from_index_){}
+    , decltype(_impl_.to_index_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&to_index_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(to_index_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.to_index_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.to_index_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftSnapshotEvent)
 }
 
-inline void RaftSnapshotEvent::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&to_index_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(to_index_));
+inline void RaftSnapshotEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.from_index_){uint64_t{0u}}
+    , decltype(_impl_.to_index_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RaftSnapshotEvent::~RaftSnapshotEvent() {
@@ -1139,7 +1186,7 @@ inline void RaftSnapshotEvent::SharedDtor() {
 }
 
 void RaftSnapshotEvent::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RaftSnapshotEvent::Clear() {
@@ -1148,9 +1195,9 @@ void RaftSnapshotEvent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&to_index_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(to_index_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.to_index_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.to_index_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1163,7 +1210,7 @@ const char* RaftSnapshotEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1171,7 +1218,7 @@ const char* RaftSnapshotEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1179,7 +1226,7 @@ const char* RaftSnapshotEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 from_index = 3 [json_name = "fromIndex"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          from_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.from_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1187,7 +1234,7 @@ const char* RaftSnapshotEvent::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 to_index = 4 [json_name = "toIndex"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          to_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.to_index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1281,41 +1328,37 @@ size_t RaftSnapshotEvent::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_to_index());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftSnapshotEvent::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RaftSnapshotEvent::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftSnapshotEvent::GetClassData() const { return &_class_data_; }
 
-void RaftSnapshotEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RaftSnapshotEvent *>(to)->MergeFrom(
-      static_cast<const RaftSnapshotEvent &>(from));
-}
 
-
-void RaftSnapshotEvent::MergeFrom(const RaftSnapshotEvent& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftSnapshotEvent)
-  GOOGLE_DCHECK_NE(&from, this);
+void RaftSnapshotEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RaftSnapshotEvent*>(&to_msg);
+  auto& from = static_cast<const RaftSnapshotEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftSnapshotEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_from_index() != 0) {
-    _internal_set_from_index(from._internal_from_index());
+    _this->_internal_set_from_index(from._internal_from_index());
   }
   if (from._internal_to_index() != 0) {
-    _internal_set_to_index(from._internal_to_index());
+    _this->_internal_set_to_index(from._internal_to_index());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RaftSnapshotEvent::CopyFrom(const RaftSnapshotEvent& from) {
@@ -1333,11 +1376,11 @@ void RaftSnapshotEvent::InternalSwap(RaftSnapshotEvent* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RaftSnapshotEvent, to_index_)
-      + sizeof(RaftSnapshotEvent::to_index_)
-      - PROTOBUF_FIELD_OFFSET(RaftSnapshotEvent, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(RaftSnapshotEvent, _impl_.to_index_)
+      + sizeof(RaftSnapshotEvent::_impl_.to_index_)
+      - PROTOBUF_FIELD_OFFSET(RaftSnapshotEvent, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RaftSnapshotEvent::GetMetadata() const {
@@ -1355,30 +1398,43 @@ class RaftConnectionEvent::_Internal {
 RaftConnectionEvent::RaftConnectionEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RaftConnectionEvent)
 }
 RaftConnectionEvent::RaftConnectionEvent(const RaftConnectionEvent& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RaftConnectionEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.address_){}
+    , decltype(_impl_.is_snapshot_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  address_.InitDefault();
+  _impl_.address_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    address_.Set("", GetArenaForAllocation());
+    _impl_.address_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_address().empty()) {
-    address_.Set(from._internal_address(), 
-      GetArenaForAllocation());
+    _this->_impl_.address_.Set(from._internal_address(), 
+      _this->GetArenaForAllocation());
   }
-  is_snapshot_ = from.is_snapshot_;
+  _this->_impl_.is_snapshot_ = from._impl_.is_snapshot_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftConnectionEvent)
 }
 
-inline void RaftConnectionEvent::SharedCtor() {
-address_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  address_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-is_snapshot_ = false;
+inline void RaftConnectionEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.address_){}
+    , decltype(_impl_.is_snapshot_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.address_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.address_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 RaftConnectionEvent::~RaftConnectionEvent() {
@@ -1392,11 +1448,11 @@ RaftConnectionEvent::~RaftConnectionEvent() {
 
 inline void RaftConnectionEvent::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  address_.Destroy();
+  _impl_.address_.Destroy();
 }
 
 void RaftConnectionEvent::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RaftConnectionEvent::Clear() {
@@ -1405,8 +1461,8 @@ void RaftConnectionEvent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  address_.ClearToEmpty();
-  is_snapshot_ = false;
+  _impl_.address_.ClearToEmpty();
+  _impl_.is_snapshot_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1429,7 +1485,7 @@ const char* RaftConnectionEvent::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // bool is_snapshot = 2 [json_name = "isSnapshot"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          is_snapshot_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.is_snapshot_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1507,35 +1563,31 @@ size_t RaftConnectionEvent::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftConnectionEvent::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RaftConnectionEvent::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftConnectionEvent::GetClassData() const { return &_class_data_; }
 
-void RaftConnectionEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RaftConnectionEvent *>(to)->MergeFrom(
-      static_cast<const RaftConnectionEvent &>(from));
-}
 
-
-void RaftConnectionEvent::MergeFrom(const RaftConnectionEvent& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftConnectionEvent)
-  GOOGLE_DCHECK_NE(&from, this);
+void RaftConnectionEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RaftConnectionEvent*>(&to_msg);
+  auto& from = static_cast<const RaftConnectionEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftConnectionEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_address().empty()) {
-    _internal_set_address(from._internal_address());
+    _this->_internal_set_address(from._internal_address());
   }
   if (from._internal_is_snapshot() != 0) {
-    _internal_set_is_snapshot(from._internal_is_snapshot());
+    _this->_internal_set_is_snapshot(from._internal_is_snapshot());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RaftConnectionEvent::CopyFrom(const RaftConnectionEvent& from) {
@@ -1555,10 +1607,10 @@ void RaftConnectionEvent::InternalSwap(RaftConnectionEvent* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &address_, lhs_arena,
-      &other->address_, rhs_arena
+      &_impl_.address_, lhs_arena,
+      &other->_impl_.address_, rhs_arena
   );
-  swap(is_snapshot_, other->is_snapshot_);
+  swap(_impl_.is_snapshot_, other->_impl_.is_snapshot_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RaftConnectionEvent::GetMetadata() const {
@@ -1576,23 +1628,33 @@ class RaftNodeEvent::_Internal {
 RaftNodeEvent::RaftNodeEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.RaftNodeEvent)
 }
 RaftNodeEvent::RaftNodeEvent(const RaftNodeEvent& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  RaftNodeEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&replica_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.replica_id_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.replica_id_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftNodeEvent)
 }
 
-inline void RaftNodeEvent::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&replica_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+inline void RaftNodeEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 RaftNodeEvent::~RaftNodeEvent() {
@@ -1609,7 +1671,7 @@ inline void RaftNodeEvent::SharedDtor() {
 }
 
 void RaftNodeEvent::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void RaftNodeEvent::Clear() {
@@ -1618,9 +1680,9 @@ void RaftNodeEvent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&replica_id_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(replica_id_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.replica_id_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.replica_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1633,7 +1695,7 @@ const char* RaftNodeEvent::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1641,7 +1703,7 @@ const char* RaftNodeEvent::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1713,35 +1775,31 @@ size_t RaftNodeEvent::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_replica_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData RaftNodeEvent::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     RaftNodeEvent::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RaftNodeEvent::GetClassData() const { return &_class_data_; }
 
-void RaftNodeEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<RaftNodeEvent *>(to)->MergeFrom(
-      static_cast<const RaftNodeEvent &>(from));
-}
 
-
-void RaftNodeEvent::MergeFrom(const RaftNodeEvent& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftNodeEvent)
-  GOOGLE_DCHECK_NE(&from, this);
+void RaftNodeEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<RaftNodeEvent*>(&to_msg);
+  auto& from = static_cast<const RaftNodeEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.RaftNodeEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void RaftNodeEvent::CopyFrom(const RaftNodeEvent& from) {
@@ -1759,11 +1817,11 @@ void RaftNodeEvent::InternalSwap(RaftNodeEvent* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RaftNodeEvent, replica_id_)
-      + sizeof(RaftNodeEvent::replica_id_)
-      - PROTOBUF_FIELD_OFFSET(RaftNodeEvent, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(RaftNodeEvent, _impl_.replica_id_)
+      + sizeof(RaftNodeEvent::_impl_.replica_id_)
+      - PROTOBUF_FIELD_OFFSET(RaftNodeEvent, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RaftNodeEvent::GetMetadata() const {
@@ -1785,6 +1843,7 @@ RaftHostShutdown::RaftHostShutdown(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 RaftHostShutdown::RaftHostShutdown(const RaftHostShutdown& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  RaftHostShutdown* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.RaftHostShutdown)
 }

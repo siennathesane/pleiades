@@ -23,9 +23,10 @@ namespace _pbi = _pb::internal;
 namespace raft {
 namespace v1 {
 PROTOBUF_CONSTEXPR CompactRequest::CompactRequest(
-    ::_pbi::ConstantInitialized)
-  : replica_id_(uint64_t{0u})
-  , shard_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.replica_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CompactRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CompactRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -36,7 +37,7 @@ struct CompactRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CompactRequestDefaultTypeInternal _CompactRequest_default_instance_;
 PROTOBUF_CONSTEXPR CompactResponse::CompactResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct CompactResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CompactResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -47,9 +48,10 @@ struct CompactResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CompactResponseDefaultTypeInternal _CompactResponse_default_instance_;
 PROTOBUF_CONSTEXPR LeaderTransferRequest::LeaderTransferRequest(
-    ::_pbi::ConstantInitialized)
-  : target_node_id_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , shard_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.target_node_id_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct LeaderTransferRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR LeaderTransferRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -60,7 +62,7 @@ struct LeaderTransferRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LeaderTransferRequestDefaultTypeInternal _LeaderTransferRequest_default_instance_;
 PROTOBUF_CONSTEXPR LeaderTransferResponse::LeaderTransferResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct LeaderTransferResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR LeaderTransferResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -71,9 +73,10 @@ struct LeaderTransferResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LeaderTransferResponseDefaultTypeInternal _LeaderTransferResponse_default_instance_;
 PROTOBUF_CONSTEXPR SnapshotRequest::SnapshotRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct SnapshotRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR SnapshotRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -84,8 +87,9 @@ struct SnapshotRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SnapshotRequestDefaultTypeInternal _SnapshotRequest_default_instance_;
 PROTOBUF_CONSTEXPR SnapshotResponse::SnapshotResponse(
-    ::_pbi::ConstantInitialized)
-  : snapshot_index_captured_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.snapshot_index_captured_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct SnapshotResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR SnapshotResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -96,7 +100,7 @@ struct SnapshotResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SnapshotResponseDefaultTypeInternal _SnapshotResponse_default_instance_;
 PROTOBUF_CONSTEXPR StopRequest::StopRequest(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct StopRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StopRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -107,7 +111,7 @@ struct StopRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopRequestDefaultTypeInternal _StopRequest_default_instance_;
 PROTOBUF_CONSTEXPR StopResponse::StopResponse(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct StopResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StopResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -118,7 +122,7 @@ struct StopResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopResponseDefaultTypeInternal _StopResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetHostConfigRequest::GetHostConfigRequest(
-    ::_pbi::ConstantInitialized){}
+    ::_pbi::ConstantInitialized) {}
 struct GetHostConfigRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetHostConfigRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -129,8 +133,9 @@ struct GetHostConfigRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetHostConfigRequestDefaultTypeInternal _GetHostConfigRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetHostConfigResponse::GetHostConfigResponse(
-    ::_pbi::ConstantInitialized)
-  : config_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.config_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetHostConfigResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetHostConfigResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -141,8 +146,9 @@ struct GetHostConfigResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetHostConfigResponseDefaultTypeInternal _GetHostConfigResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetShardMembershipRequest::GetShardMembershipRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetShardMembershipRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetShardMembershipRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -153,20 +159,21 @@ struct GetShardMembershipRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetShardMembershipRequestDefaultTypeInternal _GetShardMembershipRequest_default_instance_;
 PROTOBUF_CONSTEXPR HostConfig::HostConfig(
-    ::_pbi::ConstantInitialized)
-  : wal_dir_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , host_dir_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , raft_address_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , listen_address_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , ca_file_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , cert_file_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , key_file_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , deployment_id_(uint64_t{0u})
-  , round_trip_time_in_milliseconds_(uint64_t{0u})
-  , address_by_host_id_(false)
-  , mutual_tls_(false)
-  , enable_metrics_(false)
-  , notify_commit_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.wal_dir_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.host_dir_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.raft_address_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.listen_address_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.ca_file_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.cert_file_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.key_file_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.deployment_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.round_trip_time_in_milliseconds_)*/uint64_t{0u}
+  , /*decltype(_impl_.address_by_host_id_)*/false
+  , /*decltype(_impl_.mutual_tls_)*/false
+  , /*decltype(_impl_.enable_metrics_)*/false
+  , /*decltype(_impl_.notify_commit_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct HostConfigDefaultTypeInternal {
   PROTOBUF_CONSTEXPR HostConfigDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -189,8 +196,8 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fhost_2eproto::offsets[] PROTOBUF_S
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::CompactRequest, replica_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::CompactRequest, shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::CompactRequest, _impl_.replica_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::CompactRequest, _impl_.shard_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::CompactResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -203,8 +210,8 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fhost_2eproto::offsets[] PROTOBUF_S
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::LeaderTransferRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::LeaderTransferRequest, target_node_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::LeaderTransferRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::LeaderTransferRequest, _impl_.target_node_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::LeaderTransferResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -217,15 +224,15 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fhost_2eproto::offsets[] PROTOBUF_S
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotResponse, snapshot_index_captured_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::SnapshotResponse, _impl_.snapshot_index_captured_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StopRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -250,33 +257,33 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fhost_2eproto::offsets[] PROTOBUF_S
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetHostConfigResponse, config_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetHostConfigResponse, _impl_.config_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembershipRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembershipRequest, shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::GetShardMembershipRequest, _impl_.shard_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, deployment_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, wal_dir_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, host_dir_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, round_trip_time_in_milliseconds_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, raft_address_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, address_by_host_id_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, listen_address_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, mutual_tls_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, ca_file_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, cert_file_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, key_file_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, enable_metrics_),
-  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, notify_commit_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.deployment_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.wal_dir_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.host_dir_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.round_trip_time_in_milliseconds_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.raft_address_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.address_by_host_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.listen_address_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.mutual_tls_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.ca_file_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.cert_file_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.key_file_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.enable_metrics_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::HostConfig, _impl_.notify_commit_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::raft::v1::CompactRequest)},
@@ -367,23 +374,33 @@ class CompactRequest::_Internal {
 CompactRequest::CompactRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.CompactRequest)
 }
 CompactRequest::CompactRequest(const CompactRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CompactRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.replica_id_){}
+    , decltype(_impl_.shard_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&replica_id_, &from.replica_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&shard_id_) -
-    reinterpret_cast<char*>(&replica_id_)) + sizeof(shard_id_));
+  ::memcpy(&_impl_.replica_id_, &from._impl_.replica_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.shard_id_) -
+    reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.shard_id_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.CompactRequest)
 }
 
-inline void CompactRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&replica_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&shard_id_) -
-    reinterpret_cast<char*>(&replica_id_)) + sizeof(shard_id_));
+inline void CompactRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.replica_id_){uint64_t{0u}}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CompactRequest::~CompactRequest() {
@@ -400,7 +417,7 @@ inline void CompactRequest::SharedDtor() {
 }
 
 void CompactRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CompactRequest::Clear() {
@@ -409,9 +426,9 @@ void CompactRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&replica_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&shard_id_) -
-      reinterpret_cast<char*>(&replica_id_)) + sizeof(shard_id_));
+  ::memset(&_impl_.replica_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.shard_id_) -
+      reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.shard_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -424,7 +441,7 @@ const char* CompactRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext
       // uint64 replica_id = 1 [json_name = "replicaId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -432,7 +449,7 @@ const char* CompactRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext
       // uint64 shard_id = 2 [json_name = "shardId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -504,35 +521,31 @@ size_t CompactRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CompactRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CompactRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CompactRequest::GetClassData() const { return &_class_data_; }
 
-void CompactRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CompactRequest *>(to)->MergeFrom(
-      static_cast<const CompactRequest &>(from));
-}
 
-
-void CompactRequest::MergeFrom(const CompactRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.CompactRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void CompactRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CompactRequest*>(&to_msg);
+  auto& from = static_cast<const CompactRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.CompactRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_replica_id() != 0) {
-    _internal_set_replica_id(from._internal_replica_id());
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CompactRequest::CopyFrom(const CompactRequest& from) {
@@ -550,11 +563,11 @@ void CompactRequest::InternalSwap(CompactRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CompactRequest, shard_id_)
-      + sizeof(CompactRequest::shard_id_)
-      - PROTOBUF_FIELD_OFFSET(CompactRequest, replica_id_)>(
-          reinterpret_cast<char*>(&replica_id_),
-          reinterpret_cast<char*>(&other->replica_id_));
+      PROTOBUF_FIELD_OFFSET(CompactRequest, _impl_.shard_id_)
+      + sizeof(CompactRequest::_impl_.shard_id_)
+      - PROTOBUF_FIELD_OFFSET(CompactRequest, _impl_.replica_id_)>(
+          reinterpret_cast<char*>(&_impl_.replica_id_),
+          reinterpret_cast<char*>(&other->_impl_.replica_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CompactRequest::GetMetadata() const {
@@ -576,6 +589,7 @@ CompactResponse::CompactResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 CompactResponse::CompactResponse(const CompactResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  CompactResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.CompactResponse)
 }
@@ -611,30 +625,43 @@ class LeaderTransferRequest::_Internal {
 LeaderTransferRequest::LeaderTransferRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.LeaderTransferRequest)
 }
 LeaderTransferRequest::LeaderTransferRequest(const LeaderTransferRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  LeaderTransferRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.target_node_id_){}
+    , decltype(_impl_.shard_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  target_node_id_.InitDefault();
+  _impl_.target_node_id_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    target_node_id_.Set("", GetArenaForAllocation());
+    _impl_.target_node_id_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_target_node_id().empty()) {
-    target_node_id_.Set(from._internal_target_node_id(), 
-      GetArenaForAllocation());
+    _this->_impl_.target_node_id_.Set(from._internal_target_node_id(), 
+      _this->GetArenaForAllocation());
   }
-  shard_id_ = from.shard_id_;
+  _this->_impl_.shard_id_ = from._impl_.shard_id_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.LeaderTransferRequest)
 }
 
-inline void LeaderTransferRequest::SharedCtor() {
-target_node_id_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  target_node_id_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-shard_id_ = uint64_t{0u};
+inline void LeaderTransferRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.target_node_id_){}
+    , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.target_node_id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.target_node_id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 LeaderTransferRequest::~LeaderTransferRequest() {
@@ -648,11 +675,11 @@ LeaderTransferRequest::~LeaderTransferRequest() {
 
 inline void LeaderTransferRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  target_node_id_.Destroy();
+  _impl_.target_node_id_.Destroy();
 }
 
 void LeaderTransferRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void LeaderTransferRequest::Clear() {
@@ -661,8 +688,8 @@ void LeaderTransferRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  target_node_id_.ClearToEmpty();
-  shard_id_ = uint64_t{0u};
+  _impl_.target_node_id_.ClearToEmpty();
+  _impl_.shard_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -675,7 +702,7 @@ const char* LeaderTransferRequest::_InternalParse(const char* ptr, ::_pbi::Parse
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -763,35 +790,31 @@ size_t LeaderTransferRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData LeaderTransferRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     LeaderTransferRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*LeaderTransferRequest::GetClassData() const { return &_class_data_; }
 
-void LeaderTransferRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<LeaderTransferRequest *>(to)->MergeFrom(
-      static_cast<const LeaderTransferRequest &>(from));
-}
 
-
-void LeaderTransferRequest::MergeFrom(const LeaderTransferRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.LeaderTransferRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void LeaderTransferRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<LeaderTransferRequest*>(&to_msg);
+  auto& from = static_cast<const LeaderTransferRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.LeaderTransferRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_target_node_id().empty()) {
-    _internal_set_target_node_id(from._internal_target_node_id());
+    _this->_internal_set_target_node_id(from._internal_target_node_id());
   }
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void LeaderTransferRequest::CopyFrom(const LeaderTransferRequest& from) {
@@ -811,10 +834,10 @@ void LeaderTransferRequest::InternalSwap(LeaderTransferRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &target_node_id_, lhs_arena,
-      &other->target_node_id_, rhs_arena
+      &_impl_.target_node_id_, lhs_arena,
+      &other->_impl_.target_node_id_, rhs_arena
   );
-  swap(shard_id_, other->shard_id_);
+  swap(_impl_.shard_id_, other->_impl_.shard_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata LeaderTransferRequest::GetMetadata() const {
@@ -836,6 +859,7 @@ LeaderTransferResponse::LeaderTransferResponse(::PROTOBUF_NAMESPACE_ID::Arena* a
 }
 LeaderTransferResponse::LeaderTransferResponse(const LeaderTransferResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  LeaderTransferResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.LeaderTransferResponse)
 }
@@ -871,23 +895,33 @@ class SnapshotRequest::_Internal {
 SnapshotRequest::SnapshotRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.SnapshotRequest)
 }
 SnapshotRequest::SnapshotRequest(const SnapshotRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  SnapshotRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.SnapshotRequest)
 }
 
-inline void SnapshotRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+inline void SnapshotRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 SnapshotRequest::~SnapshotRequest() {
@@ -904,7 +938,7 @@ inline void SnapshotRequest::SharedDtor() {
 }
 
 void SnapshotRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void SnapshotRequest::Clear() {
@@ -913,9 +947,9 @@ void SnapshotRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timeout_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(timeout_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timeout_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -928,7 +962,7 @@ const char* SnapshotRequest::_InternalParse(const char* ptr, ::_pbi::ParseContex
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -936,7 +970,7 @@ const char* SnapshotRequest::_InternalParse(const char* ptr, ::_pbi::ParseContex
       // int64 timeout = 2 [json_name = "timeout"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1008,35 +1042,31 @@ size_t SnapshotRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SnapshotRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     SnapshotRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SnapshotRequest::GetClassData() const { return &_class_data_; }
 
-void SnapshotRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<SnapshotRequest *>(to)->MergeFrom(
-      static_cast<const SnapshotRequest &>(from));
-}
 
-
-void SnapshotRequest::MergeFrom(const SnapshotRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.SnapshotRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void SnapshotRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<SnapshotRequest*>(&to_msg);
+  auto& from = static_cast<const SnapshotRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.SnapshotRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SnapshotRequest::CopyFrom(const SnapshotRequest& from) {
@@ -1054,11 +1084,11 @@ void SnapshotRequest::InternalSwap(SnapshotRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SnapshotRequest, timeout_)
-      + sizeof(SnapshotRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(SnapshotRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(SnapshotRequest, _impl_.timeout_)
+      + sizeof(SnapshotRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(SnapshotRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SnapshotRequest::GetMetadata() const {
@@ -1076,18 +1106,29 @@ class SnapshotResponse::_Internal {
 SnapshotResponse::SnapshotResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.SnapshotResponse)
 }
 SnapshotResponse::SnapshotResponse(const SnapshotResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  SnapshotResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.snapshot_index_captured_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  snapshot_index_captured_ = from.snapshot_index_captured_;
+  _this->_impl_.snapshot_index_captured_ = from._impl_.snapshot_index_captured_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.SnapshotResponse)
 }
 
-inline void SnapshotResponse::SharedCtor() {
-snapshot_index_captured_ = uint64_t{0u};
+inline void SnapshotResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.snapshot_index_captured_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 SnapshotResponse::~SnapshotResponse() {
@@ -1104,7 +1145,7 @@ inline void SnapshotResponse::SharedDtor() {
 }
 
 void SnapshotResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void SnapshotResponse::Clear() {
@@ -1113,7 +1154,7 @@ void SnapshotResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  snapshot_index_captured_ = uint64_t{0u};
+  _impl_.snapshot_index_captured_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1126,7 +1167,7 @@ const char* SnapshotResponse::_InternalParse(const char* ptr, ::_pbi::ParseConte
       // uint64 snapshot_index_captured = 1 [json_name = "snapshotIndexCaptured"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          snapshot_index_captured_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.snapshot_index_captured_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1187,32 +1228,28 @@ size_t SnapshotResponse::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_snapshot_index_captured());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData SnapshotResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     SnapshotResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*SnapshotResponse::GetClassData() const { return &_class_data_; }
 
-void SnapshotResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<SnapshotResponse *>(to)->MergeFrom(
-      static_cast<const SnapshotResponse &>(from));
-}
 
-
-void SnapshotResponse::MergeFrom(const SnapshotResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.SnapshotResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void SnapshotResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<SnapshotResponse*>(&to_msg);
+  auto& from = static_cast<const SnapshotResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.SnapshotResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_snapshot_index_captured() != 0) {
-    _internal_set_snapshot_index_captured(from._internal_snapshot_index_captured());
+    _this->_internal_set_snapshot_index_captured(from._internal_snapshot_index_captured());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void SnapshotResponse::CopyFrom(const SnapshotResponse& from) {
@@ -1229,7 +1266,7 @@ bool SnapshotResponse::IsInitialized() const {
 void SnapshotResponse::InternalSwap(SnapshotResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(snapshot_index_captured_, other->snapshot_index_captured_);
+  swap(_impl_.snapshot_index_captured_, other->_impl_.snapshot_index_captured_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SnapshotResponse::GetMetadata() const {
@@ -1251,6 +1288,7 @@ StopRequest::StopRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 StopRequest::StopRequest(const StopRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  StopRequest* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.StopRequest)
 }
@@ -1290,6 +1328,7 @@ StopResponse::StopResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 }
 StopResponse::StopResponse(const StopResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  StopResponse* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.StopResponse)
 }
@@ -1329,6 +1368,7 @@ GetHostConfigRequest::GetHostConfigRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena
 }
 GetHostConfigRequest::GetHostConfigRequest(const GetHostConfigRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  GetHostConfigRequest* const _this = this; (void)_this;
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetHostConfigRequest)
 }
@@ -1364,27 +1404,36 @@ class GetHostConfigResponse::_Internal {
 
 const ::raft::v1::HostConfig&
 GetHostConfigResponse::_Internal::config(const GetHostConfigResponse* msg) {
-  return *msg->config_;
+  return *msg->_impl_.config_;
 }
 GetHostConfigResponse::GetHostConfigResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.GetHostConfigResponse)
 }
 GetHostConfigResponse::GetHostConfigResponse(const GetHostConfigResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetHostConfigResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.config_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_config()) {
-    config_ = new ::raft::v1::HostConfig(*from.config_);
-  } else {
-    config_ = nullptr;
+    _this->_impl_.config_ = new ::raft::v1::HostConfig(*from._impl_.config_);
   }
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetHostConfigResponse)
 }
 
-inline void GetHostConfigResponse::SharedCtor() {
-config_ = nullptr;
+inline void GetHostConfigResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.config_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetHostConfigResponse::~GetHostConfigResponse() {
@@ -1398,11 +1447,11 @@ GetHostConfigResponse::~GetHostConfigResponse() {
 
 inline void GetHostConfigResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete config_;
+  if (this != internal_default_instance()) delete _impl_.config_;
 }
 
 void GetHostConfigResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetHostConfigResponse::Clear() {
@@ -1411,10 +1460,10 @@ void GetHostConfigResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && config_ != nullptr) {
-    delete config_;
+  if (GetArenaForAllocation() == nullptr && _impl_.config_ != nullptr) {
+    delete _impl_.config_;
   }
-  config_ = nullptr;
+  _impl_.config_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1488,35 +1537,32 @@ size_t GetHostConfigResponse::ByteSizeLong() const {
   if (this->_internal_has_config()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *config_);
+        *_impl_.config_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetHostConfigResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetHostConfigResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetHostConfigResponse::GetClassData() const { return &_class_data_; }
 
-void GetHostConfigResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetHostConfigResponse *>(to)->MergeFrom(
-      static_cast<const GetHostConfigResponse &>(from));
-}
 
-
-void GetHostConfigResponse::MergeFrom(const GetHostConfigResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetHostConfigResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetHostConfigResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetHostConfigResponse*>(&to_msg);
+  auto& from = static_cast<const GetHostConfigResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetHostConfigResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_config()) {
-    _internal_mutable_config()->::raft::v1::HostConfig::MergeFrom(from._internal_config());
+    _this->_internal_mutable_config()->::raft::v1::HostConfig::MergeFrom(
+        from._internal_config());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetHostConfigResponse::CopyFrom(const GetHostConfigResponse& from) {
@@ -1533,7 +1579,7 @@ bool GetHostConfigResponse::IsInitialized() const {
 void GetHostConfigResponse::InternalSwap(GetHostConfigResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(config_, other->config_);
+  swap(_impl_.config_, other->_impl_.config_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetHostConfigResponse::GetMetadata() const {
@@ -1551,18 +1597,29 @@ class GetShardMembershipRequest::_Internal {
 GetShardMembershipRequest::GetShardMembershipRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.GetShardMembershipRequest)
 }
 GetShardMembershipRequest::GetShardMembershipRequest(const GetShardMembershipRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetShardMembershipRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  shard_id_ = from.shard_id_;
+  _this->_impl_.shard_id_ = from._impl_.shard_id_;
   // @@protoc_insertion_point(copy_constructor:raft.v1.GetShardMembershipRequest)
 }
 
-inline void GetShardMembershipRequest::SharedCtor() {
-shard_id_ = uint64_t{0u};
+inline void GetShardMembershipRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetShardMembershipRequest::~GetShardMembershipRequest() {
@@ -1579,7 +1636,7 @@ inline void GetShardMembershipRequest::SharedDtor() {
 }
 
 void GetShardMembershipRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetShardMembershipRequest::Clear() {
@@ -1588,7 +1645,7 @@ void GetShardMembershipRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  shard_id_ = uint64_t{0u};
+  _impl_.shard_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1601,7 +1658,7 @@ const char* GetShardMembershipRequest::_InternalParse(const char* ptr, ::_pbi::P
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1662,32 +1719,28 @@ size_t GetShardMembershipRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetShardMembershipRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetShardMembershipRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetShardMembershipRequest::GetClassData() const { return &_class_data_; }
 
-void GetShardMembershipRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetShardMembershipRequest *>(to)->MergeFrom(
-      static_cast<const GetShardMembershipRequest &>(from));
-}
 
-
-void GetShardMembershipRequest::MergeFrom(const GetShardMembershipRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembershipRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetShardMembershipRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetShardMembershipRequest*>(&to_msg);
+  auto& from = static_cast<const GetShardMembershipRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.GetShardMembershipRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetShardMembershipRequest::CopyFrom(const GetShardMembershipRequest& from) {
@@ -1704,7 +1757,7 @@ bool GetShardMembershipRequest::IsInitialized() const {
 void GetShardMembershipRequest::InternalSwap(GetShardMembershipRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(shard_id_, other->shard_id_);
+  swap(_impl_.shard_id_, other->_impl_.shard_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembershipRequest::GetMetadata() const {
@@ -1722,107 +1775,139 @@ class HostConfig::_Internal {
 HostConfig::HostConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:raft.v1.HostConfig)
 }
 HostConfig::HostConfig(const HostConfig& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  HostConfig* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.wal_dir_){}
+    , decltype(_impl_.host_dir_){}
+    , decltype(_impl_.raft_address_){}
+    , decltype(_impl_.listen_address_){}
+    , decltype(_impl_.ca_file_){}
+    , decltype(_impl_.cert_file_){}
+    , decltype(_impl_.key_file_){}
+    , decltype(_impl_.deployment_id_){}
+    , decltype(_impl_.round_trip_time_in_milliseconds_){}
+    , decltype(_impl_.address_by_host_id_){}
+    , decltype(_impl_.mutual_tls_){}
+    , decltype(_impl_.enable_metrics_){}
+    , decltype(_impl_.notify_commit_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  wal_dir_.InitDefault();
+  _impl_.wal_dir_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    wal_dir_.Set("", GetArenaForAllocation());
+    _impl_.wal_dir_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_wal_dir().empty()) {
-    wal_dir_.Set(from._internal_wal_dir(), 
-      GetArenaForAllocation());
+    _this->_impl_.wal_dir_.Set(from._internal_wal_dir(), 
+      _this->GetArenaForAllocation());
   }
-  host_dir_.InitDefault();
+  _impl_.host_dir_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    host_dir_.Set("", GetArenaForAllocation());
+    _impl_.host_dir_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_host_dir().empty()) {
-    host_dir_.Set(from._internal_host_dir(), 
-      GetArenaForAllocation());
+    _this->_impl_.host_dir_.Set(from._internal_host_dir(), 
+      _this->GetArenaForAllocation());
   }
-  raft_address_.InitDefault();
+  _impl_.raft_address_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    raft_address_.Set("", GetArenaForAllocation());
+    _impl_.raft_address_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_raft_address().empty()) {
-    raft_address_.Set(from._internal_raft_address(), 
-      GetArenaForAllocation());
+    _this->_impl_.raft_address_.Set(from._internal_raft_address(), 
+      _this->GetArenaForAllocation());
   }
-  listen_address_.InitDefault();
+  _impl_.listen_address_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    listen_address_.Set("", GetArenaForAllocation());
+    _impl_.listen_address_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_listen_address().empty()) {
-    listen_address_.Set(from._internal_listen_address(), 
-      GetArenaForAllocation());
+    _this->_impl_.listen_address_.Set(from._internal_listen_address(), 
+      _this->GetArenaForAllocation());
   }
-  ca_file_.InitDefault();
+  _impl_.ca_file_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    ca_file_.Set("", GetArenaForAllocation());
+    _impl_.ca_file_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_ca_file().empty()) {
-    ca_file_.Set(from._internal_ca_file(), 
-      GetArenaForAllocation());
+    _this->_impl_.ca_file_.Set(from._internal_ca_file(), 
+      _this->GetArenaForAllocation());
   }
-  cert_file_.InitDefault();
+  _impl_.cert_file_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    cert_file_.Set("", GetArenaForAllocation());
+    _impl_.cert_file_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_cert_file().empty()) {
-    cert_file_.Set(from._internal_cert_file(), 
-      GetArenaForAllocation());
+    _this->_impl_.cert_file_.Set(from._internal_cert_file(), 
+      _this->GetArenaForAllocation());
   }
-  key_file_.InitDefault();
+  _impl_.key_file_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    key_file_.Set("", GetArenaForAllocation());
+    _impl_.key_file_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_key_file().empty()) {
-    key_file_.Set(from._internal_key_file(), 
-      GetArenaForAllocation());
+    _this->_impl_.key_file_.Set(from._internal_key_file(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&deployment_id_, &from.deployment_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&notify_commit_) -
-    reinterpret_cast<char*>(&deployment_id_)) + sizeof(notify_commit_));
+  ::memcpy(&_impl_.deployment_id_, &from._impl_.deployment_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.notify_commit_) -
+    reinterpret_cast<char*>(&_impl_.deployment_id_)) + sizeof(_impl_.notify_commit_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.HostConfig)
 }
 
-inline void HostConfig::SharedCtor() {
-wal_dir_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  wal_dir_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-host_dir_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  host_dir_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-raft_address_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  raft_address_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-listen_address_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  listen_address_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-ca_file_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  ca_file_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-cert_file_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  cert_file_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-key_file_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  key_file_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&deployment_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&notify_commit_) -
-    reinterpret_cast<char*>(&deployment_id_)) + sizeof(notify_commit_));
+inline void HostConfig::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.wal_dir_){}
+    , decltype(_impl_.host_dir_){}
+    , decltype(_impl_.raft_address_){}
+    , decltype(_impl_.listen_address_){}
+    , decltype(_impl_.ca_file_){}
+    , decltype(_impl_.cert_file_){}
+    , decltype(_impl_.key_file_){}
+    , decltype(_impl_.deployment_id_){uint64_t{0u}}
+    , decltype(_impl_.round_trip_time_in_milliseconds_){uint64_t{0u}}
+    , decltype(_impl_.address_by_host_id_){false}
+    , decltype(_impl_.mutual_tls_){false}
+    , decltype(_impl_.enable_metrics_){false}
+    , decltype(_impl_.notify_commit_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.wal_dir_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.wal_dir_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.host_dir_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.host_dir_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.raft_address_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.raft_address_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.listen_address_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.listen_address_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.ca_file_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.ca_file_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.cert_file_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.cert_file_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.key_file_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.key_file_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 HostConfig::~HostConfig() {
@@ -1836,17 +1921,17 @@ HostConfig::~HostConfig() {
 
 inline void HostConfig::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  wal_dir_.Destroy();
-  host_dir_.Destroy();
-  raft_address_.Destroy();
-  listen_address_.Destroy();
-  ca_file_.Destroy();
-  cert_file_.Destroy();
-  key_file_.Destroy();
+  _impl_.wal_dir_.Destroy();
+  _impl_.host_dir_.Destroy();
+  _impl_.raft_address_.Destroy();
+  _impl_.listen_address_.Destroy();
+  _impl_.ca_file_.Destroy();
+  _impl_.cert_file_.Destroy();
+  _impl_.key_file_.Destroy();
 }
 
 void HostConfig::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void HostConfig::Clear() {
@@ -1855,16 +1940,16 @@ void HostConfig::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  wal_dir_.ClearToEmpty();
-  host_dir_.ClearToEmpty();
-  raft_address_.ClearToEmpty();
-  listen_address_.ClearToEmpty();
-  ca_file_.ClearToEmpty();
-  cert_file_.ClearToEmpty();
-  key_file_.ClearToEmpty();
-  ::memset(&deployment_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&notify_commit_) -
-      reinterpret_cast<char*>(&deployment_id_)) + sizeof(notify_commit_));
+  _impl_.wal_dir_.ClearToEmpty();
+  _impl_.host_dir_.ClearToEmpty();
+  _impl_.raft_address_.ClearToEmpty();
+  _impl_.listen_address_.ClearToEmpty();
+  _impl_.ca_file_.ClearToEmpty();
+  _impl_.cert_file_.ClearToEmpty();
+  _impl_.key_file_.ClearToEmpty();
+  ::memset(&_impl_.deployment_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.notify_commit_) -
+      reinterpret_cast<char*>(&_impl_.deployment_id_)) + sizeof(_impl_.notify_commit_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1877,7 +1962,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // uint64 deployment_id = 1 [json_name = "deploymentId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          deployment_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.deployment_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1905,7 +1990,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // uint64 round_trip_time_in_milliseconds = 4 [json_name = "roundTripTimeInMilliseconds"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          round_trip_time_in_milliseconds_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.round_trip_time_in_milliseconds_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1923,7 +2008,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // bool address_by_host_id = 6 [json_name = "addressByHostId"];
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          address_by_host_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.address_by_host_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1941,7 +2026,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // bool mutual_tls = 8 [json_name = "mutualTls"];
       case 8:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
-          mutual_tls_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.mutual_tls_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1979,7 +2064,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // bool enable_metrics = 12 [json_name = "enableMetrics"];
       case 12:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 96)) {
-          enable_metrics_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.enable_metrics_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1987,7 +2072,7 @@ const char* HostConfig::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
       // bool notify_commit = 13 [json_name = "notifyCommit"];
       case 13:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 104)) {
-          notify_commit_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.notify_commit_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2222,68 +2307,64 @@ size_t HostConfig::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData HostConfig::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     HostConfig::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*HostConfig::GetClassData() const { return &_class_data_; }
 
-void HostConfig::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<HostConfig *>(to)->MergeFrom(
-      static_cast<const HostConfig &>(from));
-}
 
-
-void HostConfig::MergeFrom(const HostConfig& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.HostConfig)
-  GOOGLE_DCHECK_NE(&from, this);
+void HostConfig::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<HostConfig*>(&to_msg);
+  auto& from = static_cast<const HostConfig&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.HostConfig)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_wal_dir().empty()) {
-    _internal_set_wal_dir(from._internal_wal_dir());
+    _this->_internal_set_wal_dir(from._internal_wal_dir());
   }
   if (!from._internal_host_dir().empty()) {
-    _internal_set_host_dir(from._internal_host_dir());
+    _this->_internal_set_host_dir(from._internal_host_dir());
   }
   if (!from._internal_raft_address().empty()) {
-    _internal_set_raft_address(from._internal_raft_address());
+    _this->_internal_set_raft_address(from._internal_raft_address());
   }
   if (!from._internal_listen_address().empty()) {
-    _internal_set_listen_address(from._internal_listen_address());
+    _this->_internal_set_listen_address(from._internal_listen_address());
   }
   if (!from._internal_ca_file().empty()) {
-    _internal_set_ca_file(from._internal_ca_file());
+    _this->_internal_set_ca_file(from._internal_ca_file());
   }
   if (!from._internal_cert_file().empty()) {
-    _internal_set_cert_file(from._internal_cert_file());
+    _this->_internal_set_cert_file(from._internal_cert_file());
   }
   if (!from._internal_key_file().empty()) {
-    _internal_set_key_file(from._internal_key_file());
+    _this->_internal_set_key_file(from._internal_key_file());
   }
   if (from._internal_deployment_id() != 0) {
-    _internal_set_deployment_id(from._internal_deployment_id());
+    _this->_internal_set_deployment_id(from._internal_deployment_id());
   }
   if (from._internal_round_trip_time_in_milliseconds() != 0) {
-    _internal_set_round_trip_time_in_milliseconds(from._internal_round_trip_time_in_milliseconds());
+    _this->_internal_set_round_trip_time_in_milliseconds(from._internal_round_trip_time_in_milliseconds());
   }
   if (from._internal_address_by_host_id() != 0) {
-    _internal_set_address_by_host_id(from._internal_address_by_host_id());
+    _this->_internal_set_address_by_host_id(from._internal_address_by_host_id());
   }
   if (from._internal_mutual_tls() != 0) {
-    _internal_set_mutual_tls(from._internal_mutual_tls());
+    _this->_internal_set_mutual_tls(from._internal_mutual_tls());
   }
   if (from._internal_enable_metrics() != 0) {
-    _internal_set_enable_metrics(from._internal_enable_metrics());
+    _this->_internal_set_enable_metrics(from._internal_enable_metrics());
   }
   if (from._internal_notify_commit() != 0) {
-    _internal_set_notify_commit(from._internal_notify_commit());
+    _this->_internal_set_notify_commit(from._internal_notify_commit());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void HostConfig::CopyFrom(const HostConfig& from) {
@@ -2303,39 +2384,39 @@ void HostConfig::InternalSwap(HostConfig* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &wal_dir_, lhs_arena,
-      &other->wal_dir_, rhs_arena
+      &_impl_.wal_dir_, lhs_arena,
+      &other->_impl_.wal_dir_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &host_dir_, lhs_arena,
-      &other->host_dir_, rhs_arena
+      &_impl_.host_dir_, lhs_arena,
+      &other->_impl_.host_dir_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &raft_address_, lhs_arena,
-      &other->raft_address_, rhs_arena
+      &_impl_.raft_address_, lhs_arena,
+      &other->_impl_.raft_address_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &listen_address_, lhs_arena,
-      &other->listen_address_, rhs_arena
+      &_impl_.listen_address_, lhs_arena,
+      &other->_impl_.listen_address_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &ca_file_, lhs_arena,
-      &other->ca_file_, rhs_arena
+      &_impl_.ca_file_, lhs_arena,
+      &other->_impl_.ca_file_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &cert_file_, lhs_arena,
-      &other->cert_file_, rhs_arena
+      &_impl_.cert_file_, lhs_arena,
+      &other->_impl_.cert_file_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &key_file_, lhs_arena,
-      &other->key_file_, rhs_arena
+      &_impl_.key_file_, lhs_arena,
+      &other->_impl_.key_file_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(HostConfig, notify_commit_)
-      + sizeof(HostConfig::notify_commit_)
-      - PROTOBUF_FIELD_OFFSET(HostConfig, deployment_id_)>(
-          reinterpret_cast<char*>(&deployment_id_),
-          reinterpret_cast<char*>(&other->deployment_id_));
+      PROTOBUF_FIELD_OFFSET(HostConfig, _impl_.notify_commit_)
+      + sizeof(HostConfig::_impl_.notify_commit_)
+      - PROTOBUF_FIELD_OFFSET(HostConfig, _impl_.deployment_id_)>(
+          reinterpret_cast<char*>(&_impl_.deployment_id_),
+          reinterpret_cast<char*>(&other->_impl_.deployment_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata HostConfig::GetMetadata() const {

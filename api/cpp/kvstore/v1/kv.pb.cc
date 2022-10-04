@@ -23,12 +23,13 @@ namespace _pbi = _pb::internal;
 namespace kvstore {
 namespace v1 {
 PROTOBUF_CONSTEXPR KVStoreWrapper::KVStoreWrapper(
-    ::_pbi::ConstantInitialized)
-  : bucket_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , account_(uint64_t{0u})
-  , typ_(0)
-
-  , _oneof_case_{}{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.account_)*/uint64_t{0u}
+  , /*decltype(_impl_.typ_)*/0
+  , /*decltype(_impl_.payload_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}
+  , /*decltype(_impl_._oneof_case_)*/{}} {}
 struct KVStoreWrapperDefaultTypeInternal {
   PROTOBUF_CONSTEXPR KVStoreWrapperDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -39,10 +40,11 @@ struct KVStoreWrapperDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 KVStoreWrapperDefaultTypeInternal _KVStoreWrapper_default_instance_;
 PROTOBUF_CONSTEXPR CreateAccountRequest::CreateAccountRequest(
-    ::_pbi::ConstantInitialized)
-  : owner_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.owner_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CreateAccountRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CreateAccountRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -53,9 +55,10 @@ struct CreateAccountRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateAccountRequestDefaultTypeInternal _CreateAccountRequest_default_instance_;
 PROTOBUF_CONSTEXPR CreateAccountResponse::CreateAccountResponse(
-    ::_pbi::ConstantInitialized)
-  : account_descriptor_(nullptr)
-  , transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.account_descriptor_)*/nullptr
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CreateAccountResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CreateAccountResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -66,10 +69,11 @@ struct CreateAccountResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateAccountResponseDefaultTypeInternal _CreateAccountResponse_default_instance_;
 PROTOBUF_CONSTEXPR DeleteAccountRequest::DeleteAccountRequest(
-    ::_pbi::ConstantInitialized)
-  : owner_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.owner_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteAccountRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteAccountRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -80,9 +84,10 @@ struct DeleteAccountRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteAccountRequestDefaultTypeInternal _DeleteAccountRequest_default_instance_;
 PROTOBUF_CONSTEXPR DeleteAccountResponse::DeleteAccountResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr)
-  , ok_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.ok_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteAccountResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteAccountResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -93,8 +98,9 @@ struct DeleteAccountResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteAccountResponseDefaultTypeInternal _DeleteAccountResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetAccountDescriptorRequest::GetAccountDescriptorRequest(
-    ::_pbi::ConstantInitialized)
-  : account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetAccountDescriptorRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetAccountDescriptorRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -105,8 +111,9 @@ struct GetAccountDescriptorRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetAccountDescriptorRequestDefaultTypeInternal _GetAccountDescriptorRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetAccountDescriptorResponse::GetAccountDescriptorResponse(
-    ::_pbi::ConstantInitialized)
-  : account_descriptor_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.account_descriptor_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetAccountDescriptorResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetAccountDescriptorResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -117,13 +124,14 @@ struct GetAccountDescriptorResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetAccountDescriptorResponseDefaultTypeInternal _GetAccountDescriptorResponse_default_instance_;
 PROTOBUF_CONSTEXPR AccountDescriptor::AccountDescriptor(
-    ::_pbi::ConstantInitialized)
-  : buckets_()
-  , owner_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , created_(nullptr)
-  , last_updated_(nullptr)
-  , account_id_(uint64_t{0u})
-  , bucket_count_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.buckets_)*/{}
+  , /*decltype(_impl_.owner_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.created_)*/nullptr
+  , /*decltype(_impl_.last_updated_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.bucket_count_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AccountDescriptorDefaultTypeInternal {
   PROTOBUF_CONSTEXPR AccountDescriptorDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -134,11 +142,12 @@ struct AccountDescriptorDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AccountDescriptorDefaultTypeInternal _AccountDescriptor_default_instance_;
 PROTOBUF_CONSTEXPR CreateBucketRequest::CreateBucketRequest(
-    ::_pbi::ConstantInitialized)
-  : name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , owner_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.owner_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CreateBucketRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CreateBucketRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -149,9 +158,10 @@ struct CreateBucketRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateBucketRequestDefaultTypeInternal _CreateBucketRequest_default_instance_;
 PROTOBUF_CONSTEXPR CreateBucketResponse::CreateBucketResponse(
-    ::_pbi::ConstantInitialized)
-  : bucket_descriptor_(nullptr)
-  , transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_descriptor_)*/nullptr
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CreateBucketResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CreateBucketResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -162,10 +172,11 @@ struct CreateBucketResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CreateBucketResponseDefaultTypeInternal _CreateBucketResponse_default_instance_;
 PROTOBUF_CONSTEXPR DeleteBucketRequest::DeleteBucketRequest(
-    ::_pbi::ConstantInitialized)
-  : name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteBucketRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteBucketRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -176,9 +187,10 @@ struct DeleteBucketRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteBucketRequestDefaultTypeInternal _DeleteBucketRequest_default_instance_;
 PROTOBUF_CONSTEXPR DeleteBucketResponse::DeleteBucketResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr)
-  , ok_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.ok_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteBucketResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteBucketResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -189,12 +201,13 @@ struct DeleteBucketResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteBucketResponseDefaultTypeInternal _DeleteBucketResponse_default_instance_;
 PROTOBUF_CONSTEXPR BucketDescriptor::BucketDescriptor(
-    ::_pbi::ConstantInitialized)
-  : owner_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , created_(nullptr)
-  , last_updated_(nullptr)
-  , size_(uint64_t{0u})
-  , key_count_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.owner_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.created_)*/nullptr
+  , /*decltype(_impl_.last_updated_)*/nullptr
+  , /*decltype(_impl_.size_)*/uint64_t{0u}
+  , /*decltype(_impl_.key_count_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct BucketDescriptorDefaultTypeInternal {
   PROTOBUF_CONSTEXPR BucketDescriptorDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -205,9 +218,10 @@ struct BucketDescriptorDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 BucketDescriptorDefaultTypeInternal _BucketDescriptor_default_instance_;
 PROTOBUF_CONSTEXPR GetBucketDescriptorRequest::GetBucketDescriptorRequest(
-    ::_pbi::ConstantInitialized)
-  : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetBucketDescriptorRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetBucketDescriptorRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -218,8 +232,9 @@ struct GetBucketDescriptorRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetBucketDescriptorRequestDefaultTypeInternal _GetBucketDescriptorRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetBucketDescriptorResponse::GetBucketDescriptorResponse(
-    ::_pbi::ConstantInitialized)
-  : bucket_descriptor_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_descriptor_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetBucketDescriptorResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetBucketDescriptorResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -230,11 +245,13 @@ struct GetBucketDescriptorResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetBucketDescriptorResponseDefaultTypeInternal _GetBucketDescriptorResponse_default_instance_;
 PROTOBUF_CONSTEXPR GetKeyRequest::GetKeyRequest(
-    ::_pbi::ConstantInitialized)
-  : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , account_id_(uint64_t{0u})
-  , version_(0u){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_._has_bits_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}
+  , /*decltype(_impl_.bucket_name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.version_)*/0u} {}
 struct GetKeyRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetKeyRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -245,8 +262,9 @@ struct GetKeyRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetKeyRequestDefaultTypeInternal _GetKeyRequest_default_instance_;
 PROTOBUF_CONSTEXPR GetKeyResponse::GetKeyResponse(
-    ::_pbi::ConstantInitialized)
-  : key_value_pair_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.key_value_pair_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct GetKeyResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR GetKeyResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -257,11 +275,12 @@ struct GetKeyResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 GetKeyResponseDefaultTypeInternal _GetKeyResponse_default_instance_;
 PROTOBUF_CONSTEXPR PutKeyRequest::PutKeyRequest(
-    ::_pbi::ConstantInitialized)
-  : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , key_value_pair_(nullptr)
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.key_value_pair_)*/nullptr
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PutKeyRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PutKeyRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -272,8 +291,9 @@ struct PutKeyRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PutKeyRequestDefaultTypeInternal _PutKeyRequest_default_instance_;
 PROTOBUF_CONSTEXPR PutKeyResponse::PutKeyResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct PutKeyResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR PutKeyResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -284,11 +304,12 @@ struct PutKeyResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PutKeyResponseDefaultTypeInternal _PutKeyResponse_default_instance_;
 PROTOBUF_CONSTEXPR DeleteKeyRequest::DeleteKeyRequest(
-    ::_pbi::ConstantInitialized)
-  : bucket_name_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , transaction_(nullptr)
-  , account_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.bucket_name_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.account_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteKeyRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteKeyRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -299,9 +320,10 @@ struct DeleteKeyRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteKeyRequestDefaultTypeInternal _DeleteKeyRequest_default_instance_;
 PROTOBUF_CONSTEXPR DeleteKeyResponse::DeleteKeyResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr)
-  , ok_(false){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.ok_)*/false
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct DeleteKeyResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR DeleteKeyResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -312,10 +334,11 @@ struct DeleteKeyResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DeleteKeyResponseDefaultTypeInternal _DeleteKeyResponse_default_instance_;
 PROTOBUF_CONSTEXPR KeyValueDescriptor::KeyValueDescriptor(
-    ::_pbi::ConstantInitialized)
-  : versions_()
-  , _versions_cached_byte_size_(0)
-  , current_key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.versions_)*/{}
+  , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+  , /*decltype(_impl_.current_key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct KeyValueDescriptorDefaultTypeInternal {
   PROTOBUF_CONSTEXPR KeyValueDescriptorDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -326,8 +349,9 @@ struct KeyValueDescriptorDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 KeyValueDescriptorDefaultTypeInternal _KeyValueDescriptor_default_instance_;
 PROTOBUF_CONSTEXPR ListKeyVersionsRequest::ListKeyVersionsRequest(
-    ::_pbi::ConstantInitialized)
-  : key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct ListKeyVersionsRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR ListKeyVersionsRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -338,9 +362,10 @@ struct ListKeyVersionsRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ListKeyVersionsRequestDefaultTypeInternal _ListKeyVersionsRequest_default_instance_;
 PROTOBUF_CONSTEXPR ListKeyVersionsResponse::ListKeyVersionsResponse(
-    ::_pbi::ConstantInitialized)
-  : versions_()
-  , _versions_cached_byte_size_(0){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.versions_)*/{}
+  , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct ListKeyVersionsResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR ListKeyVersionsResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -351,13 +376,14 @@ struct ListKeyVersionsResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ListKeyVersionsResponseDefaultTypeInternal _ListKeyVersionsResponse_default_instance_;
 PROTOBUF_CONSTEXPR KeyValue::KeyValue(
-    ::_pbi::ConstantInitialized)
-  : key_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , value_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , create_revision_(int64_t{0})
-  , mod_revision_(int64_t{0})
-  , lease_(int64_t{0})
-  , version_(0u){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.value_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.create_revision_)*/int64_t{0}
+  , /*decltype(_impl_.mod_revision_)*/int64_t{0}
+  , /*decltype(_impl_.lease_)*/int64_t{0}
+  , /*decltype(_impl_.version_)*/0u
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct KeyValueDefaultTypeInternal {
   PROTOBUF_CONSTEXPR KeyValueDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -368,11 +394,12 @@ struct KeyValueDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 KeyValueDefaultTypeInternal _KeyValue_default_instance_;
 PROTOBUF_CONSTEXPR Event::Event(
-    ::_pbi::ConstantInitialized)
-  : kv_(nullptr)
-  , prev_kv_(nullptr)
-  , type_(0)
-{}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_._has_bits_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}
+  , /*decltype(_impl_.kv_)*/nullptr
+  , /*decltype(_impl_.prev_kv_)*/nullptr
+  , /*decltype(_impl_.type_)*/0} {}
 struct EventDefaultTypeInternal {
   PROTOBUF_CONSTEXPR EventDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -392,12 +419,12 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _internal_metadata_),
   ~0u,  // no _extensions_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _oneof_case_[0]),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _impl_._oneof_case_[0]),
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, account_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, bucket_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, typ_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _impl_.account_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _impl_.bucket_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _impl_.typ_),
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
@@ -417,138 +444,138 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, payload_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KVStoreWrapper, _impl_.payload_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, owner_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, _impl_.owner_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountResponse, account_descriptor_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountResponse, _impl_.account_descriptor_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateAccountResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, owner_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, _impl_.owner_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountResponse, ok_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountResponse, _impl_.ok_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteAccountResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorRequest, account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorRequest, _impl_.account_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorResponse, account_descriptor_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetAccountDescriptorResponse, _impl_.account_descriptor_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, owner_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, created_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, last_updated_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, bucket_count_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, buckets_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.owner_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.created_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.last_updated_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.bucket_count_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::AccountDescriptor, _impl_.buckets_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, name_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, owner_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, _impl_.name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, _impl_.owner_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketResponse, bucket_descriptor_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketResponse, _impl_.bucket_descriptor_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CreateBucketResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, name_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, _impl_.name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketResponse, ok_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketResponse, _impl_.ok_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteBucketResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, owner_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, size_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, key_count_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, created_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, last_updated_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _impl_.owner_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _impl_.size_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _impl_.key_count_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _impl_.created_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::BucketDescriptor, _impl_.last_updated_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, bucket_name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorRequest, _impl_.bucket_name_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorResponse, bucket_descriptor_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetBucketDescriptorResponse, _impl_.bucket_descriptor_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _impl_._has_bits_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, bucket_name_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, key_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, version_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _impl_.bucket_name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _impl_.key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyRequest, _impl_.version_),
   ~0u,
   ~0u,
   ~0u,
@@ -559,85 +586,85 @@ const uint32_t TableStruct_kvstore_2fv1_2fkv_2eproto::offsets[] PROTOBUF_SECTION
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyResponse, key_value_pair_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::GetKeyResponse, _impl_.key_value_pair_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, bucket_name_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, key_value_pair_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, _impl_.bucket_name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, _impl_.key_value_pair_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::PutKeyResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, account_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, bucket_name_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, key_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, _impl_.account_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, _impl_.bucket_name_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, _impl_.key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, ok_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, _impl_.ok_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::DeleteKeyResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, versions_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, current_key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, _impl_.versions_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValueDescriptor, _impl_.current_key_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsRequest, key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsRequest, _impl_.key_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsResponse, versions_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::ListKeyVersionsResponse, _impl_.versions_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, key_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, create_revision_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, mod_revision_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, version_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, value_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, lease_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.key_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.create_revision_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.mod_revision_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.version_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.value_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::KeyValue, _impl_.lease_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _impl_._has_bits_),
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, type_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, kv_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, prev_kv_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _impl_.kv_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Event, _impl_.prev_kv_),
   ~0u,
   ~0u,
   0,
@@ -979,79 +1006,79 @@ class KVStoreWrapper::_Internal {
 
 const ::kvstore::v1::CreateAccountRequest&
 KVStoreWrapper::_Internal::create_account_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.create_account_request_;
+  return *msg->_impl_.payload_.create_account_request_;
 }
 const ::kvstore::v1::CreateAccountResponse&
 KVStoreWrapper::_Internal::create_account_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.create_account_reply_;
+  return *msg->_impl_.payload_.create_account_reply_;
 }
 const ::kvstore::v1::DeleteAccountRequest&
 KVStoreWrapper::_Internal::delete_account_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_account_request_;
+  return *msg->_impl_.payload_.delete_account_request_;
 }
 const ::kvstore::v1::DeleteAccountResponse&
 KVStoreWrapper::_Internal::delete_account_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_account_reply_;
+  return *msg->_impl_.payload_.delete_account_reply_;
 }
 const ::kvstore::v1::GetAccountDescriptorRequest&
 KVStoreWrapper::_Internal::get_account_descriptor_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_account_descriptor_request_;
+  return *msg->_impl_.payload_.get_account_descriptor_request_;
 }
 const ::kvstore::v1::GetAccountDescriptorResponse&
 KVStoreWrapper::_Internal::get_account_descriptor_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_account_descriptor_reply_;
+  return *msg->_impl_.payload_.get_account_descriptor_reply_;
 }
 const ::kvstore::v1::CreateBucketRequest&
 KVStoreWrapper::_Internal::create_bucket_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.create_bucket_request_;
+  return *msg->_impl_.payload_.create_bucket_request_;
 }
 const ::kvstore::v1::CreateBucketResponse&
 KVStoreWrapper::_Internal::create_bucket_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.create_bucket_reply_;
+  return *msg->_impl_.payload_.create_bucket_reply_;
 }
 const ::kvstore::v1::DeleteBucketRequest&
 KVStoreWrapper::_Internal::delete_bucket_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_bucket_request_;
+  return *msg->_impl_.payload_.delete_bucket_request_;
 }
 const ::kvstore::v1::DeleteBucketResponse&
 KVStoreWrapper::_Internal::delete_bucket_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_bucket_reply_;
+  return *msg->_impl_.payload_.delete_bucket_reply_;
 }
 const ::kvstore::v1::GetKeyRequest&
 KVStoreWrapper::_Internal::get_key_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_key_request_;
+  return *msg->_impl_.payload_.get_key_request_;
 }
 const ::kvstore::v1::GetKeyResponse&
 KVStoreWrapper::_Internal::get_key_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_key_reply_;
+  return *msg->_impl_.payload_.get_key_reply_;
 }
 const ::kvstore::v1::PutKeyRequest&
 KVStoreWrapper::_Internal::put_key_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.put_key_request_;
+  return *msg->_impl_.payload_.put_key_request_;
 }
 const ::kvstore::v1::PutKeyResponse&
 KVStoreWrapper::_Internal::put_key_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.put_key_reply_;
+  return *msg->_impl_.payload_.put_key_reply_;
 }
 const ::kvstore::v1::DeleteKeyRequest&
 KVStoreWrapper::_Internal::delete_key_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_key_request_;
+  return *msg->_impl_.payload_.delete_key_request_;
 }
 const ::kvstore::v1::DeleteKeyResponse&
 KVStoreWrapper::_Internal::delete_key_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.delete_key_reply_;
+  return *msg->_impl_.payload_.delete_key_reply_;
 }
 const ::kvstore::v1::GetBucketDescriptorRequest&
 KVStoreWrapper::_Internal::get_bucket_descriptor_request(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_bucket_descriptor_request_;
+  return *msg->_impl_.payload_.get_bucket_descriptor_request_;
 }
 const ::kvstore::v1::GetBucketDescriptorResponse&
 KVStoreWrapper::_Internal::get_bucket_descriptor_reply(const KVStoreWrapper* msg) {
-  return *msg->payload_.get_bucket_descriptor_reply_;
+  return *msg->_impl_.payload_.get_bucket_descriptor_reply_;
 }
 const ::errors::v1::Error&
 KVStoreWrapper::_Internal::error(const KVStoreWrapper* msg) {
-  return *msg->payload_.error_;
+  return *msg->_impl_.payload_.error_;
 }
 void KVStoreWrapper::set_allocated_create_account_request(::kvstore::v1::CreateAccountRequest* create_account_request) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -1064,7 +1091,7 @@ void KVStoreWrapper::set_allocated_create_account_request(::kvstore::v1::CreateA
           message_arena, create_account_request, submessage_arena);
     }
     set_has_create_account_request();
-    payload_.create_account_request_ = create_account_request;
+    _impl_.payload_.create_account_request_ = create_account_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.create_account_request)
 }
@@ -1079,7 +1106,7 @@ void KVStoreWrapper::set_allocated_create_account_reply(::kvstore::v1::CreateAcc
           message_arena, create_account_reply, submessage_arena);
     }
     set_has_create_account_reply();
-    payload_.create_account_reply_ = create_account_reply;
+    _impl_.payload_.create_account_reply_ = create_account_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.create_account_reply)
 }
@@ -1094,7 +1121,7 @@ void KVStoreWrapper::set_allocated_delete_account_request(::kvstore::v1::DeleteA
           message_arena, delete_account_request, submessage_arena);
     }
     set_has_delete_account_request();
-    payload_.delete_account_request_ = delete_account_request;
+    _impl_.payload_.delete_account_request_ = delete_account_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_account_request)
 }
@@ -1109,7 +1136,7 @@ void KVStoreWrapper::set_allocated_delete_account_reply(::kvstore::v1::DeleteAcc
           message_arena, delete_account_reply, submessage_arena);
     }
     set_has_delete_account_reply();
-    payload_.delete_account_reply_ = delete_account_reply;
+    _impl_.payload_.delete_account_reply_ = delete_account_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_account_reply)
 }
@@ -1124,7 +1151,7 @@ void KVStoreWrapper::set_allocated_get_account_descriptor_request(::kvstore::v1:
           message_arena, get_account_descriptor_request, submessage_arena);
     }
     set_has_get_account_descriptor_request();
-    payload_.get_account_descriptor_request_ = get_account_descriptor_request;
+    _impl_.payload_.get_account_descriptor_request_ = get_account_descriptor_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_account_descriptor_request)
 }
@@ -1139,7 +1166,7 @@ void KVStoreWrapper::set_allocated_get_account_descriptor_reply(::kvstore::v1::G
           message_arena, get_account_descriptor_reply, submessage_arena);
     }
     set_has_get_account_descriptor_reply();
-    payload_.get_account_descriptor_reply_ = get_account_descriptor_reply;
+    _impl_.payload_.get_account_descriptor_reply_ = get_account_descriptor_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_account_descriptor_reply)
 }
@@ -1154,7 +1181,7 @@ void KVStoreWrapper::set_allocated_create_bucket_request(::kvstore::v1::CreateBu
           message_arena, create_bucket_request, submessage_arena);
     }
     set_has_create_bucket_request();
-    payload_.create_bucket_request_ = create_bucket_request;
+    _impl_.payload_.create_bucket_request_ = create_bucket_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.create_bucket_request)
 }
@@ -1169,7 +1196,7 @@ void KVStoreWrapper::set_allocated_create_bucket_reply(::kvstore::v1::CreateBuck
           message_arena, create_bucket_reply, submessage_arena);
     }
     set_has_create_bucket_reply();
-    payload_.create_bucket_reply_ = create_bucket_reply;
+    _impl_.payload_.create_bucket_reply_ = create_bucket_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.create_bucket_reply)
 }
@@ -1184,7 +1211,7 @@ void KVStoreWrapper::set_allocated_delete_bucket_request(::kvstore::v1::DeleteBu
           message_arena, delete_bucket_request, submessage_arena);
     }
     set_has_delete_bucket_request();
-    payload_.delete_bucket_request_ = delete_bucket_request;
+    _impl_.payload_.delete_bucket_request_ = delete_bucket_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_bucket_request)
 }
@@ -1199,7 +1226,7 @@ void KVStoreWrapper::set_allocated_delete_bucket_reply(::kvstore::v1::DeleteBuck
           message_arena, delete_bucket_reply, submessage_arena);
     }
     set_has_delete_bucket_reply();
-    payload_.delete_bucket_reply_ = delete_bucket_reply;
+    _impl_.payload_.delete_bucket_reply_ = delete_bucket_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_bucket_reply)
 }
@@ -1214,7 +1241,7 @@ void KVStoreWrapper::set_allocated_get_key_request(::kvstore::v1::GetKeyRequest*
           message_arena, get_key_request, submessage_arena);
     }
     set_has_get_key_request();
-    payload_.get_key_request_ = get_key_request;
+    _impl_.payload_.get_key_request_ = get_key_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_key_request)
 }
@@ -1229,7 +1256,7 @@ void KVStoreWrapper::set_allocated_get_key_reply(::kvstore::v1::GetKeyResponse* 
           message_arena, get_key_reply, submessage_arena);
     }
     set_has_get_key_reply();
-    payload_.get_key_reply_ = get_key_reply;
+    _impl_.payload_.get_key_reply_ = get_key_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_key_reply)
 }
@@ -1244,7 +1271,7 @@ void KVStoreWrapper::set_allocated_put_key_request(::kvstore::v1::PutKeyRequest*
           message_arena, put_key_request, submessage_arena);
     }
     set_has_put_key_request();
-    payload_.put_key_request_ = put_key_request;
+    _impl_.payload_.put_key_request_ = put_key_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.put_key_request)
 }
@@ -1259,7 +1286,7 @@ void KVStoreWrapper::set_allocated_put_key_reply(::kvstore::v1::PutKeyResponse* 
           message_arena, put_key_reply, submessage_arena);
     }
     set_has_put_key_reply();
-    payload_.put_key_reply_ = put_key_reply;
+    _impl_.payload_.put_key_reply_ = put_key_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.put_key_reply)
 }
@@ -1274,7 +1301,7 @@ void KVStoreWrapper::set_allocated_delete_key_request(::kvstore::v1::DeleteKeyRe
           message_arena, delete_key_request, submessage_arena);
     }
     set_has_delete_key_request();
-    payload_.delete_key_request_ = delete_key_request;
+    _impl_.payload_.delete_key_request_ = delete_key_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_key_request)
 }
@@ -1289,7 +1316,7 @@ void KVStoreWrapper::set_allocated_delete_key_reply(::kvstore::v1::DeleteKeyResp
           message_arena, delete_key_reply, submessage_arena);
     }
     set_has_delete_key_reply();
-    payload_.delete_key_reply_ = delete_key_reply;
+    _impl_.payload_.delete_key_reply_ = delete_key_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.delete_key_reply)
 }
@@ -1304,7 +1331,7 @@ void KVStoreWrapper::set_allocated_get_bucket_descriptor_request(::kvstore::v1::
           message_arena, get_bucket_descriptor_request, submessage_arena);
     }
     set_has_get_bucket_descriptor_request();
-    payload_.get_bucket_descriptor_request_ = get_bucket_descriptor_request;
+    _impl_.payload_.get_bucket_descriptor_request_ = get_bucket_descriptor_request;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_bucket_descriptor_request)
 }
@@ -1319,7 +1346,7 @@ void KVStoreWrapper::set_allocated_get_bucket_descriptor_reply(::kvstore::v1::Ge
           message_arena, get_bucket_descriptor_reply, submessage_arena);
     }
     set_has_get_bucket_descriptor_reply();
-    payload_.get_bucket_descriptor_reply_ = get_bucket_descriptor_reply;
+    _impl_.payload_.get_bucket_descriptor_reply_ = get_bucket_descriptor_reply;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.get_bucket_descriptor_reply)
 }
@@ -1335,14 +1362,14 @@ void KVStoreWrapper::set_allocated_error(::errors::v1::Error* error) {
           message_arena, error, submessage_arena);
     }
     set_has_error();
-    payload_.error_ = error;
+    _impl_.payload_.error_ = error;
   }
   // @@protoc_insertion_point(field_set_allocated:kvstore.v1.KVStoreWrapper.error)
 }
 void KVStoreWrapper::clear_error() {
   if (_internal_has_error()) {
     if (GetArenaForAllocation() == nullptr) {
-      delete payload_.error_;
+      delete _impl_.payload_.error_;
     }
     clear_has_payload();
   }
@@ -1350,99 +1377,127 @@ void KVStoreWrapper::clear_error() {
 KVStoreWrapper::KVStoreWrapper(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.KVStoreWrapper)
 }
 KVStoreWrapper::KVStoreWrapper(const KVStoreWrapper& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  KVStoreWrapper* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_){}
+    , decltype(_impl_.account_){}
+    , decltype(_impl_.typ_){}
+    , decltype(_impl_.payload_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , /*decltype(_impl_._oneof_case_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bucket_.InitDefault();
+  _impl_.bucket_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    bucket_.Set("", GetArenaForAllocation());
+    _impl_.bucket_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_bucket().empty()) {
-    bucket_.Set(from._internal_bucket(), 
-      GetArenaForAllocation());
+    _this->_impl_.bucket_.Set(from._internal_bucket(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&account_, &from.account_,
-    static_cast<size_t>(reinterpret_cast<char*>(&typ_) -
-    reinterpret_cast<char*>(&account_)) + sizeof(typ_));
+  ::memcpy(&_impl_.account_, &from._impl_.account_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.typ_) -
+    reinterpret_cast<char*>(&_impl_.account_)) + sizeof(_impl_.typ_));
   clear_has_payload();
   switch (from.payload_case()) {
     case kCreateAccountRequest: {
-      _internal_mutable_create_account_request()->::kvstore::v1::CreateAccountRequest::MergeFrom(from._internal_create_account_request());
+      _this->_internal_mutable_create_account_request()->::kvstore::v1::CreateAccountRequest::MergeFrom(
+          from._internal_create_account_request());
       break;
     }
     case kCreateAccountReply: {
-      _internal_mutable_create_account_reply()->::kvstore::v1::CreateAccountResponse::MergeFrom(from._internal_create_account_reply());
+      _this->_internal_mutable_create_account_reply()->::kvstore::v1::CreateAccountResponse::MergeFrom(
+          from._internal_create_account_reply());
       break;
     }
     case kDeleteAccountRequest: {
-      _internal_mutable_delete_account_request()->::kvstore::v1::DeleteAccountRequest::MergeFrom(from._internal_delete_account_request());
+      _this->_internal_mutable_delete_account_request()->::kvstore::v1::DeleteAccountRequest::MergeFrom(
+          from._internal_delete_account_request());
       break;
     }
     case kDeleteAccountReply: {
-      _internal_mutable_delete_account_reply()->::kvstore::v1::DeleteAccountResponse::MergeFrom(from._internal_delete_account_reply());
+      _this->_internal_mutable_delete_account_reply()->::kvstore::v1::DeleteAccountResponse::MergeFrom(
+          from._internal_delete_account_reply());
       break;
     }
     case kGetAccountDescriptorRequest: {
-      _internal_mutable_get_account_descriptor_request()->::kvstore::v1::GetAccountDescriptorRequest::MergeFrom(from._internal_get_account_descriptor_request());
+      _this->_internal_mutable_get_account_descriptor_request()->::kvstore::v1::GetAccountDescriptorRequest::MergeFrom(
+          from._internal_get_account_descriptor_request());
       break;
     }
     case kGetAccountDescriptorReply: {
-      _internal_mutable_get_account_descriptor_reply()->::kvstore::v1::GetAccountDescriptorResponse::MergeFrom(from._internal_get_account_descriptor_reply());
+      _this->_internal_mutable_get_account_descriptor_reply()->::kvstore::v1::GetAccountDescriptorResponse::MergeFrom(
+          from._internal_get_account_descriptor_reply());
       break;
     }
     case kCreateBucketRequest: {
-      _internal_mutable_create_bucket_request()->::kvstore::v1::CreateBucketRequest::MergeFrom(from._internal_create_bucket_request());
+      _this->_internal_mutable_create_bucket_request()->::kvstore::v1::CreateBucketRequest::MergeFrom(
+          from._internal_create_bucket_request());
       break;
     }
     case kCreateBucketReply: {
-      _internal_mutable_create_bucket_reply()->::kvstore::v1::CreateBucketResponse::MergeFrom(from._internal_create_bucket_reply());
+      _this->_internal_mutable_create_bucket_reply()->::kvstore::v1::CreateBucketResponse::MergeFrom(
+          from._internal_create_bucket_reply());
       break;
     }
     case kDeleteBucketRequest: {
-      _internal_mutable_delete_bucket_request()->::kvstore::v1::DeleteBucketRequest::MergeFrom(from._internal_delete_bucket_request());
+      _this->_internal_mutable_delete_bucket_request()->::kvstore::v1::DeleteBucketRequest::MergeFrom(
+          from._internal_delete_bucket_request());
       break;
     }
     case kDeleteBucketReply: {
-      _internal_mutable_delete_bucket_reply()->::kvstore::v1::DeleteBucketResponse::MergeFrom(from._internal_delete_bucket_reply());
+      _this->_internal_mutable_delete_bucket_reply()->::kvstore::v1::DeleteBucketResponse::MergeFrom(
+          from._internal_delete_bucket_reply());
       break;
     }
     case kGetKeyRequest: {
-      _internal_mutable_get_key_request()->::kvstore::v1::GetKeyRequest::MergeFrom(from._internal_get_key_request());
+      _this->_internal_mutable_get_key_request()->::kvstore::v1::GetKeyRequest::MergeFrom(
+          from._internal_get_key_request());
       break;
     }
     case kGetKeyReply: {
-      _internal_mutable_get_key_reply()->::kvstore::v1::GetKeyResponse::MergeFrom(from._internal_get_key_reply());
+      _this->_internal_mutable_get_key_reply()->::kvstore::v1::GetKeyResponse::MergeFrom(
+          from._internal_get_key_reply());
       break;
     }
     case kPutKeyRequest: {
-      _internal_mutable_put_key_request()->::kvstore::v1::PutKeyRequest::MergeFrom(from._internal_put_key_request());
+      _this->_internal_mutable_put_key_request()->::kvstore::v1::PutKeyRequest::MergeFrom(
+          from._internal_put_key_request());
       break;
     }
     case kPutKeyReply: {
-      _internal_mutable_put_key_reply()->::kvstore::v1::PutKeyResponse::MergeFrom(from._internal_put_key_reply());
+      _this->_internal_mutable_put_key_reply()->::kvstore::v1::PutKeyResponse::MergeFrom(
+          from._internal_put_key_reply());
       break;
     }
     case kDeleteKeyRequest: {
-      _internal_mutable_delete_key_request()->::kvstore::v1::DeleteKeyRequest::MergeFrom(from._internal_delete_key_request());
+      _this->_internal_mutable_delete_key_request()->::kvstore::v1::DeleteKeyRequest::MergeFrom(
+          from._internal_delete_key_request());
       break;
     }
     case kDeleteKeyReply: {
-      _internal_mutable_delete_key_reply()->::kvstore::v1::DeleteKeyResponse::MergeFrom(from._internal_delete_key_reply());
+      _this->_internal_mutable_delete_key_reply()->::kvstore::v1::DeleteKeyResponse::MergeFrom(
+          from._internal_delete_key_reply());
       break;
     }
     case kGetBucketDescriptorRequest: {
-      _internal_mutable_get_bucket_descriptor_request()->::kvstore::v1::GetBucketDescriptorRequest::MergeFrom(from._internal_get_bucket_descriptor_request());
+      _this->_internal_mutable_get_bucket_descriptor_request()->::kvstore::v1::GetBucketDescriptorRequest::MergeFrom(
+          from._internal_get_bucket_descriptor_request());
       break;
     }
     case kGetBucketDescriptorReply: {
-      _internal_mutable_get_bucket_descriptor_reply()->::kvstore::v1::GetBucketDescriptorResponse::MergeFrom(from._internal_get_bucket_descriptor_reply());
+      _this->_internal_mutable_get_bucket_descriptor_reply()->::kvstore::v1::GetBucketDescriptorResponse::MergeFrom(
+          from._internal_get_bucket_descriptor_reply());
       break;
     }
     case kError: {
-      _internal_mutable_error()->::errors::v1::Error::MergeFrom(from._internal_error());
+      _this->_internal_mutable_error()->::errors::v1::Error::MergeFrom(
+          from._internal_error());
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -1452,16 +1507,23 @@ KVStoreWrapper::KVStoreWrapper(const KVStoreWrapper& from)
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.KVStoreWrapper)
 }
 
-inline void KVStoreWrapper::SharedCtor() {
-bucket_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  bucket_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&account_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&typ_) -
-    reinterpret_cast<char*>(&account_)) + sizeof(typ_));
-clear_has_payload();
+inline void KVStoreWrapper::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_){}
+    , decltype(_impl_.account_){uint64_t{0u}}
+    , decltype(_impl_.typ_){0}
+    , decltype(_impl_.payload_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , /*decltype(_impl_._oneof_case_)*/{}
+  };
+  _impl_.bucket_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.bucket_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  clear_has_payload();
 }
 
 KVStoreWrapper::~KVStoreWrapper() {
@@ -1475,14 +1537,14 @@ KVStoreWrapper::~KVStoreWrapper() {
 
 inline void KVStoreWrapper::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bucket_.Destroy();
+  _impl_.bucket_.Destroy();
   if (has_payload()) {
     clear_payload();
   }
 }
 
 void KVStoreWrapper::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void KVStoreWrapper::clear_payload() {
@@ -1490,115 +1552,115 @@ void KVStoreWrapper::clear_payload() {
   switch (payload_case()) {
     case kCreateAccountRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.create_account_request_;
+        delete _impl_.payload_.create_account_request_;
       }
       break;
     }
     case kCreateAccountReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.create_account_reply_;
+        delete _impl_.payload_.create_account_reply_;
       }
       break;
     }
     case kDeleteAccountRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_account_request_;
+        delete _impl_.payload_.delete_account_request_;
       }
       break;
     }
     case kDeleteAccountReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_account_reply_;
+        delete _impl_.payload_.delete_account_reply_;
       }
       break;
     }
     case kGetAccountDescriptorRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_account_descriptor_request_;
+        delete _impl_.payload_.get_account_descriptor_request_;
       }
       break;
     }
     case kGetAccountDescriptorReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_account_descriptor_reply_;
+        delete _impl_.payload_.get_account_descriptor_reply_;
       }
       break;
     }
     case kCreateBucketRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.create_bucket_request_;
+        delete _impl_.payload_.create_bucket_request_;
       }
       break;
     }
     case kCreateBucketReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.create_bucket_reply_;
+        delete _impl_.payload_.create_bucket_reply_;
       }
       break;
     }
     case kDeleteBucketRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_bucket_request_;
+        delete _impl_.payload_.delete_bucket_request_;
       }
       break;
     }
     case kDeleteBucketReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_bucket_reply_;
+        delete _impl_.payload_.delete_bucket_reply_;
       }
       break;
     }
     case kGetKeyRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_key_request_;
+        delete _impl_.payload_.get_key_request_;
       }
       break;
     }
     case kGetKeyReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_key_reply_;
+        delete _impl_.payload_.get_key_reply_;
       }
       break;
     }
     case kPutKeyRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.put_key_request_;
+        delete _impl_.payload_.put_key_request_;
       }
       break;
     }
     case kPutKeyReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.put_key_reply_;
+        delete _impl_.payload_.put_key_reply_;
       }
       break;
     }
     case kDeleteKeyRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_key_request_;
+        delete _impl_.payload_.delete_key_request_;
       }
       break;
     }
     case kDeleteKeyReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.delete_key_reply_;
+        delete _impl_.payload_.delete_key_reply_;
       }
       break;
     }
     case kGetBucketDescriptorRequest: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_bucket_descriptor_request_;
+        delete _impl_.payload_.get_bucket_descriptor_request_;
       }
       break;
     }
     case kGetBucketDescriptorReply: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.get_bucket_descriptor_reply_;
+        delete _impl_.payload_.get_bucket_descriptor_reply_;
       }
       break;
     }
     case kError: {
       if (GetArenaForAllocation() == nullptr) {
-        delete payload_.error_;
+        delete _impl_.payload_.error_;
       }
       break;
     }
@@ -1606,7 +1668,7 @@ void KVStoreWrapper::clear_payload() {
       break;
     }
   }
-  _oneof_case_[0] = PAYLOAD_NOT_SET;
+  _impl_._oneof_case_[0] = PAYLOAD_NOT_SET;
 }
 
 
@@ -1616,10 +1678,10 @@ void KVStoreWrapper::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bucket_.ClearToEmpty();
-  ::memset(&account_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&typ_) -
-      reinterpret_cast<char*>(&account_)) + sizeof(typ_));
+  _impl_.bucket_.ClearToEmpty();
+  ::memset(&_impl_.account_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.typ_) -
+      reinterpret_cast<char*>(&_impl_.account_)) + sizeof(_impl_.typ_));
   clear_payload();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -1633,7 +1695,7 @@ const char* KVStoreWrapper::_InternalParse(const char* ptr, ::_pbi::ParseContext
       // uint64 account = 1 [json_name = "account"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2033,252 +2095,267 @@ size_t KVStoreWrapper::ByteSizeLong() const {
     case kCreateAccountRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.create_account_request_);
+          *_impl_.payload_.create_account_request_);
       break;
     }
     // .kvstore.v1.CreateAccountResponse create_account_reply = 5 [json_name = "createAccountReply"];
     case kCreateAccountReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.create_account_reply_);
+          *_impl_.payload_.create_account_reply_);
       break;
     }
     // .kvstore.v1.DeleteAccountRequest delete_account_request = 6 [json_name = "deleteAccountRequest"];
     case kDeleteAccountRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_account_request_);
+          *_impl_.payload_.delete_account_request_);
       break;
     }
     // .kvstore.v1.DeleteAccountResponse delete_account_reply = 7 [json_name = "deleteAccountReply"];
     case kDeleteAccountReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_account_reply_);
+          *_impl_.payload_.delete_account_reply_);
       break;
     }
     // .kvstore.v1.GetAccountDescriptorRequest get_account_descriptor_request = 8 [json_name = "getAccountDescriptorRequest"];
     case kGetAccountDescriptorRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_account_descriptor_request_);
+          *_impl_.payload_.get_account_descriptor_request_);
       break;
     }
     // .kvstore.v1.GetAccountDescriptorResponse get_account_descriptor_reply = 9 [json_name = "getAccountDescriptorReply"];
     case kGetAccountDescriptorReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_account_descriptor_reply_);
+          *_impl_.payload_.get_account_descriptor_reply_);
       break;
     }
     // .kvstore.v1.CreateBucketRequest create_bucket_request = 10 [json_name = "createBucketRequest"];
     case kCreateBucketRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.create_bucket_request_);
+          *_impl_.payload_.create_bucket_request_);
       break;
     }
     // .kvstore.v1.CreateBucketResponse create_bucket_reply = 11 [json_name = "createBucketReply"];
     case kCreateBucketReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.create_bucket_reply_);
+          *_impl_.payload_.create_bucket_reply_);
       break;
     }
     // .kvstore.v1.DeleteBucketRequest delete_bucket_request = 12 [json_name = "deleteBucketRequest"];
     case kDeleteBucketRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_bucket_request_);
+          *_impl_.payload_.delete_bucket_request_);
       break;
     }
     // .kvstore.v1.DeleteBucketResponse delete_bucket_reply = 13 [json_name = "deleteBucketReply"];
     case kDeleteBucketReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_bucket_reply_);
+          *_impl_.payload_.delete_bucket_reply_);
       break;
     }
     // .kvstore.v1.GetKeyRequest get_key_request = 14 [json_name = "getKeyRequest"];
     case kGetKeyRequest: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_key_request_);
+          *_impl_.payload_.get_key_request_);
       break;
     }
     // .kvstore.v1.GetKeyResponse get_key_reply = 15 [json_name = "getKeyReply"];
     case kGetKeyReply: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_key_reply_);
+          *_impl_.payload_.get_key_reply_);
       break;
     }
     // .kvstore.v1.PutKeyRequest put_key_request = 16 [json_name = "putKeyRequest"];
     case kPutKeyRequest: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.put_key_request_);
+          *_impl_.payload_.put_key_request_);
       break;
     }
     // .kvstore.v1.PutKeyResponse put_key_reply = 17 [json_name = "putKeyReply"];
     case kPutKeyReply: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.put_key_reply_);
+          *_impl_.payload_.put_key_reply_);
       break;
     }
     // .kvstore.v1.DeleteKeyRequest delete_key_request = 18 [json_name = "deleteKeyRequest"];
     case kDeleteKeyRequest: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_key_request_);
+          *_impl_.payload_.delete_key_request_);
       break;
     }
     // .kvstore.v1.DeleteKeyResponse delete_key_reply = 19 [json_name = "deleteKeyReply"];
     case kDeleteKeyReply: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.delete_key_reply_);
+          *_impl_.payload_.delete_key_reply_);
       break;
     }
     // .kvstore.v1.GetBucketDescriptorRequest get_bucket_descriptor_request = 20 [json_name = "getBucketDescriptorRequest"];
     case kGetBucketDescriptorRequest: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_bucket_descriptor_request_);
+          *_impl_.payload_.get_bucket_descriptor_request_);
       break;
     }
     // .kvstore.v1.GetBucketDescriptorResponse get_bucket_descriptor_reply = 21 [json_name = "getBucketDescriptorReply"];
     case kGetBucketDescriptorReply: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.get_bucket_descriptor_reply_);
+          *_impl_.payload_.get_bucket_descriptor_reply_);
       break;
     }
     // .errors.v1.Error error = 22 [json_name = "error"];
     case kError: {
       total_size += 2 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *payload_.error_);
+          *_impl_.payload_.error_);
       break;
     }
     case PAYLOAD_NOT_SET: {
       break;
     }
   }
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData KVStoreWrapper::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     KVStoreWrapper::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*KVStoreWrapper::GetClassData() const { return &_class_data_; }
 
-void KVStoreWrapper::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<KVStoreWrapper *>(to)->MergeFrom(
-      static_cast<const KVStoreWrapper &>(from));
-}
 
-
-void KVStoreWrapper::MergeFrom(const KVStoreWrapper& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KVStoreWrapper)
-  GOOGLE_DCHECK_NE(&from, this);
+void KVStoreWrapper::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<KVStoreWrapper*>(&to_msg);
+  auto& from = static_cast<const KVStoreWrapper&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KVStoreWrapper)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_bucket().empty()) {
-    _internal_set_bucket(from._internal_bucket());
+    _this->_internal_set_bucket(from._internal_bucket());
   }
   if (from._internal_account() != 0) {
-    _internal_set_account(from._internal_account());
+    _this->_internal_set_account(from._internal_account());
   }
   if (from._internal_typ() != 0) {
-    _internal_set_typ(from._internal_typ());
+    _this->_internal_set_typ(from._internal_typ());
   }
   switch (from.payload_case()) {
     case kCreateAccountRequest: {
-      _internal_mutable_create_account_request()->::kvstore::v1::CreateAccountRequest::MergeFrom(from._internal_create_account_request());
+      _this->_internal_mutable_create_account_request()->::kvstore::v1::CreateAccountRequest::MergeFrom(
+          from._internal_create_account_request());
       break;
     }
     case kCreateAccountReply: {
-      _internal_mutable_create_account_reply()->::kvstore::v1::CreateAccountResponse::MergeFrom(from._internal_create_account_reply());
+      _this->_internal_mutable_create_account_reply()->::kvstore::v1::CreateAccountResponse::MergeFrom(
+          from._internal_create_account_reply());
       break;
     }
     case kDeleteAccountRequest: {
-      _internal_mutable_delete_account_request()->::kvstore::v1::DeleteAccountRequest::MergeFrom(from._internal_delete_account_request());
+      _this->_internal_mutable_delete_account_request()->::kvstore::v1::DeleteAccountRequest::MergeFrom(
+          from._internal_delete_account_request());
       break;
     }
     case kDeleteAccountReply: {
-      _internal_mutable_delete_account_reply()->::kvstore::v1::DeleteAccountResponse::MergeFrom(from._internal_delete_account_reply());
+      _this->_internal_mutable_delete_account_reply()->::kvstore::v1::DeleteAccountResponse::MergeFrom(
+          from._internal_delete_account_reply());
       break;
     }
     case kGetAccountDescriptorRequest: {
-      _internal_mutable_get_account_descriptor_request()->::kvstore::v1::GetAccountDescriptorRequest::MergeFrom(from._internal_get_account_descriptor_request());
+      _this->_internal_mutable_get_account_descriptor_request()->::kvstore::v1::GetAccountDescriptorRequest::MergeFrom(
+          from._internal_get_account_descriptor_request());
       break;
     }
     case kGetAccountDescriptorReply: {
-      _internal_mutable_get_account_descriptor_reply()->::kvstore::v1::GetAccountDescriptorResponse::MergeFrom(from._internal_get_account_descriptor_reply());
+      _this->_internal_mutable_get_account_descriptor_reply()->::kvstore::v1::GetAccountDescriptorResponse::MergeFrom(
+          from._internal_get_account_descriptor_reply());
       break;
     }
     case kCreateBucketRequest: {
-      _internal_mutable_create_bucket_request()->::kvstore::v1::CreateBucketRequest::MergeFrom(from._internal_create_bucket_request());
+      _this->_internal_mutable_create_bucket_request()->::kvstore::v1::CreateBucketRequest::MergeFrom(
+          from._internal_create_bucket_request());
       break;
     }
     case kCreateBucketReply: {
-      _internal_mutable_create_bucket_reply()->::kvstore::v1::CreateBucketResponse::MergeFrom(from._internal_create_bucket_reply());
+      _this->_internal_mutable_create_bucket_reply()->::kvstore::v1::CreateBucketResponse::MergeFrom(
+          from._internal_create_bucket_reply());
       break;
     }
     case kDeleteBucketRequest: {
-      _internal_mutable_delete_bucket_request()->::kvstore::v1::DeleteBucketRequest::MergeFrom(from._internal_delete_bucket_request());
+      _this->_internal_mutable_delete_bucket_request()->::kvstore::v1::DeleteBucketRequest::MergeFrom(
+          from._internal_delete_bucket_request());
       break;
     }
     case kDeleteBucketReply: {
-      _internal_mutable_delete_bucket_reply()->::kvstore::v1::DeleteBucketResponse::MergeFrom(from._internal_delete_bucket_reply());
+      _this->_internal_mutable_delete_bucket_reply()->::kvstore::v1::DeleteBucketResponse::MergeFrom(
+          from._internal_delete_bucket_reply());
       break;
     }
     case kGetKeyRequest: {
-      _internal_mutable_get_key_request()->::kvstore::v1::GetKeyRequest::MergeFrom(from._internal_get_key_request());
+      _this->_internal_mutable_get_key_request()->::kvstore::v1::GetKeyRequest::MergeFrom(
+          from._internal_get_key_request());
       break;
     }
     case kGetKeyReply: {
-      _internal_mutable_get_key_reply()->::kvstore::v1::GetKeyResponse::MergeFrom(from._internal_get_key_reply());
+      _this->_internal_mutable_get_key_reply()->::kvstore::v1::GetKeyResponse::MergeFrom(
+          from._internal_get_key_reply());
       break;
     }
     case kPutKeyRequest: {
-      _internal_mutable_put_key_request()->::kvstore::v1::PutKeyRequest::MergeFrom(from._internal_put_key_request());
+      _this->_internal_mutable_put_key_request()->::kvstore::v1::PutKeyRequest::MergeFrom(
+          from._internal_put_key_request());
       break;
     }
     case kPutKeyReply: {
-      _internal_mutable_put_key_reply()->::kvstore::v1::PutKeyResponse::MergeFrom(from._internal_put_key_reply());
+      _this->_internal_mutable_put_key_reply()->::kvstore::v1::PutKeyResponse::MergeFrom(
+          from._internal_put_key_reply());
       break;
     }
     case kDeleteKeyRequest: {
-      _internal_mutable_delete_key_request()->::kvstore::v1::DeleteKeyRequest::MergeFrom(from._internal_delete_key_request());
+      _this->_internal_mutable_delete_key_request()->::kvstore::v1::DeleteKeyRequest::MergeFrom(
+          from._internal_delete_key_request());
       break;
     }
     case kDeleteKeyReply: {
-      _internal_mutable_delete_key_reply()->::kvstore::v1::DeleteKeyResponse::MergeFrom(from._internal_delete_key_reply());
+      _this->_internal_mutable_delete_key_reply()->::kvstore::v1::DeleteKeyResponse::MergeFrom(
+          from._internal_delete_key_reply());
       break;
     }
     case kGetBucketDescriptorRequest: {
-      _internal_mutable_get_bucket_descriptor_request()->::kvstore::v1::GetBucketDescriptorRequest::MergeFrom(from._internal_get_bucket_descriptor_request());
+      _this->_internal_mutable_get_bucket_descriptor_request()->::kvstore::v1::GetBucketDescriptorRequest::MergeFrom(
+          from._internal_get_bucket_descriptor_request());
       break;
     }
     case kGetBucketDescriptorReply: {
-      _internal_mutable_get_bucket_descriptor_reply()->::kvstore::v1::GetBucketDescriptorResponse::MergeFrom(from._internal_get_bucket_descriptor_reply());
+      _this->_internal_mutable_get_bucket_descriptor_reply()->::kvstore::v1::GetBucketDescriptorResponse::MergeFrom(
+          from._internal_get_bucket_descriptor_reply());
       break;
     }
     case kError: {
-      _internal_mutable_error()->::errors::v1::Error::MergeFrom(from._internal_error());
+      _this->_internal_mutable_error()->::errors::v1::Error::MergeFrom(
+          from._internal_error());
       break;
     }
     case PAYLOAD_NOT_SET: {
       break;
     }
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void KVStoreWrapper::CopyFrom(const KVStoreWrapper& from) {
@@ -2298,17 +2375,17 @@ void KVStoreWrapper::InternalSwap(KVStoreWrapper* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &bucket_, lhs_arena,
-      &other->bucket_, rhs_arena
+      &_impl_.bucket_, lhs_arena,
+      &other->_impl_.bucket_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(KVStoreWrapper, typ_)
-      + sizeof(KVStoreWrapper::typ_)
-      - PROTOBUF_FIELD_OFFSET(KVStoreWrapper, account_)>(
-          reinterpret_cast<char*>(&account_),
-          reinterpret_cast<char*>(&other->account_));
-  swap(payload_, other->payload_);
-  swap(_oneof_case_[0], other->_oneof_case_[0]);
+      PROTOBUF_FIELD_OFFSET(KVStoreWrapper, _impl_.typ_)
+      + sizeof(KVStoreWrapper::_impl_.typ_)
+      - PROTOBUF_FIELD_OFFSET(KVStoreWrapper, _impl_.account_)>(
+          reinterpret_cast<char*>(&_impl_.account_),
+          reinterpret_cast<char*>(&other->_impl_.account_));
+  swap(_impl_.payload_, other->_impl_.payload_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata KVStoreWrapper::GetMetadata() const {
@@ -2326,49 +2403,59 @@ class CreateAccountRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 CreateAccountRequest::_Internal::transaction(const CreateAccountRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void CreateAccountRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 CreateAccountRequest::CreateAccountRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CreateAccountRequest)
 }
 CreateAccountRequest::CreateAccountRequest(const CreateAccountRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CreateAccountRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  owner_.InitDefault();
+  _impl_.owner_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    owner_.Set("", GetArenaForAllocation());
+    _impl_.owner_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_owner().empty()) {
-    owner_.Set(from._internal_owner(), 
-      GetArenaForAllocation());
+    _this->_impl_.owner_.Set(from._internal_owner(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CreateAccountRequest)
 }
 
-inline void CreateAccountRequest::SharedCtor() {
-owner_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  owner_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(account_id_));
+inline void CreateAccountRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.owner_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.owner_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 CreateAccountRequest::~CreateAccountRequest() {
@@ -2382,12 +2469,12 @@ CreateAccountRequest::~CreateAccountRequest() {
 
 inline void CreateAccountRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  owner_.Destroy();
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.owner_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CreateAccountRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CreateAccountRequest::Clear() {
@@ -2396,12 +2483,12 @@ void CreateAccountRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  owner_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.owner_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2414,7 +2501,7 @@ const char* CreateAccountRequest::_InternalParse(const char* ptr, ::_pbi::ParseC
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2516,7 +2603,7 @@ size_t CreateAccountRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -2524,38 +2611,35 @@ size_t CreateAccountRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CreateAccountRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CreateAccountRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CreateAccountRequest::GetClassData() const { return &_class_data_; }
 
-void CreateAccountRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CreateAccountRequest *>(to)->MergeFrom(
-      static_cast<const CreateAccountRequest &>(from));
-}
 
-
-void CreateAccountRequest::MergeFrom(const CreateAccountRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateAccountRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void CreateAccountRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CreateAccountRequest*>(&to_msg);
+  auto& from = static_cast<const CreateAccountRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateAccountRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_owner().empty()) {
-    _internal_set_owner(from._internal_owner());
+    _this->_internal_set_owner(from._internal_owner());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CreateAccountRequest::CopyFrom(const CreateAccountRequest& from) {
@@ -2575,15 +2659,15 @@ void CreateAccountRequest::InternalSwap(CreateAccountRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &owner_, lhs_arena,
-      &other->owner_, rhs_arena
+      &_impl_.owner_, lhs_arena,
+      &other->_impl_.owner_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateAccountRequest, account_id_)
-      + sizeof(CreateAccountRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(CreateAccountRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(CreateAccountRequest, _impl_.account_id_)
+      + sizeof(CreateAccountRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(CreateAccountRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CreateAccountRequest::GetMetadata() const {
@@ -2602,45 +2686,51 @@ class CreateAccountResponse::_Internal {
 
 const ::kvstore::v1::AccountDescriptor&
 CreateAccountResponse::_Internal::account_descriptor(const CreateAccountResponse* msg) {
-  return *msg->account_descriptor_;
+  return *msg->_impl_.account_descriptor_;
 }
 const ::kvstore::v1::Transaction&
 CreateAccountResponse::_Internal::transaction(const CreateAccountResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void CreateAccountResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 CreateAccountResponse::CreateAccountResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CreateAccountResponse)
 }
 CreateAccountResponse::CreateAccountResponse(const CreateAccountResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CreateAccountResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_descriptor_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_account_descriptor()) {
-    account_descriptor_ = new ::kvstore::v1::AccountDescriptor(*from.account_descriptor_);
-  } else {
-    account_descriptor_ = nullptr;
+    _this->_impl_.account_descriptor_ = new ::kvstore::v1::AccountDescriptor(*from._impl_.account_descriptor_);
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CreateAccountResponse)
 }
 
-inline void CreateAccountResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&account_descriptor_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&transaction_) -
-    reinterpret_cast<char*>(&account_descriptor_)) + sizeof(transaction_));
+inline void CreateAccountResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_descriptor_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CreateAccountResponse::~CreateAccountResponse() {
@@ -2654,12 +2744,12 @@ CreateAccountResponse::~CreateAccountResponse() {
 
 inline void CreateAccountResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete account_descriptor_;
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.account_descriptor_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CreateAccountResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CreateAccountResponse::Clear() {
@@ -2668,14 +2758,14 @@ void CreateAccountResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && account_descriptor_ != nullptr) {
-    delete account_descriptor_;
+  if (GetArenaForAllocation() == nullptr && _impl_.account_descriptor_ != nullptr) {
+    delete _impl_.account_descriptor_;
   }
-  account_descriptor_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.account_descriptor_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2764,45 +2854,43 @@ size_t CreateAccountResponse::ByteSizeLong() const {
   if (this->_internal_has_account_descriptor()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *account_descriptor_);
+        *_impl_.account_descriptor_);
   }
 
   // .kvstore.v1.Transaction transaction = 2 [json_name = "transaction"];
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CreateAccountResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CreateAccountResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CreateAccountResponse::GetClassData() const { return &_class_data_; }
 
-void CreateAccountResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CreateAccountResponse *>(to)->MergeFrom(
-      static_cast<const CreateAccountResponse &>(from));
-}
 
-
-void CreateAccountResponse::MergeFrom(const CreateAccountResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateAccountResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void CreateAccountResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CreateAccountResponse*>(&to_msg);
+  auto& from = static_cast<const CreateAccountResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateAccountResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_account_descriptor()) {
-    _internal_mutable_account_descriptor()->::kvstore::v1::AccountDescriptor::MergeFrom(from._internal_account_descriptor());
+    _this->_internal_mutable_account_descriptor()->::kvstore::v1::AccountDescriptor::MergeFrom(
+        from._internal_account_descriptor());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CreateAccountResponse::CopyFrom(const CreateAccountResponse& from) {
@@ -2820,11 +2908,11 @@ void CreateAccountResponse::InternalSwap(CreateAccountResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateAccountResponse, transaction_)
-      + sizeof(CreateAccountResponse::transaction_)
-      - PROTOBUF_FIELD_OFFSET(CreateAccountResponse, account_descriptor_)>(
-          reinterpret_cast<char*>(&account_descriptor_),
-          reinterpret_cast<char*>(&other->account_descriptor_));
+      PROTOBUF_FIELD_OFFSET(CreateAccountResponse, _impl_.transaction_)
+      + sizeof(CreateAccountResponse::_impl_.transaction_)
+      - PROTOBUF_FIELD_OFFSET(CreateAccountResponse, _impl_.account_descriptor_)>(
+          reinterpret_cast<char*>(&_impl_.account_descriptor_),
+          reinterpret_cast<char*>(&other->_impl_.account_descriptor_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CreateAccountResponse::GetMetadata() const {
@@ -2842,49 +2930,59 @@ class DeleteAccountRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteAccountRequest::_Internal::transaction(const DeleteAccountRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteAccountRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteAccountRequest::DeleteAccountRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteAccountRequest)
 }
 DeleteAccountRequest::DeleteAccountRequest(const DeleteAccountRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteAccountRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  owner_.InitDefault();
+  _impl_.owner_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    owner_.Set("", GetArenaForAllocation());
+    _impl_.owner_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_owner().empty()) {
-    owner_.Set(from._internal_owner(), 
-      GetArenaForAllocation());
+    _this->_impl_.owner_.Set(from._internal_owner(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteAccountRequest)
 }
 
-inline void DeleteAccountRequest::SharedCtor() {
-owner_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  owner_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(account_id_));
+inline void DeleteAccountRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.owner_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.owner_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 DeleteAccountRequest::~DeleteAccountRequest() {
@@ -2898,12 +2996,12 @@ DeleteAccountRequest::~DeleteAccountRequest() {
 
 inline void DeleteAccountRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  owner_.Destroy();
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.owner_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteAccountRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteAccountRequest::Clear() {
@@ -2912,12 +3010,12 @@ void DeleteAccountRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  owner_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.owner_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2930,7 +3028,7 @@ const char* DeleteAccountRequest::_InternalParse(const char* ptr, ::_pbi::ParseC
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3032,7 +3130,7 @@ size_t DeleteAccountRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -3040,38 +3138,35 @@ size_t DeleteAccountRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteAccountRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteAccountRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteAccountRequest::GetClassData() const { return &_class_data_; }
 
-void DeleteAccountRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteAccountRequest *>(to)->MergeFrom(
-      static_cast<const DeleteAccountRequest &>(from));
-}
 
-
-void DeleteAccountRequest::MergeFrom(const DeleteAccountRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteAccountRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteAccountRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteAccountRequest*>(&to_msg);
+  auto& from = static_cast<const DeleteAccountRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteAccountRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_owner().empty()) {
-    _internal_set_owner(from._internal_owner());
+    _this->_internal_set_owner(from._internal_owner());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteAccountRequest::CopyFrom(const DeleteAccountRequest& from) {
@@ -3091,15 +3186,15 @@ void DeleteAccountRequest::InternalSwap(DeleteAccountRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &owner_, lhs_arena,
-      &other->owner_, rhs_arena
+      &_impl_.owner_, lhs_arena,
+      &other->_impl_.owner_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteAccountRequest, account_id_)
-      + sizeof(DeleteAccountRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(DeleteAccountRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteAccountRequest, _impl_.account_id_)
+      + sizeof(DeleteAccountRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(DeleteAccountRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteAccountRequest::GetMetadata() const {
@@ -3117,37 +3212,45 @@ class DeleteAccountResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteAccountResponse::_Internal::transaction(const DeleteAccountResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteAccountResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteAccountResponse::DeleteAccountResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteAccountResponse)
 }
 DeleteAccountResponse::DeleteAccountResponse(const DeleteAccountResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteAccountResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  ok_ = from.ok_;
+  _this->_impl_.ok_ = from._impl_.ok_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteAccountResponse)
 }
 
-inline void DeleteAccountResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&ok_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(ok_));
+inline void DeleteAccountResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 DeleteAccountResponse::~DeleteAccountResponse() {
@@ -3161,11 +3264,11 @@ DeleteAccountResponse::~DeleteAccountResponse() {
 
 inline void DeleteAccountResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteAccountResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteAccountResponse::Clear() {
@@ -3174,11 +3277,11 @@ void DeleteAccountResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  ok_ = false;
+  _impl_.transaction_ = nullptr;
+  _impl_.ok_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3191,7 +3294,7 @@ const char* DeleteAccountResponse::_InternalParse(const char* ptr, ::_pbi::Parse
       // bool ok = 1 [json_name = "ok"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3266,7 +3369,7 @@ size_t DeleteAccountResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // bool ok = 1 [json_name = "ok"];
@@ -3274,35 +3377,32 @@ size_t DeleteAccountResponse::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteAccountResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteAccountResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteAccountResponse::GetClassData() const { return &_class_data_; }
 
-void DeleteAccountResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteAccountResponse *>(to)->MergeFrom(
-      static_cast<const DeleteAccountResponse &>(from));
-}
 
-
-void DeleteAccountResponse::MergeFrom(const DeleteAccountResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteAccountResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteAccountResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteAccountResponse*>(&to_msg);
+  auto& from = static_cast<const DeleteAccountResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteAccountResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_ok() != 0) {
-    _internal_set_ok(from._internal_ok());
+    _this->_internal_set_ok(from._internal_ok());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteAccountResponse::CopyFrom(const DeleteAccountResponse& from) {
@@ -3320,11 +3420,11 @@ void DeleteAccountResponse::InternalSwap(DeleteAccountResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteAccountResponse, ok_)
-      + sizeof(DeleteAccountResponse::ok_)
-      - PROTOBUF_FIELD_OFFSET(DeleteAccountResponse, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteAccountResponse, _impl_.ok_)
+      + sizeof(DeleteAccountResponse::_impl_.ok_)
+      - PROTOBUF_FIELD_OFFSET(DeleteAccountResponse, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteAccountResponse::GetMetadata() const {
@@ -3342,18 +3442,29 @@ class GetAccountDescriptorRequest::_Internal {
 GetAccountDescriptorRequest::GetAccountDescriptorRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetAccountDescriptorRequest)
 }
 GetAccountDescriptorRequest::GetAccountDescriptorRequest(const GetAccountDescriptorRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetAccountDescriptorRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetAccountDescriptorRequest)
 }
 
-inline void GetAccountDescriptorRequest::SharedCtor() {
-account_id_ = uint64_t{0u};
+inline void GetAccountDescriptorRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetAccountDescriptorRequest::~GetAccountDescriptorRequest() {
@@ -3370,7 +3481,7 @@ inline void GetAccountDescriptorRequest::SharedDtor() {
 }
 
 void GetAccountDescriptorRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetAccountDescriptorRequest::Clear() {
@@ -3379,7 +3490,7 @@ void GetAccountDescriptorRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  account_id_ = uint64_t{0u};
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3392,7 +3503,7 @@ const char* GetAccountDescriptorRequest::_InternalParse(const char* ptr, ::_pbi:
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3453,32 +3564,28 @@ size_t GetAccountDescriptorRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetAccountDescriptorRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetAccountDescriptorRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetAccountDescriptorRequest::GetClassData() const { return &_class_data_; }
 
-void GetAccountDescriptorRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetAccountDescriptorRequest *>(to)->MergeFrom(
-      static_cast<const GetAccountDescriptorRequest &>(from));
-}
 
-
-void GetAccountDescriptorRequest::MergeFrom(const GetAccountDescriptorRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetAccountDescriptorRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetAccountDescriptorRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetAccountDescriptorRequest*>(&to_msg);
+  auto& from = static_cast<const GetAccountDescriptorRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetAccountDescriptorRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetAccountDescriptorRequest::CopyFrom(const GetAccountDescriptorRequest& from) {
@@ -3495,7 +3602,7 @@ bool GetAccountDescriptorRequest::IsInitialized() const {
 void GetAccountDescriptorRequest::InternalSwap(GetAccountDescriptorRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(account_id_, other->account_id_);
+  swap(_impl_.account_id_, other->_impl_.account_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetAccountDescriptorRequest::GetMetadata() const {
@@ -3513,27 +3620,36 @@ class GetAccountDescriptorResponse::_Internal {
 
 const ::kvstore::v1::AccountDescriptor&
 GetAccountDescriptorResponse::_Internal::account_descriptor(const GetAccountDescriptorResponse* msg) {
-  return *msg->account_descriptor_;
+  return *msg->_impl_.account_descriptor_;
 }
 GetAccountDescriptorResponse::GetAccountDescriptorResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetAccountDescriptorResponse)
 }
 GetAccountDescriptorResponse::GetAccountDescriptorResponse(const GetAccountDescriptorResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetAccountDescriptorResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_descriptor_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_account_descriptor()) {
-    account_descriptor_ = new ::kvstore::v1::AccountDescriptor(*from.account_descriptor_);
-  } else {
-    account_descriptor_ = nullptr;
+    _this->_impl_.account_descriptor_ = new ::kvstore::v1::AccountDescriptor(*from._impl_.account_descriptor_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetAccountDescriptorResponse)
 }
 
-inline void GetAccountDescriptorResponse::SharedCtor() {
-account_descriptor_ = nullptr;
+inline void GetAccountDescriptorResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.account_descriptor_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetAccountDescriptorResponse::~GetAccountDescriptorResponse() {
@@ -3547,11 +3663,11 @@ GetAccountDescriptorResponse::~GetAccountDescriptorResponse() {
 
 inline void GetAccountDescriptorResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete account_descriptor_;
+  if (this != internal_default_instance()) delete _impl_.account_descriptor_;
 }
 
 void GetAccountDescriptorResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetAccountDescriptorResponse::Clear() {
@@ -3560,10 +3676,10 @@ void GetAccountDescriptorResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && account_descriptor_ != nullptr) {
-    delete account_descriptor_;
+  if (GetArenaForAllocation() == nullptr && _impl_.account_descriptor_ != nullptr) {
+    delete _impl_.account_descriptor_;
   }
-  account_descriptor_ = nullptr;
+  _impl_.account_descriptor_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3637,35 +3753,32 @@ size_t GetAccountDescriptorResponse::ByteSizeLong() const {
   if (this->_internal_has_account_descriptor()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *account_descriptor_);
+        *_impl_.account_descriptor_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetAccountDescriptorResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetAccountDescriptorResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetAccountDescriptorResponse::GetClassData() const { return &_class_data_; }
 
-void GetAccountDescriptorResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetAccountDescriptorResponse *>(to)->MergeFrom(
-      static_cast<const GetAccountDescriptorResponse &>(from));
-}
 
-
-void GetAccountDescriptorResponse::MergeFrom(const GetAccountDescriptorResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetAccountDescriptorResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetAccountDescriptorResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetAccountDescriptorResponse*>(&to_msg);
+  auto& from = static_cast<const GetAccountDescriptorResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetAccountDescriptorResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_account_descriptor()) {
-    _internal_mutable_account_descriptor()->::kvstore::v1::AccountDescriptor::MergeFrom(from._internal_account_descriptor());
+    _this->_internal_mutable_account_descriptor()->::kvstore::v1::AccountDescriptor::MergeFrom(
+        from._internal_account_descriptor());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetAccountDescriptorResponse::CopyFrom(const GetAccountDescriptorResponse& from) {
@@ -3682,7 +3795,7 @@ bool GetAccountDescriptorResponse::IsInitialized() const {
 void GetAccountDescriptorResponse::InternalSwap(GetAccountDescriptorResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(account_descriptor_, other->account_descriptor_);
+  swap(_impl_.account_descriptor_, other->_impl_.account_descriptor_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetAccountDescriptorResponse::GetMetadata() const {
@@ -3701,68 +3814,80 @@ class AccountDescriptor::_Internal {
 
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 AccountDescriptor::_Internal::created(const AccountDescriptor* msg) {
-  return *msg->created_;
+  return *msg->_impl_.created_;
 }
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 AccountDescriptor::_Internal::last_updated(const AccountDescriptor* msg) {
-  return *msg->last_updated_;
+  return *msg->_impl_.last_updated_;
 }
 void AccountDescriptor::clear_created() {
-  if (GetArenaForAllocation() == nullptr && created_ != nullptr) {
-    delete created_;
+  if (GetArenaForAllocation() == nullptr && _impl_.created_ != nullptr) {
+    delete _impl_.created_;
   }
-  created_ = nullptr;
+  _impl_.created_ = nullptr;
 }
 void AccountDescriptor::clear_last_updated() {
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
+  _impl_.last_updated_ = nullptr;
 }
 AccountDescriptor::AccountDescriptor(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  buckets_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.AccountDescriptor)
 }
 AccountDescriptor::AccountDescriptor(const AccountDescriptor& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      buckets_(from.buckets_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  AccountDescriptor* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.buckets_){from._impl_.buckets_}
+    , decltype(_impl_.owner_){}
+    , decltype(_impl_.created_){nullptr}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , decltype(_impl_.bucket_count_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  owner_.InitDefault();
+  _impl_.owner_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    owner_.Set("", GetArenaForAllocation());
+    _impl_.owner_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_owner().empty()) {
-    owner_.Set(from._internal_owner(), 
-      GetArenaForAllocation());
+    _this->_impl_.owner_.Set(from._internal_owner(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_created()) {
-    created_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.created_);
-  } else {
-    created_ = nullptr;
+    _this->_impl_.created_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.created_);
   }
   if (from._internal_has_last_updated()) {
-    last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.last_updated_);
-  } else {
-    last_updated_ = nullptr;
+    _this->_impl_.last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.last_updated_);
   }
-  ::memcpy(&account_id_, &from.account_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&bucket_count_) -
-    reinterpret_cast<char*>(&account_id_)) + sizeof(bucket_count_));
+  ::memcpy(&_impl_.account_id_, &from._impl_.account_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.bucket_count_) -
+    reinterpret_cast<char*>(&_impl_.account_id_)) + sizeof(_impl_.bucket_count_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.AccountDescriptor)
 }
 
-inline void AccountDescriptor::SharedCtor() {
-owner_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  owner_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&created_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&bucket_count_) -
-    reinterpret_cast<char*>(&created_)) + sizeof(bucket_count_));
+inline void AccountDescriptor::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.buckets_){arena}
+    , decltype(_impl_.owner_){}
+    , decltype(_impl_.created_){nullptr}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , decltype(_impl_.bucket_count_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.owner_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.owner_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 AccountDescriptor::~AccountDescriptor() {
@@ -3776,13 +3901,14 @@ AccountDescriptor::~AccountDescriptor() {
 
 inline void AccountDescriptor::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  owner_.Destroy();
-  if (this != internal_default_instance()) delete created_;
-  if (this != internal_default_instance()) delete last_updated_;
+  _impl_.buckets_.~RepeatedPtrField();
+  _impl_.owner_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.created_;
+  if (this != internal_default_instance()) delete _impl_.last_updated_;
 }
 
 void AccountDescriptor::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void AccountDescriptor::Clear() {
@@ -3791,19 +3917,19 @@ void AccountDescriptor::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  buckets_.Clear();
-  owner_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && created_ != nullptr) {
-    delete created_;
+  _impl_.buckets_.Clear();
+  _impl_.owner_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.created_ != nullptr) {
+    delete _impl_.created_;
   }
-  created_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  _impl_.created_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
-  ::memset(&account_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&bucket_count_) -
-      reinterpret_cast<char*>(&account_id_)) + sizeof(bucket_count_));
+  _impl_.last_updated_ = nullptr;
+  ::memset(&_impl_.account_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.bucket_count_) -
+      reinterpret_cast<char*>(&_impl_.account_id_)) + sizeof(_impl_.bucket_count_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -3816,7 +3942,7 @@ const char* AccountDescriptor::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3850,7 +3976,7 @@ const char* AccountDescriptor::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // uint64 bucket_count = 5 [json_name = "bucketCount"];
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          bucket_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.bucket_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3963,10 +4089,10 @@ size_t AccountDescriptor::ByteSizeLong() const {
 
   // repeated string buckets = 6 [json_name = "buckets"];
   total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(buckets_.size());
-  for (int i = 0, n = buckets_.size(); i < n; i++) {
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(_impl_.buckets_.size());
+  for (int i = 0, n = _impl_.buckets_.size(); i < n; i++) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-      buckets_.Get(i));
+      _impl_.buckets_.Get(i));
   }
 
   // string owner = 2 [json_name = "owner"];
@@ -3980,14 +4106,14 @@ size_t AccountDescriptor::ByteSizeLong() const {
   if (this->_internal_has_created()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *created_);
+        *_impl_.created_);
   }
 
   // .google.protobuf.Timestamp last_updated = 4 [json_name = "lastUpdated"];
   if (this->_internal_has_last_updated()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *last_updated_);
+        *_impl_.last_updated_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -4000,45 +4126,43 @@ size_t AccountDescriptor::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_bucket_count());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AccountDescriptor::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     AccountDescriptor::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AccountDescriptor::GetClassData() const { return &_class_data_; }
 
-void AccountDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<AccountDescriptor *>(to)->MergeFrom(
-      static_cast<const AccountDescriptor &>(from));
-}
 
-
-void AccountDescriptor::MergeFrom(const AccountDescriptor& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.AccountDescriptor)
-  GOOGLE_DCHECK_NE(&from, this);
+void AccountDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<AccountDescriptor*>(&to_msg);
+  auto& from = static_cast<const AccountDescriptor&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.AccountDescriptor)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  buckets_.MergeFrom(from.buckets_);
+  _this->_impl_.buckets_.MergeFrom(from._impl_.buckets_);
   if (!from._internal_owner().empty()) {
-    _internal_set_owner(from._internal_owner());
+    _this->_internal_set_owner(from._internal_owner());
   }
   if (from._internal_has_created()) {
-    _internal_mutable_created()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_created());
+    _this->_internal_mutable_created()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_created());
   }
   if (from._internal_has_last_updated()) {
-    _internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_last_updated());
+    _this->_internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_last_updated());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
   if (from._internal_bucket_count() != 0) {
-    _internal_set_bucket_count(from._internal_bucket_count());
+    _this->_internal_set_bucket_count(from._internal_bucket_count());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void AccountDescriptor::CopyFrom(const AccountDescriptor& from) {
@@ -4057,17 +4181,17 @@ void AccountDescriptor::InternalSwap(AccountDescriptor* other) {
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  buckets_.InternalSwap(&other->buckets_);
+  _impl_.buckets_.InternalSwap(&other->_impl_.buckets_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &owner_, lhs_arena,
-      &other->owner_, rhs_arena
+      &_impl_.owner_, lhs_arena,
+      &other->_impl_.owner_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AccountDescriptor, bucket_count_)
-      + sizeof(AccountDescriptor::bucket_count_)
-      - PROTOBUF_FIELD_OFFSET(AccountDescriptor, created_)>(
-          reinterpret_cast<char*>(&created_),
-          reinterpret_cast<char*>(&other->created_));
+      PROTOBUF_FIELD_OFFSET(AccountDescriptor, _impl_.bucket_count_)
+      + sizeof(AccountDescriptor::_impl_.bucket_count_)
+      - PROTOBUF_FIELD_OFFSET(AccountDescriptor, _impl_.created_)>(
+          reinterpret_cast<char*>(&_impl_.created_),
+          reinterpret_cast<char*>(&other->_impl_.created_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AccountDescriptor::GetMetadata() const {
@@ -4085,61 +4209,73 @@ class CreateBucketRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 CreateBucketRequest::_Internal::transaction(const CreateBucketRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void CreateBucketRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 CreateBucketRequest::CreateBucketRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CreateBucketRequest)
 }
 CreateBucketRequest::CreateBucketRequest(const CreateBucketRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CreateBucketRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.name_){}
+    , decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  name_.InitDefault();
+  _impl_.name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    name_.Set("", GetArenaForAllocation());
+    _impl_.name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_name().empty()) {
-    name_.Set(from._internal_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.name_.Set(from._internal_name(), 
+      _this->GetArenaForAllocation());
   }
-  owner_.InitDefault();
+  _impl_.owner_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    owner_.Set("", GetArenaForAllocation());
+    _impl_.owner_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_owner().empty()) {
-    owner_.Set(from._internal_owner(), 
-      GetArenaForAllocation());
+    _this->_impl_.owner_.Set(from._internal_owner(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CreateBucketRequest)
 }
 
-inline void CreateBucketRequest::SharedCtor() {
-name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-owner_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  owner_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(account_id_));
+inline void CreateBucketRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.name_){}
+    , decltype(_impl_.owner_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.owner_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.owner_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 CreateBucketRequest::~CreateBucketRequest() {
@@ -4153,13 +4289,13 @@ CreateBucketRequest::~CreateBucketRequest() {
 
 inline void CreateBucketRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  name_.Destroy();
-  owner_.Destroy();
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.name_.Destroy();
+  _impl_.owner_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CreateBucketRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CreateBucketRequest::Clear() {
@@ -4168,13 +4304,13 @@ void CreateBucketRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmpty();
-  owner_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.name_.ClearToEmpty();
+  _impl_.owner_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4187,7 +4323,7 @@ const char* CreateBucketRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -4316,7 +4452,7 @@ size_t CreateBucketRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -4324,41 +4460,38 @@ size_t CreateBucketRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CreateBucketRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CreateBucketRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CreateBucketRequest::GetClassData() const { return &_class_data_; }
 
-void CreateBucketRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CreateBucketRequest *>(to)->MergeFrom(
-      static_cast<const CreateBucketRequest &>(from));
-}
 
-
-void CreateBucketRequest::MergeFrom(const CreateBucketRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateBucketRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void CreateBucketRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CreateBucketRequest*>(&to_msg);
+  auto& from = static_cast<const CreateBucketRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateBucketRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_name().empty()) {
-    _internal_set_name(from._internal_name());
+    _this->_internal_set_name(from._internal_name());
   }
   if (!from._internal_owner().empty()) {
-    _internal_set_owner(from._internal_owner());
+    _this->_internal_set_owner(from._internal_owner());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CreateBucketRequest::CopyFrom(const CreateBucketRequest& from) {
@@ -4378,19 +4511,19 @@ void CreateBucketRequest::InternalSwap(CreateBucketRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &name_, lhs_arena,
-      &other->name_, rhs_arena
+      &_impl_.name_, lhs_arena,
+      &other->_impl_.name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &owner_, lhs_arena,
-      &other->owner_, rhs_arena
+      &_impl_.owner_, lhs_arena,
+      &other->_impl_.owner_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateBucketRequest, account_id_)
-      + sizeof(CreateBucketRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(CreateBucketRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(CreateBucketRequest, _impl_.account_id_)
+      + sizeof(CreateBucketRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(CreateBucketRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CreateBucketRequest::GetMetadata() const {
@@ -4409,45 +4542,51 @@ class CreateBucketResponse::_Internal {
 
 const ::kvstore::v1::BucketDescriptor&
 CreateBucketResponse::_Internal::bucket_descriptor(const CreateBucketResponse* msg) {
-  return *msg->bucket_descriptor_;
+  return *msg->_impl_.bucket_descriptor_;
 }
 const ::kvstore::v1::Transaction&
 CreateBucketResponse::_Internal::transaction(const CreateBucketResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void CreateBucketResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 CreateBucketResponse::CreateBucketResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CreateBucketResponse)
 }
 CreateBucketResponse::CreateBucketResponse(const CreateBucketResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CreateBucketResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_descriptor_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_bucket_descriptor()) {
-    bucket_descriptor_ = new ::kvstore::v1::BucketDescriptor(*from.bucket_descriptor_);
-  } else {
-    bucket_descriptor_ = nullptr;
+    _this->_impl_.bucket_descriptor_ = new ::kvstore::v1::BucketDescriptor(*from._impl_.bucket_descriptor_);
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CreateBucketResponse)
 }
 
-inline void CreateBucketResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&bucket_descriptor_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&transaction_) -
-    reinterpret_cast<char*>(&bucket_descriptor_)) + sizeof(transaction_));
+inline void CreateBucketResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_descriptor_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CreateBucketResponse::~CreateBucketResponse() {
@@ -4461,12 +4600,12 @@ CreateBucketResponse::~CreateBucketResponse() {
 
 inline void CreateBucketResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete bucket_descriptor_;
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.bucket_descriptor_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CreateBucketResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CreateBucketResponse::Clear() {
@@ -4475,14 +4614,14 @@ void CreateBucketResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && bucket_descriptor_ != nullptr) {
-    delete bucket_descriptor_;
+  if (GetArenaForAllocation() == nullptr && _impl_.bucket_descriptor_ != nullptr) {
+    delete _impl_.bucket_descriptor_;
   }
-  bucket_descriptor_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.bucket_descriptor_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4571,45 +4710,43 @@ size_t CreateBucketResponse::ByteSizeLong() const {
   if (this->_internal_has_bucket_descriptor()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *bucket_descriptor_);
+        *_impl_.bucket_descriptor_);
   }
 
   // .kvstore.v1.Transaction transaction = 2 [json_name = "transaction"];
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CreateBucketResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CreateBucketResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CreateBucketResponse::GetClassData() const { return &_class_data_; }
 
-void CreateBucketResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CreateBucketResponse *>(to)->MergeFrom(
-      static_cast<const CreateBucketResponse &>(from));
-}
 
-
-void CreateBucketResponse::MergeFrom(const CreateBucketResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateBucketResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void CreateBucketResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CreateBucketResponse*>(&to_msg);
+  auto& from = static_cast<const CreateBucketResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CreateBucketResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_bucket_descriptor()) {
-    _internal_mutable_bucket_descriptor()->::kvstore::v1::BucketDescriptor::MergeFrom(from._internal_bucket_descriptor());
+    _this->_internal_mutable_bucket_descriptor()->::kvstore::v1::BucketDescriptor::MergeFrom(
+        from._internal_bucket_descriptor());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CreateBucketResponse::CopyFrom(const CreateBucketResponse& from) {
@@ -4627,11 +4764,11 @@ void CreateBucketResponse::InternalSwap(CreateBucketResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CreateBucketResponse, transaction_)
-      + sizeof(CreateBucketResponse::transaction_)
-      - PROTOBUF_FIELD_OFFSET(CreateBucketResponse, bucket_descriptor_)>(
-          reinterpret_cast<char*>(&bucket_descriptor_),
-          reinterpret_cast<char*>(&other->bucket_descriptor_));
+      PROTOBUF_FIELD_OFFSET(CreateBucketResponse, _impl_.transaction_)
+      + sizeof(CreateBucketResponse::_impl_.transaction_)
+      - PROTOBUF_FIELD_OFFSET(CreateBucketResponse, _impl_.bucket_descriptor_)>(
+          reinterpret_cast<char*>(&_impl_.bucket_descriptor_),
+          reinterpret_cast<char*>(&other->_impl_.bucket_descriptor_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CreateBucketResponse::GetMetadata() const {
@@ -4649,49 +4786,59 @@ class DeleteBucketRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteBucketRequest::_Internal::transaction(const DeleteBucketRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteBucketRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteBucketRequest::DeleteBucketRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteBucketRequest)
 }
 DeleteBucketRequest::DeleteBucketRequest(const DeleteBucketRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteBucketRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.name_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  name_.InitDefault();
+  _impl_.name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    name_.Set("", GetArenaForAllocation());
+    _impl_.name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_name().empty()) {
-    name_.Set(from._internal_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.name_.Set(from._internal_name(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteBucketRequest)
 }
 
-inline void DeleteBucketRequest::SharedCtor() {
-name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(account_id_));
+inline void DeleteBucketRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.name_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 DeleteBucketRequest::~DeleteBucketRequest() {
@@ -4705,12 +4852,12 @@ DeleteBucketRequest::~DeleteBucketRequest() {
 
 inline void DeleteBucketRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  name_.Destroy();
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.name_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteBucketRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteBucketRequest::Clear() {
@@ -4719,12 +4866,12 @@ void DeleteBucketRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  name_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.name_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4737,7 +4884,7 @@ const char* DeleteBucketRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -4839,7 +4986,7 @@ size_t DeleteBucketRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -4847,38 +4994,35 @@ size_t DeleteBucketRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteBucketRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteBucketRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteBucketRequest::GetClassData() const { return &_class_data_; }
 
-void DeleteBucketRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteBucketRequest *>(to)->MergeFrom(
-      static_cast<const DeleteBucketRequest &>(from));
-}
 
-
-void DeleteBucketRequest::MergeFrom(const DeleteBucketRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteBucketRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteBucketRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteBucketRequest*>(&to_msg);
+  auto& from = static_cast<const DeleteBucketRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteBucketRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_name().empty()) {
-    _internal_set_name(from._internal_name());
+    _this->_internal_set_name(from._internal_name());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteBucketRequest::CopyFrom(const DeleteBucketRequest& from) {
@@ -4898,15 +5042,15 @@ void DeleteBucketRequest::InternalSwap(DeleteBucketRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &name_, lhs_arena,
-      &other->name_, rhs_arena
+      &_impl_.name_, lhs_arena,
+      &other->_impl_.name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteBucketRequest, account_id_)
-      + sizeof(DeleteBucketRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(DeleteBucketRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteBucketRequest, _impl_.account_id_)
+      + sizeof(DeleteBucketRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(DeleteBucketRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteBucketRequest::GetMetadata() const {
@@ -4924,37 +5068,45 @@ class DeleteBucketResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteBucketResponse::_Internal::transaction(const DeleteBucketResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteBucketResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteBucketResponse::DeleteBucketResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteBucketResponse)
 }
 DeleteBucketResponse::DeleteBucketResponse(const DeleteBucketResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteBucketResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  ok_ = from.ok_;
+  _this->_impl_.ok_ = from._impl_.ok_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteBucketResponse)
 }
 
-inline void DeleteBucketResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&ok_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(ok_));
+inline void DeleteBucketResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 DeleteBucketResponse::~DeleteBucketResponse() {
@@ -4968,11 +5120,11 @@ DeleteBucketResponse::~DeleteBucketResponse() {
 
 inline void DeleteBucketResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteBucketResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteBucketResponse::Clear() {
@@ -4981,11 +5133,11 @@ void DeleteBucketResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  ok_ = false;
+  _impl_.transaction_ = nullptr;
+  _impl_.ok_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4998,7 +5150,7 @@ const char* DeleteBucketResponse::_InternalParse(const char* ptr, ::_pbi::ParseC
       // bool ok = 1 [json_name = "ok"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -5073,7 +5225,7 @@ size_t DeleteBucketResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // bool ok = 1 [json_name = "ok"];
@@ -5081,35 +5233,32 @@ size_t DeleteBucketResponse::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteBucketResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteBucketResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteBucketResponse::GetClassData() const { return &_class_data_; }
 
-void DeleteBucketResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteBucketResponse *>(to)->MergeFrom(
-      static_cast<const DeleteBucketResponse &>(from));
-}
 
-
-void DeleteBucketResponse::MergeFrom(const DeleteBucketResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteBucketResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteBucketResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteBucketResponse*>(&to_msg);
+  auto& from = static_cast<const DeleteBucketResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteBucketResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_ok() != 0) {
-    _internal_set_ok(from._internal_ok());
+    _this->_internal_set_ok(from._internal_ok());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteBucketResponse::CopyFrom(const DeleteBucketResponse& from) {
@@ -5127,11 +5276,11 @@ void DeleteBucketResponse::InternalSwap(DeleteBucketResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteBucketResponse, ok_)
-      + sizeof(DeleteBucketResponse::ok_)
-      - PROTOBUF_FIELD_OFFSET(DeleteBucketResponse, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteBucketResponse, _impl_.ok_)
+      + sizeof(DeleteBucketResponse::_impl_.ok_)
+      - PROTOBUF_FIELD_OFFSET(DeleteBucketResponse, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteBucketResponse::GetMetadata() const {
@@ -5150,66 +5299,78 @@ class BucketDescriptor::_Internal {
 
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 BucketDescriptor::_Internal::created(const BucketDescriptor* msg) {
-  return *msg->created_;
+  return *msg->_impl_.created_;
 }
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
 BucketDescriptor::_Internal::last_updated(const BucketDescriptor* msg) {
-  return *msg->last_updated_;
+  return *msg->_impl_.last_updated_;
 }
 void BucketDescriptor::clear_created() {
-  if (GetArenaForAllocation() == nullptr && created_ != nullptr) {
-    delete created_;
+  if (GetArenaForAllocation() == nullptr && _impl_.created_ != nullptr) {
+    delete _impl_.created_;
   }
-  created_ = nullptr;
+  _impl_.created_ = nullptr;
 }
 void BucketDescriptor::clear_last_updated() {
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
+  _impl_.last_updated_ = nullptr;
 }
 BucketDescriptor::BucketDescriptor(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.BucketDescriptor)
 }
 BucketDescriptor::BucketDescriptor(const BucketDescriptor& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  BucketDescriptor* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.created_){nullptr}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.size_){}
+    , decltype(_impl_.key_count_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  owner_.InitDefault();
+  _impl_.owner_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    owner_.Set("", GetArenaForAllocation());
+    _impl_.owner_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_owner().empty()) {
-    owner_.Set(from._internal_owner(), 
-      GetArenaForAllocation());
+    _this->_impl_.owner_.Set(from._internal_owner(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_created()) {
-    created_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.created_);
-  } else {
-    created_ = nullptr;
+    _this->_impl_.created_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.created_);
   }
   if (from._internal_has_last_updated()) {
-    last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from.last_updated_);
-  } else {
-    last_updated_ = nullptr;
+    _this->_impl_.last_updated_ = new ::PROTOBUF_NAMESPACE_ID::Timestamp(*from._impl_.last_updated_);
   }
-  ::memcpy(&size_, &from.size_,
-    static_cast<size_t>(reinterpret_cast<char*>(&key_count_) -
-    reinterpret_cast<char*>(&size_)) + sizeof(key_count_));
+  ::memcpy(&_impl_.size_, &from._impl_.size_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.key_count_) -
+    reinterpret_cast<char*>(&_impl_.size_)) + sizeof(_impl_.key_count_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.BucketDescriptor)
 }
 
-inline void BucketDescriptor::SharedCtor() {
-owner_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  owner_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&created_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&key_count_) -
-    reinterpret_cast<char*>(&created_)) + sizeof(key_count_));
+inline void BucketDescriptor::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.owner_){}
+    , decltype(_impl_.created_){nullptr}
+    , decltype(_impl_.last_updated_){nullptr}
+    , decltype(_impl_.size_){uint64_t{0u}}
+    , decltype(_impl_.key_count_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.owner_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.owner_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 BucketDescriptor::~BucketDescriptor() {
@@ -5223,13 +5384,13 @@ BucketDescriptor::~BucketDescriptor() {
 
 inline void BucketDescriptor::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  owner_.Destroy();
-  if (this != internal_default_instance()) delete created_;
-  if (this != internal_default_instance()) delete last_updated_;
+  _impl_.owner_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.created_;
+  if (this != internal_default_instance()) delete _impl_.last_updated_;
 }
 
 void BucketDescriptor::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void BucketDescriptor::Clear() {
@@ -5238,18 +5399,18 @@ void BucketDescriptor::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  owner_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && created_ != nullptr) {
-    delete created_;
+  _impl_.owner_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.created_ != nullptr) {
+    delete _impl_.created_;
   }
-  created_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && last_updated_ != nullptr) {
-    delete last_updated_;
+  _impl_.created_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.last_updated_ != nullptr) {
+    delete _impl_.last_updated_;
   }
-  last_updated_ = nullptr;
-  ::memset(&size_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&key_count_) -
-      reinterpret_cast<char*>(&size_)) + sizeof(key_count_));
+  _impl_.last_updated_ = nullptr;
+  ::memset(&_impl_.size_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.key_count_) -
+      reinterpret_cast<char*>(&_impl_.size_)) + sizeof(_impl_.key_count_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -5272,7 +5433,7 @@ const char* BucketDescriptor::_InternalParse(const char* ptr, ::_pbi::ParseConte
       // uint64 size = 2 [json_name = "size"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -5280,7 +5441,7 @@ const char* BucketDescriptor::_InternalParse(const char* ptr, ::_pbi::ParseConte
       // uint64 key_count = 3 [json_name = "keyCount"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          key_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.key_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -5393,14 +5554,14 @@ size_t BucketDescriptor::ByteSizeLong() const {
   if (this->_internal_has_created()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *created_);
+        *_impl_.created_);
   }
 
   // .google.protobuf.Timestamp last_updated = 5 [json_name = "lastUpdated"];
   if (this->_internal_has_last_updated()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *last_updated_);
+        *_impl_.last_updated_);
   }
 
   // uint64 size = 2 [json_name = "size"];
@@ -5413,44 +5574,42 @@ size_t BucketDescriptor::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_key_count());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData BucketDescriptor::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     BucketDescriptor::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*BucketDescriptor::GetClassData() const { return &_class_data_; }
 
-void BucketDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<BucketDescriptor *>(to)->MergeFrom(
-      static_cast<const BucketDescriptor &>(from));
-}
 
-
-void BucketDescriptor::MergeFrom(const BucketDescriptor& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.BucketDescriptor)
-  GOOGLE_DCHECK_NE(&from, this);
+void BucketDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<BucketDescriptor*>(&to_msg);
+  auto& from = static_cast<const BucketDescriptor&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.BucketDescriptor)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_owner().empty()) {
-    _internal_set_owner(from._internal_owner());
+    _this->_internal_set_owner(from._internal_owner());
   }
   if (from._internal_has_created()) {
-    _internal_mutable_created()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_created());
+    _this->_internal_mutable_created()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_created());
   }
   if (from._internal_has_last_updated()) {
-    _internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(from._internal_last_updated());
+    _this->_internal_mutable_last_updated()->::PROTOBUF_NAMESPACE_ID::Timestamp::MergeFrom(
+        from._internal_last_updated());
   }
   if (from._internal_size() != 0) {
-    _internal_set_size(from._internal_size());
+    _this->_internal_set_size(from._internal_size());
   }
   if (from._internal_key_count() != 0) {
-    _internal_set_key_count(from._internal_key_count());
+    _this->_internal_set_key_count(from._internal_key_count());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void BucketDescriptor::CopyFrom(const BucketDescriptor& from) {
@@ -5470,15 +5629,15 @@ void BucketDescriptor::InternalSwap(BucketDescriptor* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &owner_, lhs_arena,
-      &other->owner_, rhs_arena
+      &_impl_.owner_, lhs_arena,
+      &other->_impl_.owner_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(BucketDescriptor, key_count_)
-      + sizeof(BucketDescriptor::key_count_)
-      - PROTOBUF_FIELD_OFFSET(BucketDescriptor, created_)>(
-          reinterpret_cast<char*>(&created_),
-          reinterpret_cast<char*>(&other->created_));
+      PROTOBUF_FIELD_OFFSET(BucketDescriptor, _impl_.key_count_)
+      + sizeof(BucketDescriptor::_impl_.key_count_)
+      - PROTOBUF_FIELD_OFFSET(BucketDescriptor, _impl_.created_)>(
+          reinterpret_cast<char*>(&_impl_.created_),
+          reinterpret_cast<char*>(&other->_impl_.created_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata BucketDescriptor::GetMetadata() const {
@@ -5496,30 +5655,43 @@ class GetBucketDescriptorRequest::_Internal {
 GetBucketDescriptorRequest::GetBucketDescriptorRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetBucketDescriptorRequest)
 }
 GetBucketDescriptorRequest::GetBucketDescriptorRequest(const GetBucketDescriptorRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetBucketDescriptorRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bucket_name_.InitDefault();
+  _impl_.bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    bucket_name_.Set("", GetArenaForAllocation());
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_bucket_name().empty()) {
-    bucket_name_.Set(from._internal_bucket_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.bucket_name_.Set(from._internal_bucket_name(), 
+      _this->GetArenaForAllocation());
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetBucketDescriptorRequest)
 }
 
-inline void GetBucketDescriptorRequest::SharedCtor() {
-bucket_name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  bucket_name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-account_id_ = uint64_t{0u};
+inline void GetBucketDescriptorRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.bucket_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 GetBucketDescriptorRequest::~GetBucketDescriptorRequest() {
@@ -5533,11 +5705,11 @@ GetBucketDescriptorRequest::~GetBucketDescriptorRequest() {
 
 inline void GetBucketDescriptorRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bucket_name_.Destroy();
+  _impl_.bucket_name_.Destroy();
 }
 
 void GetBucketDescriptorRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetBucketDescriptorRequest::Clear() {
@@ -5546,8 +5718,8 @@ void GetBucketDescriptorRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bucket_name_.ClearToEmpty();
-  account_id_ = uint64_t{0u};
+  _impl_.bucket_name_.ClearToEmpty();
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -5560,7 +5732,7 @@ const char* GetBucketDescriptorRequest::_InternalParse(const char* ptr, ::_pbi::
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -5648,35 +5820,31 @@ size_t GetBucketDescriptorRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetBucketDescriptorRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetBucketDescriptorRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetBucketDescriptorRequest::GetClassData() const { return &_class_data_; }
 
-void GetBucketDescriptorRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetBucketDescriptorRequest *>(to)->MergeFrom(
-      static_cast<const GetBucketDescriptorRequest &>(from));
-}
 
-
-void GetBucketDescriptorRequest::MergeFrom(const GetBucketDescriptorRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetBucketDescriptorRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetBucketDescriptorRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetBucketDescriptorRequest*>(&to_msg);
+  auto& from = static_cast<const GetBucketDescriptorRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetBucketDescriptorRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_bucket_name().empty()) {
-    _internal_set_bucket_name(from._internal_bucket_name());
+    _this->_internal_set_bucket_name(from._internal_bucket_name());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetBucketDescriptorRequest::CopyFrom(const GetBucketDescriptorRequest& from) {
@@ -5696,10 +5864,10 @@ void GetBucketDescriptorRequest::InternalSwap(GetBucketDescriptorRequest* other)
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &bucket_name_, lhs_arena,
-      &other->bucket_name_, rhs_arena
+      &_impl_.bucket_name_, lhs_arena,
+      &other->_impl_.bucket_name_, rhs_arena
   );
-  swap(account_id_, other->account_id_);
+  swap(_impl_.account_id_, other->_impl_.account_id_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetBucketDescriptorRequest::GetMetadata() const {
@@ -5717,27 +5885,36 @@ class GetBucketDescriptorResponse::_Internal {
 
 const ::kvstore::v1::BucketDescriptor&
 GetBucketDescriptorResponse::_Internal::bucket_descriptor(const GetBucketDescriptorResponse* msg) {
-  return *msg->bucket_descriptor_;
+  return *msg->_impl_.bucket_descriptor_;
 }
 GetBucketDescriptorResponse::GetBucketDescriptorResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetBucketDescriptorResponse)
 }
 GetBucketDescriptorResponse::GetBucketDescriptorResponse(const GetBucketDescriptorResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetBucketDescriptorResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_descriptor_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_bucket_descriptor()) {
-    bucket_descriptor_ = new ::kvstore::v1::BucketDescriptor(*from.bucket_descriptor_);
-  } else {
-    bucket_descriptor_ = nullptr;
+    _this->_impl_.bucket_descriptor_ = new ::kvstore::v1::BucketDescriptor(*from._impl_.bucket_descriptor_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetBucketDescriptorResponse)
 }
 
-inline void GetBucketDescriptorResponse::SharedCtor() {
-bucket_descriptor_ = nullptr;
+inline void GetBucketDescriptorResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_descriptor_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetBucketDescriptorResponse::~GetBucketDescriptorResponse() {
@@ -5751,11 +5928,11 @@ GetBucketDescriptorResponse::~GetBucketDescriptorResponse() {
 
 inline void GetBucketDescriptorResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete bucket_descriptor_;
+  if (this != internal_default_instance()) delete _impl_.bucket_descriptor_;
 }
 
 void GetBucketDescriptorResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetBucketDescriptorResponse::Clear() {
@@ -5764,10 +5941,10 @@ void GetBucketDescriptorResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && bucket_descriptor_ != nullptr) {
-    delete bucket_descriptor_;
+  if (GetArenaForAllocation() == nullptr && _impl_.bucket_descriptor_ != nullptr) {
+    delete _impl_.bucket_descriptor_;
   }
-  bucket_descriptor_ = nullptr;
+  _impl_.bucket_descriptor_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -5841,35 +6018,32 @@ size_t GetBucketDescriptorResponse::ByteSizeLong() const {
   if (this->_internal_has_bucket_descriptor()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *bucket_descriptor_);
+        *_impl_.bucket_descriptor_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetBucketDescriptorResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetBucketDescriptorResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetBucketDescriptorResponse::GetClassData() const { return &_class_data_; }
 
-void GetBucketDescriptorResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetBucketDescriptorResponse *>(to)->MergeFrom(
-      static_cast<const GetBucketDescriptorResponse &>(from));
-}
 
-
-void GetBucketDescriptorResponse::MergeFrom(const GetBucketDescriptorResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetBucketDescriptorResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetBucketDescriptorResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetBucketDescriptorResponse*>(&to_msg);
+  auto& from = static_cast<const GetBucketDescriptorResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetBucketDescriptorResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_bucket_descriptor()) {
-    _internal_mutable_bucket_descriptor()->::kvstore::v1::BucketDescriptor::MergeFrom(from._internal_bucket_descriptor());
+    _this->_internal_mutable_bucket_descriptor()->::kvstore::v1::BucketDescriptor::MergeFrom(
+        from._internal_bucket_descriptor());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetBucketDescriptorResponse::CopyFrom(const GetBucketDescriptorResponse& from) {
@@ -5886,7 +6060,7 @@ bool GetBucketDescriptorResponse::IsInitialized() const {
 void GetBucketDescriptorResponse::InternalSwap(GetBucketDescriptorResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(bucket_descriptor_, other->bucket_descriptor_);
+  swap(_impl_.bucket_descriptor_, other->_impl_.bucket_descriptor_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetBucketDescriptorResponse::GetMetadata() const {
@@ -5899,7 +6073,7 @@ void GetBucketDescriptorResponse::InternalSwap(GetBucketDescriptorResponse* othe
 
 class GetKeyRequest::_Internal {
  public:
-  using HasBits = decltype(std::declval<GetKeyRequest>()._has_bits_);
+  using HasBits = decltype(std::declval<GetKeyRequest>()._impl_._has_bits_);
   static void set_has_version(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
@@ -5908,48 +6082,63 @@ class GetKeyRequest::_Internal {
 GetKeyRequest::GetKeyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetKeyRequest)
 }
 GetKeyRequest::GetKeyRequest(const GetKeyRequest& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetKeyRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_){}
+    , decltype(_impl_.account_id_){}
+    , decltype(_impl_.version_){}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bucket_name_.InitDefault();
+  _impl_.bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    bucket_name_.Set("", GetArenaForAllocation());
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_bucket_name().empty()) {
-    bucket_name_.Set(from._internal_bucket_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.bucket_name_.Set(from._internal_bucket_name(), 
+      _this->GetArenaForAllocation());
   }
-  key_.InitDefault();
+  _impl_.key_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    key_.Set("", GetArenaForAllocation());
+    _impl_.key_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_key().empty()) {
-    key_.Set(from._internal_key(), 
-      GetArenaForAllocation());
+    _this->_impl_.key_.Set(from._internal_key(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&account_id_, &from.account_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&version_) -
-    reinterpret_cast<char*>(&account_id_)) + sizeof(version_));
+  ::memcpy(&_impl_.account_id_, &from._impl_.account_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.version_) -
+    reinterpret_cast<char*>(&_impl_.account_id_)) + sizeof(_impl_.version_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetKeyRequest)
 }
 
-inline void GetKeyRequest::SharedCtor() {
-bucket_name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  bucket_name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-key_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  key_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&account_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
-    reinterpret_cast<char*>(&account_id_)) + sizeof(version_));
+inline void GetKeyRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_){}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , decltype(_impl_.version_){0u}
+  };
+  _impl_.bucket_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 GetKeyRequest::~GetKeyRequest() {
@@ -5963,12 +6152,12 @@ GetKeyRequest::~GetKeyRequest() {
 
 inline void GetKeyRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bucket_name_.Destroy();
-  key_.Destroy();
+  _impl_.bucket_name_.Destroy();
+  _impl_.key_.Destroy();
 }
 
 void GetKeyRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetKeyRequest::Clear() {
@@ -5977,11 +6166,11 @@ void GetKeyRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bucket_name_.ClearToEmpty();
-  key_.ClearToEmpty();
-  account_id_ = uint64_t{0u};
-  version_ = 0u;
-  _has_bits_.Clear();
+  _impl_.bucket_name_.ClearToEmpty();
+  _impl_.key_.ClearToEmpty();
+  _impl_.account_id_ = uint64_t{0u};
+  _impl_.version_ = 0u;
+  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -5995,7 +6184,7 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -6023,7 +6212,7 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
           _Internal::set_has_version(&has_bits);
-          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -6044,7 +6233,7 @@ const char* GetKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
     CHK_(ptr != nullptr);
   }  // while
 message_done:
-  _has_bits_.Or(has_bits);
+  _impl_._has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -6122,46 +6311,42 @@ size_t GetKeyRequest::ByteSizeLong() const {
   }
 
   // optional uint32 version = 4 [json_name = "version"];
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000001u) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_version());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetKeyRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetKeyRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetKeyRequest::GetClassData() const { return &_class_data_; }
 
-void GetKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetKeyRequest *>(to)->MergeFrom(
-      static_cast<const GetKeyRequest &>(from));
-}
 
-
-void GetKeyRequest::MergeFrom(const GetKeyRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetKeyRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetKeyRequest*>(&to_msg);
+  auto& from = static_cast<const GetKeyRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetKeyRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_bucket_name().empty()) {
-    _internal_set_bucket_name(from._internal_bucket_name());
+    _this->_internal_set_bucket_name(from._internal_bucket_name());
   }
   if (!from._internal_key().empty()) {
-    _internal_set_key(from._internal_key());
+    _this->_internal_set_key(from._internal_key());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
   if (from._internal_has_version()) {
-    _internal_set_version(from._internal_version());
+    _this->_internal_set_version(from._internal_version());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetKeyRequest::CopyFrom(const GetKeyRequest& from) {
@@ -6180,21 +6365,21 @@ void GetKeyRequest::InternalSwap(GetKeyRequest* other) {
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &bucket_name_, lhs_arena,
-      &other->bucket_name_, rhs_arena
+      &_impl_.bucket_name_, lhs_arena,
+      &other->_impl_.bucket_name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &key_, lhs_arena,
-      &other->key_, rhs_arena
+      &_impl_.key_, lhs_arena,
+      &other->_impl_.key_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(GetKeyRequest, version_)
-      + sizeof(GetKeyRequest::version_)
-      - PROTOBUF_FIELD_OFFSET(GetKeyRequest, account_id_)>(
-          reinterpret_cast<char*>(&account_id_),
-          reinterpret_cast<char*>(&other->account_id_));
+      PROTOBUF_FIELD_OFFSET(GetKeyRequest, _impl_.version_)
+      + sizeof(GetKeyRequest::_impl_.version_)
+      - PROTOBUF_FIELD_OFFSET(GetKeyRequest, _impl_.account_id_)>(
+          reinterpret_cast<char*>(&_impl_.account_id_),
+          reinterpret_cast<char*>(&other->_impl_.account_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetKeyRequest::GetMetadata() const {
@@ -6212,27 +6397,36 @@ class GetKeyResponse::_Internal {
 
 const ::kvstore::v1::KeyValue&
 GetKeyResponse::_Internal::key_value_pair(const GetKeyResponse* msg) {
-  return *msg->key_value_pair_;
+  return *msg->_impl_.key_value_pair_;
 }
 GetKeyResponse::GetKeyResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.GetKeyResponse)
 }
 GetKeyResponse::GetKeyResponse(const GetKeyResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  GetKeyResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_value_pair_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_key_value_pair()) {
-    key_value_pair_ = new ::kvstore::v1::KeyValue(*from.key_value_pair_);
-  } else {
-    key_value_pair_ = nullptr;
+    _this->_impl_.key_value_pair_ = new ::kvstore::v1::KeyValue(*from._impl_.key_value_pair_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.GetKeyResponse)
 }
 
-inline void GetKeyResponse::SharedCtor() {
-key_value_pair_ = nullptr;
+inline void GetKeyResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_value_pair_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 GetKeyResponse::~GetKeyResponse() {
@@ -6246,11 +6440,11 @@ GetKeyResponse::~GetKeyResponse() {
 
 inline void GetKeyResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete key_value_pair_;
+  if (this != internal_default_instance()) delete _impl_.key_value_pair_;
 }
 
 void GetKeyResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void GetKeyResponse::Clear() {
@@ -6259,10 +6453,10 @@ void GetKeyResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && key_value_pair_ != nullptr) {
-    delete key_value_pair_;
+  if (GetArenaForAllocation() == nullptr && _impl_.key_value_pair_ != nullptr) {
+    delete _impl_.key_value_pair_;
   }
-  key_value_pair_ = nullptr;
+  _impl_.key_value_pair_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -6336,35 +6530,32 @@ size_t GetKeyResponse::ByteSizeLong() const {
   if (this->_internal_has_key_value_pair()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *key_value_pair_);
+        *_impl_.key_value_pair_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GetKeyResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     GetKeyResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetKeyResponse::GetClassData() const { return &_class_data_; }
 
-void GetKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<GetKeyResponse *>(to)->MergeFrom(
-      static_cast<const GetKeyResponse &>(from));
-}
 
-
-void GetKeyResponse::MergeFrom(const GetKeyResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetKeyResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void GetKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<GetKeyResponse*>(&to_msg);
+  auto& from = static_cast<const GetKeyResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.GetKeyResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_key_value_pair()) {
-    _internal_mutable_key_value_pair()->::kvstore::v1::KeyValue::MergeFrom(from._internal_key_value_pair());
+    _this->_internal_mutable_key_value_pair()->::kvstore::v1::KeyValue::MergeFrom(
+        from._internal_key_value_pair());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void GetKeyResponse::CopyFrom(const GetKeyResponse& from) {
@@ -6381,7 +6572,7 @@ bool GetKeyResponse::IsInitialized() const {
 void GetKeyResponse::InternalSwap(GetKeyResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(key_value_pair_, other->key_value_pair_);
+  swap(_impl_.key_value_pair_, other->_impl_.key_value_pair_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata GetKeyResponse::GetMetadata() const {
@@ -6400,58 +6591,68 @@ class PutKeyRequest::_Internal {
 
 const ::kvstore::v1::KeyValue&
 PutKeyRequest::_Internal::key_value_pair(const PutKeyRequest* msg) {
-  return *msg->key_value_pair_;
+  return *msg->_impl_.key_value_pair_;
 }
 const ::kvstore::v1::Transaction&
 PutKeyRequest::_Internal::transaction(const PutKeyRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void PutKeyRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 PutKeyRequest::PutKeyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.PutKeyRequest)
 }
 PutKeyRequest::PutKeyRequest(const PutKeyRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  PutKeyRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_value_pair_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bucket_name_.InitDefault();
+  _impl_.bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    bucket_name_.Set("", GetArenaForAllocation());
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_bucket_name().empty()) {
-    bucket_name_.Set(from._internal_bucket_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.bucket_name_.Set(from._internal_bucket_name(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_key_value_pair()) {
-    key_value_pair_ = new ::kvstore::v1::KeyValue(*from.key_value_pair_);
-  } else {
-    key_value_pair_ = nullptr;
+    _this->_impl_.key_value_pair_ = new ::kvstore::v1::KeyValue(*from._impl_.key_value_pair_);
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.PutKeyRequest)
 }
 
-inline void PutKeyRequest::SharedCtor() {
-bucket_name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  bucket_name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&key_value_pair_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&key_value_pair_)) + sizeof(account_id_));
+inline void PutKeyRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_value_pair_){nullptr}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.bucket_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 PutKeyRequest::~PutKeyRequest() {
@@ -6465,13 +6666,13 @@ PutKeyRequest::~PutKeyRequest() {
 
 inline void PutKeyRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bucket_name_.Destroy();
-  if (this != internal_default_instance()) delete key_value_pair_;
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.bucket_name_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.key_value_pair_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void PutKeyRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void PutKeyRequest::Clear() {
@@ -6480,16 +6681,16 @@ void PutKeyRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bucket_name_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && key_value_pair_ != nullptr) {
-    delete key_value_pair_;
+  _impl_.bucket_name_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.key_value_pair_ != nullptr) {
+    delete _impl_.key_value_pair_;
   }
-  key_value_pair_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.key_value_pair_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -6502,7 +6703,7 @@ const char* PutKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext*
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -6619,14 +6820,14 @@ size_t PutKeyRequest::ByteSizeLong() const {
   if (this->_internal_has_key_value_pair()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *key_value_pair_);
+        *_impl_.key_value_pair_);
   }
 
   // .kvstore.v1.Transaction transaction = 4 [json_name = "transaction"];
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -6634,41 +6835,39 @@ size_t PutKeyRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PutKeyRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     PutKeyRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PutKeyRequest::GetClassData() const { return &_class_data_; }
 
-void PutKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<PutKeyRequest *>(to)->MergeFrom(
-      static_cast<const PutKeyRequest &>(from));
-}
 
-
-void PutKeyRequest::MergeFrom(const PutKeyRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.PutKeyRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void PutKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<PutKeyRequest*>(&to_msg);
+  auto& from = static_cast<const PutKeyRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.PutKeyRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_bucket_name().empty()) {
-    _internal_set_bucket_name(from._internal_bucket_name());
+    _this->_internal_set_bucket_name(from._internal_bucket_name());
   }
   if (from._internal_has_key_value_pair()) {
-    _internal_mutable_key_value_pair()->::kvstore::v1::KeyValue::MergeFrom(from._internal_key_value_pair());
+    _this->_internal_mutable_key_value_pair()->::kvstore::v1::KeyValue::MergeFrom(
+        from._internal_key_value_pair());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PutKeyRequest::CopyFrom(const PutKeyRequest& from) {
@@ -6688,15 +6887,15 @@ void PutKeyRequest::InternalSwap(PutKeyRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &bucket_name_, lhs_arena,
-      &other->bucket_name_, rhs_arena
+      &_impl_.bucket_name_, lhs_arena,
+      &other->_impl_.bucket_name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(PutKeyRequest, account_id_)
-      + sizeof(PutKeyRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(PutKeyRequest, key_value_pair_)>(
-          reinterpret_cast<char*>(&key_value_pair_),
-          reinterpret_cast<char*>(&other->key_value_pair_));
+      PROTOBUF_FIELD_OFFSET(PutKeyRequest, _impl_.account_id_)
+      + sizeof(PutKeyRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(PutKeyRequest, _impl_.key_value_pair_)>(
+          reinterpret_cast<char*>(&_impl_.key_value_pair_),
+          reinterpret_cast<char*>(&other->_impl_.key_value_pair_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata PutKeyRequest::GetMetadata() const {
@@ -6714,33 +6913,42 @@ class PutKeyResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 PutKeyResponse::_Internal::transaction(const PutKeyResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void PutKeyResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 PutKeyResponse::PutKeyResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.PutKeyResponse)
 }
 PutKeyResponse::PutKeyResponse(const PutKeyResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  PutKeyResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.PutKeyResponse)
 }
 
-inline void PutKeyResponse::SharedCtor() {
-transaction_ = nullptr;
+inline void PutKeyResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 PutKeyResponse::~PutKeyResponse() {
@@ -6754,11 +6962,11 @@ PutKeyResponse::~PutKeyResponse() {
 
 inline void PutKeyResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void PutKeyResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void PutKeyResponse::Clear() {
@@ -6767,10 +6975,10 @@ void PutKeyResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -6844,35 +7052,32 @@ size_t PutKeyResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PutKeyResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     PutKeyResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PutKeyResponse::GetClassData() const { return &_class_data_; }
 
-void PutKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<PutKeyResponse *>(to)->MergeFrom(
-      static_cast<const PutKeyResponse &>(from));
-}
 
-
-void PutKeyResponse::MergeFrom(const PutKeyResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.PutKeyResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void PutKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<PutKeyResponse*>(&to_msg);
+  auto& from = static_cast<const PutKeyResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.PutKeyResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PutKeyResponse::CopyFrom(const PutKeyResponse& from) {
@@ -6889,7 +7094,7 @@ bool PutKeyResponse::IsInitialized() const {
 void PutKeyResponse::InternalSwap(PutKeyResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(transaction_, other->transaction_);
+  swap(_impl_.transaction_, other->_impl_.transaction_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata PutKeyResponse::GetMetadata() const {
@@ -6907,61 +7112,73 @@ class DeleteKeyRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteKeyRequest::_Internal::transaction(const DeleteKeyRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteKeyRequest::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteKeyRequest::DeleteKeyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteKeyRequest)
 }
 DeleteKeyRequest::DeleteKeyRequest(const DeleteKeyRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteKeyRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  bucket_name_.InitDefault();
+  _impl_.bucket_name_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    bucket_name_.Set("", GetArenaForAllocation());
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_bucket_name().empty()) {
-    bucket_name_.Set(from._internal_bucket_name(), 
-      GetArenaForAllocation());
+    _this->_impl_.bucket_name_.Set(from._internal_bucket_name(), 
+      _this->GetArenaForAllocation());
   }
-  key_.InitDefault();
+  _impl_.key_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    key_.Set("", GetArenaForAllocation());
+    _impl_.key_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_key().empty()) {
-    key_.Set(from._internal_key(), 
-      GetArenaForAllocation());
+    _this->_impl_.key_.Set(from._internal_key(), 
+      _this->GetArenaForAllocation());
   }
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  account_id_ = from.account_id_;
+  _this->_impl_.account_id_ = from._impl_.account_id_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteKeyRequest)
 }
 
-inline void DeleteKeyRequest::SharedCtor() {
-bucket_name_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  bucket_name_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-key_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  key_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&account_id_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(account_id_));
+inline void DeleteKeyRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.bucket_name_){}
+    , decltype(_impl_.key_){}
+    , decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.account_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.bucket_name_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.bucket_name_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 DeleteKeyRequest::~DeleteKeyRequest() {
@@ -6975,13 +7192,13 @@ DeleteKeyRequest::~DeleteKeyRequest() {
 
 inline void DeleteKeyRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  bucket_name_.Destroy();
-  key_.Destroy();
-  if (this != internal_default_instance()) delete transaction_;
+  _impl_.bucket_name_.Destroy();
+  _impl_.key_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteKeyRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteKeyRequest::Clear() {
@@ -6990,13 +7207,13 @@ void DeleteKeyRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  bucket_name_.ClearToEmpty();
-  key_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  _impl_.bucket_name_.ClearToEmpty();
+  _impl_.key_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  account_id_ = uint64_t{0u};
+  _impl_.transaction_ = nullptr;
+  _impl_.account_id_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -7009,7 +7226,7 @@ const char* DeleteKeyRequest::_InternalParse(const char* ptr, ::_pbi::ParseConte
       // uint64 account_id = 1 [json_name = "accountId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.account_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -7133,7 +7350,7 @@ size_t DeleteKeyRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // uint64 account_id = 1 [json_name = "accountId"];
@@ -7141,41 +7358,38 @@ size_t DeleteKeyRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_account_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteKeyRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteKeyRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteKeyRequest::GetClassData() const { return &_class_data_; }
 
-void DeleteKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteKeyRequest *>(to)->MergeFrom(
-      static_cast<const DeleteKeyRequest &>(from));
-}
 
-
-void DeleteKeyRequest::MergeFrom(const DeleteKeyRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteKeyRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteKeyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteKeyRequest*>(&to_msg);
+  auto& from = static_cast<const DeleteKeyRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteKeyRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_bucket_name().empty()) {
-    _internal_set_bucket_name(from._internal_bucket_name());
+    _this->_internal_set_bucket_name(from._internal_bucket_name());
   }
   if (!from._internal_key().empty()) {
-    _internal_set_key(from._internal_key());
+    _this->_internal_set_key(from._internal_key());
   }
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_account_id() != 0) {
-    _internal_set_account_id(from._internal_account_id());
+    _this->_internal_set_account_id(from._internal_account_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteKeyRequest::CopyFrom(const DeleteKeyRequest& from) {
@@ -7195,19 +7409,19 @@ void DeleteKeyRequest::InternalSwap(DeleteKeyRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &bucket_name_, lhs_arena,
-      &other->bucket_name_, rhs_arena
+      &_impl_.bucket_name_, lhs_arena,
+      &other->_impl_.bucket_name_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &key_, lhs_arena,
-      &other->key_, rhs_arena
+      &_impl_.key_, lhs_arena,
+      &other->_impl_.key_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteKeyRequest, account_id_)
-      + sizeof(DeleteKeyRequest::account_id_)
-      - PROTOBUF_FIELD_OFFSET(DeleteKeyRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteKeyRequest, _impl_.account_id_)
+      + sizeof(DeleteKeyRequest::_impl_.account_id_)
+      - PROTOBUF_FIELD_OFFSET(DeleteKeyRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteKeyRequest::GetMetadata() const {
@@ -7225,37 +7439,45 @@ class DeleteKeyResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 DeleteKeyResponse::_Internal::transaction(const DeleteKeyResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 void DeleteKeyResponse::clear_transaction() {
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
 }
 DeleteKeyResponse::DeleteKeyResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.DeleteKeyResponse)
 }
 DeleteKeyResponse::DeleteKeyResponse(const DeleteKeyResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  DeleteKeyResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  ok_ = from.ok_;
+  _this->_impl_.ok_ = from._impl_.ok_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.DeleteKeyResponse)
 }
 
-inline void DeleteKeyResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&ok_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(ok_));
+inline void DeleteKeyResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.ok_){false}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 DeleteKeyResponse::~DeleteKeyResponse() {
@@ -7269,11 +7491,11 @@ DeleteKeyResponse::~DeleteKeyResponse() {
 
 inline void DeleteKeyResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void DeleteKeyResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void DeleteKeyResponse::Clear() {
@@ -7282,11 +7504,11 @@ void DeleteKeyResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  ok_ = false;
+  _impl_.transaction_ = nullptr;
+  _impl_.ok_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -7299,7 +7521,7 @@ const char* DeleteKeyResponse::_InternalParse(const char* ptr, ::_pbi::ParseCont
       // bool ok = 1 [json_name = "ok"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.ok_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -7374,7 +7596,7 @@ size_t DeleteKeyResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // bool ok = 1 [json_name = "ok"];
@@ -7382,35 +7604,32 @@ size_t DeleteKeyResponse::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DeleteKeyResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     DeleteKeyResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DeleteKeyResponse::GetClassData() const { return &_class_data_; }
 
-void DeleteKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DeleteKeyResponse *>(to)->MergeFrom(
-      static_cast<const DeleteKeyResponse &>(from));
-}
 
-
-void DeleteKeyResponse::MergeFrom(const DeleteKeyResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteKeyResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void DeleteKeyResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<DeleteKeyResponse*>(&to_msg);
+  auto& from = static_cast<const DeleteKeyResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.DeleteKeyResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_ok() != 0) {
-    _internal_set_ok(from._internal_ok());
+    _this->_internal_set_ok(from._internal_ok());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void DeleteKeyResponse::CopyFrom(const DeleteKeyResponse& from) {
@@ -7428,11 +7647,11 @@ void DeleteKeyResponse::InternalSwap(DeleteKeyResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(DeleteKeyResponse, ok_)
-      + sizeof(DeleteKeyResponse::ok_)
-      - PROTOBUF_FIELD_OFFSET(DeleteKeyResponse, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(DeleteKeyResponse, _impl_.ok_)
+      + sizeof(DeleteKeyResponse::_impl_.ok_)
+      - PROTOBUF_FIELD_OFFSET(DeleteKeyResponse, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata DeleteKeyResponse::GetMetadata() const {
@@ -7449,31 +7668,45 @@ class KeyValueDescriptor::_Internal {
 
 KeyValueDescriptor::KeyValueDescriptor(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  versions_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.KeyValueDescriptor)
 }
 KeyValueDescriptor::KeyValueDescriptor(const KeyValueDescriptor& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      versions_(from.versions_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  KeyValueDescriptor* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.versions_){from._impl_.versions_}
+    , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+    , decltype(_impl_.current_key_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  current_key_.InitDefault();
+  _impl_.current_key_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    current_key_.Set("", GetArenaForAllocation());
+    _impl_.current_key_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_current_key().empty()) {
-    current_key_.Set(from._internal_current_key(), 
-      GetArenaForAllocation());
+    _this->_impl_.current_key_.Set(from._internal_current_key(), 
+      _this->GetArenaForAllocation());
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.KeyValueDescriptor)
 }
 
-inline void KeyValueDescriptor::SharedCtor() {
-current_key_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  current_key_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void KeyValueDescriptor::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.versions_){arena}
+    , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+    , decltype(_impl_.current_key_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.current_key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.current_key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 KeyValueDescriptor::~KeyValueDescriptor() {
@@ -7487,11 +7720,12 @@ KeyValueDescriptor::~KeyValueDescriptor() {
 
 inline void KeyValueDescriptor::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  current_key_.Destroy();
+  _impl_.versions_.~RepeatedField();
+  _impl_.current_key_.Destroy();
 }
 
 void KeyValueDescriptor::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void KeyValueDescriptor::Clear() {
@@ -7500,8 +7734,8 @@ void KeyValueDescriptor::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  versions_.Clear();
-  current_key_.ClearToEmpty();
+  _impl_.versions_.Clear();
+  _impl_.current_key_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -7562,7 +7796,7 @@ uint8_t* KeyValueDescriptor::_InternalSerialize(
 
   // repeated uint32 versions = 1 [json_name = "versions"];
   {
-    int byte_size = _versions_cached_byte_size_.load(std::memory_order_relaxed);
+    int byte_size = _impl_._versions_cached_byte_size_.load(std::memory_order_relaxed);
     if (byte_size > 0) {
       target = stream->WriteUInt32Packed(
           1, _internal_versions(), byte_size, target);
@@ -7594,13 +7828,13 @@ size_t KeyValueDescriptor::ByteSizeLong() const {
   // repeated uint32 versions = 1 [json_name = "versions"];
   {
     size_t data_size = ::_pbi::WireFormatLite::
-      UInt32Size(this->versions_);
+      UInt32Size(this->_impl_.versions_);
     if (data_size > 0) {
       total_size += 1 +
         ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
     }
     int cached_size = ::_pbi::ToCachedSize(data_size);
-    _versions_cached_byte_size_.store(cached_size,
+    _impl_._versions_cached_byte_size_.store(cached_size,
                                     std::memory_order_relaxed);
     total_size += data_size;
   }
@@ -7612,33 +7846,29 @@ size_t KeyValueDescriptor::ByteSizeLong() const {
         this->_internal_current_key());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData KeyValueDescriptor::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     KeyValueDescriptor::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*KeyValueDescriptor::GetClassData() const { return &_class_data_; }
 
-void KeyValueDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<KeyValueDescriptor *>(to)->MergeFrom(
-      static_cast<const KeyValueDescriptor &>(from));
-}
 
-
-void KeyValueDescriptor::MergeFrom(const KeyValueDescriptor& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KeyValueDescriptor)
-  GOOGLE_DCHECK_NE(&from, this);
+void KeyValueDescriptor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<KeyValueDescriptor*>(&to_msg);
+  auto& from = static_cast<const KeyValueDescriptor&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KeyValueDescriptor)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  versions_.MergeFrom(from.versions_);
+  _this->_impl_.versions_.MergeFrom(from._impl_.versions_);
   if (!from._internal_current_key().empty()) {
-    _internal_set_current_key(from._internal_current_key());
+    _this->_internal_set_current_key(from._internal_current_key());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void KeyValueDescriptor::CopyFrom(const KeyValueDescriptor& from) {
@@ -7657,10 +7887,10 @@ void KeyValueDescriptor::InternalSwap(KeyValueDescriptor* other) {
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  versions_.InternalSwap(&other->versions_);
+  _impl_.versions_.InternalSwap(&other->_impl_.versions_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &current_key_, lhs_arena,
-      &other->current_key_, rhs_arena
+      &_impl_.current_key_, lhs_arena,
+      &other->_impl_.current_key_, rhs_arena
   );
 }
 
@@ -7679,28 +7909,40 @@ class ListKeyVersionsRequest::_Internal {
 ListKeyVersionsRequest::ListKeyVersionsRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.ListKeyVersionsRequest)
 }
 ListKeyVersionsRequest::ListKeyVersionsRequest(const ListKeyVersionsRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ListKeyVersionsRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  key_.InitDefault();
+  _impl_.key_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    key_.Set("", GetArenaForAllocation());
+    _impl_.key_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_key().empty()) {
-    key_.Set(from._internal_key(), 
-      GetArenaForAllocation());
+    _this->_impl_.key_.Set(from._internal_key(), 
+      _this->GetArenaForAllocation());
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.ListKeyVersionsRequest)
 }
 
-inline void ListKeyVersionsRequest::SharedCtor() {
-key_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  key_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void ListKeyVersionsRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 ListKeyVersionsRequest::~ListKeyVersionsRequest() {
@@ -7714,11 +7956,11 @@ ListKeyVersionsRequest::~ListKeyVersionsRequest() {
 
 inline void ListKeyVersionsRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  key_.Destroy();
+  _impl_.key_.Destroy();
 }
 
 void ListKeyVersionsRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void ListKeyVersionsRequest::Clear() {
@@ -7727,7 +7969,7 @@ void ListKeyVersionsRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  key_.ClearToEmpty();
+  _impl_.key_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -7804,32 +8046,28 @@ size_t ListKeyVersionsRequest::ByteSizeLong() const {
         this->_internal_key());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ListKeyVersionsRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     ListKeyVersionsRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ListKeyVersionsRequest::GetClassData() const { return &_class_data_; }
 
-void ListKeyVersionsRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<ListKeyVersionsRequest *>(to)->MergeFrom(
-      static_cast<const ListKeyVersionsRequest &>(from));
-}
 
-
-void ListKeyVersionsRequest::MergeFrom(const ListKeyVersionsRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void ListKeyVersionsRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ListKeyVersionsRequest*>(&to_msg);
+  auto& from = static_cast<const ListKeyVersionsRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_key().empty()) {
-    _internal_set_key(from._internal_key());
+    _this->_internal_set_key(from._internal_key());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void ListKeyVersionsRequest::CopyFrom(const ListKeyVersionsRequest& from) {
@@ -7849,8 +8087,8 @@ void ListKeyVersionsRequest::InternalSwap(ListKeyVersionsRequest* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &key_, lhs_arena,
-      &other->key_, rhs_arena
+      &_impl_.key_, lhs_arena,
+      &other->_impl_.key_, rhs_arena
   );
 }
 
@@ -7868,19 +8106,31 @@ class ListKeyVersionsResponse::_Internal {
 
 ListKeyVersionsResponse::ListKeyVersionsResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  versions_(arena) {
-  SharedCtor();
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.ListKeyVersionsResponse)
 }
 ListKeyVersionsResponse::ListKeyVersionsResponse(const ListKeyVersionsResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      versions_(from.versions_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ListKeyVersionsResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.versions_){from._impl_.versions_}
+    , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.ListKeyVersionsResponse)
 }
 
-inline void ListKeyVersionsResponse::SharedCtor() {
+inline void ListKeyVersionsResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.versions_){arena}
+    , /*decltype(_impl_._versions_cached_byte_size_)*/{0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 ListKeyVersionsResponse::~ListKeyVersionsResponse() {
@@ -7894,10 +8144,11 @@ ListKeyVersionsResponse::~ListKeyVersionsResponse() {
 
 inline void ListKeyVersionsResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.versions_.~RepeatedField();
 }
 
 void ListKeyVersionsResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void ListKeyVersionsResponse::Clear() {
@@ -7906,7 +8157,7 @@ void ListKeyVersionsResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  versions_.Clear();
+  _impl_.versions_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -7958,7 +8209,7 @@ uint8_t* ListKeyVersionsResponse::_InternalSerialize(
 
   // repeated uint32 versions = 1 [json_name = "versions"];
   {
-    int byte_size = _versions_cached_byte_size_.load(std::memory_order_relaxed);
+    int byte_size = _impl_._versions_cached_byte_size_.load(std::memory_order_relaxed);
     if (byte_size > 0) {
       target = stream->WriteUInt32Packed(
           1, _internal_versions(), byte_size, target);
@@ -7984,41 +8235,37 @@ size_t ListKeyVersionsResponse::ByteSizeLong() const {
   // repeated uint32 versions = 1 [json_name = "versions"];
   {
     size_t data_size = ::_pbi::WireFormatLite::
-      UInt32Size(this->versions_);
+      UInt32Size(this->_impl_.versions_);
     if (data_size > 0) {
       total_size += 1 +
         ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
     }
     int cached_size = ::_pbi::ToCachedSize(data_size);
-    _versions_cached_byte_size_.store(cached_size,
+    _impl_._versions_cached_byte_size_.store(cached_size,
                                     std::memory_order_relaxed);
     total_size += data_size;
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ListKeyVersionsResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     ListKeyVersionsResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ListKeyVersionsResponse::GetClassData() const { return &_class_data_; }
 
-void ListKeyVersionsResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<ListKeyVersionsResponse *>(to)->MergeFrom(
-      static_cast<const ListKeyVersionsResponse &>(from));
-}
 
-
-void ListKeyVersionsResponse::MergeFrom(const ListKeyVersionsResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void ListKeyVersionsResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ListKeyVersionsResponse*>(&to_msg);
+  auto& from = static_cast<const ListKeyVersionsResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.ListKeyVersionsResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  versions_.MergeFrom(from.versions_);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.versions_.MergeFrom(from._impl_.versions_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void ListKeyVersionsResponse::CopyFrom(const ListKeyVersionsResponse& from) {
@@ -8035,7 +8282,7 @@ bool ListKeyVersionsResponse::IsInitialized() const {
 void ListKeyVersionsResponse::InternalSwap(ListKeyVersionsResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  versions_.InternalSwap(&other->versions_);
+  _impl_.versions_.InternalSwap(&other->_impl_.versions_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ListKeyVersionsResponse::GetMetadata() const {
@@ -8053,47 +8300,65 @@ class KeyValue::_Internal {
 KeyValue::KeyValue(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.KeyValue)
 }
 KeyValue::KeyValue(const KeyValue& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  KeyValue* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_){}
+    , decltype(_impl_.value_){}
+    , decltype(_impl_.create_revision_){}
+    , decltype(_impl_.mod_revision_){}
+    , decltype(_impl_.lease_){}
+    , decltype(_impl_.version_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  key_.InitDefault();
+  _impl_.key_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    key_.Set("", GetArenaForAllocation());
+    _impl_.key_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_key().empty()) {
-    key_.Set(from._internal_key(), 
-      GetArenaForAllocation());
+    _this->_impl_.key_.Set(from._internal_key(), 
+      _this->GetArenaForAllocation());
   }
-  value_.InitDefault();
+  _impl_.value_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    value_.Set("", GetArenaForAllocation());
+    _impl_.value_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_value().empty()) {
-    value_.Set(from._internal_value(), 
-      GetArenaForAllocation());
+    _this->_impl_.value_.Set(from._internal_value(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&create_revision_, &from.create_revision_,
-    static_cast<size_t>(reinterpret_cast<char*>(&version_) -
-    reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
+  ::memcpy(&_impl_.create_revision_, &from._impl_.create_revision_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.version_) -
+    reinterpret_cast<char*>(&_impl_.create_revision_)) + sizeof(_impl_.version_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.KeyValue)
 }
 
-inline void KeyValue::SharedCtor() {
-key_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  key_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-value_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  value_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&create_revision_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&version_) -
-    reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
+inline void KeyValue::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.key_){}
+    , decltype(_impl_.value_){}
+    , decltype(_impl_.create_revision_){int64_t{0}}
+    , decltype(_impl_.mod_revision_){int64_t{0}}
+    , decltype(_impl_.lease_){int64_t{0}}
+    , decltype(_impl_.version_){0u}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.value_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.value_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 KeyValue::~KeyValue() {
@@ -8107,12 +8372,12 @@ KeyValue::~KeyValue() {
 
 inline void KeyValue::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  key_.Destroy();
-  value_.Destroy();
+  _impl_.key_.Destroy();
+  _impl_.value_.Destroy();
 }
 
 void KeyValue::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void KeyValue::Clear() {
@@ -8121,11 +8386,11 @@ void KeyValue::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  key_.ClearToEmpty();
-  value_.ClearToEmpty();
-  ::memset(&create_revision_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&version_) -
-      reinterpret_cast<char*>(&create_revision_)) + sizeof(version_));
+  _impl_.key_.ClearToEmpty();
+  _impl_.value_.ClearToEmpty();
+  ::memset(&_impl_.create_revision_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.version_) -
+      reinterpret_cast<char*>(&_impl_.create_revision_)) + sizeof(_impl_.version_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -8147,7 +8412,7 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
       // int64 create_revision = 2 [json_name = "createRevision"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          create_revision_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.create_revision_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -8155,7 +8420,7 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
       // int64 mod_revision = 3 [json_name = "modRevision"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          mod_revision_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.mod_revision_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -8163,7 +8428,7 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
       // uint32 version = 4 [json_name = "version"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.version_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -8180,7 +8445,7 @@ const char* KeyValue::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
       // int64 lease = 6 [json_name = "lease"];
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          lease_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.lease_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -8300,47 +8565,43 @@ size_t KeyValue::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_version());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData KeyValue::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     KeyValue::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*KeyValue::GetClassData() const { return &_class_data_; }
 
-void KeyValue::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<KeyValue *>(to)->MergeFrom(
-      static_cast<const KeyValue &>(from));
-}
 
-
-void KeyValue::MergeFrom(const KeyValue& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KeyValue)
-  GOOGLE_DCHECK_NE(&from, this);
+void KeyValue::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<KeyValue*>(&to_msg);
+  auto& from = static_cast<const KeyValue&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.KeyValue)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_key().empty()) {
-    _internal_set_key(from._internal_key());
+    _this->_internal_set_key(from._internal_key());
   }
   if (!from._internal_value().empty()) {
-    _internal_set_value(from._internal_value());
+    _this->_internal_set_value(from._internal_value());
   }
   if (from._internal_create_revision() != 0) {
-    _internal_set_create_revision(from._internal_create_revision());
+    _this->_internal_set_create_revision(from._internal_create_revision());
   }
   if (from._internal_mod_revision() != 0) {
-    _internal_set_mod_revision(from._internal_mod_revision());
+    _this->_internal_set_mod_revision(from._internal_mod_revision());
   }
   if (from._internal_lease() != 0) {
-    _internal_set_lease(from._internal_lease());
+    _this->_internal_set_lease(from._internal_lease());
   }
   if (from._internal_version() != 0) {
-    _internal_set_version(from._internal_version());
+    _this->_internal_set_version(from._internal_version());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void KeyValue::CopyFrom(const KeyValue& from) {
@@ -8360,19 +8621,19 @@ void KeyValue::InternalSwap(KeyValue* other) {
   auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &key_, lhs_arena,
-      &other->key_, rhs_arena
+      &_impl_.key_, lhs_arena,
+      &other->_impl_.key_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &value_, lhs_arena,
-      &other->value_, rhs_arena
+      &_impl_.value_, lhs_arena,
+      &other->_impl_.value_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(KeyValue, version_)
-      + sizeof(KeyValue::version_)
-      - PROTOBUF_FIELD_OFFSET(KeyValue, create_revision_)>(
-          reinterpret_cast<char*>(&create_revision_),
-          reinterpret_cast<char*>(&other->create_revision_));
+      PROTOBUF_FIELD_OFFSET(KeyValue, _impl_.version_)
+      + sizeof(KeyValue::_impl_.version_)
+      - PROTOBUF_FIELD_OFFSET(KeyValue, _impl_.create_revision_)>(
+          reinterpret_cast<char*>(&_impl_.create_revision_),
+          reinterpret_cast<char*>(&other->_impl_.create_revision_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata KeyValue::GetMetadata() const {
@@ -8385,7 +8646,7 @@ void KeyValue::InternalSwap(KeyValue* other) {
 
 class Event::_Internal {
  public:
-  using HasBits = decltype(std::declval<Event>()._has_bits_);
+  using HasBits = decltype(std::declval<Event>()._impl_._has_bits_);
   static const ::kvstore::v1::KeyValue& kv(const Event* msg);
   static const ::kvstore::v1::KeyValue& prev_kv(const Event* msg);
   static void set_has_prev_kv(HasBits* has_bits) {
@@ -8395,41 +8656,50 @@ class Event::_Internal {
 
 const ::kvstore::v1::KeyValue&
 Event::_Internal::kv(const Event* msg) {
-  return *msg->kv_;
+  return *msg->_impl_.kv_;
 }
 const ::kvstore::v1::KeyValue&
 Event::_Internal::prev_kv(const Event* msg) {
-  return *msg->prev_kv_;
+  return *msg->_impl_.prev_kv_;
 }
 Event::Event(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.Event)
 }
 Event::Event(const Event& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      _has_bits_(from._has_bits_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Event* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){from._impl_._has_bits_}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.kv_){nullptr}
+    , decltype(_impl_.prev_kv_){nullptr}
+    , decltype(_impl_.type_){}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_kv()) {
-    kv_ = new ::kvstore::v1::KeyValue(*from.kv_);
-  } else {
-    kv_ = nullptr;
+    _this->_impl_.kv_ = new ::kvstore::v1::KeyValue(*from._impl_.kv_);
   }
   if (from._internal_has_prev_kv()) {
-    prev_kv_ = new ::kvstore::v1::KeyValue(*from.prev_kv_);
-  } else {
-    prev_kv_ = nullptr;
+    _this->_impl_.prev_kv_ = new ::kvstore::v1::KeyValue(*from._impl_.prev_kv_);
   }
-  type_ = from.type_;
+  _this->_impl_.type_ = from._impl_.type_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.Event)
 }
 
-inline void Event::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&kv_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&type_) -
-    reinterpret_cast<char*>(&kv_)) + sizeof(type_));
+inline void Event::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_._has_bits_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+    , decltype(_impl_.kv_){nullptr}
+    , decltype(_impl_.prev_kv_){nullptr}
+    , decltype(_impl_.type_){0}
+  };
 }
 
 Event::~Event() {
@@ -8443,12 +8713,12 @@ Event::~Event() {
 
 inline void Event::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete kv_;
-  if (this != internal_default_instance()) delete prev_kv_;
+  if (this != internal_default_instance()) delete _impl_.kv_;
+  if (this != internal_default_instance()) delete _impl_.prev_kv_;
 }
 
 void Event::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Event::Clear() {
@@ -8457,17 +8727,17 @@ void Event::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && kv_ != nullptr) {
-    delete kv_;
+  if (GetArenaForAllocation() == nullptr && _impl_.kv_ != nullptr) {
+    delete _impl_.kv_;
   }
-  kv_ = nullptr;
-  cached_has_bits = _has_bits_[0];
+  _impl_.kv_ = nullptr;
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000001u) {
-    GOOGLE_DCHECK(prev_kv_ != nullptr);
-    prev_kv_->Clear();
+    GOOGLE_DCHECK(_impl_.prev_kv_ != nullptr);
+    _impl_.prev_kv_->Clear();
   }
-  type_ = 0;
-  _has_bits_.Clear();
+  _impl_.type_ = 0;
+  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -8519,7 +8789,7 @@ const char* Event::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
     CHK_(ptr != nullptr);
   }  // while
 message_done:
-  _has_bits_.Or(has_bits);
+  _impl_._has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -8574,15 +8844,15 @@ size_t Event::ByteSizeLong() const {
   if (this->_internal_has_kv()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *kv_);
+        *_impl_.kv_);
   }
 
   // optional .kvstore.v1.KeyValue prev_kv = 3 [json_name = "prevKv"];
-  cached_has_bits = _has_bits_[0];
+  cached_has_bits = _impl_._has_bits_[0];
   if (cached_has_bits & 0x00000001u) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *prev_kv_);
+        *_impl_.prev_kv_);
   }
 
   // .kvstore.v1.KeyOperationType type = 1 [json_name = "type"];
@@ -8591,38 +8861,36 @@ size_t Event::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Event::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Event::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Event::GetClassData() const { return &_class_data_; }
 
-void Event::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Event *>(to)->MergeFrom(
-      static_cast<const Event &>(from));
-}
 
-
-void Event::MergeFrom(const Event& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.Event)
-  GOOGLE_DCHECK_NE(&from, this);
+void Event::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Event*>(&to_msg);
+  auto& from = static_cast<const Event&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.Event)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_kv()) {
-    _internal_mutable_kv()->::kvstore::v1::KeyValue::MergeFrom(from._internal_kv());
+    _this->_internal_mutable_kv()->::kvstore::v1::KeyValue::MergeFrom(
+        from._internal_kv());
   }
   if (from._internal_has_prev_kv()) {
-    _internal_mutable_prev_kv()->::kvstore::v1::KeyValue::MergeFrom(from._internal_prev_kv());
+    _this->_internal_mutable_prev_kv()->::kvstore::v1::KeyValue::MergeFrom(
+        from._internal_prev_kv());
   }
   if (from._internal_type() != 0) {
-    _internal_set_type(from._internal_type());
+    _this->_internal_set_type(from._internal_type());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Event::CopyFrom(const Event& from) {
@@ -8639,13 +8907,13 @@ bool Event::IsInitialized() const {
 void Event::InternalSwap(Event* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Event, type_)
-      + sizeof(Event::type_)
-      - PROTOBUF_FIELD_OFFSET(Event, kv_)>(
-          reinterpret_cast<char*>(&kv_),
-          reinterpret_cast<char*>(&other->kv_));
+      PROTOBUF_FIELD_OFFSET(Event, _impl_.type_)
+      + sizeof(Event::_impl_.type_)
+      - PROTOBUF_FIELD_OFFSET(Event, _impl_.kv_)>(
+          reinterpret_cast<char*>(&_impl_.kv_),
+          reinterpret_cast<char*>(&other->_impl_.kv_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Event::GetMetadata() const {

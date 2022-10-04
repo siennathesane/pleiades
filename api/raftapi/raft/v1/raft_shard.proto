@@ -1,6 +1,18 @@
 syntax = "proto3";
 
 package raft.v1;
+import "google/protobuf/timestamp.proto";
+
+message ShardState {
+  google.protobuf.Timestamp last_updated = 1;
+  uint64 shard_id = 2;
+  uint64 config_change_id = 3;
+  map<uint64, string> replicas = 4;
+  map<uint64, string> observers = 5;
+  map<uint64, string> witnesses = 6;
+  map<uint64, string> removed = 7;
+  StateMachineType type = 8;
+}
 
 enum StateMachineType {
   STATE_MACHINE_TYPE_UNSPECIFIED = 0;

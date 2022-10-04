@@ -23,9 +23,10 @@ namespace _pbi = _pb::internal;
 namespace kvstore {
 namespace v1 {
 PROTOBUF_CONSTEXPR CloseTransactionRequest::CloseTransactionRequest(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr)
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CloseTransactionRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CloseTransactionRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -36,9 +37,10 @@ struct CloseTransactionRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CloseTransactionRequestDefaultTypeInternal _CloseTransactionRequest_default_instance_;
 PROTOBUF_CONSTEXPR CloseTransactionResponse::CloseTransactionResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr)
-  , timeout_(int64_t{0}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_.timeout_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CloseTransactionResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CloseTransactionResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -49,8 +51,9 @@ struct CloseTransactionResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CloseTransactionResponseDefaultTypeInternal _CloseTransactionResponse_default_instance_;
 PROTOBUF_CONSTEXPR CommitRequest::CommitRequest(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CommitRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CommitRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -61,8 +64,9 @@ struct CommitRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommitRequestDefaultTypeInternal _CommitRequest_default_instance_;
 PROTOBUF_CONSTEXPR CommitResponse::CommitResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct CommitResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR CommitResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -73,11 +77,12 @@ struct CommitResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CommitResponseDefaultTypeInternal _CommitResponse_default_instance_;
 PROTOBUF_CONSTEXPR Transaction::Transaction(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , client_id_(uint64_t{0u})
-  , transaction_id_(uint64_t{0u})
-  , responded_to_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.client_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.transaction_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.responded_to_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct TransactionDefaultTypeInternal {
   PROTOBUF_CONSTEXPR TransactionDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -88,9 +93,10 @@ struct TransactionDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TransactionDefaultTypeInternal _Transaction_default_instance_;
 PROTOBUF_CONSTEXPR NewTransactionRequest::NewTransactionRequest(
-    ::_pbi::ConstantInitialized)
-  : shard_id_(uint64_t{0u})
-  , client_id_(uint64_t{0u}){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.client_id_)*/uint64_t{0u}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct NewTransactionRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NewTransactionRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -101,8 +107,9 @@ struct NewTransactionRequestDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NewTransactionRequestDefaultTypeInternal _NewTransactionRequest_default_instance_;
 PROTOBUF_CONSTEXPR NewTransactionResponse::NewTransactionResponse(
-    ::_pbi::ConstantInitialized)
-  : transaction_(nullptr){}
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.transaction_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
 struct NewTransactionResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR NewTransactionResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -125,55 +132,55 @@ const uint32_t TableStruct_kvstore_2fv1_2ftransactions_2eproto::offsets[] PROTOB
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionRequest, transaction_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionRequest, timeout_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionRequest, _impl_.transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionResponse, transaction_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionResponse, timeout_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionResponse, _impl_.transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CloseTransactionResponse, _impl_.timeout_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitRequest, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitRequest, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::CommitResponse, _impl_.transaction_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, client_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, transaction_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, responded_to_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, _impl_.client_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, _impl_.transaction_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::Transaction, _impl_.responded_to_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionRequest, shard_id_),
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionRequest, client_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionRequest, _impl_.client_id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionResponse, transaction_),
+  PROTOBUF_FIELD_OFFSET(::kvstore::v1::NewTransactionResponse, _impl_.transaction_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::kvstore::v1::CloseTransactionRequest)},
@@ -247,31 +254,39 @@ class CloseTransactionRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 CloseTransactionRequest::_Internal::transaction(const CloseTransactionRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 CloseTransactionRequest::CloseTransactionRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CloseTransactionRequest)
 }
 CloseTransactionRequest::CloseTransactionRequest(const CloseTransactionRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CloseTransactionRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  timeout_ = from.timeout_;
+  _this->_impl_.timeout_ = from._impl_.timeout_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CloseTransactionRequest)
 }
 
-inline void CloseTransactionRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(timeout_));
+inline void CloseTransactionRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CloseTransactionRequest::~CloseTransactionRequest() {
@@ -285,11 +300,11 @@ CloseTransactionRequest::~CloseTransactionRequest() {
 
 inline void CloseTransactionRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CloseTransactionRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CloseTransactionRequest::Clear() {
@@ -298,11 +313,11 @@ void CloseTransactionRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  timeout_ = int64_t{0};
+  _impl_.transaction_ = nullptr;
+  _impl_.timeout_ = int64_t{0};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -323,7 +338,7 @@ const char* CloseTransactionRequest::_InternalParse(const char* ptr, ::_pbi::Par
       // int64 timeout = 2 [json_name = "timeout"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -390,7 +405,7 @@ size_t CloseTransactionRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // int64 timeout = 2 [json_name = "timeout"];
@@ -398,35 +413,32 @@ size_t CloseTransactionRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CloseTransactionRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CloseTransactionRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CloseTransactionRequest::GetClassData() const { return &_class_data_; }
 
-void CloseTransactionRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CloseTransactionRequest *>(to)->MergeFrom(
-      static_cast<const CloseTransactionRequest &>(from));
-}
 
-
-void CloseTransactionRequest::MergeFrom(const CloseTransactionRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CloseTransactionRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void CloseTransactionRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CloseTransactionRequest*>(&to_msg);
+  auto& from = static_cast<const CloseTransactionRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CloseTransactionRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CloseTransactionRequest::CopyFrom(const CloseTransactionRequest& from) {
@@ -444,11 +456,11 @@ void CloseTransactionRequest::InternalSwap(CloseTransactionRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CloseTransactionRequest, timeout_)
-      + sizeof(CloseTransactionRequest::timeout_)
-      - PROTOBUF_FIELD_OFFSET(CloseTransactionRequest, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(CloseTransactionRequest, _impl_.timeout_)
+      + sizeof(CloseTransactionRequest::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(CloseTransactionRequest, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CloseTransactionRequest::GetMetadata() const {
@@ -466,31 +478,39 @@ class CloseTransactionResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 CloseTransactionResponse::_Internal::transaction(const CloseTransactionResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 CloseTransactionResponse::CloseTransactionResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CloseTransactionResponse)
 }
 CloseTransactionResponse::CloseTransactionResponse(const CloseTransactionResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CloseTransactionResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.timeout_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
-  timeout_ = from.timeout_;
+  _this->_impl_.timeout_ = from._impl_.timeout_;
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CloseTransactionResponse)
 }
 
-inline void CloseTransactionResponse::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&transaction_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&timeout_) -
-    reinterpret_cast<char*>(&transaction_)) + sizeof(timeout_));
+inline void CloseTransactionResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , decltype(_impl_.timeout_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CloseTransactionResponse::~CloseTransactionResponse() {
@@ -504,11 +524,11 @@ CloseTransactionResponse::~CloseTransactionResponse() {
 
 inline void CloseTransactionResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CloseTransactionResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CloseTransactionResponse::Clear() {
@@ -517,11 +537,11 @@ void CloseTransactionResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
-  timeout_ = int64_t{0};
+  _impl_.transaction_ = nullptr;
+  _impl_.timeout_ = int64_t{0};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -542,7 +562,7 @@ const char* CloseTransactionResponse::_InternalParse(const char* ptr, ::_pbi::Pa
       // int64 timeout = 2 [json_name = "timeout"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.timeout_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -609,7 +629,7 @@ size_t CloseTransactionResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
   // int64 timeout = 2 [json_name = "timeout"];
@@ -617,35 +637,32 @@ size_t CloseTransactionResponse::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timeout());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CloseTransactionResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CloseTransactionResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CloseTransactionResponse::GetClassData() const { return &_class_data_; }
 
-void CloseTransactionResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CloseTransactionResponse *>(to)->MergeFrom(
-      static_cast<const CloseTransactionResponse &>(from));
-}
 
-
-void CloseTransactionResponse::MergeFrom(const CloseTransactionResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CloseTransactionResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void CloseTransactionResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CloseTransactionResponse*>(&to_msg);
+  auto& from = static_cast<const CloseTransactionResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CloseTransactionResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
   if (from._internal_timeout() != 0) {
-    _internal_set_timeout(from._internal_timeout());
+    _this->_internal_set_timeout(from._internal_timeout());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CloseTransactionResponse::CopyFrom(const CloseTransactionResponse& from) {
@@ -663,11 +680,11 @@ void CloseTransactionResponse::InternalSwap(CloseTransactionResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CloseTransactionResponse, timeout_)
-      + sizeof(CloseTransactionResponse::timeout_)
-      - PROTOBUF_FIELD_OFFSET(CloseTransactionResponse, transaction_)>(
-          reinterpret_cast<char*>(&transaction_),
-          reinterpret_cast<char*>(&other->transaction_));
+      PROTOBUF_FIELD_OFFSET(CloseTransactionResponse, _impl_.timeout_)
+      + sizeof(CloseTransactionResponse::_impl_.timeout_)
+      - PROTOBUF_FIELD_OFFSET(CloseTransactionResponse, _impl_.transaction_)>(
+          reinterpret_cast<char*>(&_impl_.transaction_),
+          reinterpret_cast<char*>(&other->_impl_.transaction_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CloseTransactionResponse::GetMetadata() const {
@@ -685,27 +702,36 @@ class CommitRequest::_Internal {
 
 const ::kvstore::v1::Transaction&
 CommitRequest::_Internal::transaction(const CommitRequest* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 CommitRequest::CommitRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CommitRequest)
 }
 CommitRequest::CommitRequest(const CommitRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CommitRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CommitRequest)
 }
 
-inline void CommitRequest::SharedCtor() {
-transaction_ = nullptr;
+inline void CommitRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CommitRequest::~CommitRequest() {
@@ -719,11 +745,11 @@ CommitRequest::~CommitRequest() {
 
 inline void CommitRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CommitRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CommitRequest::Clear() {
@@ -732,10 +758,10 @@ void CommitRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -809,35 +835,32 @@ size_t CommitRequest::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CommitRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CommitRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CommitRequest::GetClassData() const { return &_class_data_; }
 
-void CommitRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CommitRequest *>(to)->MergeFrom(
-      static_cast<const CommitRequest &>(from));
-}
 
-
-void CommitRequest::MergeFrom(const CommitRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CommitRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void CommitRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CommitRequest*>(&to_msg);
+  auto& from = static_cast<const CommitRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CommitRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CommitRequest::CopyFrom(const CommitRequest& from) {
@@ -854,7 +877,7 @@ bool CommitRequest::IsInitialized() const {
 void CommitRequest::InternalSwap(CommitRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(transaction_, other->transaction_);
+  swap(_impl_.transaction_, other->_impl_.transaction_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CommitRequest::GetMetadata() const {
@@ -872,27 +895,36 @@ class CommitResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 CommitResponse::_Internal::transaction(const CommitResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 CommitResponse::CommitResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.CommitResponse)
 }
 CommitResponse::CommitResponse(const CommitResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CommitResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.CommitResponse)
 }
 
-inline void CommitResponse::SharedCtor() {
-transaction_ = nullptr;
+inline void CommitResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 CommitResponse::~CommitResponse() {
@@ -906,11 +938,11 @@ CommitResponse::~CommitResponse() {
 
 inline void CommitResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void CommitResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void CommitResponse::Clear() {
@@ -919,10 +951,10 @@ void CommitResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -996,35 +1028,32 @@ size_t CommitResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CommitResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     CommitResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CommitResponse::GetClassData() const { return &_class_data_; }
 
-void CommitResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<CommitResponse *>(to)->MergeFrom(
-      static_cast<const CommitResponse &>(from));
-}
 
-
-void CommitResponse::MergeFrom(const CommitResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CommitResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void CommitResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CommitResponse*>(&to_msg);
+  auto& from = static_cast<const CommitResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.CommitResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void CommitResponse::CopyFrom(const CommitResponse& from) {
@@ -1041,7 +1070,7 @@ bool CommitResponse::IsInitialized() const {
 void CommitResponse::InternalSwap(CommitResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(transaction_, other->transaction_);
+  swap(_impl_.transaction_, other->_impl_.transaction_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CommitResponse::GetMetadata() const {
@@ -1059,23 +1088,37 @@ class Transaction::_Internal {
 Transaction::Transaction(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.Transaction)
 }
 Transaction::Transaction(const Transaction& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  Transaction* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.client_id_){}
+    , decltype(_impl_.transaction_id_){}
+    , decltype(_impl_.responded_to_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&responded_to_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(responded_to_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.responded_to_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.responded_to_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.Transaction)
 }
 
-inline void Transaction::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&responded_to_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(responded_to_));
+inline void Transaction::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.client_id_){uint64_t{0u}}
+    , decltype(_impl_.transaction_id_){uint64_t{0u}}
+    , decltype(_impl_.responded_to_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 Transaction::~Transaction() {
@@ -1092,7 +1135,7 @@ inline void Transaction::SharedDtor() {
 }
 
 void Transaction::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void Transaction::Clear() {
@@ -1101,9 +1144,9 @@ void Transaction::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&responded_to_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(responded_to_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.responded_to_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.responded_to_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1116,7 +1159,7 @@ const char* Transaction::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1124,7 +1167,7 @@ const char* Transaction::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       // uint64 client_id = 2 [json_name = "clientId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          client_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.client_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1132,7 +1175,7 @@ const char* Transaction::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       // uint64 transaction_id = 3 [json_name = "transactionId"];
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          transaction_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.transaction_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1140,7 +1183,7 @@ const char* Transaction::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       // uint64 responded_to = 4 [json_name = "respondedTo"];
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          responded_to_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.responded_to_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1234,41 +1277,37 @@ size_t Transaction::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_responded_to());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Transaction::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     Transaction::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Transaction::GetClassData() const { return &_class_data_; }
 
-void Transaction::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<Transaction *>(to)->MergeFrom(
-      static_cast<const Transaction &>(from));
-}
 
-
-void Transaction::MergeFrom(const Transaction& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.Transaction)
-  GOOGLE_DCHECK_NE(&from, this);
+void Transaction::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<Transaction*>(&to_msg);
+  auto& from = static_cast<const Transaction&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.Transaction)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_client_id() != 0) {
-    _internal_set_client_id(from._internal_client_id());
+    _this->_internal_set_client_id(from._internal_client_id());
   }
   if (from._internal_transaction_id() != 0) {
-    _internal_set_transaction_id(from._internal_transaction_id());
+    _this->_internal_set_transaction_id(from._internal_transaction_id());
   }
   if (from._internal_responded_to() != 0) {
-    _internal_set_responded_to(from._internal_responded_to());
+    _this->_internal_set_responded_to(from._internal_responded_to());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Transaction::CopyFrom(const Transaction& from) {
@@ -1286,11 +1325,11 @@ void Transaction::InternalSwap(Transaction* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Transaction, responded_to_)
-      + sizeof(Transaction::responded_to_)
-      - PROTOBUF_FIELD_OFFSET(Transaction, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(Transaction, _impl_.responded_to_)
+      + sizeof(Transaction::_impl_.responded_to_)
+      - PROTOBUF_FIELD_OFFSET(Transaction, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Transaction::GetMetadata() const {
@@ -1308,23 +1347,33 @@ class NewTransactionRequest::_Internal {
 NewTransactionRequest::NewTransactionRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.NewTransactionRequest)
 }
 NewTransactionRequest::NewTransactionRequest(const NewTransactionRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  NewTransactionRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){}
+    , decltype(_impl_.client_id_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&shard_id_, &from.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&client_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(client_id_));
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.client_id_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.client_id_));
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.NewTransactionRequest)
 }
 
-inline void NewTransactionRequest::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&shard_id_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&client_id_) -
-    reinterpret_cast<char*>(&shard_id_)) + sizeof(client_id_));
+inline void NewTransactionRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.client_id_){uint64_t{0u}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 NewTransactionRequest::~NewTransactionRequest() {
@@ -1341,7 +1390,7 @@ inline void NewTransactionRequest::SharedDtor() {
 }
 
 void NewTransactionRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void NewTransactionRequest::Clear() {
@@ -1350,9 +1399,9 @@ void NewTransactionRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&client_id_) -
-      reinterpret_cast<char*>(&shard_id_)) + sizeof(client_id_));
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.client_id_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.client_id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1365,7 +1414,7 @@ const char* NewTransactionRequest::_InternalParse(const char* ptr, ::_pbi::Parse
       // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1373,7 +1422,7 @@ const char* NewTransactionRequest::_InternalParse(const char* ptr, ::_pbi::Parse
       // uint64 client_id = 2 [json_name = "clientId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          client_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.client_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1445,35 +1494,31 @@ size_t NewTransactionRequest::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_client_id());
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData NewTransactionRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     NewTransactionRequest::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NewTransactionRequest::GetClassData() const { return &_class_data_; }
 
-void NewTransactionRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<NewTransactionRequest *>(to)->MergeFrom(
-      static_cast<const NewTransactionRequest &>(from));
-}
 
-
-void NewTransactionRequest::MergeFrom(const NewTransactionRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.NewTransactionRequest)
-  GOOGLE_DCHECK_NE(&from, this);
+void NewTransactionRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<NewTransactionRequest*>(&to_msg);
+  auto& from = static_cast<const NewTransactionRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.NewTransactionRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_shard_id() != 0) {
-    _internal_set_shard_id(from._internal_shard_id());
+    _this->_internal_set_shard_id(from._internal_shard_id());
   }
   if (from._internal_client_id() != 0) {
-    _internal_set_client_id(from._internal_client_id());
+    _this->_internal_set_client_id(from._internal_client_id());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void NewTransactionRequest::CopyFrom(const NewTransactionRequest& from) {
@@ -1491,11 +1536,11 @@ void NewTransactionRequest::InternalSwap(NewTransactionRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(NewTransactionRequest, client_id_)
-      + sizeof(NewTransactionRequest::client_id_)
-      - PROTOBUF_FIELD_OFFSET(NewTransactionRequest, shard_id_)>(
-          reinterpret_cast<char*>(&shard_id_),
-          reinterpret_cast<char*>(&other->shard_id_));
+      PROTOBUF_FIELD_OFFSET(NewTransactionRequest, _impl_.client_id_)
+      + sizeof(NewTransactionRequest::_impl_.client_id_)
+      - PROTOBUF_FIELD_OFFSET(NewTransactionRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NewTransactionRequest::GetMetadata() const {
@@ -1513,27 +1558,36 @@ class NewTransactionResponse::_Internal {
 
 const ::kvstore::v1::Transaction&
 NewTransactionResponse::_Internal::transaction(const NewTransactionResponse* msg) {
-  return *msg->transaction_;
+  return *msg->_impl_.transaction_;
 }
 NewTransactionResponse::NewTransactionResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:kvstore.v1.NewTransactionResponse)
 }
 NewTransactionResponse::NewTransactionResponse(const NewTransactionResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  NewTransactionResponse* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   if (from._internal_has_transaction()) {
-    transaction_ = new ::kvstore::v1::Transaction(*from.transaction_);
-  } else {
-    transaction_ = nullptr;
+    _this->_impl_.transaction_ = new ::kvstore::v1::Transaction(*from._impl_.transaction_);
   }
   // @@protoc_insertion_point(copy_constructor:kvstore.v1.NewTransactionResponse)
 }
 
-inline void NewTransactionResponse::SharedCtor() {
-transaction_ = nullptr;
+inline void NewTransactionResponse::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.transaction_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 NewTransactionResponse::~NewTransactionResponse() {
@@ -1547,11 +1601,11 @@ NewTransactionResponse::~NewTransactionResponse() {
 
 inline void NewTransactionResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete transaction_;
+  if (this != internal_default_instance()) delete _impl_.transaction_;
 }
 
 void NewTransactionResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
 
 void NewTransactionResponse::Clear() {
@@ -1560,10 +1614,10 @@ void NewTransactionResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && transaction_ != nullptr) {
-    delete transaction_;
+  if (GetArenaForAllocation() == nullptr && _impl_.transaction_ != nullptr) {
+    delete _impl_.transaction_;
   }
-  transaction_ = nullptr;
+  _impl_.transaction_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1637,35 +1691,32 @@ size_t NewTransactionResponse::ByteSizeLong() const {
   if (this->_internal_has_transaction()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *transaction_);
+        *_impl_.transaction_);
   }
 
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData NewTransactionResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
     NewTransactionResponse::MergeImpl
 };
 const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NewTransactionResponse::GetClassData() const { return &_class_data_; }
 
-void NewTransactionResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<NewTransactionResponse *>(to)->MergeFrom(
-      static_cast<const NewTransactionResponse &>(from));
-}
 
-
-void NewTransactionResponse::MergeFrom(const NewTransactionResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.NewTransactionResponse)
-  GOOGLE_DCHECK_NE(&from, this);
+void NewTransactionResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<NewTransactionResponse*>(&to_msg);
+  auto& from = static_cast<const NewTransactionResponse&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:kvstore.v1.NewTransactionResponse)
+  GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_has_transaction()) {
-    _internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(from._internal_transaction());
+    _this->_internal_mutable_transaction()->::kvstore::v1::Transaction::MergeFrom(
+        from._internal_transaction());
   }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void NewTransactionResponse::CopyFrom(const NewTransactionResponse& from) {
@@ -1682,7 +1733,7 @@ bool NewTransactionResponse::IsInitialized() const {
 void NewTransactionResponse::InternalSwap(NewTransactionResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(transaction_, other->transaction_);
+  swap(_impl_.transaction_, other->_impl_.transaction_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NewTransactionResponse::GetMetadata() const {

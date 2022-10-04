@@ -3,7 +3,7 @@
 /* eslint-disable */
 /* @ts-nocheck */
 
-import {proto3} from "@bufbuild/protobuf";
+import {proto3, Timestamp} from "@bufbuild/protobuf";
 
 /**
  * @generated from enum raft.v1.StateMachineType
@@ -14,6 +14,23 @@ export const StateMachineType = proto3.makeEnum(
     {no: 0, name: "STATE_MACHINE_TYPE_UNSPECIFIED", localName: "UNSPECIFIED"},
     {no: 1, name: "STATE_MACHINE_TYPE_TEST", localName: "TEST"},
     {no: 2, name: "STATE_MACHINE_TYPE_KV", localName: "KV"},
+  ],
+);
+
+/**
+ * @generated from message raft.v1.ShardState
+ */
+export const ShardState = proto3.makeMessageType(
+  "raft.v1.ShardState",
+  () => [
+    { no: 1, name: "last_updated", kind: "message", T: Timestamp },
+    { no: 2, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 3, name: "config_change_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 4, name: "replicas", kind: "map", K: 4 /* ScalarType.UINT64 */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
+    { no: 5, name: "observers", kind: "map", K: 4 /* ScalarType.UINT64 */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
+    { no: 6, name: "witnesses", kind: "map", K: 4 /* ScalarType.UINT64 */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
+    { no: 7, name: "removed", kind: "map", K: 4 /* ScalarType.UINT64 */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
+    { no: 8, name: "type", kind: "enum", T: proto3.getEnumType(StateMachineType) },
   ],
 );
 
