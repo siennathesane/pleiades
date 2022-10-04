@@ -211,7 +211,7 @@ func (r *raftShardConnectAdapter) StopReplica(ctx context.Context, c *connect.Re
 		return connect.NewResponse(&raftv1.StopReplicaResponse{}), errors.New("invalid shard id, must not be 0")
 	}
 
-	_, err := r.shardManager.StopReplica(c.Msg.GetShardId())
+	_, err := r.shardManager.StopReplica(c.Msg.GetShardId(), c.Msg.GetReplicaId())
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't stop replica")
 		return nil, err

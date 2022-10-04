@@ -209,7 +209,7 @@ func (r *raftShardGrpcAdapter) StopReplica(ctx context.Context, request *raftv1.
 		return nil, ErrSystemShardRange
 	}
 
-	_, err := r.shardManager.StopReplica(request.GetShardId())
+	_, err := r.shardManager.StopReplica(request.GetShardId(), 0)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't stop replica")
 		return nil, err

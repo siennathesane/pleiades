@@ -370,7 +370,7 @@ func (s *bboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1
 	}
 
 	keyName := request.GetKey()
-	if keyName == "" {
+	if len(keyName) == 0 {
 		s.logger.Trace().Msg("empty key name")
 		return &kvstorev1.GetKeyResponse{}, errors.New("empty key name")
 	}
@@ -520,7 +520,7 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 	}
 
 	key := request.GetKey()
-	if key == "" {
+	if len(key) == 0 {
 		s.logger.Trace().Msg("empty key value pair")
 		return &kvstorev1.DeleteKeyResponse{}, kv.ErrInvalidBucketName
 	}
