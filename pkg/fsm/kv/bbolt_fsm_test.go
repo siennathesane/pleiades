@@ -201,7 +201,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 			AccountId:  testAccountId,
 			BucketName: testBucketId,
 			KeyValuePair: &kvstorev1.KeyValue{
-				Key:            "test-key",
+				Key:            []byte("test-key"),
 				CreateRevision: 0,
 				ModRevision:    0,
 				Version:        1,
@@ -329,7 +329,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 
 	testPutKeyValue, _ := utils.RandomBytes(128)
 	testKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
 		Version:        1,
@@ -428,7 +428,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		bucket := accountBucket.Bucket([]byte(testBucketId))
 		t.Require().NotNil(bucket, "the bucket must not be nil")
 
-		val := bucket.Get([]byte("test-key"))
+		val := bucket.Get([]byte([]byte("test-key")))
 		t.Require().NotNil(val)
 		t.Require().NotEmpty(val)
 
@@ -458,7 +458,7 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 
 	testPutKeyValue, _ := utils.RandomBytes(128)
 	testKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
 		Version:        1,
