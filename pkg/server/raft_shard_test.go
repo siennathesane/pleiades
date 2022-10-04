@@ -16,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -39,6 +40,7 @@ type shardManagerTestSuite struct {
 
 func (t *shardManagerTestSuite) SetupSuite() {
 
+	configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
 	t.logger = utils.NewTestLogger(t.T())
 
 	t.defaultTimeout = 300 * time.Millisecond
@@ -678,6 +680,6 @@ func (t *shardManagerTestSuite) TestStopReplica() {
 		cs.ProposalCompleted()
 	}
 
-	_, err = shardManager.StopReplica(testShardId)
+	_, err = shardManager.StopReplica(testShardId, firstNodeClusterConfig.ClusterID)
 	t.Require().NoError(err, "there must not be an error when stopping the replia")
 }

@@ -13,11 +13,14 @@ import (
 	"context"
 	"time"
 
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type resultCode int
@@ -89,12 +92,17 @@ var (
 
 func newShardManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *raftShardManager {
 	l := logger.With().Str("component", "shard-manager").Logger()
-	return &raftShardManager{l, nodeHost}
+	s, err := fsm.NewShardStore(l)
+	if err != nil {
+		l.Fatal().Err(err).Msg("can't create shard store")
+	}
+	return &raftShardManager{l, nodeHost, s}
 }
 
 type raftShardManager struct {
-	logger zerolog.Logger
-	nh     *dragonboat.NodeHost
+	logger     zerolog.Logger
+	nh         *dragonboat.NodeHost
+	shardStore *fsm.ShardStore
 }
 
 func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
@@ -117,8 +125,15 @@ func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost 
 	err = c.nh.SyncRequestAddNode(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add replica")
+		return err
 	}
-	return err
+
+	err = c.storeShardState(shardId, timeout)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+
+	return nil
 }
 
 func (c *raftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
@@ -141,8 +156,15 @@ func (c *raftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, 
 	err = c.nh.SyncRequestAddObserver(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
+		return err
 	}
-	return err
+
+	err = c.storeShardState(shardId, timeout)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+
+	return nil
 }
 
 func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
@@ -165,8 +187,14 @@ func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, n
 	err = c.nh.SyncRequestAddWitness(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
+		return err
 	}
-	return err
+
+	err = c.storeShardState(shardId, timeout)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+	return nil
 }
 
 func (c *raftShardManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
@@ -205,17 +233,30 @@ func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 	members[replicaId] = c.nh.RaftAddress()
 	l.Debug().Str("raft-address", c.nh.RaftAddress()).Msg("adding self to members")
 
+	var err error
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("creating test state machine")
-		return c.nh.StartCluster(members, false, newTestStateMachine, clusterConfig)
+		err = c.nh.StartCluster(members, false, newTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("creating bbolt state machine")
-		return c.nh.StartOnDiskCluster(members, false, kv.NewBBoltFSM, clusterConfig)
+		err = c.nh.StartOnDiskCluster(members, false, kv.NewBBoltFSM, clusterConfig)
+	default:
+		l.Error().Msg("unknown state machine type")
+		return ErrUnsupportedStateMachine
 	}
 
-	l.Error().Msg("unknown state machine type")
-	return ErrUnsupportedStateMachine
+	if err != nil {
+		l.Error().Err(err).Msg("error creating state machine")
+		return err
+	}
+
+	err = c.storeShardState(shardId, timeout)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+
+	return nil
 }
 
 func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error {
@@ -224,14 +265,30 @@ func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 
 	clusterConfig := newDConfig(shardId, replicaId)
 
+	var err error
 	switch stateMachineType {
 	case testStateMachineType:
-		l.Info().Msg("creating test state machine")
-		return c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+		l.Info().Msg("starting test state machine")
+		err = c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	case BBoltStateMachineType:
+		l.Info().Msg("starting bbolt state machine")
+		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+	default:
+		l.Error().Msg("unknown state machine type")
+		return ErrUnsupportedStateMachine
 	}
 
-	l.Error().Msg("unknown state machine type")
-	return ErrUnsupportedStateMachine
+	if err != nil {
+		l.Error().Err(err).Msg("error starting state machine")
+		return err
+	}
+
+	err = c.storeShardState(shardId, 100*time.Millisecond)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+
+	return nil
 }
 
 func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error {
@@ -241,24 +298,46 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 	clusterConfig := newDConfig(shardId, replicaId)
 	clusterConfig.IsObserver = true
 
+	var err error
 	switch stateMachineType {
 	case testStateMachineType:
-		l.Info().Msg("creating test state machine")
+		l.Info().Msg("starting test state machine observer")
 		return c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	case BBoltStateMachineType:
+		l.Info().Msg("starting bbolt state machine observer")
+		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+	default:
+		l.Error().Msg("unknown state machine type")
+		return ErrUnsupportedStateMachine
 	}
 
-	l.Error().Msg("unknown state machine type")
-	return ErrUnsupportedStateMachine
+	if err != nil {
+		l.Error().Err(err).Msg("error starting state machine observer")
+		return err
+	}
+
+	err = c.storeShardState(shardId, 100*time.Millisecond)
+	if err != nil {
+		l.Error().Err(err).Msg("can't store shard state")
+	}
+
+	return nil
 }
 
 // todo (sienna): this should stop the replica, not the shard...
-func (c *raftShardManager) StopReplica(shardId uint64) (*OperationResult, error) {
+func (c *raftShardManager) StopReplica(shardId uint64, replicaId uint64) (*OperationResult, error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("stopping replica")
-	err := c.nh.StopCluster(shardId)
+	err := c.nh.StopNode(shardId, replicaId)
 	if err != nil {
 		c.logger.Error().Err(err).Uint64("shard", shardId).Msg("failed to stop replica")
 		return nil, errors.Wrap(err, "failed to stop replica")
 	}
+
+	err = c.storeShardState(shardId, 100*time.Millisecond)
+	if err != nil {
+		c.logger.Error().Err(err).Msg("can't store shard state")
+	}
+
 	return &OperationResult{}, nil
 }
 
@@ -290,6 +369,12 @@ func (c *raftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeo
 		l.Error().Err(err).Msg("failed to delete replica")
 		return err
 	}
+
+	err = c.storeShardState(shardId, 100*time.Millisecond)
+	if err != nil {
+		c.logger.Error().Err(err).Msg("can't store shard state")
+	}
+
 	return nil
 }
 
@@ -301,6 +386,35 @@ func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
 		c.logger.Error().Err(err).Uint64("shard", shardId).Uint64("replica", replicaId).Msg("failed to remove data")
 	}
 	return err
+}
+
+func (c *raftShardManager) storeShardState(shardId uint64, timeout time.Duration) error {
+	ctx, cancel := context.WithTimeout(context.TODO(), 100*time.Millisecond)
+	defer cancel()
+
+	memberState, err := c.nh.SyncGetClusterMembership(ctx, shardId)
+	if err != nil {
+		c.logger.Error().Err(err).Msg("can't get shard state")
+		return err
+	}
+
+	return c.shardStore.Put(&raftv1.ShardState{
+		LastUpdated:    timestamppb.Now(),
+		ShardId:        shardId,
+		ConfigChangeId: memberState.ConfigChangeID,
+		Replicas:       memberState.Nodes,
+		Observers:      memberState.Observers,
+		Witnesses:      memberState.Witnesses,
+		Removed: func() map[uint64]string {
+			m := make(map[uint64]string)
+			for k, _ := range memberState.Removed {
+				m[k] = ""
+			}
+			return m
+		}(),
+		Type: 0,
+	})
+	return nil
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {
