@@ -22,7 +22,7 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func newShardStore(logger zerolog.Logger) (*shardStore, error) {
+func NewShardStore(logger zerolog.Logger) (*ShardStore, error) {
 	basePath := configuration.Get().GetString("server.datastore.basePath")
 	dbPath := filepath.Join(basePath, "shard-config.db")
 
@@ -31,18 +31,18 @@ func newShardStore(logger zerolog.Logger) (*shardStore, error) {
 		return nil, err
 	}
 
-	return &shardStore{
+	return &ShardStore{
 		logger: logger.With().Str("component", "shard-config").Logger(),
 		db:     db,
 	}, nil
 }
 
-type shardStore struct {
+type ShardStore struct {
 	logger zerolog.Logger
 	db *bbolt.DB
 }
 
-func (s *shardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
+func (s *ShardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
 	req := &raftv1.NewShardRequest{}
 	err :=  s.db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(shardConfigBucket))
@@ -67,7 +67,7 @@ func (s *shardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
 	return req, err
 }
 
-func (s *shardStore) Put(req *raftv1.NewShardRequest) error {
+func (s *ShardStore) Put(req *raftv1.NewShardRequest) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(shardConfigBucket))
 		if err != nil {
@@ -88,7 +88,7 @@ func (s *shardStore) Put(req *raftv1.NewShardRequest) error {
 	})
 }
 
-func (s *shardStore) Delete(shardId uint64) error {
+func (s *ShardStore) Delete(shardId uint64) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(shardConfigBucket))
 		if bucket == nil {

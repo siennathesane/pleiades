@@ -35,7 +35,7 @@ func (t *shardStoreTestSuite) SetupSuite() {
 func (t *shardStoreTestSuite) TestLifecycle() {
 	configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
 
-	store, err := newShardStore(t.logger)
+	store, err := NewShardStore(t.logger)
 	t.Require().NoError(err, "there must not be an error when opening the shard store")
 	t.Require().NotNil(store, "the shard store must not be empty")
 
