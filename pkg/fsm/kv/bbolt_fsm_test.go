@@ -18,10 +18,10 @@ import (
 	"testing"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/rs/zerolog"
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
 )
@@ -49,7 +49,7 @@ func (t *BBoltFsmTestSuite) TestNewBBoltStateMachine() {
 }
 
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineOpen() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
@@ -80,7 +80,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineOpen() {
 }
 
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineClose() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
@@ -101,7 +101,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineClose() {
 }
 
 func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
@@ -314,7 +314,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 }
 
 func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
@@ -443,7 +443,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 }
 
 func (t *BBoltFsmTestSuite) TestLookup() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")
@@ -559,7 +559,7 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 }
 
 func (t *BBoltFsmTestSuite) TestSync() {
-	viper.SetDefault("datastore.basePath", t.T().TempDir())
+	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
 	fsm := newBBoltStateMachine(t.shardId, t.replicaId)
 	t.Require().NotNil(fsm, "the fsm must not be nil")

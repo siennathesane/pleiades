@@ -7,12 +7,21 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package configuration
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal  int = 484
-
-	shardConfigBucket string = "shards"
+import (
+	vip "github.com/spf13/viper"
 )
+
+var (
+	viper *vip.Viper
+)
+
+
+func init() {
+	viper = vip.New()
+}
+
+func Get() *vip.Viper {
+	return viper
+}

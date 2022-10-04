@@ -34,58 +34,40 @@ purposes.
 DO NOT USE THEM FOR PRODUCTION`,
 }
 
-var (
-	serverConfig    *configuration.ServerConfig
-
-	serverAddr string
-)
-
 func init() {
 	rootCmd.AddCommand(devCmd)
 
+	if config == nil {
+		config = configuration.Get()
+	}
+
+	defaultDataBasePath := ""
 	//goland:noinspection GoBoolExpressions
 	if runtime.GOOS == "darwin" {
 		dir, err := homedir.Dir()
 		if err != nil {
 			log.Fatal().Err(err).Msg("failed to get home directory")
 		}
-
-		defaultBasePath = filepath.Join(dir, "Library", "pleiades")
+		defaultDataBasePath = filepath.Join(dir, "Library", "pleiades")
+	} else {
+		defaultDataBasePath = configuration.DefaultBaseDataPath
 	}
+	config.Set("server.datastore.basePath", defaultDataBasePath)
 
-	serverConfig = &configuration.ServerConfig{
-		Datastore: &configuration.Datastore{
-			BasePath: defaultBasePath,
-			LogDir:   filepath.Join(defaultBasePath, "logs"),
-			DataDir:  filepath.Join(defaultBasePath, "data"),
-		},
-		Host: &configuration.Host{
-			CaFile:        filepath.Join(defaultBasePath, "tls", "ca.pem"),
-			CertFile:      filepath.Join(defaultBasePath, "tls", "cert.pem"),
-			DeploymentId:  1,
-			GrpcListenAddress: "0.0.0.0:5000",
-			KeyFile:       filepath.Join(defaultBasePath, "tls", "key.pem"),
-			ListenAddress: "0.0.0.0:5001",
-			MutualTLS:     false,
-			NotifyCommit:  false,
-			Rtt:           1,
-		},
-	}
-	config.Server = serverConfig
+	// mtls settings
+	//region
+	devCmd.PersistentFlags().String("ca-cert", filepath.Join(defaultDataBasePath, "tls", "ca.pem"), "mtls ca")
+	config.BindPFlag("server.host.caFile", devCmd.PersistentFlags().Lookup("ca-cert"))
 
-	//goland:noinspection GoBoolExpressions
-	if runtime.GOOS == "darwin" {
-		serverConfig.Host.GrpcListenAddress = "0.0.0.0:50000"
-		devCmd.PersistentFlags().StringVar(&serverAddr, "server", "localhost:50000", "server to talk to")
-	}
+	devCmd.PersistentFlags().String("cert-file", filepath.Join(defaultDataBasePath, "tls", "cert.pem"), "mtls cert")
+	config.BindPFlag("server.host.certFile", devCmd.PersistentFlags().Lookup("cert-file"))
 
-	devCmd.PersistentFlags().StringVar(&serverConfig.Host.CaFile, "ca-cert", serverConfig.Host.CaFile, "tls ca")
-	devCmd.PersistentFlags().StringVar(&serverConfig.Host.CertFile, "cert", serverConfig.Host.CertFile, "mtls cert")
-	devCmd.PersistentFlags().StringVar(&serverConfig.Host.KeyFile, "cert-key", serverConfig.Host.KeyFile, "mtls key")
-	devCmd.PersistentFlags().BoolVar(&serverConfig.Host.MutualTLS, "mtls", serverConfig.Host.MutualTLS, "enable mtls")
+	devCmd.PersistentFlags().String("cert-key", filepath.Join(defaultDataBasePath, "tls", "key.pem"), "mtls key")
+	config.BindPFlag("server.host.keyFile", devCmd.PersistentFlags().Lookup("cert-key"))
 
-	devCmd.MarkFlagsRequiredTogether("mtls", "ca-cert", "cert", "cert-key")
+	devCmd.PersistentFlags().Bool("mtls", false, "enable mtls")
+	config.BindPFlag("server.host.mtls", devCmd.PersistentFlags().Lookup("mtls"))
 
-	c := filepath.Join(configuration.DefaultBaseConfigPath, "pleiades.yaml")
-	devCmd.PersistentFlags().StringP("config", "c", c, "config file location")
+	devCmd.MarkFlagsRequiredTogether("mtls", "ca-cert", "cert-file", "cert-key")
+	//endregion
 }
