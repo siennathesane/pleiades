@@ -280,7 +280,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 
 	testPutValue, _ := utils.RandomBytes(128)
 	testKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
 		Version:        0,
@@ -321,7 +321,7 @@ func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
 	for i := 0; i < 20; i++ {
 		testPutValue, _ = utils.RandomBytes(128)
 		testKvp = &kvstorev1.KeyValue{
-			Key:            fmt.Sprintf("test-key-%d", i),
+			Key:            []byte(fmt.Sprintf("test-key-%d", i)),
 			CreateRevision: 0,
 			ModRevision:    0,
 			Version:        0,

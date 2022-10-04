@@ -15,7 +15,6 @@ import (
 	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -36,7 +35,6 @@ type Options struct {
 type Server struct {
 	logger                 zerolog.Logger
 	nh                     *dragonboat.NodeHost
-	shardConfigDb          *fsm.ShardStore
 	raftHost               IHost
 	raftShard              IShardManager
 	raftTransactionManager ITransactionManager
@@ -51,11 +49,6 @@ func New(nhc dconfig.NodeHostConfig, mux *http.ServeMux, logger zerolog.Logger) 
 	nh, err := dragonboat.NewNodeHost(nhc)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't start node host")
-	}
-
-	srv.shardConfigDb, err = fsm.NewShardStore(logger)
-	if err != nil {
-		return nil, errors.Wrap(err, "can't load shard config db")
 	}
 
 	rh := newRaftHost(nh, logger)
