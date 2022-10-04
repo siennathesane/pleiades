@@ -69,7 +69,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().Bool("debug", true, "enable debug logging")
+	rootCmd.PersistentFlags().Bool("debug", false, "enable debug logging")
 }
 
 func setupLogger(cmd *cobra.Command, args []string) zerolog.Logger {

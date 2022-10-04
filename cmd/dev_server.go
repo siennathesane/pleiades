@@ -12,7 +12,10 @@ package cmd
 import (
 	"net/http"
 	"os"
+	"os/signal"
+	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/configuration"
@@ -42,8 +45,6 @@ filing bugs against it the team may or may not get to
 DO NOT USE THIS IN PRODUCTION`,
 	Run: startServer,
 }
-
-var reset = true
 
 func init() {
 	devCmd.AddCommand(serverCmd)
@@ -92,8 +93,8 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	nhc := dconfig.NodeHostConfig{
 		DeploymentID:   serverConfig.Server.Host.DeploymentId,
-		WALDir:         serverConfig.Server.Datastore.LogDir,
-		NodeHostDir:    serverConfig.Server.Datastore.DataDir,
+		WALDir:         filepath.Join(config.GetString("server.datastore.basePath"), serverConfig.Server.Datastore.LogDir),
+		NodeHostDir:    filepath.Join(config.GetString("server.datastore.basePath"), serverConfig.Server.Datastore.DataDir),
 		RTTMillisecond: serverConfig.Server.Host.Rtt,
 		RaftAddress:    serverConfig.Server.Host.ListenAddress,
 		EnableMetrics:  true,
@@ -139,11 +140,20 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	logger.Debug().Msg("state machines finished, starting server")
 
-	http.ListenAndServe(
-		config.GetString("server.host.listenAddr"),
-		// Use h2c so we can serve HTTP/2 without TLS.
-		h2c.NewHandler(mux, &http2.Server{}),
-	)
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
+	srv := &http.Server{
+		Addr: config.GetString("server.host.grpcListenAddr"),
+		Handler: h2c.NewHandler(mux, &http2.Server{}),
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Fatal().Err(err).Msg("cannot run server")
+		}
+	}()
+
+	<-done
 	s.Stop()
 }
