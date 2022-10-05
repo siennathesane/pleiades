@@ -54,13 +54,11 @@ test-with-cover:
   retry: 2
   stage: test
   image: "golang:$GO_VERSION"
-  needs:
-    - build
   <<: *mod-cache
   <<: *build-test-scripts
   script:
     - mage install:godeps
-    - go test ./... -coverprofile=coverage.txt -covermode atomic
+    - go test ./... -coverprofile=coverage.txt -covermode atomic -timeout=1h
     - gocover-cobertura < coverage.txt > coverage.xml
   artifacts:
     reports:
@@ -73,13 +71,11 @@ test-with-report:
   retry: 2
   stage: test
   image: "golang:$GO_VERSION"
-  needs:
-    - build
   <<: *mod-cache
   <<: *build-test-scripts
   script:
     - mage install:godeps
-    - gotestsum --junitfile report.xml --format testname
+    - gotestsum --junitfile report.xml --format testname ./... -- -test.timeout=1h
   artifacts:
     reports:
       junit: report.xml
