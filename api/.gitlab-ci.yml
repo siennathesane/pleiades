@@ -1,0 +1,30 @@
+stages:
+  - build
+  - release
+
+lint:
+  stage: build
+  image: registry.gitlab.com/anthropos-labs/api/builder:latest
+  script:
+    - buf lint
+    - buf breaking --against "https://gitlab.com/anthropos-labs/api.git#branch=mainline"
+  artifacts:
+    paths:
+      - "build/pleiades"
+    name: "pleiades"
+    expire_in: "5 days"
+
+upload:
+  stage: release
+  image: registry.gitlab.com/anthropos-labs/api/builder:latest
+  variables:
+    BUF_USER: sienna-al
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH 
+  script:
+    - |
+      for f in databaseapi errorapi raftapi; do
+        pushd $f
+        buf push
+        popd
+      done
