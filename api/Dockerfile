@@ -7,6 +7,7 @@ run apt update -y && \
         jq \
         curl \
         golang \
+        git \
         protobuf-compiler
 
 ## install node and es
