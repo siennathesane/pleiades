@@ -3,6 +3,16 @@ syntax = "proto3";
 package raft.v1;
 import "google/protobuf/timestamp.proto";
 
+message ShardStateEvent {
+  enum CmdType {
+    CMD_TYPE_UNSPECIFIED = 0;
+    CMD_TYPE_PUT = 1;
+    CMD_TYPE_DELETE = 2;
+  }
+  CmdType cmd = 1;
+  ShardState event = 2;
+}
+
 message ShardState {
   google.protobuf.Timestamp last_updated = 1;
   uint64 shard_id = 2;

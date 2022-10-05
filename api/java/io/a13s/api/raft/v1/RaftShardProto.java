@@ -15,6 +15,11 @@ public final class RaftShardProto {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_raft_v1_ShardStateEvent_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_raft_v1_ShardStateEvent_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_raft_v1_ShardState_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -179,94 +184,105 @@ public final class RaftShardProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\030raft/v1/raft_shard.proto\022\007raft.v1\032\037goo" +
-      "gle/protobuf/timestamp.proto\"\263\005\n\nShardSt" +
-      "ate\022=\n\014last_updated\030\001 \001(\0132\032.google.proto" +
-      "buf.TimestampR\013lastUpdated\022\031\n\010shard_id\030\002" +
-      " \001(\004R\007shardId\022(\n\020config_change_id\030\003 \001(\004R" +
-      "\016configChangeId\022=\n\010replicas\030\004 \003(\0132!.raft" +
-      ".v1.ShardState.ReplicasEntryR\010replicas\022@" +
-      "\n\tobservers\030\005 \003(\0132\".raft.v1.ShardState.O" +
-      "bserversEntryR\tobservers\022@\n\twitnesses\030\006 " +
-      "\003(\0132\".raft.v1.ShardState.WitnessesEntryR" +
-      "\twitnesses\022:\n\007removed\030\007 \003(\0132 .raft.v1.Sh" +
-      "ardState.RemovedEntryR\007removed\022-\n\004type\030\010" +
-      " \001(\0162\031.raft.v1.StateMachineTypeR\004type\032;\n" +
+      "gle/protobuf/timestamp.proto\"\274\001\n\017ShardSt" +
+      "ateEvent\0222\n\003cmd\030\001 \001(\0162 .raft.v1.ShardSta" +
+      "teEvent.CmdTypeR\003cmd\022)\n\005event\030\002 \001(\0132\023.ra" +
+      "ft.v1.ShardStateR\005event\"J\n\007CmdType\022\030\n\024CM" +
+      "D_TYPE_UNSPECIFIED\020\000\022\020\n\014CMD_TYPE_PUT\020\001\022\023" +
+      "\n\017CMD_TYPE_DELETE\020\002\"\263\005\n\nShardState\022=\n\014la" +
+      "st_updated\030\001 \001(\0132\032.google.protobuf.Times" +
+      "tampR\013lastUpdated\022\031\n\010shard_id\030\002 \001(\004R\007sha" +
+      "rdId\022(\n\020config_change_id\030\003 \001(\004R\016configCh" +
+      "angeId\022=\n\010replicas\030\004 \003(\0132!.raft.v1.Shard" +
+      "State.ReplicasEntryR\010replicas\022@\n\tobserve" +
+      "rs\030\005 \003(\0132\".raft.v1.ShardState.ObserversE" +
+      "ntryR\tobservers\022@\n\twitnesses\030\006 \003(\0132\".raf" +
+      "t.v1.ShardState.WitnessesEntryR\twitnesse" +
+      "s\022:\n\007removed\030\007 \003(\0132 .raft.v1.ShardState." +
+      "RemovedEntryR\007removed\022-\n\004type\030\010 \001(\0162\031.ra" +
+      "ft.v1.StateMachineTypeR\004type\032;\n\rReplicas" +
+      "Entry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005" +
+      "value:\0028\001\032<\n\016ObserversEntry\022\020\n\003key\030\001 \001(\004" +
+      "R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032<\n\016Witne" +
+      "ssesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001" +
+      "(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020\n\003key\030\001 \001" +
+      "(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\"\203\001\n\021Ad" +
+      "dReplicaRequest\022\035\n\nreplica_id\030\001 \001(\004R\trep" +
+      "licaId\022\031\n\010shard_id\030\002 \001(\004R\007shardId\022\032\n\010hos" +
+      "tname\030\004 \001(\tR\010hostname\022\030\n\007timeout\030\005 \001(\003R\007" +
+      "timeout\"\024\n\022AddReplicaResponse\"\213\001\n\031AddRep" +
+      "licaObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007s" +
+      "hardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\032\n" +
+      "\010hostname\030\003 \001(\tR\010hostname\022\030\n\007timeout\030\004 \001" +
+      "(\003R\007timeout\"\034\n\032AddReplicaObserverRespons" +
+      "e\"\212\001\n\030AddReplicaWitnessRequest\022\031\n\010shard_" +
+      "id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\tr" +
+      "eplicaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007" +
+      "timeout\030\004 \001(\003R\007timeout\"\033\n\031AddReplicaWitn" +
+      "essResponse\"j\n\024RemoveReplicaRequest\022\031\n\010s" +
+      "hard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001" +
+      "(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R\007timeout\"" +
+      "\027\n\025RemoveReplicaResponse\"h\n\022GetLeaderIdR" +
+      "equest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrep" +
+      "lica_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001(" +
+      "\003R\007timeout\"K\n\023GetLeaderIdResponse\022\026\n\006lea" +
+      "der\030\001 \001(\004R\006leader\022\034\n\tavailable\030\002 \001(\010R\tav" +
+      "ailable\"3\n\026GetShardMembersRequest\022\031\n\010sha" +
+      "rd_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetShardMembers" +
+      "Response\022(\n\020config_change_id\030\001 \001(\004R\016conf" +
+      "igChangeId\022J\n\010replicas\030\002 \003(\0132..raft.v1.G" +
+      "etShardMembersResponse.ReplicasEntryR\010re" +
+      "plicas\022M\n\tobservers\030\003 \003(\0132/.raft.v1.GetS" +
+      "hardMembersResponse.ObserversEntryR\tobse" +
+      "rvers\022M\n\twitnesses\030\004 \003(\0132/.raft.v1.GetSh" +
+      "ardMembersResponse.WitnessesEntryR\twitne" +
+      "sses\022G\n\007removed\030\005 \003(\0132-.raft.v1.GetShard" +
+      "MembersResponse.RemovedEntryR\007removed\032;\n" +
       "\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005valu" +
       "e\030\002 \001(\tR\005value:\0028\001\032<\n\016ObserversEntry\022\020\n\003" +
       "key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001" +
       "\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005" +
       "value\030\002 \001(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020" +
       "\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\002" +
-      "8\001\"\203\001\n\021AddReplicaRequest\022\035\n\nreplica_id\030\001" +
-      " \001(\004R\treplicaId\022\031\n\010shard_id\030\002 \001(\004R\007shard" +
-      "Id\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n\007timeou" +
-      "t\030\005 \001(\003R\007timeout\"\024\n\022AddReplicaResponse\"\213" +
-      "\001\n\031AddReplicaObserverRequest\022\031\n\010shard_id" +
-      "\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\trep" +
-      "licaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007ti" +
-      "meout\030\004 \001(\003R\007timeout\"\034\n\032AddReplicaObserv" +
-      "erResponse\"\212\001\n\030AddReplicaWitnessRequest\022" +
-      "\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id" +
-      "\030\002 \001(\004R\treplicaId\022\032\n\010hostname\030\003 \001(\tR\010hos" +
-      "tname\022\030\n\007timeout\030\004 \001(\003R\007timeout\"\033\n\031AddRe" +
-      "plicaWitnessResponse\"j\n\024RemoveReplicaReq" +
-      "uest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepli" +
-      "ca_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R" +
-      "\007timeout\"\027\n\025RemoveReplicaResponse\"h\n\022Get" +
-      "LeaderIdRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard" +
-      "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\030\n\007tim" +
-      "eout\030\003 \001(\003R\007timeout\"K\n\023GetLeaderIdRespon" +
-      "se\022\026\n\006leader\030\001 \001(\004R\006leader\022\034\n\tavailable\030" +
-      "\002 \001(\010R\tavailable\"3\n\026GetShardMembersReque" +
-      "st\022\031\n\010shard_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetSha" +
-      "rdMembersResponse\022(\n\020config_change_id\030\001 " +
-      "\001(\004R\016configChangeId\022J\n\010replicas\030\002 \003(\0132.." +
-      "raft.v1.GetShardMembersResponse.Replicas" +
-      "EntryR\010replicas\022M\n\tobservers\030\003 \003(\0132/.raf" +
-      "t.v1.GetShardMembersResponse.ObserversEn" +
-      "tryR\tobservers\022M\n\twitnesses\030\004 \003(\0132/.raft" +
-      ".v1.GetShardMembersResponse.WitnessesEnt" +
-      "ryR\twitnesses\022G\n\007removed\030\005 \003(\0132-.raft.v1" +
-      ".GetShardMembersResponse.RemovedEntryR\007r" +
-      "emoved\032;\n\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003ke" +
-      "y\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032<\n\016Observers" +
-      "Entry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005" +
-      "value:\0028\001\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004" +
-      "R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032:\n\014Remov" +
-      "edEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\t" +
-      "R\005value:\0028\001\"\260\001\n\017NewShardRequest\022\031\n\010shard" +
-      "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t" +
-      "replicaId\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateM" +
-      "achineTypeR\004type\022\032\n\010hostname\030\004 \001(\tR\010host" +
-      "name\022\030\n\007timeout\030\005 \001(\003R\007timeout\"\022\n\020NewSha" +
-      "rdResponse\"M\n\021RemoveDataRequest\022\031\n\010shard" +
-      "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t" +
-      "replicaId\"\024\n\022RemoveDataResponse\"~\n\023Start" +
-      "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI" +
-      "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004type" +
-      "\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type\"" +
-      "\026\n\024StartReplicaResponse\"\206\001\n\033StartReplica" +
-      "ObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard" +
-      "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004typ" +
-      "e\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type" +
-      "\"\036\n\034StartReplicaObserverResponse\"N\n\022Stop" +
-      "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI" +
-      "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\"\025\n\023Stop" +
-      "ReplicaResponse*n\n\020StateMachineType\022\"\n\036S" +
-      "TATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE" +
-      "_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TY" +
-      "PE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016RaftShar" +
-      "dProtoP\001Z\032a13s.io/api/raft/v1;raftv1\242\002\003R" +
-      "XX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMeta" +
-      "data\352\002\010Raft::V1b\006proto3"
+      "8\001\"\260\001\n\017NewShardRequest\022\031\n\010shard_id\030\001 \001(\004" +
+      "R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId" +
+      "\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateMachineTyp" +
+      "eR\004type\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n\007t" +
+      "imeout\030\005 \001(\003R\007timeout\"\022\n\020NewShardRespons" +
+      "e\"M\n\021RemoveDataRequest\022\031\n\010shard_id\030\001 \001(\004" +
+      "R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId" +
+      "\"\024\n\022RemoveDataResponse\"~\n\023StartReplicaRe" +
+      "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl" +
+      "ica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031." +
+      "raft.v1.StateMachineTypeR\004type\"\026\n\024StartR" +
+      "eplicaResponse\"\206\001\n\033StartReplicaObserverR" +
+      "equest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrep" +
+      "lica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031" +
+      ".raft.v1.StateMachineTypeR\004type\"\036\n\034Start" +
+      "ReplicaObserverResponse\"N\n\022StopReplicaRe" +
+      "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl" +
+      "ica_id\030\002 \001(\004R\treplicaId\"\025\n\023StopReplicaRe" +
+      "sponse*n\n\020StateMachineType\022\"\n\036STATE_MACH" +
+      "INE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE_MACHINE_" +
+      "TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TYPE_KV\020\002B~" +
+      "\n\023io.a13s.api.raft.v1B\016RaftShardProtoP\001Z" +
+      "\032a13s.io/api/raft/v1;raftv1\242\002\003RXX\252\002\007Raft" +
+      ".V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010Ra" +
+      "ft::V1b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
         });
-    internal_static_raft_v1_ShardState_descriptor =
+    internal_static_raft_v1_ShardStateEvent_descriptor =
       getDescriptor().getMessageTypes().get(0);
+    internal_static_raft_v1_ShardStateEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_raft_v1_ShardStateEvent_descriptor,
+        new java.lang.String[] { "Cmd", "Event", });
+    internal_static_raft_v1_ShardState_descriptor =
+      getDescriptor().getMessageTypes().get(1);
     internal_static_raft_v1_ShardState_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_ShardState_descriptor,
@@ -296,73 +312,73 @@ public final class RaftShardProto {
         internal_static_raft_v1_ShardState_RemovedEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_raft_v1_AddReplicaRequest_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_raft_v1_AddReplicaRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaRequest_descriptor,
         new java.lang.String[] { "ReplicaId", "ShardId", "Hostname", "Timeout", });
     internal_static_raft_v1_AddReplicaResponse_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_raft_v1_AddReplicaResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_AddReplicaObserverRequest_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_raft_v1_AddReplicaObserverRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaObserverRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Hostname", "Timeout", });
     internal_static_raft_v1_AddReplicaObserverResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_raft_v1_AddReplicaObserverResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaObserverResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_AddReplicaWitnessRequest_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_raft_v1_AddReplicaWitnessRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaWitnessRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Hostname", "Timeout", });
     internal_static_raft_v1_AddReplicaWitnessResponse_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_raft_v1_AddReplicaWitnessResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_AddReplicaWitnessResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_RemoveReplicaRequest_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_raft_v1_RemoveReplicaRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_RemoveReplicaRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Timeout", });
     internal_static_raft_v1_RemoveReplicaResponse_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(9);
     internal_static_raft_v1_RemoveReplicaResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_RemoveReplicaResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_GetLeaderIdRequest_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_raft_v1_GetLeaderIdRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_GetLeaderIdRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Timeout", });
     internal_static_raft_v1_GetLeaderIdResponse_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(11);
     internal_static_raft_v1_GetLeaderIdResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_GetLeaderIdResponse_descriptor,
         new java.lang.String[] { "Leader", "Available", });
     internal_static_raft_v1_GetShardMembersRequest_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_raft_v1_GetShardMembersRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_GetShardMembersRequest_descriptor,
         new java.lang.String[] { "ShardId", });
     internal_static_raft_v1_GetShardMembersResponse_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_raft_v1_GetShardMembersResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_GetShardMembersResponse_descriptor,
@@ -392,61 +408,61 @@ public final class RaftShardProto {
         internal_static_raft_v1_GetShardMembersResponse_RemovedEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_raft_v1_NewShardRequest_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_raft_v1_NewShardRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_NewShardRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Type", "Hostname", "Timeout", });
     internal_static_raft_v1_NewShardResponse_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_raft_v1_NewShardResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_NewShardResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_RemoveDataRequest_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_raft_v1_RemoveDataRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_RemoveDataRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", });
     internal_static_raft_v1_RemoveDataResponse_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_raft_v1_RemoveDataResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_RemoveDataResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_StartReplicaRequest_descriptor =
-      getDescriptor().getMessageTypes().get(17);
+      getDescriptor().getMessageTypes().get(18);
     internal_static_raft_v1_StartReplicaRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StartReplicaRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Type", });
     internal_static_raft_v1_StartReplicaResponse_descriptor =
-      getDescriptor().getMessageTypes().get(18);
+      getDescriptor().getMessageTypes().get(19);
     internal_static_raft_v1_StartReplicaResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StartReplicaResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_StartReplicaObserverRequest_descriptor =
-      getDescriptor().getMessageTypes().get(19);
+      getDescriptor().getMessageTypes().get(20);
     internal_static_raft_v1_StartReplicaObserverRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StartReplicaObserverRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", "Type", });
     internal_static_raft_v1_StartReplicaObserverResponse_descriptor =
-      getDescriptor().getMessageTypes().get(20);
+      getDescriptor().getMessageTypes().get(21);
     internal_static_raft_v1_StartReplicaObserverResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StartReplicaObserverResponse_descriptor,
         new java.lang.String[] { });
     internal_static_raft_v1_StopReplicaRequest_descriptor =
-      getDescriptor().getMessageTypes().get(21);
+      getDescriptor().getMessageTypes().get(22);
     internal_static_raft_v1_StopReplicaRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StopReplicaRequest_descriptor,
         new java.lang.String[] { "ShardId", "ReplicaId", });
     internal_static_raft_v1_StopReplicaResponse_descriptor =
-      getDescriptor().getMessageTypes().get(22);
+      getDescriptor().getMessageTypes().get(23);
     internal_static_raft_v1_StopReplicaResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_StopReplicaResponse_descriptor,

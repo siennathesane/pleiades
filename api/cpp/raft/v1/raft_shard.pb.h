@@ -115,6 +115,9 @@ extern RemoveReplicaResponseDefaultTypeInternal _RemoveReplicaResponse_default_i
 class ShardState;
 struct ShardStateDefaultTypeInternal;
 extern ShardStateDefaultTypeInternal _ShardState_default_instance_;
+class ShardStateEvent;
+struct ShardStateEventDefaultTypeInternal;
+extern ShardStateEventDefaultTypeInternal _ShardStateEvent_default_instance_;
 class ShardState_ObserversEntry_DoNotUse;
 struct ShardState_ObserversEntry_DoNotUseDefaultTypeInternal;
 extern ShardState_ObserversEntry_DoNotUseDefaultTypeInternal _ShardState_ObserversEntry_DoNotUse_default_instance_;
@@ -169,6 +172,7 @@ template<> ::raft::v1::RemoveDataResponse* Arena::CreateMaybeMessage<::raft::v1:
 template<> ::raft::v1::RemoveReplicaRequest* Arena::CreateMaybeMessage<::raft::v1::RemoveReplicaRequest>(Arena*);
 template<> ::raft::v1::RemoveReplicaResponse* Arena::CreateMaybeMessage<::raft::v1::RemoveReplicaResponse>(Arena*);
 template<> ::raft::v1::ShardState* Arena::CreateMaybeMessage<::raft::v1::ShardState>(Arena*);
+template<> ::raft::v1::ShardStateEvent* Arena::CreateMaybeMessage<::raft::v1::ShardStateEvent>(Arena*);
 template<> ::raft::v1::ShardState_ObserversEntry_DoNotUse* Arena::CreateMaybeMessage<::raft::v1::ShardState_ObserversEntry_DoNotUse>(Arena*);
 template<> ::raft::v1::ShardState_RemovedEntry_DoNotUse* Arena::CreateMaybeMessage<::raft::v1::ShardState_RemovedEntry_DoNotUse>(Arena*);
 template<> ::raft::v1::ShardState_ReplicasEntry_DoNotUse* Arena::CreateMaybeMessage<::raft::v1::ShardState_ReplicasEntry_DoNotUse>(Arena*);
@@ -183,6 +187,32 @@ PROTOBUF_NAMESPACE_CLOSE
 namespace raft {
 namespace v1 {
 
+enum ShardStateEvent_CmdType : int {
+  ShardStateEvent_CmdType_CMD_TYPE_UNSPECIFIED = 0,
+  ShardStateEvent_CmdType_CMD_TYPE_PUT = 1,
+  ShardStateEvent_CmdType_CMD_TYPE_DELETE = 2,
+  ShardStateEvent_CmdType_ShardStateEvent_CmdType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  ShardStateEvent_CmdType_ShardStateEvent_CmdType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool ShardStateEvent_CmdType_IsValid(int value);
+constexpr ShardStateEvent_CmdType ShardStateEvent_CmdType_CmdType_MIN = ShardStateEvent_CmdType_CMD_TYPE_UNSPECIFIED;
+constexpr ShardStateEvent_CmdType ShardStateEvent_CmdType_CmdType_MAX = ShardStateEvent_CmdType_CMD_TYPE_DELETE;
+constexpr int ShardStateEvent_CmdType_CmdType_ARRAYSIZE = ShardStateEvent_CmdType_CmdType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ShardStateEvent_CmdType_descriptor();
+template<typename T>
+inline const std::string& ShardStateEvent_CmdType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, ShardStateEvent_CmdType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function ShardStateEvent_CmdType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    ShardStateEvent_CmdType_descriptor(), enum_t_value);
+}
+inline bool ShardStateEvent_CmdType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, ShardStateEvent_CmdType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<ShardStateEvent_CmdType>(
+    ShardStateEvent_CmdType_descriptor(), name, value);
+}
 enum StateMachineType : int {
   STATE_MACHINE_TYPE_UNSPECIFIED = 0,
   STATE_MACHINE_TYPE_TEST = 1,
@@ -210,6 +240,206 @@ inline bool StateMachineType_Parse(
     StateMachineType_descriptor(), name, value);
 }
 // ===================================================================
+
+class ShardStateEvent final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.v1.ShardStateEvent) */ {
+ public:
+  inline ShardStateEvent() : ShardStateEvent(nullptr) {}
+  ~ShardStateEvent() override;
+  explicit PROTOBUF_CONSTEXPR ShardStateEvent(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ShardStateEvent(const ShardStateEvent& from);
+  ShardStateEvent(ShardStateEvent&& from) noexcept
+    : ShardStateEvent() {
+    *this = ::std::move(from);
+  }
+
+  inline ShardStateEvent& operator=(const ShardStateEvent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ShardStateEvent& operator=(ShardStateEvent&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ShardStateEvent& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ShardStateEvent* internal_default_instance() {
+    return reinterpret_cast<const ShardStateEvent*>(
+               &_ShardStateEvent_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(ShardStateEvent& a, ShardStateEvent& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ShardStateEvent* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ShardStateEvent* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ShardStateEvent* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ShardStateEvent>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ShardStateEvent& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ShardStateEvent& from) {
+    ShardStateEvent::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ShardStateEvent* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "raft.v1.ShardStateEvent";
+  }
+  protected:
+  explicit ShardStateEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef ShardStateEvent_CmdType CmdType;
+  static constexpr CmdType CMD_TYPE_UNSPECIFIED =
+    ShardStateEvent_CmdType_CMD_TYPE_UNSPECIFIED;
+  static constexpr CmdType CMD_TYPE_PUT =
+    ShardStateEvent_CmdType_CMD_TYPE_PUT;
+  static constexpr CmdType CMD_TYPE_DELETE =
+    ShardStateEvent_CmdType_CMD_TYPE_DELETE;
+  static inline bool CmdType_IsValid(int value) {
+    return ShardStateEvent_CmdType_IsValid(value);
+  }
+  static constexpr CmdType CmdType_MIN =
+    ShardStateEvent_CmdType_CmdType_MIN;
+  static constexpr CmdType CmdType_MAX =
+    ShardStateEvent_CmdType_CmdType_MAX;
+  static constexpr int CmdType_ARRAYSIZE =
+    ShardStateEvent_CmdType_CmdType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  CmdType_descriptor() {
+    return ShardStateEvent_CmdType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& CmdType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, CmdType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function CmdType_Name.");
+    return ShardStateEvent_CmdType_Name(enum_t_value);
+  }
+  static inline bool CmdType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      CmdType* value) {
+    return ShardStateEvent_CmdType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kEventFieldNumber = 2,
+    kCmdFieldNumber = 1,
+  };
+  // .raft.v1.ShardState event = 2 [json_name = "event"];
+  bool has_event() const;
+  private:
+  bool _internal_has_event() const;
+  public:
+  void clear_event();
+  const ::raft::v1::ShardState& event() const;
+  PROTOBUF_NODISCARD ::raft::v1::ShardState* release_event();
+  ::raft::v1::ShardState* mutable_event();
+  void set_allocated_event(::raft::v1::ShardState* event);
+  private:
+  const ::raft::v1::ShardState& _internal_event() const;
+  ::raft::v1::ShardState* _internal_mutable_event();
+  public:
+  void unsafe_arena_set_allocated_event(
+      ::raft::v1::ShardState* event);
+  ::raft::v1::ShardState* unsafe_arena_release_event();
+
+  // .raft.v1.ShardStateEvent.CmdType cmd = 1 [json_name = "cmd"];
+  void clear_cmd();
+  ::raft::v1::ShardStateEvent_CmdType cmd() const;
+  void set_cmd(::raft::v1::ShardStateEvent_CmdType value);
+  private:
+  ::raft::v1::ShardStateEvent_CmdType _internal_cmd() const;
+  void _internal_set_cmd(::raft::v1::ShardStateEvent_CmdType value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:raft.v1.ShardStateEvent)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::raft::v1::ShardState* event_;
+    int cmd_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_raft_2fv1_2fraft_5fshard_2eproto;
+};
+// -------------------------------------------------------------------
 
 class ShardState_ReplicasEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<ShardState_ReplicasEntry_DoNotUse, 
     uint64_t, std::string,
@@ -363,7 +593,7 @@ class ShardState final :
                &_ShardState_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(ShardState& a, ShardState& b) {
     a.Swap(&b);
@@ -648,7 +878,7 @@ class AddReplicaRequest final :
                &_AddReplicaRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(AddReplicaRequest& a, AddReplicaRequest& b) {
     a.Swap(&b);
@@ -833,7 +1063,7 @@ class AddReplicaResponse final :
                &_AddReplicaResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(AddReplicaResponse& a, AddReplicaResponse& b) {
     a.Swap(&b);
@@ -952,7 +1182,7 @@ class AddReplicaObserverRequest final :
                &_AddReplicaObserverRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(AddReplicaObserverRequest& a, AddReplicaObserverRequest& b) {
     a.Swap(&b);
@@ -1137,7 +1367,7 @@ class AddReplicaObserverResponse final :
                &_AddReplicaObserverResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(AddReplicaObserverResponse& a, AddReplicaObserverResponse& b) {
     a.Swap(&b);
@@ -1256,7 +1486,7 @@ class AddReplicaWitnessRequest final :
                &_AddReplicaWitnessRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(AddReplicaWitnessRequest& a, AddReplicaWitnessRequest& b) {
     a.Swap(&b);
@@ -1441,7 +1671,7 @@ class AddReplicaWitnessResponse final :
                &_AddReplicaWitnessResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(AddReplicaWitnessResponse& a, AddReplicaWitnessResponse& b) {
     a.Swap(&b);
@@ -1560,7 +1790,7 @@ class RemoveReplicaRequest final :
                &_RemoveReplicaRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    12;
 
   friend void swap(RemoveReplicaRequest& a, RemoveReplicaRequest& b) {
     a.Swap(&b);
@@ -1729,7 +1959,7 @@ class RemoveReplicaResponse final :
                &_RemoveReplicaResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(RemoveReplicaResponse& a, RemoveReplicaResponse& b) {
     a.Swap(&b);
@@ -1848,7 +2078,7 @@ class GetLeaderIdRequest final :
                &_GetLeaderIdRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    14;
 
   friend void swap(GetLeaderIdRequest& a, GetLeaderIdRequest& b) {
     a.Swap(&b);
@@ -2018,7 +2248,7 @@ class GetLeaderIdResponse final :
                &_GetLeaderIdResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    15;
 
   friend void swap(GetLeaderIdResponse& a, GetLeaderIdResponse& b) {
     a.Swap(&b);
@@ -2177,7 +2407,7 @@ class GetShardMembersRequest final :
                &_GetShardMembersRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    15;
+    16;
 
   friend void swap(GetShardMembersRequest& a, GetShardMembersRequest& b) {
     a.Swap(&b);
@@ -2429,7 +2659,7 @@ class GetShardMembersResponse final :
                &_GetShardMembersResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(GetShardMembersResponse& a, GetShardMembersResponse& b) {
     a.Swap(&b);
@@ -2672,7 +2902,7 @@ class NewShardRequest final :
                &_NewShardRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(NewShardRequest& a, NewShardRequest& b) {
     a.Swap(&b);
@@ -2868,7 +3098,7 @@ class NewShardResponse final :
                &_NewShardResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(NewShardResponse& a, NewShardResponse& b) {
     a.Swap(&b);
@@ -2987,7 +3217,7 @@ class RemoveDataRequest final :
                &_RemoveDataRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    24;
 
   friend void swap(RemoveDataRequest& a, RemoveDataRequest& b) {
     a.Swap(&b);
@@ -3145,7 +3375,7 @@ class RemoveDataResponse final :
                &_RemoveDataResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    24;
+    25;
 
   friend void swap(RemoveDataResponse& a, RemoveDataResponse& b) {
     a.Swap(&b);
@@ -3264,7 +3494,7 @@ class StartReplicaRequest final :
                &_StartReplicaRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    25;
+    26;
 
   friend void swap(StartReplicaRequest& a, StartReplicaRequest& b) {
     a.Swap(&b);
@@ -3433,7 +3663,7 @@ class StartReplicaResponse final :
                &_StartReplicaResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    26;
+    27;
 
   friend void swap(StartReplicaResponse& a, StartReplicaResponse& b) {
     a.Swap(&b);
@@ -3552,7 +3782,7 @@ class StartReplicaObserverRequest final :
                &_StartReplicaObserverRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    27;
+    28;
 
   friend void swap(StartReplicaObserverRequest& a, StartReplicaObserverRequest& b) {
     a.Swap(&b);
@@ -3721,7 +3951,7 @@ class StartReplicaObserverResponse final :
                &_StartReplicaObserverResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    28;
+    29;
 
   friend void swap(StartReplicaObserverResponse& a, StartReplicaObserverResponse& b) {
     a.Swap(&b);
@@ -3840,7 +4070,7 @@ class StopReplicaRequest final :
                &_StopReplicaRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    29;
+    30;
 
   friend void swap(StopReplicaRequest& a, StopReplicaRequest& b) {
     a.Swap(&b);
@@ -3998,7 +4228,7 @@ class StopReplicaResponse final :
                &_StopReplicaResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    30;
+    31;
 
   friend void swap(StopReplicaResponse& a, StopReplicaResponse& b) {
     a.Swap(&b);
@@ -4076,6 +4306,120 @@ class StopReplicaResponse final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// ShardStateEvent
+
+// .raft.v1.ShardStateEvent.CmdType cmd = 1 [json_name = "cmd"];
+inline void ShardStateEvent::clear_cmd() {
+  _impl_.cmd_ = 0;
+}
+inline ::raft::v1::ShardStateEvent_CmdType ShardStateEvent::_internal_cmd() const {
+  return static_cast< ::raft::v1::ShardStateEvent_CmdType >(_impl_.cmd_);
+}
+inline ::raft::v1::ShardStateEvent_CmdType ShardStateEvent::cmd() const {
+  // @@protoc_insertion_point(field_get:raft.v1.ShardStateEvent.cmd)
+  return _internal_cmd();
+}
+inline void ShardStateEvent::_internal_set_cmd(::raft::v1::ShardStateEvent_CmdType value) {
+  
+  _impl_.cmd_ = value;
+}
+inline void ShardStateEvent::set_cmd(::raft::v1::ShardStateEvent_CmdType value) {
+  _internal_set_cmd(value);
+  // @@protoc_insertion_point(field_set:raft.v1.ShardStateEvent.cmd)
+}
+
+// .raft.v1.ShardState event = 2 [json_name = "event"];
+inline bool ShardStateEvent::_internal_has_event() const {
+  return this != internal_default_instance() && _impl_.event_ != nullptr;
+}
+inline bool ShardStateEvent::has_event() const {
+  return _internal_has_event();
+}
+inline void ShardStateEvent::clear_event() {
+  if (GetArenaForAllocation() == nullptr && _impl_.event_ != nullptr) {
+    delete _impl_.event_;
+  }
+  _impl_.event_ = nullptr;
+}
+inline const ::raft::v1::ShardState& ShardStateEvent::_internal_event() const {
+  const ::raft::v1::ShardState* p = _impl_.event_;
+  return p != nullptr ? *p : reinterpret_cast<const ::raft::v1::ShardState&>(
+      ::raft::v1::_ShardState_default_instance_);
+}
+inline const ::raft::v1::ShardState& ShardStateEvent::event() const {
+  // @@protoc_insertion_point(field_get:raft.v1.ShardStateEvent.event)
+  return _internal_event();
+}
+inline void ShardStateEvent::unsafe_arena_set_allocated_event(
+    ::raft::v1::ShardState* event) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.event_);
+  }
+  _impl_.event_ = event;
+  if (event) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:raft.v1.ShardStateEvent.event)
+}
+inline ::raft::v1::ShardState* ShardStateEvent::release_event() {
+  
+  ::raft::v1::ShardState* temp = _impl_.event_;
+  _impl_.event_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::raft::v1::ShardState* ShardStateEvent::unsafe_arena_release_event() {
+  // @@protoc_insertion_point(field_release:raft.v1.ShardStateEvent.event)
+  
+  ::raft::v1::ShardState* temp = _impl_.event_;
+  _impl_.event_ = nullptr;
+  return temp;
+}
+inline ::raft::v1::ShardState* ShardStateEvent::_internal_mutable_event() {
+  
+  if (_impl_.event_ == nullptr) {
+    auto* p = CreateMaybeMessage<::raft::v1::ShardState>(GetArenaForAllocation());
+    _impl_.event_ = p;
+  }
+  return _impl_.event_;
+}
+inline ::raft::v1::ShardState* ShardStateEvent::mutable_event() {
+  ::raft::v1::ShardState* _msg = _internal_mutable_event();
+  // @@protoc_insertion_point(field_mutable:raft.v1.ShardStateEvent.event)
+  return _msg;
+}
+inline void ShardStateEvent::set_allocated_event(::raft::v1::ShardState* event) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.event_;
+  }
+  if (event) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(event);
+    if (message_arena != submessage_arena) {
+      event = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, event, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.event_ = event;
+  // @@protoc_insertion_point(field_set_allocated:raft.v1.ShardStateEvent.event)
+}
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -5482,6 +5826,8 @@ inline void StopReplicaRequest::set_replica_id(uint64_t value) {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -5490,6 +5836,11 @@ inline void StopReplicaRequest::set_replica_id(uint64_t value) {
 
 PROTOBUF_NAMESPACE_OPEN
 
+template <> struct is_proto_enum< ::raft::v1::ShardStateEvent_CmdType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::raft::v1::ShardStateEvent_CmdType>() {
+  return ::raft::v1::ShardStateEvent_CmdType_descriptor();
+}
 template <> struct is_proto_enum< ::raft::v1::StateMachineType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::raft::v1::StateMachineType>() {

@@ -27,6 +27,55 @@ export declare enum StateMachineType {
 }
 
 /**
+ * @generated from message raft.v1.ShardStateEvent
+ */
+export declare class ShardStateEvent extends Message<ShardStateEvent> {
+  /**
+   * @generated from field: raft.v1.ShardStateEvent.CmdType cmd = 1;
+   */
+  cmd: ShardStateEvent_CmdType;
+
+  /**
+   * @generated from field: raft.v1.ShardState event = 2;
+   */
+  event?: ShardState;
+
+  constructor(data?: PartialMessage<ShardStateEvent>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "raft.v1.ShardStateEvent";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ShardStateEvent;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ShardStateEvent;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ShardStateEvent;
+
+  static equals(a: ShardStateEvent | PlainMessage<ShardStateEvent> | undefined, b: ShardStateEvent | PlainMessage<ShardStateEvent> | undefined): boolean;
+}
+
+/**
+ * @generated from enum raft.v1.ShardStateEvent.CmdType
+ */
+export declare enum ShardStateEvent_CmdType {
+  /**
+   * @generated from enum value: CMD_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CMD_TYPE_PUT = 1;
+   */
+  PUT = 1,
+
+  /**
+   * @generated from enum value: CMD_TYPE_DELETE = 2;
+   */
+  DELETE = 2,
+}
+
+/**
  * @generated from message raft.v1.ShardState
  */
 export declare class ShardState extends Message<ShardState> {

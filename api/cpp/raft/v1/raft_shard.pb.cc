@@ -22,6 +22,20 @@ namespace _pbi = _pb::internal;
 
 namespace raft {
 namespace v1 {
+PROTOBUF_CONSTEXPR ShardStateEvent::ShardStateEvent(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.event_)*/nullptr
+  , /*decltype(_impl_.cmd_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct ShardStateEventDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ShardStateEventDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ShardStateEventDefaultTypeInternal() {}
+  union {
+    ShardStateEvent _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ShardStateEventDefaultTypeInternal _ShardStateEvent_default_instance_;
 PROTOBUF_CONSTEXPR ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse(
     ::_pbi::ConstantInitialized) {}
 struct ShardState_ReplicasEntry_DoNotUseDefaultTypeInternal {
@@ -428,11 +442,19 @@ struct StopReplicaResponseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StopReplicaResponseDefaultTypeInternal _StopReplicaResponse_default_instance_;
 }  // namespace v1
 }  // namespace raft
-static ::_pb::Metadata file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[31];
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto[1];
+static ::_pb::Metadata file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[32];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto[2];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_raft_2fv1_2fraft_5fshard_2eproto = nullptr;
 
 const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardStateEvent, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardStateEvent, _impl_.cmd_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::ShardStateEvent, _impl_.event_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::ShardState_ReplicasEntry_DoNotUse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -702,40 +724,42 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _inlined_string_donated_
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 8, -1, sizeof(::raft::v1::ShardState_ReplicasEntry_DoNotUse)},
-  { 10, 18, -1, sizeof(::raft::v1::ShardState_ObserversEntry_DoNotUse)},
-  { 20, 28, -1, sizeof(::raft::v1::ShardState_WitnessesEntry_DoNotUse)},
-  { 30, 38, -1, sizeof(::raft::v1::ShardState_RemovedEntry_DoNotUse)},
-  { 40, -1, -1, sizeof(::raft::v1::ShardState)},
-  { 54, -1, -1, sizeof(::raft::v1::AddReplicaRequest)},
-  { 64, -1, -1, sizeof(::raft::v1::AddReplicaResponse)},
-  { 70, -1, -1, sizeof(::raft::v1::AddReplicaObserverRequest)},
-  { 80, -1, -1, sizeof(::raft::v1::AddReplicaObserverResponse)},
-  { 86, -1, -1, sizeof(::raft::v1::AddReplicaWitnessRequest)},
-  { 96, -1, -1, sizeof(::raft::v1::AddReplicaWitnessResponse)},
-  { 102, -1, -1, sizeof(::raft::v1::RemoveReplicaRequest)},
-  { 111, -1, -1, sizeof(::raft::v1::RemoveReplicaResponse)},
-  { 117, -1, -1, sizeof(::raft::v1::GetLeaderIdRequest)},
-  { 126, -1, -1, sizeof(::raft::v1::GetLeaderIdResponse)},
-  { 134, -1, -1, sizeof(::raft::v1::GetShardMembersRequest)},
-  { 141, 149, -1, sizeof(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse)},
-  { 151, 159, -1, sizeof(::raft::v1::GetShardMembersResponse_ObserversEntry_DoNotUse)},
-  { 161, 169, -1, sizeof(::raft::v1::GetShardMembersResponse_WitnessesEntry_DoNotUse)},
-  { 171, 179, -1, sizeof(::raft::v1::GetShardMembersResponse_RemovedEntry_DoNotUse)},
-  { 181, -1, -1, sizeof(::raft::v1::GetShardMembersResponse)},
-  { 192, -1, -1, sizeof(::raft::v1::NewShardRequest)},
-  { 203, -1, -1, sizeof(::raft::v1::NewShardResponse)},
-  { 209, -1, -1, sizeof(::raft::v1::RemoveDataRequest)},
-  { 217, -1, -1, sizeof(::raft::v1::RemoveDataResponse)},
-  { 223, -1, -1, sizeof(::raft::v1::StartReplicaRequest)},
-  { 232, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
-  { 238, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
-  { 247, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
-  { 253, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
-  { 261, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
+  { 0, -1, -1, sizeof(::raft::v1::ShardStateEvent)},
+  { 8, 16, -1, sizeof(::raft::v1::ShardState_ReplicasEntry_DoNotUse)},
+  { 18, 26, -1, sizeof(::raft::v1::ShardState_ObserversEntry_DoNotUse)},
+  { 28, 36, -1, sizeof(::raft::v1::ShardState_WitnessesEntry_DoNotUse)},
+  { 38, 46, -1, sizeof(::raft::v1::ShardState_RemovedEntry_DoNotUse)},
+  { 48, -1, -1, sizeof(::raft::v1::ShardState)},
+  { 62, -1, -1, sizeof(::raft::v1::AddReplicaRequest)},
+  { 72, -1, -1, sizeof(::raft::v1::AddReplicaResponse)},
+  { 78, -1, -1, sizeof(::raft::v1::AddReplicaObserverRequest)},
+  { 88, -1, -1, sizeof(::raft::v1::AddReplicaObserverResponse)},
+  { 94, -1, -1, sizeof(::raft::v1::AddReplicaWitnessRequest)},
+  { 104, -1, -1, sizeof(::raft::v1::AddReplicaWitnessResponse)},
+  { 110, -1, -1, sizeof(::raft::v1::RemoveReplicaRequest)},
+  { 119, -1, -1, sizeof(::raft::v1::RemoveReplicaResponse)},
+  { 125, -1, -1, sizeof(::raft::v1::GetLeaderIdRequest)},
+  { 134, -1, -1, sizeof(::raft::v1::GetLeaderIdResponse)},
+  { 142, -1, -1, sizeof(::raft::v1::GetShardMembersRequest)},
+  { 149, 157, -1, sizeof(::raft::v1::GetShardMembersResponse_ReplicasEntry_DoNotUse)},
+  { 159, 167, -1, sizeof(::raft::v1::GetShardMembersResponse_ObserversEntry_DoNotUse)},
+  { 169, 177, -1, sizeof(::raft::v1::GetShardMembersResponse_WitnessesEntry_DoNotUse)},
+  { 179, 187, -1, sizeof(::raft::v1::GetShardMembersResponse_RemovedEntry_DoNotUse)},
+  { 189, -1, -1, sizeof(::raft::v1::GetShardMembersResponse)},
+  { 200, -1, -1, sizeof(::raft::v1::NewShardRequest)},
+  { 211, -1, -1, sizeof(::raft::v1::NewShardResponse)},
+  { 217, -1, -1, sizeof(::raft::v1::RemoveDataRequest)},
+  { 225, -1, -1, sizeof(::raft::v1::RemoveDataResponse)},
+  { 231, -1, -1, sizeof(::raft::v1::StartReplicaRequest)},
+  { 240, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
+  { 246, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
+  { 255, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
+  { 261, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
+  { 269, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
+  &::raft::v1::_ShardStateEvent_default_instance_._instance,
   &::raft::v1::_ShardState_ReplicasEntry_DoNotUse_default_instance_._instance,
   &::raft::v1::_ShardState_ObserversEntry_DoNotUse_default_instance_._instance,
   &::raft::v1::_ShardState_WitnessesEntry_DoNotUse_default_instance_._instance,
@@ -771,95 +795,100 @@ static const ::_pb::Message* const file_default_instances[] = {
 
 const char descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\030raft/v1/raft_shard.proto\022\007raft.v1\032\037goo"
-  "gle/protobuf/timestamp.proto\"\263\005\n\nShardSt"
-  "ate\022=\n\014last_updated\030\001 \001(\0132\032.google.proto"
-  "buf.TimestampR\013lastUpdated\022\031\n\010shard_id\030\002"
-  " \001(\004R\007shardId\022(\n\020config_change_id\030\003 \001(\004R"
-  "\016configChangeId\022=\n\010replicas\030\004 \003(\0132!.raft"
-  ".v1.ShardState.ReplicasEntryR\010replicas\022@"
-  "\n\tobservers\030\005 \003(\0132\".raft.v1.ShardState.O"
-  "bserversEntryR\tobservers\022@\n\twitnesses\030\006 "
-  "\003(\0132\".raft.v1.ShardState.WitnessesEntryR"
-  "\twitnesses\022:\n\007removed\030\007 \003(\0132 .raft.v1.Sh"
-  "ardState.RemovedEntryR\007removed\022-\n\004type\030\010"
-  " \001(\0162\031.raft.v1.StateMachineTypeR\004type\032;\n"
+  "gle/protobuf/timestamp.proto\"\274\001\n\017ShardSt"
+  "ateEvent\0222\n\003cmd\030\001 \001(\0162 .raft.v1.ShardSta"
+  "teEvent.CmdTypeR\003cmd\022)\n\005event\030\002 \001(\0132\023.ra"
+  "ft.v1.ShardStateR\005event\"J\n\007CmdType\022\030\n\024CM"
+  "D_TYPE_UNSPECIFIED\020\000\022\020\n\014CMD_TYPE_PUT\020\001\022\023"
+  "\n\017CMD_TYPE_DELETE\020\002\"\263\005\n\nShardState\022=\n\014la"
+  "st_updated\030\001 \001(\0132\032.google.protobuf.Times"
+  "tampR\013lastUpdated\022\031\n\010shard_id\030\002 \001(\004R\007sha"
+  "rdId\022(\n\020config_change_id\030\003 \001(\004R\016configCh"
+  "angeId\022=\n\010replicas\030\004 \003(\0132!.raft.v1.Shard"
+  "State.ReplicasEntryR\010replicas\022@\n\tobserve"
+  "rs\030\005 \003(\0132\".raft.v1.ShardState.ObserversE"
+  "ntryR\tobservers\022@\n\twitnesses\030\006 \003(\0132\".raf"
+  "t.v1.ShardState.WitnessesEntryR\twitnesse"
+  "s\022:\n\007removed\030\007 \003(\0132 .raft.v1.ShardState."
+  "RemovedEntryR\007removed\022-\n\004type\030\010 \001(\0162\031.ra"
+  "ft.v1.StateMachineTypeR\004type\032;\n\rReplicas"
+  "Entry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005"
+  "value:\0028\001\032<\n\016ObserversEntry\022\020\n\003key\030\001 \001(\004"
+  "R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032<\n\016Witne"
+  "ssesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001"
+  "(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020\n\003key\030\001 \001"
+  "(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\"\203\001\n\021Ad"
+  "dReplicaRequest\022\035\n\nreplica_id\030\001 \001(\004R\trep"
+  "licaId\022\031\n\010shard_id\030\002 \001(\004R\007shardId\022\032\n\010hos"
+  "tname\030\004 \001(\tR\010hostname\022\030\n\007timeout\030\005 \001(\003R\007"
+  "timeout\"\024\n\022AddReplicaResponse\"\213\001\n\031AddRep"
+  "licaObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007s"
+  "hardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\032\n"
+  "\010hostname\030\003 \001(\tR\010hostname\022\030\n\007timeout\030\004 \001"
+  "(\003R\007timeout\"\034\n\032AddReplicaObserverRespons"
+  "e\"\212\001\n\030AddReplicaWitnessRequest\022\031\n\010shard_"
+  "id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\tr"
+  "eplicaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007"
+  "timeout\030\004 \001(\003R\007timeout\"\033\n\031AddReplicaWitn"
+  "essResponse\"j\n\024RemoveReplicaRequest\022\031\n\010s"
+  "hard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001"
+  "(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R\007timeout\""
+  "\027\n\025RemoveReplicaResponse\"h\n\022GetLeaderIdR"
+  "equest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrep"
+  "lica_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001("
+  "\003R\007timeout\"K\n\023GetLeaderIdResponse\022\026\n\006lea"
+  "der\030\001 \001(\004R\006leader\022\034\n\tavailable\030\002 \001(\010R\tav"
+  "ailable\"3\n\026GetShardMembersRequest\022\031\n\010sha"
+  "rd_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetShardMembers"
+  "Response\022(\n\020config_change_id\030\001 \001(\004R\016conf"
+  "igChangeId\022J\n\010replicas\030\002 \003(\0132..raft.v1.G"
+  "etShardMembersResponse.ReplicasEntryR\010re"
+  "plicas\022M\n\tobservers\030\003 \003(\0132/.raft.v1.GetS"
+  "hardMembersResponse.ObserversEntryR\tobse"
+  "rvers\022M\n\twitnesses\030\004 \003(\0132/.raft.v1.GetSh"
+  "ardMembersResponse.WitnessesEntryR\twitne"
+  "sses\022G\n\007removed\030\005 \003(\0132-.raft.v1.GetShard"
+  "MembersResponse.RemovedEntryR\007removed\032;\n"
   "\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005valu"
   "e\030\002 \001(\tR\005value:\0028\001\032<\n\016ObserversEntry\022\020\n\003"
   "key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001"
   "\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005"
   "value\030\002 \001(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020"
   "\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\002"
-  "8\001\"\203\001\n\021AddReplicaRequest\022\035\n\nreplica_id\030\001"
-  " \001(\004R\treplicaId\022\031\n\010shard_id\030\002 \001(\004R\007shard"
-  "Id\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n\007timeou"
-  "t\030\005 \001(\003R\007timeout\"\024\n\022AddReplicaResponse\"\213"
-  "\001\n\031AddReplicaObserverRequest\022\031\n\010shard_id"
-  "\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\trep"
-  "licaId\022\032\n\010hostname\030\003 \001(\tR\010hostname\022\030\n\007ti"
-  "meout\030\004 \001(\003R\007timeout\"\034\n\032AddReplicaObserv"
-  "erResponse\"\212\001\n\030AddReplicaWitnessRequest\022"
-  "\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id"
-  "\030\002 \001(\004R\treplicaId\022\032\n\010hostname\030\003 \001(\tR\010hos"
-  "tname\022\030\n\007timeout\030\004 \001(\003R\007timeout\"\033\n\031AddRe"
-  "plicaWitnessResponse\"j\n\024RemoveReplicaReq"
-  "uest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepli"
-  "ca_id\030\002 \001(\004R\treplicaId\022\030\n\007timeout\030\003 \001(\003R"
-  "\007timeout\"\027\n\025RemoveReplicaResponse\"h\n\022Get"
-  "LeaderIdRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard"
-  "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\030\n\007tim"
-  "eout\030\003 \001(\003R\007timeout\"K\n\023GetLeaderIdRespon"
-  "se\022\026\n\006leader\030\001 \001(\004R\006leader\022\034\n\tavailable\030"
-  "\002 \001(\010R\tavailable\"3\n\026GetShardMembersReque"
-  "st\022\031\n\010shard_id\030\001 \001(\004R\007shardId\"\353\004\n\027GetSha"
-  "rdMembersResponse\022(\n\020config_change_id\030\001 "
-  "\001(\004R\016configChangeId\022J\n\010replicas\030\002 \003(\0132.."
-  "raft.v1.GetShardMembersResponse.Replicas"
-  "EntryR\010replicas\022M\n\tobservers\030\003 \003(\0132/.raf"
-  "t.v1.GetShardMembersResponse.ObserversEn"
-  "tryR\tobservers\022M\n\twitnesses\030\004 \003(\0132/.raft"
-  ".v1.GetShardMembersResponse.WitnessesEnt"
-  "ryR\twitnesses\022G\n\007removed\030\005 \003(\0132-.raft.v1"
-  ".GetShardMembersResponse.RemovedEntryR\007r"
-  "emoved\032;\n\rReplicasEntry\022\020\n\003key\030\001 \001(\004R\003ke"
-  "y\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032<\n\016Observers"
-  "Entry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\tR\005"
-  "value:\0028\001\032<\n\016WitnessesEntry\022\020\n\003key\030\001 \001(\004"
-  "R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\032:\n\014Remov"
-  "edEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001(\t"
-  "R\005value:\0028\001\"\260\001\n\017NewShardRequest\022\031\n\010shard"
-  "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t"
-  "replicaId\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateM"
-  "achineTypeR\004type\022\032\n\010hostname\030\004 \001(\tR\010host"
-  "name\022\030\n\007timeout\030\005 \001(\003R\007timeout\"\022\n\020NewSha"
-  "rdResponse\"M\n\021RemoveDataRequest\022\031\n\010shard"
-  "_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\t"
-  "replicaId\"\024\n\022RemoveDataResponse\"~\n\023Start"
-  "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI"
-  "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004type"
-  "\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type\""
-  "\026\n\024StartReplicaResponse\"\206\001\n\033StartReplica"
-  "ObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard"
-  "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022-\n\004typ"
-  "e\030\003 \001(\0162\031.raft.v1.StateMachineTypeR\004type"
-  "\"\036\n\034StartReplicaObserverResponse\"N\n\022Stop"
-  "ReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shardI"
-  "d\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\"\025\n\023Stop"
-  "ReplicaResponse*n\n\020StateMachineType\022\"\n\036S"
-  "TATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE"
-  "_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TY"
-  "PE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016RaftShar"
-  "dProtoP\001Z\032a13s.io/api/raft/v1;raftv1\242\002\003R"
-  "XX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMeta"
-  "data\352\002\010Raft::V1b\006proto3"
+  "8\001\"\260\001\n\017NewShardRequest\022\031\n\010shard_id\030\001 \001(\004"
+  "R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId"
+  "\022-\n\004type\030\003 \001(\0162\031.raft.v1.StateMachineTyp"
+  "eR\004type\022\032\n\010hostname\030\004 \001(\tR\010hostname\022\030\n\007t"
+  "imeout\030\005 \001(\003R\007timeout\"\022\n\020NewShardRespons"
+  "e\"M\n\021RemoveDataRequest\022\031\n\010shard_id\030\001 \001(\004"
+  "R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId"
+  "\"\024\n\022RemoveDataResponse\"~\n\023StartReplicaRe"
+  "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl"
+  "ica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031."
+  "raft.v1.StateMachineTypeR\004type\"\026\n\024StartR"
+  "eplicaResponse\"\206\001\n\033StartReplicaObserverR"
+  "equest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrep"
+  "lica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031"
+  ".raft.v1.StateMachineTypeR\004type\"\036\n\034Start"
+  "ReplicaObserverResponse\"N\n\022StopReplicaRe"
+  "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl"
+  "ica_id\030\002 \001(\004R\treplicaId\"\025\n\023StopReplicaRe"
+  "sponse*n\n\020StateMachineType\022\"\n\036STATE_MACH"
+  "INE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE_MACHINE_"
+  "TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TYPE_KV\020\002B~"
+  "\n\023io.a13s.api.raft.v1B\016RaftShardProtoP\001Z"
+  "\032a13s.io/api/raft/v1;raftv1\242\002\003RXX\252\002\007Raft"
+  ".V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010Ra"
+  "ft::V1b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2ftimestamp_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_raft_2fv1_2fraft_5fshard_2eproto = {
-    false, false, 3223, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
+    false, false, 3414, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
     "raft/v1/raft_shard.proto",
-    &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps, 1, 31,
+    &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps, 1, 32,
     schemas, file_default_instances, TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets,
     file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto, file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto,
     file_level_service_descriptors_raft_2fv1_2fraft_5fshard_2eproto,
@@ -872,9 +901,32 @@ PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_raft_2fv
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_raft_2fv1_2fraft_5fshard_2eproto(&descriptor_table_raft_2fv1_2fraft_5fshard_2eproto);
 namespace raft {
 namespace v1 {
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StateMachineType_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ShardStateEvent_CmdType_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_raft_2fv1_2fraft_5fshard_2eproto);
   return file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto[0];
+}
+bool ShardStateEvent_CmdType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#if (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+constexpr ShardStateEvent_CmdType ShardStateEvent::CMD_TYPE_UNSPECIFIED;
+constexpr ShardStateEvent_CmdType ShardStateEvent::CMD_TYPE_PUT;
+constexpr ShardStateEvent_CmdType ShardStateEvent::CMD_TYPE_DELETE;
+constexpr ShardStateEvent_CmdType ShardStateEvent::CmdType_MIN;
+constexpr ShardStateEvent_CmdType ShardStateEvent::CmdType_MAX;
+constexpr int ShardStateEvent::CmdType_ARRAYSIZE;
+#endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || (_MSC_VER >= 1900 && _MSC_VER < 1912))
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StateMachineType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_raft_2fv1_2fraft_5fshard_2eproto);
+  return file_level_enum_descriptors_raft_2fv1_2fraft_5fshard_2eproto[1];
 }
 bool StateMachineType_IsValid(int value) {
   switch (value) {
@@ -890,6 +942,233 @@ bool StateMachineType_IsValid(int value) {
 
 // ===================================================================
 
+class ShardStateEvent::_Internal {
+ public:
+  static const ::raft::v1::ShardState& event(const ShardStateEvent* msg);
+};
+
+const ::raft::v1::ShardState&
+ShardStateEvent::_Internal::event(const ShardStateEvent* msg) {
+  return *msg->_impl_.event_;
+}
+ShardStateEvent::ShardStateEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:raft.v1.ShardStateEvent)
+}
+ShardStateEvent::ShardStateEvent(const ShardStateEvent& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ShardStateEvent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.event_){nullptr}
+    , decltype(_impl_.cmd_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_event()) {
+    _this->_impl_.event_ = new ::raft::v1::ShardState(*from._impl_.event_);
+  }
+  _this->_impl_.cmd_ = from._impl_.cmd_;
+  // @@protoc_insertion_point(copy_constructor:raft.v1.ShardStateEvent)
+}
+
+inline void ShardStateEvent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.event_){nullptr}
+    , decltype(_impl_.cmd_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+ShardStateEvent::~ShardStateEvent() {
+  // @@protoc_insertion_point(destructor:raft.v1.ShardStateEvent)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ShardStateEvent::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete _impl_.event_;
+}
+
+void ShardStateEvent::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void ShardStateEvent::Clear() {
+// @@protoc_insertion_point(message_clear_start:raft.v1.ShardStateEvent)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && _impl_.event_ != nullptr) {
+    delete _impl_.event_;
+  }
+  _impl_.event_ = nullptr;
+  _impl_.cmd_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ShardStateEvent::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .raft.v1.ShardStateEvent.CmdType cmd = 1 [json_name = "cmd"];
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_cmd(static_cast<::raft::v1::ShardStateEvent_CmdType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // .raft.v1.ShardState event = 2 [json_name = "event"];
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_event(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ShardStateEvent::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:raft.v1.ShardStateEvent)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .raft.v1.ShardStateEvent.CmdType cmd = 1 [json_name = "cmd"];
+  if (this->_internal_cmd() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_cmd(), target);
+  }
+
+  // .raft.v1.ShardState event = 2 [json_name = "event"];
+  if (this->_internal_has_event()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::event(this),
+        _Internal::event(this).GetCachedSize(), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:raft.v1.ShardStateEvent)
+  return target;
+}
+
+size_t ShardStateEvent::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:raft.v1.ShardStateEvent)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .raft.v1.ShardState event = 2 [json_name = "event"];
+  if (this->_internal_has_event()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.event_);
+  }
+
+  // .raft.v1.ShardStateEvent.CmdType cmd = 1 [json_name = "cmd"];
+  if (this->_internal_cmd() != 0) {
+    total_size += 1 +
+      ::_pbi::WireFormatLite::EnumSize(this->_internal_cmd());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ShardStateEvent::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ShardStateEvent::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ShardStateEvent::GetClassData() const { return &_class_data_; }
+
+
+void ShardStateEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ShardStateEvent*>(&to_msg);
+  auto& from = static_cast<const ShardStateEvent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:raft.v1.ShardStateEvent)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_has_event()) {
+    _this->_internal_mutable_event()->::raft::v1::ShardState::MergeFrom(
+        from._internal_event());
+  }
+  if (from._internal_cmd() != 0) {
+    _this->_internal_set_cmd(from._internal_cmd());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ShardStateEvent::CopyFrom(const ShardStateEvent& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:raft.v1.ShardStateEvent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ShardStateEvent::IsInitialized() const {
+  return true;
+}
+
+void ShardStateEvent::InternalSwap(ShardStateEvent* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ShardStateEvent, _impl_.cmd_)
+      + sizeof(ShardStateEvent::_impl_.cmd_)
+      - PROTOBUF_FIELD_OFFSET(ShardStateEvent, _impl_.event_)>(
+          reinterpret_cast<char*>(&_impl_.event_),
+          reinterpret_cast<char*>(&other->_impl_.event_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ShardStateEvent::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[0]);
+}
+
+// ===================================================================
+
 ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse() {}
 ShardState_ReplicasEntry_DoNotUse::ShardState_ReplicasEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena)
     : SuperType(arena) {}
@@ -899,7 +1178,7 @@ void ShardState_ReplicasEntry_DoNotUse::MergeFrom(const ShardState_ReplicasEntry
 ::PROTOBUF_NAMESPACE_ID::Metadata ShardState_ReplicasEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[0]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[1]);
 }
 
 // ===================================================================
@@ -913,7 +1192,7 @@ void ShardState_ObserversEntry_DoNotUse::MergeFrom(const ShardState_ObserversEnt
 ::PROTOBUF_NAMESPACE_ID::Metadata ShardState_ObserversEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[1]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[2]);
 }
 
 // ===================================================================
@@ -927,7 +1206,7 @@ void ShardState_WitnessesEntry_DoNotUse::MergeFrom(const ShardState_WitnessesEnt
 ::PROTOBUF_NAMESPACE_ID::Metadata ShardState_WitnessesEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[2]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[3]);
 }
 
 // ===================================================================
@@ -941,7 +1220,7 @@ void ShardState_RemovedEntry_DoNotUse::MergeFrom(const ShardState_RemovedEntry_D
 ::PROTOBUF_NAMESPACE_ID::Metadata ShardState_RemovedEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[3]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[4]);
 }
 
 // ===================================================================
@@ -1461,7 +1740,7 @@ void ShardState::InternalSwap(ShardState* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ShardState::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[4]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[5]);
 }
 
 // ===================================================================
@@ -1748,7 +2027,7 @@ void AddReplicaRequest::InternalSwap(AddReplicaRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[5]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[6]);
 }
 
 // ===================================================================
@@ -1788,7 +2067,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaResponse::GetClassDa
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[6]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[7]);
 }
 
 // ===================================================================
@@ -2075,7 +2354,7 @@ void AddReplicaObserverRequest::InternalSwap(AddReplicaObserverRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaObserverRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[7]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[8]);
 }
 
 // ===================================================================
@@ -2115,7 +2394,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaObserverResponse::Ge
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaObserverResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[8]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[9]);
 }
 
 // ===================================================================
@@ -2402,7 +2681,7 @@ void AddReplicaWitnessRequest::InternalSwap(AddReplicaWitnessRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaWitnessRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[9]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[10]);
 }
 
 // ===================================================================
@@ -2442,7 +2721,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*AddReplicaWitnessResponse::Get
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaWitnessResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[10]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[11]);
 }
 
 // ===================================================================
@@ -2677,7 +2956,7 @@ void RemoveReplicaRequest::InternalSwap(RemoveReplicaRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[11]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[12]);
 }
 
 // ===================================================================
@@ -2717,7 +2996,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveReplicaResponse::GetClas
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[12]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[13]);
 }
 
 // ===================================================================
@@ -2952,7 +3231,7 @@ void GetLeaderIdRequest::InternalSwap(GetLeaderIdRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GetLeaderIdRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[13]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[14]);
 }
 
 // ===================================================================
@@ -3163,7 +3442,7 @@ void GetLeaderIdResponse::InternalSwap(GetLeaderIdResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GetLeaderIdResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[14]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[15]);
 }
 
 // ===================================================================
@@ -3341,7 +3620,7 @@ void GetShardMembersRequest::InternalSwap(GetShardMembersRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[15]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[16]);
 }
 
 // ===================================================================
@@ -3355,7 +3634,7 @@ void GetShardMembersResponse_ReplicasEntry_DoNotUse::MergeFrom(const GetShardMem
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_ReplicasEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[16]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[17]);
 }
 
 // ===================================================================
@@ -3369,7 +3648,7 @@ void GetShardMembersResponse_ObserversEntry_DoNotUse::MergeFrom(const GetShardMe
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_ObserversEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[17]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[18]);
 }
 
 // ===================================================================
@@ -3383,7 +3662,7 @@ void GetShardMembersResponse_WitnessesEntry_DoNotUse::MergeFrom(const GetShardMe
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_WitnessesEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[18]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[19]);
 }
 
 // ===================================================================
@@ -3397,7 +3676,7 @@ void GetShardMembersResponse_RemovedEntry_DoNotUse::MergeFrom(const GetShardMemb
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse_RemovedEntry_DoNotUse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[19]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[20]);
 }
 
 // ===================================================================
@@ -3810,7 +4089,7 @@ void GetShardMembersResponse::InternalSwap(GetShardMembersResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GetShardMembersResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[20]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[21]);
 }
 
 // ===================================================================
@@ -4124,7 +4403,7 @@ void NewShardRequest::InternalSwap(NewShardRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata NewShardRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[21]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[22]);
 }
 
 // ===================================================================
@@ -4164,7 +4443,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NewShardResponse::GetClassData
 ::PROTOBUF_NAMESPACE_ID::Metadata NewShardResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[22]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[23]);
 }
 
 // ===================================================================
@@ -4375,7 +4654,7 @@ void RemoveDataRequest::InternalSwap(RemoveDataRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveDataRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[23]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[24]);
 }
 
 // ===================================================================
@@ -4415,7 +4694,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*RemoveDataResponse::GetClassDa
 ::PROTOBUF_NAMESPACE_ID::Metadata RemoveDataResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[24]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[25]);
 }
 
 // ===================================================================
@@ -4653,7 +4932,7 @@ void StartReplicaRequest::InternalSwap(StartReplicaRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[25]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[26]);
 }
 
 // ===================================================================
@@ -4693,7 +4972,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaResponse::GetClass
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[26]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[27]);
 }
 
 // ===================================================================
@@ -4931,7 +5210,7 @@ void StartReplicaObserverRequest::InternalSwap(StartReplicaObserverRequest* othe
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaObserverRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[27]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[28]);
 }
 
 // ===================================================================
@@ -4971,7 +5250,7 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StartReplicaObserverResponse::
 ::PROTOBUF_NAMESPACE_ID::Metadata StartReplicaObserverResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[28]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[29]);
 }
 
 // ===================================================================
@@ -5182,7 +5461,7 @@ void StopReplicaRequest::InternalSwap(StopReplicaRequest* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata StopReplicaRequest::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[29]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[30]);
 }
 
 // ===================================================================
@@ -5222,13 +5501,17 @@ const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StopReplicaResponse::GetClassD
 ::PROTOBUF_NAMESPACE_ID::Metadata StopReplicaResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_getter, &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once,
-      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[30]);
+      file_level_metadata_raft_2fv1_2fraft_5fshard_2eproto[31]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace v1
 }  // namespace raft
 PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::raft::v1::ShardStateEvent*
+Arena::CreateMaybeMessage< ::raft::v1::ShardStateEvent >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::raft::v1::ShardStateEvent >(arena);
+}
 template<> PROTOBUF_NOINLINE ::raft::v1::ShardState_ReplicasEntry_DoNotUse*
 Arena::CreateMaybeMessage< ::raft::v1::ShardState_ReplicasEntry_DoNotUse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::raft::v1::ShardState_ReplicasEntry_DoNotUse >(arena);
