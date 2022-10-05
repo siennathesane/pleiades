@@ -55,7 +55,7 @@ func (r *RaftTransactionGrpcAdapterTestSuite) SetupTest() {
 	ctx := context.Background()
 	r.srv = grpc.NewServer()
 
-	r.nh = utils.buildTestNodeHost(r.T())
+	r.nh = utils.BuildTestNodeHost(r.T())
 	r.rtm = &raftTransactionManager{
 		logger:       r.logger,
 		nh:           r.nh,
@@ -93,7 +93,7 @@ func (r *RaftTransactionGrpcAdapterTestSuite) TearDownTest() {
 
 func (r *RaftTransactionGrpcAdapterTestSuite) TestTransactionLifecycle() {
 
-	shardConfig := utils.buildTestShardConfig(r.T())
+	shardConfig := utils.BuildTestShardConfig(r.T())
 	shardConfig.SnapshotEntries = 5
 	shardConfig.ClusterID = 1000
 	members := make(map[uint64]string)

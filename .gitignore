@@ -1,3 +1,5 @@
+**.tgz
+**/*.db
 **/tmp
 .idea/shelf/
 .idea/usage.statistics.xml
@@ -6,9 +8,8 @@ bin/
 build/
 ci/vars/**.sh
 ci/vars/**.yaml
+google/
 node_modules/
 package-lock.json
-**.tgz
+report.xml
 vendor/
-**/*.db
-google/
