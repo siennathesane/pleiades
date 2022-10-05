@@ -16,6 +16,7 @@ import (
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
+	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -128,10 +129,10 @@ func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost 
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
+	//err = c.storeShardState(shardId)
+	//if err != nil {
+	//	l.Error().Err(err).Msg("can't store shard state")
+	//}
 
 	return nil
 }
@@ -190,10 +191,10 @@ func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, n
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
+	//err = c.storeShardState(shardId)
+	//if err != nil {
+	//	l.Error().Err(err).Msg("can't store shard state")
+	//}
 	return nil
 }
 
@@ -237,7 +238,7 @@ func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("creating test state machine")
-		err = c.nh.StartCluster(members, false, newTestStateMachine, clusterConfig)
+		err = c.nh.StartCluster(members, false, utils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("creating bbolt state machine")
 		err = c.nh.StartOnDiskCluster(members, false, kv.NewBBoltFSM, clusterConfig)
@@ -269,7 +270,7 @@ func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("starting test state machine")
-		err = c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+		err = c.nh.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("starting bbolt state machine")
 		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
@@ -302,7 +303,7 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("starting test state machine observer")
-		return c.nh.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+		return c.nh.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("starting bbolt state machine observer")
 		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)

@@ -44,7 +44,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 300 * time.Millisecond
 
-	t.nh = buildTestNodeHost(t.T())
+	t.nh = utils.BuildTestNodeHost(t.T())
 	t.tm = newTransactionManager(t.nh, t.logger)
 	t.sm = newShardManager(t.nh, t.logger)
 

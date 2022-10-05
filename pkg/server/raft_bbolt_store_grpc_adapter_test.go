@@ -53,7 +53,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
 	// ensure that bbolt uses the temp directory
 	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
-	t.nh = buildTestNodeHost(t.T())
+	t.nh = utils.BuildTestNodeHost(t.T())
 	t.tm = newTransactionManager(t.nh, t.logger)
 	t.sm = newShardManager(t.nh, t.logger)
 	t.storem = newBboltStoreManager(t.tm, t.nh, t.logger)

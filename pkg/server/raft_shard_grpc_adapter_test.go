@@ -58,11 +58,11 @@ func (t *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	t.srv = grpc.NewServer()
 
 	t.testShardId = rand.Uint64()
-	t.testClusterConfig = buildTestShardConfig(t.T())
+	t.testClusterConfig = utils.BuildTestShardConfig(t.T())
 	t.defaultTimeout = 300 * time.Millisecond
 	t.extendedDefaultTimeout = 500 * time.Millisecond
 
-	t.testShardManager = newShardManager(buildTestNodeHost(t.T()), t.logger)
+	t.testShardManager = newShardManager(utils.BuildTestNodeHost(t.T()), t.logger)
 
 	t.adapter = &raftShardGrpcAdapter{
 		logger:       t.logger,
@@ -109,9 +109,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TearDownTest() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 
 	client := raftv1.NewShardServiceClient(t.conn)
@@ -124,7 +124,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -137,9 +137,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TestAddReplica() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 	clusterConfig.IsObserver = true
 
@@ -153,7 +153,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -166,9 +166,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TestAddReplicaObserver() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestAddReplicaWitness() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 	clusterConfig.IsWitness = true
 
@@ -182,7 +182,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestAddReplicaWitness() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -236,9 +236,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TestNewShard() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 
 	client := raftv1.NewShardServiceClient(t.conn)
@@ -251,7 +251,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -275,9 +275,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TestRemoveData() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 
 	client := raftv1.NewShardServiceClient(t.conn)
@@ -290,7 +290,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestRemoveReplica() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -319,8 +319,8 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
 	currentTestShard := rand.Uint64()
 
 	// generate a new "local" shard manager
-	localNodeHost := buildTestNodeHost(t.T())
-	shardConfig := buildTestShardConfig(t.T())
+	localNodeHost := utils.BuildTestNodeHost(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.ClusterID = currentTestShard
 	localShardManager := newShardManager(localNodeHost, t.logger)
 
@@ -388,8 +388,8 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
 	currentTestShard := rand.Uint64()
 
 	// generate a new "local" shard manager
-	localNodeHost := buildTestNodeHost(t.T())
-	shardConfig := buildTestShardConfig(t.T())
+	localNodeHost := utils.BuildTestNodeHost(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.ClusterID = currentTestShard
 	localShardManager := newShardManager(localNodeHost, t.logger)
 
@@ -455,9 +455,9 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
 
 func (t *RaftShardGrpcAdapterTestSuite) TestStopReplica() {
 
-	testNodeHost := buildTestNodeHost(t.T())
+	testNodeHost := utils.BuildTestNodeHost(t.T())
 
-	clusterConfig := buildTestShardConfig(t.T())
+	clusterConfig := utils.BuildTestShardConfig(t.T())
 	clusterConfig.ClusterID = t.testShardId
 
 	client := raftv1.NewShardServiceClient(t.conn)
@@ -470,7 +470,7 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStopReplica() {
 	t.Require().NoError(err, "there must not be an error when adding a replica")
 	utils.Wait(t.defaultTimeout)
 
-	err = testNodeHost.StartCluster(nil, true, newTestStateMachine, clusterConfig)
+	err = testNodeHost.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting a test state machine")
 	utils.Wait(t.defaultTimeout)
 

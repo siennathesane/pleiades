@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package utils
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ import (
 	"github.com/lni/goutils/vfs"
 )
 
-func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
+func BuildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	rand.Seed(time.Now().UTC().UnixNano())
 	port := 1024 + rand.Intn(65535-1024)
 
@@ -39,7 +39,7 @@ func buildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 	}
 }
 
-func buildTestShardConfig(t *testing.T) dconfig.Config {
+func BuildTestShardConfig(t *testing.T) dconfig.Config {
 	rand.Seed(time.Now().UTC().UnixNano())
 	nodeId := rand.Intn(10_000)
 	clusterId := rand.Intn(10_000)
@@ -52,8 +52,8 @@ func buildTestShardConfig(t *testing.T) dconfig.Config {
 	}
 }
 
-func buildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
-	host, err := dragonboat.NewNodeHost(buildTestNodeHostConfig(t))
+func BuildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
+	host, err := dragonboat.NewNodeHost(BuildTestNodeHostConfig(t))
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -61,31 +61,17 @@ func buildTestNodeHost(t *testing.T) *dragonboat.NodeHost {
 	return host
 }
 
-func build3NodeTestCluster(t *testing.T) ([]dconfig.Config, []dconfig.NodeHostConfig, []*dragonboat.NodeHost) {
-	clusterConfigs := make([]dconfig.Config, 3)
-	nodeConfigs := make([]dconfig.NodeHostConfig, 3)
-	nodeHosts := make([]*dragonboat.NodeHost, 3)
+func BuildTestShard(t *testing.T) (*dragonboat.NodeHost, dconfig.Config) {
+	firstTestHost := BuildTestNodeHost(t)
+	firstNodeClusterConfig := BuildTestShardConfig(t)
+	nodeClusters := make(map[uint64]string)
+	nodeClusters[firstNodeClusterConfig.NodeID] = firstTestHost.RaftAddress()
 
-	initialMembers := make(map[uint64]dragonboat.Target)
-	for i := 0; i < 3; i++ {
-		clusterConfig := buildTestShardConfig(t)
-		nodeConfig := buildTestNodeHostConfig(t)
-		clusterConfigs[i] = clusterConfig
-		nodeConfigs[i] = nodeConfig
-
-		host, err := dragonboat.NewNodeHost(nodeConfig)
-		if err != nil {
-			t.Fatalf(err.Error())
-		}
-		nodeHosts[i] = host
-		initialMembers[clusterConfig.NodeID] = host.RaftAddress()
+	err := firstTestHost.StartCluster(nodeClusters, false, NewTestStateMachine, firstNodeClusterConfig)
+	if err != nil {
+		t.Fatalf("cannot start test state machine: %s", err)
 	}
+	Wait(100*time.Millisecond)
 
-	for i := 0; i < len(nodeHosts); i++ {
-		if err := nodeHosts[i].StartCluster(initialMembers, false, newTestStateMachine, buildTestShardConfig(t)); err != nil {
-			t.Fatalf(err.Error())
-		}
-	}
-
-	return clusterConfigs, nodeConfigs, nodeHosts
+	return firstTestHost, firstNodeClusterConfig
 }

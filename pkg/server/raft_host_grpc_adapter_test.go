@@ -51,7 +51,7 @@ func (t *raftHostGrpcAdapterTestSuite) SetupTest() {
 	ctx := context.Background()
 	t.srv = grpc.NewServer()
 
-	t.nh = buildTestNodeHost(t.T())
+	t.nh = utils.BuildTestNodeHost(t.T())
 	t.rh = &raftHost{
 		nh:     t.nh,
 		logger: t.logger,
@@ -90,12 +90,12 @@ func (t *raftHostGrpcAdapterTestSuite) TestCompact() {
 		t.T().Skipf("skipping")
 	}
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, utils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -134,12 +134,12 @@ func (t *raftHostGrpcAdapterTestSuite) TestSnapshot() {
 		t.T().Skipf("skipping")
 	}
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, utils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
