@@ -38,7 +38,7 @@ func (t *RaftHostTestSuite) SetupSuite() {
 }
 
 func (t *RaftHostTestSuite) SetupTest() {
-	t.nh = buildTestNodeHost(t.T())
+	t.nh = utils.BuildTestNodeHost(t.T())
 }
 
 func (t *RaftHostTestSuite) TearDownTest() {
@@ -48,12 +48,12 @@ func (t *RaftHostTestSuite) TearDownTest() {
 func (t *RaftHostTestSuite) TestCompact() {
 	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, utils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -85,12 +85,12 @@ func (t *RaftHostTestSuite) TestGetHostInfo() {
 func (t *RaftHostTestSuite) TestHasNodeInfo() {
 	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, utils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(3000*time.Millisecond)
 
@@ -123,12 +123,12 @@ func (t *RaftHostTestSuite) TestRaftAddress() {
 func (t *RaftHostTestSuite) TestSnapshot() {
 	host := newRaftHost(t.nh, t.logger)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, utils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 

@@ -16,6 +16,10 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
+var (
+	singleton *EmbeddedMessaging
+)
+
 type EmbeddedMessagingStreamOpts struct {
 	*server.Options
 	timeout time.Duration
@@ -30,12 +34,37 @@ type EmbeddedMessagingPubSubClient struct {
 }
 
 func NewEmbeddedMessaging(opts *EmbeddedMessagingStreamOpts) (*EmbeddedMessaging, error) {
+	if singleton != nil {
+		return singleton, nil
+	}
+
 	// todo (sienna): ensure that StoreDir is set
 	srv, err := server.NewServer(opts.Options)
-	return &EmbeddedMessaging{
+	singleton = &EmbeddedMessaging{
 		opts: opts,
 		srv:  srv,
-	}, err
+	}
+	singleton.Start()
+	return singleton, err
+}
+
+func NewEmbeddedMessagingWithDefaults() (*EmbeddedMessaging, error) {
+	if singleton != nil {
+		return singleton, nil
+	}
+
+	opts := &server.Options{
+		Host:       "localhost",
+		JetStream:  true,
+		DontListen: true,
+	}
+	srv, err := server.NewServer(opts)
+	singleton =  &EmbeddedMessaging{
+		opts: &EmbeddedMessagingStreamOpts{timeout: 4000 * time.Millisecond, Options: opts},
+		srv:  srv,
+	}
+	singleton.Start()
+	return singleton, err
 }
 
 type EmbeddedMessaging struct {

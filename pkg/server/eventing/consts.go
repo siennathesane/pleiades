@@ -7,24 +7,8 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package configuration
+package eventing
 
-import (
-	vip "github.com/spf13/viper"
+const (
+	ShardConfigStream string = "system.raftv1.shard-config"
 )
-
-var (
-	viper *vip.Viper
-)
-
-
-func init() {
-	viper = vip.New()
-}
-
-func Get() *vip.Viper {
-	if viper == nil {
-		viper = vip.New()
-	}
-	return viper
-}

@@ -49,17 +49,17 @@ func (t *shardManagerTestSuite) SetupSuite() {
 
 func (t *shardManagerTestSuite) TestAddReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -77,7 +77,7 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NoError(err, "there must not be an error when starting the second node")
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -92,7 +92,7 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -105,17 +105,17 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 
 func (t *shardManagerTestSuite) TestAddShardObserver() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -133,7 +133,7 @@ func (t *shardManagerTestSuite) TestAddShardObserver() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NoError(err, "there must not be an error when starting the second node")
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -148,7 +148,7 @@ func (t *shardManagerTestSuite) TestAddShardObserver() {
 	err = shardManager.AddReplicaObserver(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -161,17 +161,17 @@ func (t *shardManagerTestSuite) TestAddShardObserver() {
 
 func (t *shardManagerTestSuite) TestAddShardWitness() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -189,7 +189,7 @@ func (t *shardManagerTestSuite) TestAddShardWitness() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NoError(err, "there must not be an error when starting the second node")
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -204,7 +204,7 @@ func (t *shardManagerTestSuite) TestAddShardWitness() {
 	err = shardManager.AddReplicaWitness(testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()), utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add an observer")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -217,17 +217,17 @@ func (t *shardManagerTestSuite) TestAddShardWitness() {
 
 func (t *shardManagerTestSuite) TestDeleteReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -245,7 +245,7 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
 	secondNodeClusterConfig := dconfig.Config{
@@ -258,7 +258,7 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -280,17 +280,17 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 
 func (t *shardManagerTestSuite) TestGetLeaderId() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -308,7 +308,7 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
 	secondNodeClusterConfig := dconfig.Config{
@@ -321,7 +321,7 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 	
@@ -333,17 +333,17 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 
 func (t *shardManagerTestSuite) TestGetShardMembers() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -367,7 +367,7 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
 	secondNodeClusterConfig := dconfig.Config{
@@ -380,7 +380,7 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -393,11 +393,11 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 
 func (t *shardManagerTestSuite) TestNewShard() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId := firstNodeClusterConfig.ClusterID
 
 	err := shardManager.NewShard(testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
@@ -427,17 +427,17 @@ func (t *shardManagerTestSuite) TestNewShard() {
 
 func (t *shardManagerTestSuite) TestRemoveData() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -455,7 +455,7 @@ func (t *shardManagerTestSuite) TestRemoveData() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NoError(err, "there must not be an error when starting the second node")
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -472,7 +472,7 @@ func (t *shardManagerTestSuite) TestRemoveData() {
 	err = shardManager.nh.SyncRequestAddNode(ctx, testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()),0)
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -492,17 +492,17 @@ func (t *shardManagerTestSuite) TestRemoveData() {
 
 func (t *shardManagerTestSuite) TestRemoveReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -520,7 +520,7 @@ func (t *shardManagerTestSuite) TestRemoveReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondNode := buildTestNodeHost(t.T())
+	secondNode := utils.BuildTestNodeHost(t.T())
 	t.Require().NoError(err, "there must not be an error when starting the second node")
 	t.Require().NotNil(secondNode, "secondNode must not be nil")
 
@@ -537,7 +537,7 @@ func (t *shardManagerTestSuite) TestRemoveReplica() {
 	err = shardManager.nh.SyncRequestAddNode(ctx, testShardId, secondNodeClusterConfig.NodeID, dragonboat.Target(secondNode.RaftAddress()),0)
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 
-	err = secondNode.StartCluster(nil, true, newTestStateMachine, secondNodeClusterConfig)
+	err = secondNode.StartCluster(nil, true, utils.NewTestStateMachine, secondNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(t.extendedDefaultTimeout)
 
@@ -560,7 +560,7 @@ func (t *shardManagerTestSuite) TestRemoveReplica() {
 
 func (t *shardManagerTestSuite) TestStartReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	firstShardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(firstShardManager, "firstShardManager must not be nil")
 
@@ -583,7 +583,7 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondTestHost := buildTestNodeHost(t.T())
+	secondTestHost := utils.BuildTestNodeHost(t.T())
 	secondShardManager := newShardManager(secondTestHost, t.logger)
 	t.Require().NotNil(secondShardManager, "firstShardManager must not be nil")
 
@@ -606,7 +606,7 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 
 func (t *shardManagerTestSuite) TestStartObserverReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	firstShardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(firstShardManager, "firstShardManager must not be nil")
 
@@ -629,7 +629,7 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 		cs.ProposalCompleted()
 	}
 
-	secondTestHost := buildTestNodeHost(t.T())
+	secondTestHost := utils.BuildTestNodeHost(t.T())
 	secondShardManager := newShardManager(secondTestHost, t.logger)
 	t.Require().NotNil(secondShardManager, "firstShardManager must not be nil")
 
@@ -652,17 +652,17 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 
 func (t *shardManagerTestSuite) TestStopReplica() {
 
-	firstTestHost := buildTestNodeHost(t.T())
+	firstTestHost := utils.BuildTestNodeHost(t.T())
 	shardManager := newShardManager(firstTestHost, t.logger)
 	t.Require().NotNil(shardManager, "raftShardManager must not be nil")
 
 	testShardId := uint64(0)
-	firstNodeClusterConfig := buildTestShardConfig(t.T())
+	firstNodeClusterConfig := utils.BuildTestShardConfig(t.T())
 	testShardId = firstNodeClusterConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[firstNodeClusterConfig.NodeID] = shardManager.nh.RaftAddress()
 
-	err := shardManager.nh.StartCluster(nodeClusters, false, newTestStateMachine, firstNodeClusterConfig)
+	err := shardManager.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, firstNodeClusterConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
