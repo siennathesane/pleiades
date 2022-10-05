@@ -18,6 +18,29 @@ export const StateMachineType = proto3.makeEnum(
 );
 
 /**
+ * @generated from message raft.v1.ShardStateEvent
+ */
+export const ShardStateEvent = proto3.makeMessageType(
+  "raft.v1.ShardStateEvent",
+  () => [
+    { no: 1, name: "cmd", kind: "enum", T: proto3.getEnumType(ShardStateEvent_CmdType) },
+    { no: 2, name: "event", kind: "message", T: ShardState },
+  ],
+);
+
+/**
+ * @generated from enum raft.v1.ShardStateEvent.CmdType
+ */
+export const ShardStateEvent_CmdType = proto3.makeEnum(
+  "raft.v1.ShardStateEvent.CmdType",
+  [
+    {no: 0, name: "CMD_TYPE_UNSPECIFIED", localName: "UNSPECIFIED"},
+    {no: 1, name: "CMD_TYPE_PUT", localName: "PUT"},
+    {no: 2, name: "CMD_TYPE_DELETE", localName: "DELETE"},
+  ],
+);
+
+/**
  * @generated from message raft.v1.ShardState
  */
 export const ShardState = proto3.makeMessageType(
