@@ -42,10 +42,10 @@ func (smt *TransactionManagerTestSuite) SetupSuite() {
 	smt.logger = utils.NewTestLogger(smt.T())
 	smt.defaultTimeout = 500 * time.Millisecond
 
-	smt.nh = utils.buildTestNodeHost(smt.T())
+	smt.nh = utils.BuildTestNodeHost(smt.T())
 	smt.Require().NotNil(smt.nh, "node must not be nil")
 
-	shardConfig := utils.buildTestShardConfig(smt.T())
+	shardConfig := utils.BuildTestShardConfig(smt.T())
 	smt.shardId = shardConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[shardConfig.NodeID] = smt.nh.RaftAddress()

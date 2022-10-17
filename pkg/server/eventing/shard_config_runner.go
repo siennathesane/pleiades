@@ -11,11 +11,12 @@ package eventing
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm"
+	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -24,7 +25,7 @@ import (
 
 func NewShardConfigRunner(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) (*shardConfigRunner, error) {
 	l := logger.With().Str("component", "shard-config").Logger()
-	srv, err := newServer(logger)
+	srv, err := NewServer(logger)
 	if err != nil {
 		return nil, err
 	}
@@ -36,24 +37,7 @@ func NewShardConfigRunner(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) 
 
 	done := make(chan struct{})
 
-	runner := &shardConfigRunner{logger: l, msgServ: srv, store: store, done: done}
-	client, err := runner.msgServ.GetStreamClient()
-	if err != nil {
-		return nil, err
-	}
-
-	streamName := strings.Split(ShardConfigStream, ".")
-	_, err = client.AddStream(&nats.StreamConfig{
-		Name:      streamName[len(streamName)-1],
-		Subjects:  []string{ShardConfigStream},
-		Retention: nats.WorkQueuePolicy,
-		Discard:   nats.DiscardOld,
-		Storage:   nats.MemoryStorage,
-	})
-	if err != nil {
-		return nil, err
-	}
-
+	runner := &shardConfigRunner{logger: l, msgServ: srv, store: store, done: done, nh: nodeHost}
 	go runner.run()
 
 	return runner, nil
@@ -61,9 +45,9 @@ func NewShardConfigRunner(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) 
 
 type shardConfigRunner struct {
 	logger  zerolog.Logger
-	msgServ *server
+	msgServ *Server
 	store   *fsm.ShardStore
-	nh *dragonboat.NodeHost
+	nh      *dragonboat.NodeHost
 	done    chan struct{}
 }
 
@@ -73,72 +57,99 @@ func (s *shardConfigRunner) run() {
 		s.logger.Fatal().Err(err).Msg("can't talk to nats")
 	}
 
-	listener := make(chan *nats.Msg)
-	sub, err := client.ChanSubscribe(ShardConfigStream, listener)
+	sub, err := client.PullSubscribe(ShardConfigStream, "shard-runner", nats.BindStream(SystemStreamName))
 	if err != nil {
 		s.logger.Fatal().Err(err).Msg("can't subscribe to stream")
 	}
 	defer sub.Unsubscribe()
 
-	for msg := range listener {
-		go func(msg *nats.Msg) {
-			payload := &raftv1.ShardStateEvent{}
-			err := payload.UnmarshalVT(msg.Data)
+	for {
+		msg, err := sub.Fetch(1)
+		if err != nil {
+			if errors.Is(err, nats.ErrTimeout) {
+				continue
+			}
+			s.logger.Error().Err(err).Msg("cant fetch message")
+		}
+		if len(msg) == 0 {
+			continue
+		}
+		go s.handleMsg(msg[0])
+		select {
+		case <- s.done:
+			return
+		}
+	}
+}
+
+func (s *shardConfigRunner) handleMsg(msg *nats.Msg) {
+	err := msg.Ack()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("error acknowledging message processing")
+	}
+
+	payload := &raftv1.ShardStateEvent{}
+	err = payload.UnmarshalVT(msg.Data)
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't unmarshal shard message payload")
+		return
+	}
+
+	if payload.GetEvent() == nil {
+		s.logger.Error().Msg("empty event")
+		return
+	}
+
+	switch payload.GetCmd() {
+	case raftv1.ShardStateEvent_CMD_TYPE_PUT:
+
+		event := payload.GetEvent()
+		var memberState *dragonboat.Membership
+
+		for memberState == nil {
+			ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+			memberState, err = s.nh.SyncGetClusterMembership(ctx, event.GetShardId())
 			if err != nil {
-				s.logger.Error().Err(err).Msg("can't unmarshal shard message payload")
-				return
+				s.logger.Error().Err(err).Msg("can't get shard state")
+				cancel()
+				utils.Wait(100*time.Millisecond)
+				continue
 			}
+			cancel()
+		}
 
-			if payload.GetEvent() == nil {
-				s.logger.Error().Msg("empty event")
-				return
-			}
-
-			switch payload.GetCmd() {
-			case raftv1.ShardStateEvent_CMD_TYPE_PUT:
-				ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
-				defer cancel()
-
-				memberState, err := s.nh.SyncGetClusterMembership(ctx, payload.GetEvent().GetShardId())
-				if err != nil {
-					s.logger.Error().Err(err).Msg("can't get shard state")
-					return
+		shardState := &raftv1.ShardState{
+			LastUpdated:    timestamppb.Now(),
+			ShardId:        payload.GetEvent().GetShardId(),
+			ConfigChangeId: memberState.ConfigChangeID,
+			Replicas:       memberState.Nodes,
+			Observers:      memberState.Observers,
+			Witnesses:      memberState.Witnesses,
+			Removed: func() map[uint64]string {
+				m := make(map[uint64]string)
+				for k, _ := range memberState.Removed {
+					m[k] = ""
 				}
+				return m
+			}(),
+			Type: 0,
+		}
+		s.logger.Trace().
+			Int64("last-updated", shardState.LastUpdated.Seconds).
+			Uint64("shard-id", shardState.GetShardId()).
+			Uint64("config-change-id", shardState.GetConfigChangeId()).
+			Msg("shard state")
 
-				shardState := &raftv1.ShardState{
-					LastUpdated:    timestamppb.Now(),
-					ShardId:        payload.GetEvent().GetShardId(),
-					ConfigChangeId: memberState.ConfigChangeID,
-					Replicas:       memberState.Nodes,
-					Observers:      memberState.Observers,
-					Witnesses:      memberState.Witnesses,
-					Removed: func() map[uint64]string {
-						m := make(map[uint64]string)
-						for k, _ := range memberState.Removed {
-							m[k] = ""
-						}
-						return m
-					}(),
-					Type: 0,
-				}
-
-				if err := s.store.Put(shardState); err != nil {
-					s.logger.Error().Err(err).Msg("can't store shard event")
-					break
-				}
-			case raftv1.ShardStateEvent_CMD_TYPE_DELETE:
-				if err := s.store.Delete(payload.GetEvent().GetShardId()); err != nil {
-					s.logger.Error().Err(err).Msg("can't store shard event")
-					break
-				}
-			default:
-				break
-			}
-
-			err = msg.Ack()
-			if err != nil {
-				s.logger.Error().Err(err).Msg("error acknowledging message processing")
-			}
-		}(msg)
+		if err := s.store.Put(shardState); err != nil {
+			s.logger.Error().Err(err).Msg("can't store shard event")
+			break
+		}
+	case raftv1.ShardStateEvent_CMD_TYPE_DELETE:
+		if err := s.store.Delete(payload.GetEvent().GetShardId()); err != nil {
+			s.logger.Error().Err(err).Msg("can't store shard event")
+			break
+		}
+	default:
+		break
 	}
 }

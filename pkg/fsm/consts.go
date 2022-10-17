@@ -14,5 +14,5 @@ const (
 	// ref: https://go.dev/play/p/hvhaWYwufx1
 	dbDirModeVal  int = 484
 
-	shardConfigBucket string = "shards"
+	ShardConfigBucket string = "shards"
 )

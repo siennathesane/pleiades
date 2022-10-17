@@ -14,8 +14,9 @@ import (
 	"time"
 
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
+	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/server/eventing"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
@@ -91,19 +92,15 @@ var (
 	errNoConfigChangeId = errors.New("no config change id")
 )
 
-func newShardManager(nodeHost *dragonboat.NodeHost, logger zerolog.Logger) *raftShardManager {
+func newShardManager(nodeHost *dragonboat.NodeHost, client *messaging.EmbeddedMessagingStreamClient, logger zerolog.Logger) *raftShardManager {
 	l := logger.With().Str("component", "shard-manager").Logger()
-	s, err := fsm.NewShardStore(l)
-	if err != nil {
-		l.Fatal().Err(err).Msg("can't create shard store")
-	}
-	return &raftShardManager{l, nodeHost, s}
+	return &raftShardManager{l, nodeHost, client}
 }
 
 type raftShardManager struct {
-	logger     zerolog.Logger
-	nh         *dragonboat.NodeHost
-	shardStore *fsm.ShardStore
+	logger zerolog.Logger
+	nh     *dragonboat.NodeHost
+	client *messaging.EmbeddedMessagingStreamClient
 }
 
 func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
@@ -389,7 +386,6 @@ func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-// todo (sienna): implement this via the message bus instead of inlining it
 func (c *raftShardManager) storeShardState(shardId uint64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
@@ -400,7 +396,7 @@ func (c *raftShardManager) storeShardState(shardId uint64) error {
 		return err
 	}
 
-	return c.shardStore.Put(&raftv1.ShardState{
+	msg := &raftv1.ShardState{
 		LastUpdated:    timestamppb.Now(),
 		ShardId:        shardId,
 		ConfigChangeId: memberState.ConfigChangeID,
@@ -415,7 +411,20 @@ func (c *raftShardManager) storeShardState(shardId uint64) error {
 			return m
 		}(),
 		Type: 0,
-	})
+	}
+
+	payload, err := msg.MarshalVT()
+	if err != nil {
+		c.logger.Error().Err(err).Msg("can't marshal shard state message")
+		return err
+	}
+
+	_, err = c.client.Publish(eventing.ShardConfigStream, payload)
+	if err != nil {
+		c.logger.Error().Err(err).Msg("can't publish shard state event")
+	}
+
+	return nil
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {
