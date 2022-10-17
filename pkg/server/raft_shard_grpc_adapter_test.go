@@ -18,6 +18,7 @@ import (
 	"time"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
@@ -45,11 +46,21 @@ type RaftShardGrpcAdapterTestSuite struct {
 	testShardManager       *raftShardManager
 	defaultTimeout         time.Duration
 	extendedDefaultTimeout time.Duration
+	nats                   *messaging.EmbeddedMessaging
+	client                 *messaging.EmbeddedMessagingStreamClient
 }
 
 // SetupTest represents a remote Pleiades host
 func (t *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	t.logger = utils.NewTestLogger(t.T())
+
+	m, err := messaging.NewEmbeddedMessagingWithDefaults()
+	t.Require().NoError(err, "there must not be an error when creating the embedded nats")
+	t.nats = m
+
+	client, err := t.nats.GetStreamClient()
+	t.Require().NoError(err)
+	t.client = client
 
 	buffer := 1024 * 1024
 	listener := bufconn.Listen(buffer)
@@ -62,14 +73,14 @@ func (t *RaftShardGrpcAdapterTestSuite) SetupTest() {
 	t.defaultTimeout = 300 * time.Millisecond
 	t.extendedDefaultTimeout = 500 * time.Millisecond
 
-	t.testShardManager = newShardManager(utils.BuildTestNodeHost(t.T()), t.logger)
+	t.testShardManager = newShardManager(utils.BuildTestNodeHost(t.T()), t.client, t.logger)
 
 	t.adapter = &raftShardGrpcAdapter{
 		logger:       t.logger,
 		shardManager: t.testShardManager,
 	}
 
-	err := t.adapter.shardManager.NewShard(t.testShardId, t.testClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
+	err = t.adapter.shardManager.NewShard(t.testShardId, t.testClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
 	t.Require().NoError(err, "there must not be an error when starting the test shard")
 	utils.Wait(t.defaultTimeout)
 
@@ -322,10 +333,10 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplica() {
 	localNodeHost := utils.BuildTestNodeHost(t.T())
 	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.ClusterID = currentTestShard
-	localShardManager := newShardManager(localNodeHost, t.logger)
+	localShardManager := newShardManager(localNodeHost, t.client, t.logger)
 
 	// and then wire it to a server.
-	listener := bufconn.Listen(1024*1024)
+	listener := bufconn.Listen(1024 * 1024)
 	ctx := context.Background()
 	srv := grpc.NewServer()
 	adapter := &raftShardGrpcAdapter{
@@ -391,10 +402,10 @@ func (t *RaftShardGrpcAdapterTestSuite) TestStartReplicaObserver() {
 	localNodeHost := utils.BuildTestNodeHost(t.T())
 	shardConfig := utils.BuildTestShardConfig(t.T())
 	shardConfig.ClusterID = currentTestShard
-	localShardManager := newShardManager(localNodeHost, t.logger)
+	localShardManager := newShardManager(localNodeHost, t.client, t.logger)
 
 	// and then wire it to a server.
-	listener := bufconn.Listen(1024*1024)
+	listener := bufconn.Listen(1024 * 1024)
 	ctx := context.Background()
 	srv := grpc.NewServer()
 	adapter := &raftShardGrpcAdapter{

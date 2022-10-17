@@ -15,6 +15,7 @@ import (
 	"github.com/mxplusb/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/api/raft/v1/raftv1connect"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/server/eventing"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -27,9 +28,8 @@ func init() {
 }
 
 type Options struct {
-	GRPCPort                int
-	EmbeddedEventStreamPort int
-	RaftPort                int
+	GRPCPort int
+	RaftPort int
 }
 
 type Server struct {
@@ -39,6 +39,7 @@ type Server struct {
 	raftShard              IShardManager
 	raftTransactionManager ITransactionManager
 	bboltStoreManager      IKVStore
+	eventServer            *eventing.Server
 }
 
 func New(nhc dconfig.NodeHostConfig, mux *http.ServeMux, logger zerolog.Logger) (*Server, error) {
@@ -51,6 +52,11 @@ func New(nhc dconfig.NodeHostConfig, mux *http.ServeMux, logger zerolog.Logger) 
 		return nil, errors.Wrap(err, "can't start node host")
 	}
 
+	srv.eventServer, err = eventing.NewServer(logger)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't instantiate nats")
+	}
+
 	rh := newRaftHost(nh, logger)
 	rhAdapter := &raftHostConnectAdapter{
 		logger: logger,
@@ -60,7 +66,11 @@ func New(nhc dconfig.NodeHostConfig, mux *http.ServeMux, logger zerolog.Logger) 
 	mux.Handle(path, handler)
 	srv.raftHost = rh
 
-	sm := newShardManager(nh, logger)
+	shardManagerClient, err := srv.eventServer.GetStreamClient()
+	if err != nil {
+		return nil, errors.Wrap(err, "can't create stream client")
+	}
+	sm := newShardManager(nh, shardManagerClient, logger)
 	smAdapter := &raftShardConnectAdapter{
 		logger:       logger,
 		shardManager: sm,

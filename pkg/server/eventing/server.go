@@ -11,14 +11,19 @@ package eventing
 
 import (
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 )
 
-var (
-	serverSingleton *server
+const (
+	SystemStreamName = "system"
 )
 
-func newServer(logger zerolog.Logger) (*server, error) {
+var (
+	serverSingleton *Server
+)
+
+func NewServer(logger zerolog.Logger) (*Server, error) {
 	if serverSingleton != nil {
 		return serverSingleton, nil
 	}
@@ -28,12 +33,29 @@ func newServer(logger zerolog.Logger) (*server, error) {
 		return nil, err
 	}
 
-	serverSingleton = &server{srv, logger.With().Str("component", "eventing").Logger()}
+	serverSingleton = &Server{srv, logger.With().Str("component", "eventing").Logger()}
+
+	client, err := serverSingleton.GetStreamClient()
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = client.AddStream(&nats.StreamConfig{
+		Name: SystemStreamName,
+		Description: "All internal system streams",
+		Subjects: []string{"system.>"},
+		Retention: nats.WorkQueuePolicy,
+		Discard:   nats.DiscardOld,
+		Storage:   nats.MemoryStorage,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	return serverSingleton, nil
 }
 
-type server struct {
+type Server struct {
 	*messaging.EmbeddedMessaging
 	logger zerolog.Logger
 }

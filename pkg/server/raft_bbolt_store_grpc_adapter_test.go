@@ -20,6 +20,7 @@ import (
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -44,6 +45,8 @@ type raftBboltStoreManagerGrpcAdapterTestSuite struct {
 	nh             *dragonboat.NodeHost
 	rh             *raftHost
 	defaultTimeout time.Duration
+	nats   *messaging.EmbeddedMessaging
+	client *messaging.EmbeddedMessagingStreamClient
 }
 
 func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
@@ -53,9 +56,17 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
 	// ensure that bbolt uses the temp directory
 	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
 
+	m, err := messaging.NewEmbeddedMessagingWithDefaults()
+	t.Require().NoError(err, "there must not be an error when creating the embedded nats")
+	t.nats = m
+
+	client, err := t.nats.GetStreamClient()
+	t.Require().NoError(err)
+	t.client = client
+
 	t.nh = utils.BuildTestNodeHost(t.T())
 	t.tm = newTransactionManager(t.nh, t.logger)
-	t.sm = newShardManager(t.nh, t.logger)
+	t.sm = newShardManager(t.nh, t.client, t.logger)
 	t.storem = newBboltStoreManager(t.tm, t.nh, t.logger)
 
 	// shardLimit+1
