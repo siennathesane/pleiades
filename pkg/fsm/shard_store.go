@@ -46,7 +46,7 @@ type ShardStore struct {
 func (s *ShardStore) GetAll() ([]*raftv1.ShardState, error) {
 	reqs := make([]*raftv1.ShardState, 0)
 	err := s.db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(shardConfigBucket))
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
 			return errors.New("no shards configured")
 		}
@@ -73,7 +73,7 @@ func (s *ShardStore) GetAll() ([]*raftv1.ShardState, error) {
 func (s *ShardStore) Get(shardId uint64) (*raftv1.ShardState, error) {
 	req := &raftv1.ShardState{}
 	err := s.db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(shardConfigBucket))
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
 			return errors.New("no shards configured")
 		}
@@ -97,7 +97,7 @@ func (s *ShardStore) Get(shardId uint64) (*raftv1.ShardState, error) {
 
 func (s *ShardStore) Put(req *raftv1.ShardState) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(shardConfigBucket))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(ShardConfigBucket))
 		if err != nil {
 			s.logger.Trace().Err(err).Msg("can't open shard config bucket")
 			return err
@@ -118,7 +118,7 @@ func (s *ShardStore) Put(req *raftv1.ShardState) error {
 
 func (s *ShardStore) Delete(shardId uint64) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(shardConfigBucket))
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
 			return errors.New("no shards configured")
 		}
