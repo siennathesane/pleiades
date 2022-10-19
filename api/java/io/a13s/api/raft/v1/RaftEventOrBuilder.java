@@ -119,5 +119,20 @@ public interface RaftEventOrBuilder extends
    */
   io.a13s.api.raft.v1.RaftHostShutdownOrBuilder getHostShutdownOrBuilder();
 
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   * @return Whether the leaderUpdate field is set.
+   */
+  boolean hasLeaderUpdate();
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   * @return The leaderUpdate.
+   */
+  io.a13s.api.raft.v1.RaftLeaderInfo getLeaderUpdate();
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   */
+  io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder getLeaderUpdateOrBuilder();
+
   public io.a13s.api.raft.v1.RaftEvent.EventCase getEventCase();
 }

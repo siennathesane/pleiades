@@ -146,6 +146,7 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fevent_2eproto::offsets[] PROTOBUF_
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
   ::_pbi::kInvalidFieldOffsetTag,
+  ::_pbi::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftEvent, _impl_.event_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::RaftLeaderInfo, _internal_metadata_),
@@ -201,12 +202,12 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fevent_2eproto::offsets[] PROTOBUF_
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::raft::v1::RaftEvent)},
-  { 15, -1, -1, sizeof(::raft::v1::RaftLeaderInfo)},
-  { 25, -1, -1, sizeof(::raft::v1::RaftLogEntryEvent)},
-  { 34, -1, -1, sizeof(::raft::v1::RaftSnapshotEvent)},
-  { 44, -1, -1, sizeof(::raft::v1::RaftConnectionEvent)},
-  { 52, -1, -1, sizeof(::raft::v1::RaftNodeEvent)},
-  { 60, -1, -1, sizeof(::raft::v1::RaftHostShutdown)},
+  { 16, -1, -1, sizeof(::raft::v1::RaftLeaderInfo)},
+  { 26, -1, -1, sizeof(::raft::v1::RaftLogEntryEvent)},
+  { 35, -1, -1, sizeof(::raft::v1::RaftSnapshotEvent)},
+  { 45, -1, -1, sizeof(::raft::v1::RaftConnectionEvent)},
+  { 53, -1, -1, sizeof(::raft::v1::RaftNodeEvent)},
+  { 61, -1, -1, sizeof(::raft::v1::RaftHostShutdown)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -221,7 +222,7 @@ static const ::_pb::Message* const file_default_instances[] = {
 
 const char descriptor_table_protodef_raft_2fv1_2fraft_5fevent_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\030raft/v1/raft_event.proto\022\007raft.v1\032\037goo"
-  "gle/protobuf/timestamp.proto\"\301\003\n\tRaftEve"
+  "gle/protobuf/timestamp.proto\"\201\004\n\tRaftEve"
   "nt\022$\n\003typ\030\001 \001(\0162\022.raft.v1.EventTypeR\003typ"
   "\022&\n\006action\030\002 \001(\0162\016.raft.v1.EventR\006action"
   "\0228\n\ttimestamp\030\003 \001(\0132\032.google.protobuf.Ti"
@@ -232,49 +233,50 @@ const char descriptor_table_protodef_raft_2fv1_2fraft_5fevent_2eproto[] PROTOBUF
   "ft.v1.RaftConnectionEventH\000R\nconnection\022"
   ",\n\004node\030\007 \001(\0132\026.raft.v1.RaftNodeEventH\000R"
   "\004node\022@\n\rhost_shutdown\030\010 \001(\0132\031.raft.v1.R"
-  "aftHostShutdownH\000R\014hostShutdownB\007\n\005event"
-  "\"{\n\016RaftLeaderInfo\022\031\n\010shard_id\030\001 \001(\004R\007sh"
-  "ardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\022\n\004"
-  "term\030\003 \001(\004R\004term\022\033\n\tleader_id\030\004 \001(\004R\010lea"
-  "derId\"c\n\021RaftLogEntryEvent\022\031\n\010shard_id\030\001"
-  " \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\trepli"
-  "caId\022\024\n\005index\030\003 \001(\004R\005index\"\207\001\n\021RaftSnaps"
-  "hotEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nr"
-  "eplica_id\030\002 \001(\004R\treplicaId\022\035\n\nfrom_index"
-  "\030\003 \001(\004R\tfromIndex\022\031\n\010to_index\030\004 \001(\004R\007toI"
-  "ndex\"P\n\023RaftConnectionEvent\022\030\n\007address\030\001"
-  " \001(\tR\007address\022\037\n\013is_snapshot\030\002 \001(\010R\nisSn"
-  "apshot\"I\n\rRaftNodeEvent\022\031\n\010shard_id\030\001 \001("
-  "\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaI"
-  "d\"\022\n\020RaftHostShutdown*\264\001\n\tEventType\022\032\n\026E"
-  "VENT_TYPE_UNSPECIFIED\020\000\022\030\n\024EVENT_TYPE_LO"
-  "G_ENTRY\020\001\022\027\n\023EVENT_TYPE_SNAPSHOT\020\002\022\031\n\025EV"
-  "ENT_TYPE_CONNECTION\020\003\022\023\n\017EVENT_TYPE_HOST"
-  "\020\004\022\023\n\017EVENT_TYPE_NODE\020\005\022\023\n\017EVENT_TYPE_RA"
-  "FT\020\006*\365\003\n\005Event\022\025\n\021EVENT_UNSPECIFIED\020\000\022 \n"
-  "\034EVENT_CONNECTION_ESTABLISHED\020\001\022\033\n\027EVENT"
-  "_CONNECTION_FAILED\020\002\022\027\n\023EVENT_LOG_COMPAC"
-  "TED\020\003\022\031\n\025EVENT_LOGDB_COMPACTED\020\004\022\034\n\030EVEN"
-  "T_MEMBERSHIP_CHANGED\020\005\022!\n\035EVENT_NODE_HOS"
-  "T_SHUTTING_DOWN\020\006\022\024\n\020EVENT_NODE_READY\020\007\022"
-  "\027\n\023EVENT_NODE_UNLOADED\020\010\022\037\n\033EVENT_SEND_S"
-  "NAPSHOT_ABORTED\020\t\022!\n\035EVENT_SEND_SNAPSHOT"
-  "_COMPLETED\020\n\022\037\n\033EVENT_SEND_SNAPSHOT_STAR"
-  "TED\020\013\022\034\n\030EVENT_SNAPSHOT_COMPACTED\020\014\022\032\n\026E"
-  "VENT_SNAPSHOT_CREATED\020\r\022\033\n\027EVENT_SNAPSHO"
-  "T_RECEIVED\020\016\022\034\n\030EVENT_SNAPSHOT_RECOVERED"
-  "\020\017\022\030\n\024EVENT_LEADER_UPDATED\020\020B~\n\023io.a13s."
-  "api.raft.v1B\016RaftEventProtoP\001Z\032a13s.io/a"
-  "pi/raft/v1;raftv1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft"
-  "\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010Raft::V1b\006pr"
-  "oto3"
+  "aftHostShutdownH\000R\014hostShutdown\022>\n\rleade"
+  "r_update\030\t \001(\0132\027.raft.v1.RaftLeaderInfoH"
+  "\000R\014leaderUpdateB\007\n\005event\"{\n\016RaftLeaderIn"
+  "fo\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica"
+  "_id\030\002 \001(\004R\treplicaId\022\022\n\004term\030\003 \001(\004R\004term"
+  "\022\033\n\tleader_id\030\004 \001(\004R\010leaderId\"c\n\021RaftLog"
+  "EntryEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n"
+  "\nreplica_id\030\002 \001(\004R\treplicaId\022\024\n\005index\030\003 "
+  "\001(\004R\005index\"\207\001\n\021RaftSnapshotEvent\022\031\n\010shar"
+  "d_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R"
+  "\treplicaId\022\035\n\nfrom_index\030\003 \001(\004R\tfromInde"
+  "x\022\031\n\010to_index\030\004 \001(\004R\007toIndex\"P\n\023RaftConn"
+  "ectionEvent\022\030\n\007address\030\001 \001(\tR\007address\022\037\n"
+  "\013is_snapshot\030\002 \001(\010R\nisSnapshot\"I\n\rRaftNo"
+  "deEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nre"
+  "plica_id\030\002 \001(\004R\treplicaId\"\022\n\020RaftHostShu"
+  "tdown*\264\001\n\tEventType\022\032\n\026EVENT_TYPE_UNSPEC"
+  "IFIED\020\000\022\030\n\024EVENT_TYPE_LOG_ENTRY\020\001\022\027\n\023EVE"
+  "NT_TYPE_SNAPSHOT\020\002\022\031\n\025EVENT_TYPE_CONNECT"
+  "ION\020\003\022\023\n\017EVENT_TYPE_HOST\020\004\022\023\n\017EVENT_TYPE"
+  "_NODE\020\005\022\023\n\017EVENT_TYPE_RAFT\020\006*\365\003\n\005Event\022\025"
+  "\n\021EVENT_UNSPECIFIED\020\000\022 \n\034EVENT_CONNECTIO"
+  "N_ESTABLISHED\020\001\022\033\n\027EVENT_CONNECTION_FAIL"
+  "ED\020\002\022\027\n\023EVENT_LOG_COMPACTED\020\003\022\031\n\025EVENT_L"
+  "OGDB_COMPACTED\020\004\022\034\n\030EVENT_MEMBERSHIP_CHA"
+  "NGED\020\005\022!\n\035EVENT_NODE_HOST_SHUTTING_DOWN\020"
+  "\006\022\024\n\020EVENT_NODE_READY\020\007\022\027\n\023EVENT_NODE_UN"
+  "LOADED\020\010\022\037\n\033EVENT_SEND_SNAPSHOT_ABORTED\020"
+  "\t\022!\n\035EVENT_SEND_SNAPSHOT_COMPLETED\020\n\022\037\n\033"
+  "EVENT_SEND_SNAPSHOT_STARTED\020\013\022\034\n\030EVENT_S"
+  "NAPSHOT_COMPACTED\020\014\022\032\n\026EVENT_SNAPSHOT_CR"
+  "EATED\020\r\022\033\n\027EVENT_SNAPSHOT_RECEIVED\020\016\022\034\n\030"
+  "EVENT_SNAPSHOT_RECOVERED\020\017\022\030\n\024EVENT_LEAD"
+  "ER_UPDATED\020\020B~\n\023io.a13s.api.raft.v1B\016Raf"
+  "tEventProtoP\001Z\032a13s.io/api/raft/v1;raftv"
+  "1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GP"
+  "BMetadata\352\002\010Raft::V1b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_raft_2fv1_2fraft_5fevent_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2ftimestamp_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_raft_2fv1_2fraft_5fevent_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_raft_2fv1_2fraft_5fevent_2eproto = {
-    false, false, 1884, descriptor_table_protodef_raft_2fv1_2fraft_5fevent_2eproto,
+    false, false, 1948, descriptor_table_protodef_raft_2fv1_2fraft_5fevent_2eproto,
     "raft/v1/raft_event.proto",
     &descriptor_table_raft_2fv1_2fraft_5fevent_2eproto_once, descriptor_table_raft_2fv1_2fraft_5fevent_2eproto_deps, 1, 7,
     schemas, file_default_instances, TableStruct_raft_2fv1_2fraft_5fevent_2eproto::offsets,
@@ -348,6 +350,7 @@ class RaftEvent::_Internal {
   static const ::raft::v1::RaftConnectionEvent& connection(const RaftEvent* msg);
   static const ::raft::v1::RaftNodeEvent& node(const RaftEvent* msg);
   static const ::raft::v1::RaftHostShutdown& host_shutdown(const RaftEvent* msg);
+  static const ::raft::v1::RaftLeaderInfo& leader_update(const RaftEvent* msg);
 };
 
 const ::PROTOBUF_NAMESPACE_ID::Timestamp&
@@ -373,6 +376,10 @@ RaftEvent::_Internal::node(const RaftEvent* msg) {
 const ::raft::v1::RaftHostShutdown&
 RaftEvent::_Internal::host_shutdown(const RaftEvent* msg) {
   return *msg->_impl_.event_.host_shutdown_;
+}
+const ::raft::v1::RaftLeaderInfo&
+RaftEvent::_Internal::leader_update(const RaftEvent* msg) {
+  return *msg->_impl_.event_.leader_update_;
 }
 void RaftEvent::clear_timestamp() {
   if (GetArenaForAllocation() == nullptr && _impl_.timestamp_ != nullptr) {
@@ -455,6 +462,21 @@ void RaftEvent::set_allocated_host_shutdown(::raft::v1::RaftHostShutdown* host_s
   }
   // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.host_shutdown)
 }
+void RaftEvent::set_allocated_leader_update(::raft::v1::RaftLeaderInfo* leader_update) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_event();
+  if (leader_update) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(leader_update);
+    if (message_arena != submessage_arena) {
+      leader_update = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, leader_update, submessage_arena);
+    }
+    set_has_leader_update();
+    _impl_.event_.leader_update_ = leader_update;
+  }
+  // @@protoc_insertion_point(field_set_allocated:raft.v1.RaftEvent.leader_update)
+}
 RaftEvent::RaftEvent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -504,6 +526,11 @@ RaftEvent::RaftEvent(const RaftEvent& from)
     case kHostShutdown: {
       _this->_internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(
           from._internal_host_shutdown());
+      break;
+    }
+    case kLeaderUpdate: {
+      _this->_internal_mutable_leader_update()->::raft::v1::RaftLeaderInfo::MergeFrom(
+          from._internal_leader_update());
       break;
     }
     case EVENT_NOT_SET: {
@@ -579,6 +606,12 @@ void RaftEvent::clear_event() {
     case kHostShutdown: {
       if (GetArenaForAllocation() == nullptr) {
         delete _impl_.event_.host_shutdown_;
+      }
+      break;
+    }
+    case kLeaderUpdate: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete _impl_.event_.leader_update_;
       }
       break;
     }
@@ -679,6 +712,14 @@ const char* RaftEvent::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx
         } else
           goto handle_unusual;
         continue;
+      // .raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];
+      case 9:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 74)) {
+          ptr = ctx->ParseMessage(_internal_mutable_leader_update(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
       default:
         goto handle_unusual;
     }  // switch
@@ -764,6 +805,13 @@ uint8_t* RaftEvent::_InternalSerialize(
         _Internal::host_shutdown(this).GetCachedSize(), target, stream);
   }
 
+  // .raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];
+  if (_internal_has_leader_update()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(9, _Internal::leader_update(this),
+        _Internal::leader_update(this).GetCachedSize(), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -835,6 +883,13 @@ size_t RaftEvent::ByteSizeLong() const {
           *_impl_.event_.host_shutdown_);
       break;
     }
+    // .raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];
+    case kLeaderUpdate: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *_impl_.event_.leader_update_);
+      break;
+    }
     case EVENT_NOT_SET: {
       break;
     }
@@ -891,6 +946,11 @@ void RaftEvent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROT
     case kHostShutdown: {
       _this->_internal_mutable_host_shutdown()->::raft::v1::RaftHostShutdown::MergeFrom(
           from._internal_host_shutdown());
+      break;
+    }
+    case kLeaderUpdate: {
+      _this->_internal_mutable_leader_update()->::raft::v1::RaftLeaderInfo::MergeFrom(
+          from._internal_leader_update());
       break;
     }
     case EVENT_NOT_SET: {
