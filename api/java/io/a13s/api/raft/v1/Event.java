@@ -72,6 +72,10 @@ public enum Event
    * <code>EVENT_SNAPSHOT_RECOVERED = 15;</code>
    */
   EVENT_SNAPSHOT_RECOVERED(15),
+  /**
+   * <code>EVENT_LEADER_UPDATED = 16;</code>
+   */
+  EVENT_LEADER_UPDATED(16),
   UNRECOGNIZED(-1),
   ;
 
@@ -139,6 +143,10 @@ public enum Event
    * <code>EVENT_SNAPSHOT_RECOVERED = 15;</code>
    */
   public static final int EVENT_SNAPSHOT_RECOVERED_VALUE = 15;
+  /**
+   * <code>EVENT_LEADER_UPDATED = 16;</code>
+   */
+  public static final int EVENT_LEADER_UPDATED_VALUE = 16;
 
 
   public final int getNumber() {
@@ -181,6 +189,7 @@ public enum Event
       case 13: return EVENT_SNAPSHOT_CREATED;
       case 14: return EVENT_SNAPSHOT_RECEIVED;
       case 15: return EVENT_SNAPSHOT_RECOVERED;
+      case 16: return EVENT_LEADER_UPDATED;
       default: return null;
     }
   }

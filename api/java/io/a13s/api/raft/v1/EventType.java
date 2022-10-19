@@ -32,6 +32,10 @@ public enum EventType
    * <code>EVENT_TYPE_NODE = 5;</code>
    */
   EVENT_TYPE_NODE(5),
+  /**
+   * <code>EVENT_TYPE_RAFT = 6;</code>
+   */
+  EVENT_TYPE_RAFT(6),
   UNRECOGNIZED(-1),
   ;
 
@@ -59,6 +63,10 @@ public enum EventType
    * <code>EVENT_TYPE_NODE = 5;</code>
    */
   public static final int EVENT_TYPE_NODE_VALUE = 5;
+  /**
+   * <code>EVENT_TYPE_RAFT = 6;</code>
+   */
+  public static final int EVENT_TYPE_RAFT_VALUE = 6;
 
 
   public final int getNumber() {
@@ -91,6 +99,7 @@ public enum EventType
       case 3: return EVENT_TYPE_CONNECTION;
       case 4: return EVENT_TYPE_HOST;
       case 5: return EVENT_TYPE_NODE;
+      case 6: return EVENT_TYPE_RAFT;
       default: return null;
     }
   }

@@ -17,6 +17,7 @@ export const EventType = proto3.makeEnum(
     {no: 3, name: "EVENT_TYPE_CONNECTION", localName: "CONNECTION"},
     {no: 4, name: "EVENT_TYPE_HOST", localName: "HOST"},
     {no: 5, name: "EVENT_TYPE_NODE", localName: "NODE"},
+    {no: 6, name: "EVENT_TYPE_RAFT", localName: "RAFT"},
   ],
 );
 
@@ -42,6 +43,7 @@ export const Event = proto3.makeEnum(
     {no: 13, name: "EVENT_SNAPSHOT_CREATED", localName: "SNAPSHOT_CREATED"},
     {no: 14, name: "EVENT_SNAPSHOT_RECEIVED", localName: "SNAPSHOT_RECEIVED"},
     {no: 15, name: "EVENT_SNAPSHOT_RECOVERED", localName: "SNAPSHOT_RECOVERED"},
+    {no: 16, name: "EVENT_LEADER_UPDATED", localName: "LEADER_UPDATED"},
   ],
 );
 
@@ -59,6 +61,19 @@ export const RaftEvent = proto3.makeMessageType(
     { no: 6, name: "connection", kind: "message", T: RaftConnectionEvent, oneof: "event" },
     { no: 7, name: "node", kind: "message", T: RaftNodeEvent, oneof: "event" },
     { no: 8, name: "host_shutdown", kind: "message", T: RaftHostShutdown, oneof: "event" },
+  ],
+);
+
+/**
+ * @generated from message raft.v1.RaftLeaderInfo
+ */
+export const RaftLeaderInfo = proto3.makeMessageType(
+  "raft.v1.RaftLeaderInfo",
+  () => [
+    { no: 1, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 2, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 3, name: "term", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 4, name: "leader_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
   ],
 );
 
