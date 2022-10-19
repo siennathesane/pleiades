@@ -58,6 +58,9 @@ extern RaftEventDefaultTypeInternal _RaftEvent_default_instance_;
 class RaftHostShutdown;
 struct RaftHostShutdownDefaultTypeInternal;
 extern RaftHostShutdownDefaultTypeInternal _RaftHostShutdown_default_instance_;
+class RaftLeaderInfo;
+struct RaftLeaderInfoDefaultTypeInternal;
+extern RaftLeaderInfoDefaultTypeInternal _RaftLeaderInfo_default_instance_;
 class RaftLogEntryEvent;
 struct RaftLogEntryEventDefaultTypeInternal;
 extern RaftLogEntryEventDefaultTypeInternal _RaftLogEntryEvent_default_instance_;
@@ -73,6 +76,7 @@ PROTOBUF_NAMESPACE_OPEN
 template<> ::raft::v1::RaftConnectionEvent* Arena::CreateMaybeMessage<::raft::v1::RaftConnectionEvent>(Arena*);
 template<> ::raft::v1::RaftEvent* Arena::CreateMaybeMessage<::raft::v1::RaftEvent>(Arena*);
 template<> ::raft::v1::RaftHostShutdown* Arena::CreateMaybeMessage<::raft::v1::RaftHostShutdown>(Arena*);
+template<> ::raft::v1::RaftLeaderInfo* Arena::CreateMaybeMessage<::raft::v1::RaftLeaderInfo>(Arena*);
 template<> ::raft::v1::RaftLogEntryEvent* Arena::CreateMaybeMessage<::raft::v1::RaftLogEntryEvent>(Arena*);
 template<> ::raft::v1::RaftNodeEvent* Arena::CreateMaybeMessage<::raft::v1::RaftNodeEvent>(Arena*);
 template<> ::raft::v1::RaftSnapshotEvent* Arena::CreateMaybeMessage<::raft::v1::RaftSnapshotEvent>(Arena*);
@@ -87,12 +91,13 @@ enum EventType : int {
   EVENT_TYPE_CONNECTION = 3,
   EVENT_TYPE_HOST = 4,
   EVENT_TYPE_NODE = 5,
+  EVENT_TYPE_RAFT = 6,
   EventType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   EventType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool EventType_IsValid(int value);
 constexpr EventType EventType_MIN = EVENT_TYPE_UNSPECIFIED;
-constexpr EventType EventType_MAX = EVENT_TYPE_NODE;
+constexpr EventType EventType_MAX = EVENT_TYPE_RAFT;
 constexpr int EventType_ARRAYSIZE = EventType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* EventType_descriptor();
@@ -126,12 +131,13 @@ enum Event : int {
   EVENT_SNAPSHOT_CREATED = 13,
   EVENT_SNAPSHOT_RECEIVED = 14,
   EVENT_SNAPSHOT_RECOVERED = 15,
+  EVENT_LEADER_UPDATED = 16,
   Event_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   Event_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool Event_IsValid(int value);
 constexpr Event Event_MIN = EVENT_UNSPECIFIED;
-constexpr Event Event_MAX = EVENT_SNAPSHOT_RECOVERED;
+constexpr Event Event_MAX = EVENT_LEADER_UPDATED;
 constexpr int Event_ARRAYSIZE = Event_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* Event_descriptor();
@@ -454,6 +460,187 @@ class RaftEvent final :
 };
 // -------------------------------------------------------------------
 
+class RaftLeaderInfo final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.v1.RaftLeaderInfo) */ {
+ public:
+  inline RaftLeaderInfo() : RaftLeaderInfo(nullptr) {}
+  ~RaftLeaderInfo() override;
+  explicit PROTOBUF_CONSTEXPR RaftLeaderInfo(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  RaftLeaderInfo(const RaftLeaderInfo& from);
+  RaftLeaderInfo(RaftLeaderInfo&& from) noexcept
+    : RaftLeaderInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline RaftLeaderInfo& operator=(const RaftLeaderInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline RaftLeaderInfo& operator=(RaftLeaderInfo&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const RaftLeaderInfo& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const RaftLeaderInfo* internal_default_instance() {
+    return reinterpret_cast<const RaftLeaderInfo*>(
+               &_RaftLeaderInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(RaftLeaderInfo& a, RaftLeaderInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(RaftLeaderInfo* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(RaftLeaderInfo* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  RaftLeaderInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<RaftLeaderInfo>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const RaftLeaderInfo& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const RaftLeaderInfo& from) {
+    RaftLeaderInfo::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RaftLeaderInfo* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "raft.v1.RaftLeaderInfo";
+  }
+  protected:
+  explicit RaftLeaderInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kShardIdFieldNumber = 1,
+    kReplicaIdFieldNumber = 2,
+    kTermFieldNumber = 3,
+    kLeaderIdFieldNumber = 4,
+  };
+  // uint64 shard_id = 1 [json_name = "shardId"];
+  void clear_shard_id();
+  uint64_t shard_id() const;
+  void set_shard_id(uint64_t value);
+  private:
+  uint64_t _internal_shard_id() const;
+  void _internal_set_shard_id(uint64_t value);
+  public:
+
+  // uint64 replica_id = 2 [json_name = "replicaId"];
+  void clear_replica_id();
+  uint64_t replica_id() const;
+  void set_replica_id(uint64_t value);
+  private:
+  uint64_t _internal_replica_id() const;
+  void _internal_set_replica_id(uint64_t value);
+  public:
+
+  // uint64 term = 3 [json_name = "term"];
+  void clear_term();
+  uint64_t term() const;
+  void set_term(uint64_t value);
+  private:
+  uint64_t _internal_term() const;
+  void _internal_set_term(uint64_t value);
+  public:
+
+  // uint64 leader_id = 4 [json_name = "leaderId"];
+  void clear_leader_id();
+  uint64_t leader_id() const;
+  void set_leader_id(uint64_t value);
+  private:
+  uint64_t _internal_leader_id() const;
+  void _internal_set_leader_id(uint64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:raft.v1.RaftLeaderInfo)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    uint64_t shard_id_;
+    uint64_t replica_id_;
+    uint64_t term_;
+    uint64_t leader_id_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_raft_2fv1_2fraft_5fevent_2eproto;
+};
+// -------------------------------------------------------------------
+
 class RaftLogEntryEvent final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:raft.v1.RaftLogEntryEvent) */ {
  public:
@@ -502,7 +689,7 @@ class RaftLogEntryEvent final :
                &_RaftLogEntryEvent_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(RaftLogEntryEvent& a, RaftLogEntryEvent& b) {
     a.Swap(&b);
@@ -672,7 +859,7 @@ class RaftSnapshotEvent final :
                &_RaftSnapshotEvent_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(RaftSnapshotEvent& a, RaftSnapshotEvent& b) {
     a.Swap(&b);
@@ -853,7 +1040,7 @@ class RaftConnectionEvent final :
                &_RaftConnectionEvent_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(RaftConnectionEvent& a, RaftConnectionEvent& b) {
     a.Swap(&b);
@@ -1017,7 +1204,7 @@ class RaftNodeEvent final :
                &_RaftNodeEvent_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(RaftNodeEvent& a, RaftNodeEvent& b) {
     a.Swap(&b);
@@ -1175,7 +1362,7 @@ class RaftHostShutdown final :
                &_RaftHostShutdown_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(RaftHostShutdown& a, RaftHostShutdown& b) {
     a.Swap(&b);
@@ -1761,6 +1948,90 @@ inline RaftEvent::EventCase RaftEvent::event_case() const {
 }
 // -------------------------------------------------------------------
 
+// RaftLeaderInfo
+
+// uint64 shard_id = 1 [json_name = "shardId"];
+inline void RaftLeaderInfo::clear_shard_id() {
+  _impl_.shard_id_ = uint64_t{0u};
+}
+inline uint64_t RaftLeaderInfo::_internal_shard_id() const {
+  return _impl_.shard_id_;
+}
+inline uint64_t RaftLeaderInfo::shard_id() const {
+  // @@protoc_insertion_point(field_get:raft.v1.RaftLeaderInfo.shard_id)
+  return _internal_shard_id();
+}
+inline void RaftLeaderInfo::_internal_set_shard_id(uint64_t value) {
+  
+  _impl_.shard_id_ = value;
+}
+inline void RaftLeaderInfo::set_shard_id(uint64_t value) {
+  _internal_set_shard_id(value);
+  // @@protoc_insertion_point(field_set:raft.v1.RaftLeaderInfo.shard_id)
+}
+
+// uint64 replica_id = 2 [json_name = "replicaId"];
+inline void RaftLeaderInfo::clear_replica_id() {
+  _impl_.replica_id_ = uint64_t{0u};
+}
+inline uint64_t RaftLeaderInfo::_internal_replica_id() const {
+  return _impl_.replica_id_;
+}
+inline uint64_t RaftLeaderInfo::replica_id() const {
+  // @@protoc_insertion_point(field_get:raft.v1.RaftLeaderInfo.replica_id)
+  return _internal_replica_id();
+}
+inline void RaftLeaderInfo::_internal_set_replica_id(uint64_t value) {
+  
+  _impl_.replica_id_ = value;
+}
+inline void RaftLeaderInfo::set_replica_id(uint64_t value) {
+  _internal_set_replica_id(value);
+  // @@protoc_insertion_point(field_set:raft.v1.RaftLeaderInfo.replica_id)
+}
+
+// uint64 term = 3 [json_name = "term"];
+inline void RaftLeaderInfo::clear_term() {
+  _impl_.term_ = uint64_t{0u};
+}
+inline uint64_t RaftLeaderInfo::_internal_term() const {
+  return _impl_.term_;
+}
+inline uint64_t RaftLeaderInfo::term() const {
+  // @@protoc_insertion_point(field_get:raft.v1.RaftLeaderInfo.term)
+  return _internal_term();
+}
+inline void RaftLeaderInfo::_internal_set_term(uint64_t value) {
+  
+  _impl_.term_ = value;
+}
+inline void RaftLeaderInfo::set_term(uint64_t value) {
+  _internal_set_term(value);
+  // @@protoc_insertion_point(field_set:raft.v1.RaftLeaderInfo.term)
+}
+
+// uint64 leader_id = 4 [json_name = "leaderId"];
+inline void RaftLeaderInfo::clear_leader_id() {
+  _impl_.leader_id_ = uint64_t{0u};
+}
+inline uint64_t RaftLeaderInfo::_internal_leader_id() const {
+  return _impl_.leader_id_;
+}
+inline uint64_t RaftLeaderInfo::leader_id() const {
+  // @@protoc_insertion_point(field_get:raft.v1.RaftLeaderInfo.leader_id)
+  return _internal_leader_id();
+}
+inline void RaftLeaderInfo::_internal_set_leader_id(uint64_t value) {
+  
+  _impl_.leader_id_ = value;
+}
+inline void RaftLeaderInfo::set_leader_id(uint64_t value) {
+  _internal_set_leader_id(value);
+  // @@protoc_insertion_point(field_set:raft.v1.RaftLeaderInfo.leader_id)
+}
+
+// -------------------------------------------------------------------
+
 // RaftLogEntryEvent
 
 // uint64 shard_id = 1 [json_name = "shardId"];
@@ -2032,6 +2303,8 @@ inline void RaftNodeEvent::set_replica_id(uint64_t value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

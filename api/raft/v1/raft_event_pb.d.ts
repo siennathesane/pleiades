@@ -39,6 +39,11 @@ export declare enum EventType {
    * @generated from enum value: EVENT_TYPE_NODE = 5;
    */
   NODE = 5,
+
+  /**
+   * @generated from enum value: EVENT_TYPE_RAFT = 6;
+   */
+  RAFT = 6,
 }
 
 /**
@@ -124,6 +129,11 @@ export declare enum Event {
    * @generated from enum value: EVENT_SNAPSHOT_RECOVERED = 15;
    */
   SNAPSHOT_RECOVERED = 15,
+
+  /**
+   * @generated from enum value: EVENT_LEADER_UPDATED = 16;
+   */
+  LEADER_UPDATED = 16,
 }
 
 /**
@@ -193,6 +203,45 @@ export declare class RaftEvent extends Message<RaftEvent> {
   static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RaftEvent;
 
   static equals(a: RaftEvent | PlainMessage<RaftEvent> | undefined, b: RaftEvent | PlainMessage<RaftEvent> | undefined): boolean;
+}
+
+/**
+ * @generated from message raft.v1.RaftLeaderInfo
+ */
+export declare class RaftLeaderInfo extends Message<RaftLeaderInfo> {
+  /**
+   * @generated from field: uint64 shard_id = 1;
+   */
+  shardId: bigint;
+
+  /**
+   * @generated from field: uint64 replica_id = 2;
+   */
+  replicaId: bigint;
+
+  /**
+   * @generated from field: uint64 term = 3;
+   */
+  term: bigint;
+
+  /**
+   * @generated from field: uint64 leader_id = 4;
+   */
+  leaderId: bigint;
+
+  constructor(data?: PartialMessage<RaftLeaderInfo>);
+
+  static readonly runtime: typeof proto3;
+  static readonly typeName = "raft.v1.RaftLeaderInfo";
+  static readonly fields: FieldList;
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RaftLeaderInfo;
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RaftLeaderInfo;
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RaftLeaderInfo;
+
+  static equals(a: RaftLeaderInfo | PlainMessage<RaftLeaderInfo> | undefined, b: RaftLeaderInfo | PlainMessage<RaftLeaderInfo> | undefined): boolean;
 }
 
 /**
