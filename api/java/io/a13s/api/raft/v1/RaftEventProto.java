@@ -59,7 +59,7 @@ public final class RaftEventProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\030raft/v1/raft_event.proto\022\007raft.v1\032\037goo" +
-      "gle/protobuf/timestamp.proto\"\301\003\n\tRaftEve" +
+      "gle/protobuf/timestamp.proto\"\201\004\n\tRaftEve" +
       "nt\022$\n\003typ\030\001 \001(\0162\022.raft.v1.EventTypeR\003typ" +
       "\022&\n\006action\030\002 \001(\0162\016.raft.v1.EventR\006action" +
       "\0228\n\ttimestamp\030\003 \001(\0132\032.google.protobuf.Ti" +
@@ -70,42 +70,43 @@ public final class RaftEventProto {
       "ft.v1.RaftConnectionEventH\000R\nconnection\022" +
       ",\n\004node\030\007 \001(\0132\026.raft.v1.RaftNodeEventH\000R" +
       "\004node\022@\n\rhost_shutdown\030\010 \001(\0132\031.raft.v1.R" +
-      "aftHostShutdownH\000R\014hostShutdownB\007\n\005event" +
-      "\"{\n\016RaftLeaderInfo\022\031\n\010shard_id\030\001 \001(\004R\007sh" +
-      "ardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\022\n\004" +
-      "term\030\003 \001(\004R\004term\022\033\n\tleader_id\030\004 \001(\004R\010lea" +
-      "derId\"c\n\021RaftLogEntryEvent\022\031\n\010shard_id\030\001" +
-      " \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\trepli" +
-      "caId\022\024\n\005index\030\003 \001(\004R\005index\"\207\001\n\021RaftSnaps" +
-      "hotEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nr" +
-      "eplica_id\030\002 \001(\004R\treplicaId\022\035\n\nfrom_index" +
-      "\030\003 \001(\004R\tfromIndex\022\031\n\010to_index\030\004 \001(\004R\007toI" +
-      "ndex\"P\n\023RaftConnectionEvent\022\030\n\007address\030\001" +
-      " \001(\tR\007address\022\037\n\013is_snapshot\030\002 \001(\010R\nisSn" +
-      "apshot\"I\n\rRaftNodeEvent\022\031\n\010shard_id\030\001 \001(" +
-      "\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaI" +
-      "d\"\022\n\020RaftHostShutdown*\264\001\n\tEventType\022\032\n\026E" +
-      "VENT_TYPE_UNSPECIFIED\020\000\022\030\n\024EVENT_TYPE_LO" +
-      "G_ENTRY\020\001\022\027\n\023EVENT_TYPE_SNAPSHOT\020\002\022\031\n\025EV" +
-      "ENT_TYPE_CONNECTION\020\003\022\023\n\017EVENT_TYPE_HOST" +
-      "\020\004\022\023\n\017EVENT_TYPE_NODE\020\005\022\023\n\017EVENT_TYPE_RA" +
-      "FT\020\006*\365\003\n\005Event\022\025\n\021EVENT_UNSPECIFIED\020\000\022 \n" +
-      "\034EVENT_CONNECTION_ESTABLISHED\020\001\022\033\n\027EVENT" +
-      "_CONNECTION_FAILED\020\002\022\027\n\023EVENT_LOG_COMPAC" +
-      "TED\020\003\022\031\n\025EVENT_LOGDB_COMPACTED\020\004\022\034\n\030EVEN" +
-      "T_MEMBERSHIP_CHANGED\020\005\022!\n\035EVENT_NODE_HOS" +
-      "T_SHUTTING_DOWN\020\006\022\024\n\020EVENT_NODE_READY\020\007\022" +
-      "\027\n\023EVENT_NODE_UNLOADED\020\010\022\037\n\033EVENT_SEND_S" +
-      "NAPSHOT_ABORTED\020\t\022!\n\035EVENT_SEND_SNAPSHOT" +
-      "_COMPLETED\020\n\022\037\n\033EVENT_SEND_SNAPSHOT_STAR" +
-      "TED\020\013\022\034\n\030EVENT_SNAPSHOT_COMPACTED\020\014\022\032\n\026E" +
-      "VENT_SNAPSHOT_CREATED\020\r\022\033\n\027EVENT_SNAPSHO" +
-      "T_RECEIVED\020\016\022\034\n\030EVENT_SNAPSHOT_RECOVERED" +
-      "\020\017\022\030\n\024EVENT_LEADER_UPDATED\020\020B~\n\023io.a13s." +
-      "api.raft.v1B\016RaftEventProtoP\001Z\032a13s.io/a" +
-      "pi/raft/v1;raftv1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft" +
-      "\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010Raft::V1b\006pr" +
-      "oto3"
+      "aftHostShutdownH\000R\014hostShutdown\022>\n\rleade" +
+      "r_update\030\t \001(\0132\027.raft.v1.RaftLeaderInfoH" +
+      "\000R\014leaderUpdateB\007\n\005event\"{\n\016RaftLeaderIn" +
+      "fo\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nreplica" +
+      "_id\030\002 \001(\004R\treplicaId\022\022\n\004term\030\003 \001(\004R\004term" +
+      "\022\033\n\tleader_id\030\004 \001(\004R\010leaderId\"c\n\021RaftLog" +
+      "EntryEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n" +
+      "\nreplica_id\030\002 \001(\004R\treplicaId\022\024\n\005index\030\003 " +
+      "\001(\004R\005index\"\207\001\n\021RaftSnapshotEvent\022\031\n\010shar" +
+      "d_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R" +
+      "\treplicaId\022\035\n\nfrom_index\030\003 \001(\004R\tfromInde" +
+      "x\022\031\n\010to_index\030\004 \001(\004R\007toIndex\"P\n\023RaftConn" +
+      "ectionEvent\022\030\n\007address\030\001 \001(\tR\007address\022\037\n" +
+      "\013is_snapshot\030\002 \001(\010R\nisSnapshot\"I\n\rRaftNo" +
+      "deEvent\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nre" +
+      "plica_id\030\002 \001(\004R\treplicaId\"\022\n\020RaftHostShu" +
+      "tdown*\264\001\n\tEventType\022\032\n\026EVENT_TYPE_UNSPEC" +
+      "IFIED\020\000\022\030\n\024EVENT_TYPE_LOG_ENTRY\020\001\022\027\n\023EVE" +
+      "NT_TYPE_SNAPSHOT\020\002\022\031\n\025EVENT_TYPE_CONNECT" +
+      "ION\020\003\022\023\n\017EVENT_TYPE_HOST\020\004\022\023\n\017EVENT_TYPE" +
+      "_NODE\020\005\022\023\n\017EVENT_TYPE_RAFT\020\006*\365\003\n\005Event\022\025" +
+      "\n\021EVENT_UNSPECIFIED\020\000\022 \n\034EVENT_CONNECTIO" +
+      "N_ESTABLISHED\020\001\022\033\n\027EVENT_CONNECTION_FAIL" +
+      "ED\020\002\022\027\n\023EVENT_LOG_COMPACTED\020\003\022\031\n\025EVENT_L" +
+      "OGDB_COMPACTED\020\004\022\034\n\030EVENT_MEMBERSHIP_CHA" +
+      "NGED\020\005\022!\n\035EVENT_NODE_HOST_SHUTTING_DOWN\020" +
+      "\006\022\024\n\020EVENT_NODE_READY\020\007\022\027\n\023EVENT_NODE_UN" +
+      "LOADED\020\010\022\037\n\033EVENT_SEND_SNAPSHOT_ABORTED\020" +
+      "\t\022!\n\035EVENT_SEND_SNAPSHOT_COMPLETED\020\n\022\037\n\033" +
+      "EVENT_SEND_SNAPSHOT_STARTED\020\013\022\034\n\030EVENT_S" +
+      "NAPSHOT_COMPACTED\020\014\022\032\n\026EVENT_SNAPSHOT_CR" +
+      "EATED\020\r\022\033\n\027EVENT_SNAPSHOT_RECEIVED\020\016\022\034\n\030" +
+      "EVENT_SNAPSHOT_RECOVERED\020\017\022\030\n\024EVENT_LEAD" +
+      "ER_UPDATED\020\020B~\n\023io.a13s.api.raft.v1B\016Raf" +
+      "tEventProtoP\001Z\032a13s.io/api/raft/v1;raftv" +
+      "1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GP" +
+      "BMetadata\352\002\010Raft::V1b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -117,7 +118,7 @@ public final class RaftEventProto {
     internal_static_raft_v1_RaftEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_raft_v1_RaftEvent_descriptor,
-        new java.lang.String[] { "Typ", "Action", "Timestamp", "LogEntry", "Snapshot", "Connection", "Node", "HostShutdown", "Event", });
+        new java.lang.String[] { "Typ", "Action", "Timestamp", "LogEntry", "Snapshot", "Connection", "Node", "HostShutdown", "LeaderUpdate", "Event", });
     internal_static_raft_v1_RaftLeaderInfo_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_raft_v1_RaftLeaderInfo_fieldAccessorTable = new

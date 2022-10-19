@@ -44,6 +44,7 @@ message RaftEvent {
     RaftConnectionEvent connection = 6;
     RaftNodeEvent node = 7;
     RaftHostShutdown host_shutdown = 8;
+    RaftLeaderInfo leader_update = 9;
   }
 }
 

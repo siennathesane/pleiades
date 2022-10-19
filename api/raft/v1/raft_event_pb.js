@@ -61,6 +61,7 @@ export const RaftEvent = proto3.makeMessageType(
     { no: 6, name: "connection", kind: "message", T: RaftConnectionEvent, oneof: "event" },
     { no: 7, name: "node", kind: "message", T: RaftNodeEvent, oneof: "event" },
     { no: 8, name: "host_shutdown", kind: "message", T: RaftHostShutdown, oneof: "event" },
+    { no: 9, name: "leader_update", kind: "message", T: RaftLeaderInfo, oneof: "event" },
   ],
 );
 

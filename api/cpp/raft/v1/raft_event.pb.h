@@ -205,6 +205,7 @@ class RaftEvent final :
     kConnection = 6,
     kNode = 7,
     kHostShutdown = 8,
+    kLeaderUpdate = 9,
     EVENT_NOT_SET = 0,
   };
 
@@ -294,6 +295,7 @@ class RaftEvent final :
     kConnectionFieldNumber = 6,
     kNodeFieldNumber = 7,
     kHostShutdownFieldNumber = 8,
+    kLeaderUpdateFieldNumber = 9,
   };
   // .google.protobuf.Timestamp timestamp = 3 [json_name = "timestamp"];
   bool has_timestamp() const;
@@ -421,6 +423,24 @@ class RaftEvent final :
       ::raft::v1::RaftHostShutdown* host_shutdown);
   ::raft::v1::RaftHostShutdown* unsafe_arena_release_host_shutdown();
 
+  // .raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];
+  bool has_leader_update() const;
+  private:
+  bool _internal_has_leader_update() const;
+  public:
+  void clear_leader_update();
+  const ::raft::v1::RaftLeaderInfo& leader_update() const;
+  PROTOBUF_NODISCARD ::raft::v1::RaftLeaderInfo* release_leader_update();
+  ::raft::v1::RaftLeaderInfo* mutable_leader_update();
+  void set_allocated_leader_update(::raft::v1::RaftLeaderInfo* leader_update);
+  private:
+  const ::raft::v1::RaftLeaderInfo& _internal_leader_update() const;
+  ::raft::v1::RaftLeaderInfo* _internal_mutable_leader_update();
+  public:
+  void unsafe_arena_set_allocated_leader_update(
+      ::raft::v1::RaftLeaderInfo* leader_update);
+  ::raft::v1::RaftLeaderInfo* unsafe_arena_release_leader_update();
+
   void clear_event();
   EventCase event_case() const;
   // @@protoc_insertion_point(class_scope:raft.v1.RaftEvent)
@@ -431,6 +451,7 @@ class RaftEvent final :
   void set_has_connection();
   void set_has_node();
   void set_has_host_shutdown();
+  void set_has_leader_update();
 
   inline bool has_event() const;
   inline void clear_has_event();
@@ -450,6 +471,7 @@ class RaftEvent final :
       ::raft::v1::RaftConnectionEvent* connection_;
       ::raft::v1::RaftNodeEvent* node_;
       ::raft::v1::RaftHostShutdown* host_shutdown_;
+      ::raft::v1::RaftLeaderInfo* leader_update_;
     } event_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
     uint32_t _oneof_case_[1];
@@ -1934,6 +1956,80 @@ inline ::raft::v1::RaftHostShutdown* RaftEvent::_internal_mutable_host_shutdown(
 inline ::raft::v1::RaftHostShutdown* RaftEvent::mutable_host_shutdown() {
   ::raft::v1::RaftHostShutdown* _msg = _internal_mutable_host_shutdown();
   // @@protoc_insertion_point(field_mutable:raft.v1.RaftEvent.host_shutdown)
+  return _msg;
+}
+
+// .raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];
+inline bool RaftEvent::_internal_has_leader_update() const {
+  return event_case() == kLeaderUpdate;
+}
+inline bool RaftEvent::has_leader_update() const {
+  return _internal_has_leader_update();
+}
+inline void RaftEvent::set_has_leader_update() {
+  _impl_._oneof_case_[0] = kLeaderUpdate;
+}
+inline void RaftEvent::clear_leader_update() {
+  if (_internal_has_leader_update()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete _impl_.event_.leader_update_;
+    }
+    clear_has_event();
+  }
+}
+inline ::raft::v1::RaftLeaderInfo* RaftEvent::release_leader_update() {
+  // @@protoc_insertion_point(field_release:raft.v1.RaftEvent.leader_update)
+  if (_internal_has_leader_update()) {
+    clear_has_event();
+    ::raft::v1::RaftLeaderInfo* temp = _impl_.event_.leader_update_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.event_.leader_update_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::raft::v1::RaftLeaderInfo& RaftEvent::_internal_leader_update() const {
+  return _internal_has_leader_update()
+      ? *_impl_.event_.leader_update_
+      : reinterpret_cast< ::raft::v1::RaftLeaderInfo&>(::raft::v1::_RaftLeaderInfo_default_instance_);
+}
+inline const ::raft::v1::RaftLeaderInfo& RaftEvent::leader_update() const {
+  // @@protoc_insertion_point(field_get:raft.v1.RaftEvent.leader_update)
+  return _internal_leader_update();
+}
+inline ::raft::v1::RaftLeaderInfo* RaftEvent::unsafe_arena_release_leader_update() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:raft.v1.RaftEvent.leader_update)
+  if (_internal_has_leader_update()) {
+    clear_has_event();
+    ::raft::v1::RaftLeaderInfo* temp = _impl_.event_.leader_update_;
+    _impl_.event_.leader_update_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void RaftEvent::unsafe_arena_set_allocated_leader_update(::raft::v1::RaftLeaderInfo* leader_update) {
+  clear_event();
+  if (leader_update) {
+    set_has_leader_update();
+    _impl_.event_.leader_update_ = leader_update;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:raft.v1.RaftEvent.leader_update)
+}
+inline ::raft::v1::RaftLeaderInfo* RaftEvent::_internal_mutable_leader_update() {
+  if (!_internal_has_leader_update()) {
+    clear_event();
+    set_has_leader_update();
+    _impl_.event_.leader_update_ = CreateMaybeMessage< ::raft::v1::RaftLeaderInfo >(GetArenaForAllocation());
+  }
+  return _impl_.event_.leader_update_;
+}
+inline ::raft::v1::RaftLeaderInfo* RaftEvent::mutable_leader_update() {
+  ::raft::v1::RaftLeaderInfo* _msg = _internal_mutable_leader_update();
+  // @@protoc_insertion_point(field_mutable:raft.v1.RaftEvent.leader_update)
   return _msg;
 }
 

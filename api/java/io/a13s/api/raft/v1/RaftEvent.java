@@ -145,6 +145,20 @@ private static final long serialVersionUID = 0L;
             eventCase_ = 8;
             break;
           }
+          case 74: {
+            io.a13s.api.raft.v1.RaftLeaderInfo.Builder subBuilder = null;
+            if (eventCase_ == 9) {
+              subBuilder = ((io.a13s.api.raft.v1.RaftLeaderInfo) event_).toBuilder();
+            }
+            event_ =
+                input.readMessage(io.a13s.api.raft.v1.RaftLeaderInfo.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftLeaderInfo) event_);
+              event_ = subBuilder.buildPartial();
+            }
+            eventCase_ = 9;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -189,6 +203,7 @@ private static final long serialVersionUID = 0L;
     CONNECTION(6),
     NODE(7),
     HOST_SHUTDOWN(8),
+    LEADER_UPDATE(9),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -211,6 +226,7 @@ private static final long serialVersionUID = 0L;
         case 6: return CONNECTION;
         case 7: return NODE;
         case 8: return HOST_SHUTDOWN;
+        case 9: return LEADER_UPDATE;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -445,6 +461,37 @@ private static final long serialVersionUID = 0L;
     return io.a13s.api.raft.v1.RaftHostShutdown.getDefaultInstance();
   }
 
+  public static final int LEADER_UPDATE_FIELD_NUMBER = 9;
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   * @return Whether the leaderUpdate field is set.
+   */
+  @java.lang.Override
+  public boolean hasLeaderUpdate() {
+    return eventCase_ == 9;
+  }
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   * @return The leaderUpdate.
+   */
+  @java.lang.Override
+  public io.a13s.api.raft.v1.RaftLeaderInfo getLeaderUpdate() {
+    if (eventCase_ == 9) {
+       return (io.a13s.api.raft.v1.RaftLeaderInfo) event_;
+    }
+    return io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+  }
+  /**
+   * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+   */
+  @java.lang.Override
+  public io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder getLeaderUpdateOrBuilder() {
+    if (eventCase_ == 9) {
+       return (io.a13s.api.raft.v1.RaftLeaderInfo) event_;
+    }
+    return io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -482,6 +529,9 @@ private static final long serialVersionUID = 0L;
     }
     if (eventCase_ == 8) {
       output.writeMessage(8, (io.a13s.api.raft.v1.RaftHostShutdown) event_);
+    }
+    if (eventCase_ == 9) {
+      output.writeMessage(9, (io.a13s.api.raft.v1.RaftLeaderInfo) event_);
     }
     unknownFields.writeTo(output);
   }
@@ -523,6 +573,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 8) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(8, (io.a13s.api.raft.v1.RaftHostShutdown) event_);
+    }
+    if (eventCase_ == 9) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(9, (io.a13s.api.raft.v1.RaftLeaderInfo) event_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -568,6 +622,10 @@ private static final long serialVersionUID = 0L;
         if (!getHostShutdown()
             .equals(other.getHostShutdown())) return false;
         break;
+      case 9:
+        if (!getLeaderUpdate()
+            .equals(other.getLeaderUpdate())) return false;
+        break;
       case 0:
       default:
     }
@@ -610,6 +668,10 @@ private static final long serialVersionUID = 0L;
       case 8:
         hash = (37 * hash) + HOST_SHUTDOWN_FIELD_NUMBER;
         hash = (53 * hash) + getHostShutdown().hashCode();
+        break;
+      case 9:
+        hash = (37 * hash) + LEADER_UPDATE_FIELD_NUMBER;
+        hash = (53 * hash) + getLeaderUpdate().hashCode();
         break;
       case 0:
       default:
@@ -827,6 +889,13 @@ private static final long serialVersionUID = 0L;
           result.event_ = hostShutdownBuilder_.build();
         }
       }
+      if (eventCase_ == 9) {
+        if (leaderUpdateBuilder_ == null) {
+          result.event_ = event_;
+        } else {
+          result.event_ = leaderUpdateBuilder_.build();
+        }
+      }
       result.eventCase_ = eventCase_;
       onBuilt();
       return result;
@@ -904,6 +973,10 @@ private static final long serialVersionUID = 0L;
         }
         case HOST_SHUTDOWN: {
           mergeHostShutdown(other.getHostShutdown());
+          break;
+        }
+        case LEADER_UPDATE: {
+          mergeLeaderUpdate(other.getLeaderUpdate());
           break;
         }
         case EVENT_NOT_SET: {
@@ -1889,6 +1962,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 8;
       onChanged();;
       return hostShutdownBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilderV3<
+        io.a13s.api.raft.v1.RaftLeaderInfo, io.a13s.api.raft.v1.RaftLeaderInfo.Builder, io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder> leaderUpdateBuilder_;
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     * @return Whether the leaderUpdate field is set.
+     */
+    @java.lang.Override
+    public boolean hasLeaderUpdate() {
+      return eventCase_ == 9;
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     * @return The leaderUpdate.
+     */
+    @java.lang.Override
+    public io.a13s.api.raft.v1.RaftLeaderInfo getLeaderUpdate() {
+      if (leaderUpdateBuilder_ == null) {
+        if (eventCase_ == 9) {
+          return (io.a13s.api.raft.v1.RaftLeaderInfo) event_;
+        }
+        return io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+      } else {
+        if (eventCase_ == 9) {
+          return leaderUpdateBuilder_.getMessage();
+        }
+        return io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    public Builder setLeaderUpdate(io.a13s.api.raft.v1.RaftLeaderInfo value) {
+      if (leaderUpdateBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        leaderUpdateBuilder_.setMessage(value);
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    public Builder setLeaderUpdate(
+        io.a13s.api.raft.v1.RaftLeaderInfo.Builder builderForValue) {
+      if (leaderUpdateBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        leaderUpdateBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    public Builder mergeLeaderUpdate(io.a13s.api.raft.v1.RaftLeaderInfo value) {
+      if (leaderUpdateBuilder_ == null) {
+        if (eventCase_ == 9 &&
+            event_ != io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance()) {
+          event_ = io.a13s.api.raft.v1.RaftLeaderInfo.newBuilder((io.a13s.api.raft.v1.RaftLeaderInfo) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 9) {
+          leaderUpdateBuilder_.mergeFrom(value);
+        } else {
+          leaderUpdateBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    public Builder clearLeaderUpdate() {
+      if (leaderUpdateBuilder_ == null) {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        leaderUpdateBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    public io.a13s.api.raft.v1.RaftLeaderInfo.Builder getLeaderUpdateBuilder() {
+      return getLeaderUpdateFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    @java.lang.Override
+    public io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder getLeaderUpdateOrBuilder() {
+      if ((eventCase_ == 9) && (leaderUpdateBuilder_ != null)) {
+        return leaderUpdateBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 9) {
+          return (io.a13s.api.raft.v1.RaftLeaderInfo) event_;
+        }
+        return io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.raft.v1.RaftLeaderInfo leader_update = 9 [json_name = "leaderUpdate"];</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        io.a13s.api.raft.v1.RaftLeaderInfo, io.a13s.api.raft.v1.RaftLeaderInfo.Builder, io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder> 
+        getLeaderUpdateFieldBuilder() {
+      if (leaderUpdateBuilder_ == null) {
+        if (!(eventCase_ == 9)) {
+          event_ = io.a13s.api.raft.v1.RaftLeaderInfo.getDefaultInstance();
+        }
+        leaderUpdateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            io.a13s.api.raft.v1.RaftLeaderInfo, io.a13s.api.raft.v1.RaftLeaderInfo.Builder, io.a13s.api.raft.v1.RaftLeaderInfoOrBuilder>(
+                (io.a13s.api.raft.v1.RaftLeaderInfo) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 9;
+      onChanged();;
+      return leaderUpdateBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

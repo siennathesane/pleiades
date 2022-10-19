@@ -188,6 +188,12 @@ export declare class RaftEvent extends Message<RaftEvent> {
      */
     value: RaftHostShutdown;
     case: "hostShutdown";
+  } | {
+    /**
+     * @generated from field: raft.v1.RaftLeaderInfo leader_update = 9;
+     */
+    value: RaftLeaderInfo;
+    case: "leaderUpdate";
   } | { case: undefined; value?: undefined };
 
   constructor(data?: PartialMessage<RaftEvent>);
