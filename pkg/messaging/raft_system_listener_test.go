@@ -10,13 +10,13 @@
 package messaging
 
 import (
+	"math/rand"
 	"testing"
 	"time"
 
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3/raftio"
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -33,7 +33,7 @@ type RaftSystemListenerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
 	e              *EmbeddedMessaging
-	client         *EmbeddedMessagingPubSubClient
+	pubSubClient   *EmbeddedMessagingPubSubClient
 	queueClient    *EmbeddedMessagingStreamClient
 	defaultTimeout time.Duration
 }
@@ -42,61 +42,74 @@ func (t *RaftSystemListenerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 500 * time.Millisecond
 
-	opts := &EmbeddedMessagingStreamOpts{
-		Options: &server.Options{
-			Host: "localhost",
-			JetStream: true,
-			DontListen: true,
-		},
-		timeout: utils.Timeout(4000 * time.Millisecond),
-	}
-
 	var err error
-	t.e, err = NewEmbeddedMessaging(opts)
+	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating the event stream")
 
 	t.e.Start()
+	t.Require().NoError(err, "there must not be an error when creating the system stream")
 }
 
 func (t *RaftSystemListenerTestSuite) SetupTest() {
 	var err error
-	t.client, err = t.e.GetPubSubClient()
+	t.pubSubClient, err = t.e.GetPubSubClient()
 	t.Require().NoError(err, "there must not be an error creating the eventStreamClient")
-	t.Require().NotNil(t.client, "the eventStreamClient must not be nil")
+	t.Require().NotNil(t.pubSubClient, "the eventStreamClient must not be nil")
 
 	t.queueClient, err = t.e.GetStreamClient()
-	t.Require().NoError(err, "there must not be an error when getting a stream client")
-	t.Require().NotNil(t.queueClient, "the queue client must not be nil")
+	t.Require().NoError(err, "there must not be an error when getting a stream pubSubClient")
+	t.Require().NotNil(t.queueClient, "the queue pubSubClient must not be nil")
 }
 
 func (t *RaftSystemListenerTestSuite) TestNewNewRaftSystemListener() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
+	t.Require().NoError(err, "there must not be an error when creating the listener")
+	t.Require().NotNil(listener, "the listener must not be nil")
+}
+
+func (t *RaftSystemListenerTestSuite) TestLeaderUpdated() {
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
-	streams := t.queueClient.StreamNames()
+	sub, err := t.pubSubClient.SubscribeSync(RaftSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
-	for stream := range streams {
-		t.Require().Equal(systemStreamName, stream)
+	testMsg := raftio.LeaderInfo{
+		ClusterID: rand.Uint64(),
+		NodeID:    rand.Uint64(),
+		Term:      rand.Uint64(),
+		LeaderID:  rand.Uint64(),
 	}
+	listener.LeaderUpdated(testMsg)
+
+	msgs, err := sub.NextMsg(utils.Timeout(1000 * time.Millisecond))
+	t.Require().NoError(err, "there must not be an error when fetching the messages")
+
+	payload := &raftv1.RaftEvent{}
+	err = payload.UnmarshalVT(msgs.Data)
+	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
+	t.Require().Equal(raftv1.Event_EVENT_LEADER_UPDATED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
 
+	sub, err := t.pubSubClient.SubscribeSync(RaftHostSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
+
 	listener.NodeHostShuttingDown()
 
-	sub, err := t.queueClient.SubscribeSync(raftHostSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(1000 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -105,9 +118,15 @@ func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftNodeSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.NodeInfo{
 		ClusterID: 10,
@@ -115,15 +134,8 @@ func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
 	}
 	listener.NodeUnloaded(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftNodeSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -132,9 +144,15 @@ func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeReady() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftNodeSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.NodeInfo{
 		ClusterID: 10,
@@ -142,15 +160,8 @@ func (t *RaftSystemListenerTestSuite) TestNodeReady() {
 	}
 	listener.NodeReady(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftNodeSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -159,9 +170,15 @@ func (t *RaftSystemListenerTestSuite) TestNodeReady() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftNodeSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.NodeInfo{
 		ClusterID: 10,
@@ -169,15 +186,8 @@ func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
 	}
 	listener.MembershipChanged(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftNodeSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -186,9 +196,15 @@ func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftConnectionSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.ConnectionInfo{
 		Address:            "localhost:1000",
@@ -196,15 +212,8 @@ func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
 	}
 	listener.ConnectionEstablished(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftConnectionSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -213,9 +222,15 @@ func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftConnectionSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.ConnectionInfo{
 		Address:            "localhost:1000",
@@ -223,15 +238,8 @@ func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
 	}
 	listener.ConnectionFailed(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftConnectionSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -240,9 +248,15 @@ func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -252,15 +266,8 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
 	}
 	listener.SendSnapshotStarted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -269,9 +276,15 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -281,15 +294,8 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
 	}
 	listener.SendSnapshotCompleted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -298,9 +304,15 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -310,15 +322,8 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
 	}
 	listener.SendSnapshotAborted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -327,9 +332,15 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -339,15 +350,8 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
 	}
 	listener.SnapshotReceived(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -356,9 +360,15 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -368,15 +378,8 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
 	}
 	listener.SnapshotRecovered(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -385,9 +388,15 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -397,15 +406,8 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
 	}
 	listener.SnapshotCreated(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -414,9 +416,15 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftSnapshotSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.SnapshotInfo{
 		ClusterID: 10,
@@ -426,15 +434,8 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
 	}
 	listener.SnapshotCompacted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftSnapshotSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -443,9 +444,15 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftLogSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.EntryInfo{
 		ClusterID: 10,
@@ -454,15 +461,8 @@ func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
 	}
 	listener.LogCompacted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftLogSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
@@ -471,9 +471,15 @@ func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
-	listener, err := NewRaftSystemListener(t.client, t.queueClient, t.logger)
+	listener, err := NewRaftSystemListener(t.pubSubClient, t.queueClient, t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the listener")
 	t.Require().NotNil(listener, "the listener must not be nil")
+
+	sub, err := t.pubSubClient.SubscribeSync(RaftLogSubject)
+	t.Require().NoError(err, "there must not be an error when subscribing")
+	defer func(sub *nats.Subscription) {
+		_ = sub.Unsubscribe()
+	}(sub)
 
 	testMsg := raftio.EntryInfo{
 		ClusterID: 10,
@@ -482,15 +488,8 @@ func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
 	}
 	listener.LogDBCompacted(testMsg)
 
-	sub, err := t.queueClient.SubscribeSync(raftLogSubject, nats.BindStream(systemStreamName))
-	t.Require().NoError(err, "there must not be an error when subscribing")
-	defer sub.Unsubscribe()
-
-	msgs, err := sub.NextMsg(utils.Timeout(100*time.Millisecond))
+	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
-
-	err = msgs.AckSync()
-	t.Require().NoError(err, "there must not be an error when syncing the message")
 
 	payload := &raftv1.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
