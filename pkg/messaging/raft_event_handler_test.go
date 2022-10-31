@@ -15,7 +15,6 @@ import (
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -38,20 +37,18 @@ func (t *RaftEventHandlerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 500 * time.Millisecond
 
-	opts := &EmbeddedMessagingStreamOpts{
-		Options: &server.Options{
-			Host:       "localhost",
-			JetStream:  true,
-			DontListen: true,
-		},
-		timeout: utils.Timeout(4000 * time.Millisecond),
-	}
-
 	var err error
-	t.e, err = NewEmbeddedMessaging(opts)
+	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating the event stream")
 
 	t.e.Start()
+}
+
+func (t *RaftEventHandlerTestSuite) TearDownSuite() {
+	//t.e = nil
+	//t.pubSubClient = nil
+	//t.queueClient = nil
+	//runtime.GC()
 }
 
 func (t *RaftEventHandlerTestSuite) SetupTest() {
@@ -61,35 +58,34 @@ func (t *RaftEventHandlerTestSuite) SetupTest() {
 	t.Require().NotNil(t.client, "the eventStreamClient must not be nil")
 
 	t.queueClient, err = t.e.GetStreamClient()
-	t.Require().NoError(err, "there must not be an error when getting a stream client")
-	t.Require().NotNil(t.queueClient, "the queue client must not be nil")
+	t.Require().NoError(err, "there must not be an error when getting a stream pubSubClient")
+	t.Require().NotNil(t.queueClient, "the queue pubSubClient must not be nil")
 }
 
 func (t *RaftEventHandlerTestSuite) TestWaitForMembershipChange() {
 	testShardId := uint64(10)
-	testReplicaId := uint64(100)
 
 	eh := NewRaftEventHandler(t.client, t.queueClient, t.logger)
 
-	go func() {
-		for i := uint64(0); i < 500; i++ {
-			payload := &raftv1.RaftEvent{
-				Typ:       raftv1.EventType_EVENT_TYPE_NODE,
-				Action:    raftv1.Event_EVENT_MEMBERSHIP_CHANGED,
-				Timestamp: timestamppb.Now(),
-				Event: &raftv1.RaftEvent_Node{Node: &raftv1.RaftNodeEvent{
-					ShardId:   i,
-					ReplicaId: i * 10,
-				}},
-			}
-			buf, _ := payload.MarshalVT()
-			err := t.client.Publish(raftNodeSubject, buf)
-			t.Require().NoError(err, "there must not be an error when publishing an event")
-			utils.Wait(1 * time.Millisecond)
+	results := make(chan *raftv1.RaftEvent, 1)
+	go eh.WaitForMembershipChange(testShardId, results, utils.Timeout(300000*time.Millisecond))
+
+	for i := uint64(0); i < 500; i++ {
+		payload := &raftv1.RaftEvent{
+			Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+			Action:    raftv1.Event_EVENT_MEMBERSHIP_CHANGED,
+			Timestamp: timestamppb.Now(),
+			Event: &raftv1.RaftEvent_Node{Node: &raftv1.RaftNodeEvent{
+				ShardId:   i,
+				ReplicaId: i * 10,
+			}},
 		}
-	}()
+		buf, _ := payload.MarshalVT()
+		err := t.client.Publish(RaftNodeSubject, buf)
+		t.Require().NoError(err, "there must not be an error when publishing an event")
+		utils.Wait(1 * time.Millisecond)
+	}
 
-	err := eh.WaitForMembershipChange(testShardId, testReplicaId, utils.Timeout(100*time.Millisecond))
-	t.Require().NoError(err, "there must not be an error when waiting for a specific membership change message")
-
+	result := <-results
+	t.Require().NotNil(result, "the result of waiting for a membership change must not be nil")
 }
