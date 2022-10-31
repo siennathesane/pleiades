@@ -1,25 +1,32 @@
-# Pleiades Protocols
+# Pleiades Internal Message Bus (IMB)
 
-## Rules 
+## Design
 
-1. Stream must open with state message
-2. Stream must send headers before each message
-3. Stream must send invalid state if recoverable
-4. Stream must close if in unrecoverable state
-5. Stream must send state message after each payload message
+Currently, the Internal Message Bus (IMB) uses a in-memory implementation of [NATS](https://nats.io). NATS is completely overpowered for Pleiades, but it's also exactly what Pleiades needs in the short-term. It currently runs in-memory with socket-only connections to the Pleiades process, so various
+processes in Pleiades can open and close clients as needed without having to worry about security concerns.
 
-## Headers
+## Subjects
 
-1. All headers must contain 3 fields:
-  1. Type
-  1. Size
-  1. Checksum
+Pleiades splits up the various messaging needs into separate Subjects. For the most part, the subjects are pretty straightforward: a hierarchal ordering of granularity.
 
-The type field must be an enumeration of all types for the specific protocol
+There is a top-level queue called `SYSTEM` which coalesces all system Subjects into a unified event stream so it can be subscribed to later. Internal consumers can also subscribe to specific Subjects instead of the system Subject.
 
-The size field must be the size of the next message
+| Subject                    | Purpose                                                         | Owner    | Type    |
+|----------------------------|-----------------------------------------------------------------|----------|---------|
+| `SYSTEM`                   | The root system Subject                                         | _SYSTEM_ | Queue   |
+| `system.raftv1`            | Top-level subject for Raft messages                             | Raft     | Subject |
+| `system.raftv1.connection` | Connection alerts for Raft                                      | Raft     | Subject |
+| `system.raftv1.host`       | Host alerts for Raft                                            | Raft     | Subject |
+| `system.raftv1.log`        | Log notifications for Raft                                      | Raft     | Subject |
+| `system.raftv1.node`       | Node events for Raft                                            | Raft     | Subject |
+| `system.raftv1.raft`       | Raft events                                                     | Raft     | Subject |
+| `system.raftv1.snapshot`   | Snapshot events for Raft                                        | Raft     | Subject |
+| `system.raftv1.<123>`      | Shard-specific events, where `<123>` is a specific shard number | Raft     | Subject |
 
-The checksum must be a CRC-32 checksum using the IEEE polynomial
+## Ownership
 
-## Workflows
+The ownership of the stream and subject namespaces are handled by the [Embedded Messaging](../pkg/messaging/embedded_messaging.go) component. It handles the creation of the necessary Subjects and Queues.
 
+## Logging
+
+The IMB is completely asynchronous, which can make it hard to develop, hard to debug, and just generally difficult to work with. To save yourself, your teammates, and pretty much everyone a difficult time, _LOG ALL ERRORS_. This will help troubleshoot everything from tests to live errors.
