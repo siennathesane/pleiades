@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package kvstore
 
 import (
 	"fmt"
@@ -19,6 +19,9 @@ import (
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	utils2 "github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/shard"
+	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -35,8 +38,8 @@ func TestBBoltStoreManager(t *testing.T) {
 type bboltStoreManagerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
-	tm             *raftTransactionManager
-	sm             *raftShardManager
+	tm             *transactions.TransactionManager
+	sm             *shard.RaftShardManager
 	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
 	nats           *messaging.EmbeddedMessaging
@@ -47,17 +50,23 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 300 * time.Millisecond
 
-	m, err := messaging.NewEmbeddedMessagingWithDefaults()
+	m, err := messaging.NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error when creating the embedded nats")
 	t.nats = m
+	t.nats.Start()
 
 	client, err := t.nats.GetStreamClient()
 	t.Require().NoError(err)
 	t.client = client
 
-	t.nh = utils.BuildTestNodeHost(t.T())
-	t.tm = newTransactionManager(t.nh, t.logger)
-	t.sm = newShardManager(t.nh, t.client, t.logger)
+	pubSubClient, err := t.nats.GetPubSubClient()
+	t.Require().NoError(err, "there must not be an error when creating the pubsub client")
+
+	eventHandler := messaging.NewRaftEventHandler(pubSubClient, client, t.logger)
+
+	t.nh = utils2.BuildTestNodeHost(t.T())
+	t.tm = transactions.NewTransactionManager(t.nh, t.logger)
+	t.sm = shard.NewShardManager(t.nh, t.client, eventHandler, t.logger)
 
 	// ensure that bbolt uses the temp directory
 	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
@@ -68,7 +77,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 		go func() {
 			wg.Add(1)
 			defer wg.Done()
-			err := t.sm.NewShard(i, i*4, BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
+			err := t.sm.NewShard(i, i*4, shard.BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
@@ -78,7 +87,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
-	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
@@ -108,7 +117,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
-	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
@@ -155,7 +164,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
-	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
@@ -199,7 +208,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
-	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
@@ -262,7 +271,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
-	storeManager := newBboltStoreManager(t.tm, t.nh, t.logger)
+	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)

@@ -15,7 +15,6 @@ import (
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm"
-	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	"github.com/nats-io/nats.go"
@@ -52,12 +51,12 @@ type shardConfigRunner struct {
 }
 
 func (s *shardConfigRunner) run() {
-	client, err := s.msgServ.GetStreamClient()
+	client, err := s.msgServ.GetPubSubClient()
 	if err != nil {
 		s.logger.Fatal().Err(err).Msg("can't talk to nats")
 	}
 
-	sub, err := client.PullSubscribe(ShardConfigStream, "shard-runner", nats.BindStream(SystemStreamName))
+	sub, err := client.SubscribeSync(ShardConfigStream)
 	if err != nil {
 		s.logger.Fatal().Err(err).Msg("can't subscribe to stream")
 	}
@@ -76,7 +75,7 @@ func (s *shardConfigRunner) run() {
 		}
 		go s.handleMsg(msg[0])
 		select {
-		case <- s.done:
+		case <-s.done:
 			return
 		}
 	}
@@ -112,7 +111,6 @@ func (s *shardConfigRunner) handleMsg(msg *nats.Msg) {
 			if err != nil {
 				s.logger.Error().Err(err).Msg("can't get shard state")
 				cancel()
-				utils.Wait(100*time.Millisecond)
 				continue
 			}
 			cancel()
@@ -127,13 +125,14 @@ func (s *shardConfigRunner) handleMsg(msg *nats.Msg) {
 			Witnesses:      memberState.Witnesses,
 			Removed: func() map[uint64]string {
 				m := make(map[uint64]string)
-				for k, _ := range memberState.Removed {
+				for k := range memberState.Removed {
 					m[k] = ""
 				}
 				return m
 			}(),
 			Type: 0,
 		}
+
 		s.logger.Trace().
 			Int64("last-updated", shardState.LastUpdated.Seconds).
 			Uint64("shard-id", shardState.GetShardId()).
@@ -144,6 +143,7 @@ func (s *shardConfigRunner) handleMsg(msg *nats.Msg) {
 			s.logger.Error().Err(err).Msg("can't store shard event")
 			break
 		}
+
 	case raftv1.ShardStateEvent_CMD_TYPE_DELETE:
 		if err := s.store.Delete(payload.GetEvent().GetShardId()); err != nil {
 			s.logger.Error().Err(err).Msg("can't store shard event")

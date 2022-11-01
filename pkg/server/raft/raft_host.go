@@ -7,31 +7,32 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package raft
 
 import (
 	"context"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 )
 
-var _ IHost = (*raftHost)(nil)
+var _ runtime.IHost = (*RaftHost)(nil)
 
-func newRaftHost(host *dragonboat.NodeHost, logger zerolog.Logger) *raftHost {
-	return &raftHost{
+func NewRaftHost(host *dragonboat.NodeHost, logger zerolog.Logger) *RaftHost {
+	return &RaftHost{
 		logger: logger.With().Str("component", "raft-host").Logger(),
 		nh:     host,
 	}
 }
 
-type raftHost struct {
+type RaftHost struct {
 	logger zerolog.Logger
 	nh     *dragonboat.NodeHost
 }
 
-func (r *raftHost) Compact(shardId uint64, replicaId uint64) error {
+func (r *RaftHost) Compact(shardId uint64, replicaId uint64) error {
 	l := r.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 
 	l.Info().Msg("requesting compaction")
@@ -48,14 +49,14 @@ func (r *raftHost) Compact(shardId uint64, replicaId uint64) error {
 	return nil
 }
 
-func (r *raftHost) GetHostInfo(opt HostInfoOption) *HostInfo {
+func (r *RaftHost) GetHostInfo(opt runtime.HostInfoOption) *runtime.HostInfo {
 	nhi := r.nh.GetNodeHostInfo(dragonboat.NodeHostInfoOption{
 		SkipLogInfo: opt.SkipLogInfo,
 	})
 
-	cil := make([]ClusterInfo, len(nhi.ClusterInfoList))
+	cil := make([]runtime.ClusterInfo, len(nhi.ClusterInfoList))
 	for idx := range nhi.ClusterInfoList {
-		cil[idx] = ClusterInfo{
+		cil[idx] = runtime.ClusterInfo{
 			ShardId:           nhi.ClusterInfoList[idx].ClusterID,
 			ReplicaId:         nhi.ClusterInfoList[idx].NodeID,
 			Nodes:             nhi.ClusterInfoList[idx].Nodes,
@@ -67,20 +68,20 @@ func (r *raftHost) GetHostInfo(opt HostInfoOption) *HostInfo {
 		}
 	}
 
-	li := make([]NodeInfo, len(nhi.LogInfo))
+	li := make([]runtime.NodeInfo, len(nhi.LogInfo))
 	for idx := range nhi.LogInfo {
-		li[idx] = NodeInfo{
+		li[idx] = runtime.NodeInfo{
 			ShardId:   nhi.LogInfo[idx].ClusterID,
 			ReplicaId: nhi.LogInfo[idx].NodeID,
 		}
 	}
 
-	return &HostInfo{
-		HostId:          nhi.NodeHostID,
-		RaftAddress:     nhi.RaftAddress,
-		Gossip:          GossipInfo{
-			Enabled: nhi.Gossip.Enabled,
-			AdvertiseAddress: nhi.Gossip.AdvertiseAddress,
+	return &runtime.HostInfo{
+		HostId:      nhi.NodeHostID,
+		RaftAddress: nhi.RaftAddress,
+		Gossip: runtime.GossipInfo{
+			Enabled:             nhi.Gossip.Enabled,
+			AdvertiseAddress:    nhi.Gossip.AdvertiseAddress,
 			NumOfLiveKnownHosts: nhi.Gossip.NumOfKnownNodeHosts,
 		},
 		ClusterInfoList: cil,
@@ -88,17 +89,17 @@ func (r *raftHost) GetHostInfo(opt HostInfoOption) *HostInfo {
 	}
 }
 
-func (r *raftHost) HasNodeInfo(shardId uint64, replicaId uint64) bool {
+func (r *RaftHost) HasNodeInfo(shardId uint64, replicaId uint64) bool {
 	return r.nh.HasNodeInfo(shardId, replicaId)
 }
 
-func (r *raftHost) Id() string {
+func (r *RaftHost) Id() string {
 	return r.nh.ID()
 }
 
-func (r *raftHost) HostConfig() HostConfig {
+func (r *RaftHost) HostConfig() runtime.HostConfig {
 	nhc := r.nh.NodeHostConfig()
-	return HostConfig{
+	return runtime.HostConfig{
 		nhc.DeploymentID,
 		nhc.WALDir,
 		nhc.NodeHostDir,
@@ -115,11 +116,11 @@ func (r *raftHost) HostConfig() HostConfig {
 	}
 }
 
-func (r *raftHost) RaftAddress() string {
+func (r *RaftHost) RaftAddress() string {
 	return r.nh.RaftAddress()
 }
 
-func (r *raftHost) Snapshot(shardId uint64, opt SnapshotOption, timeout time.Duration) (uint64, error) {
+func (r *RaftHost) Snapshot(shardId uint64, opt runtime.SnapshotOption, timeout time.Duration) (uint64, error) {
 	l := r.logger.With().Uint64("shard", shardId).Logger()
 	ctx, _ := context.WithTimeout(context.Background(), timeout)
 
@@ -139,64 +140,7 @@ func (r *raftHost) Snapshot(shardId uint64, opt SnapshotOption, timeout time.Dur
 	return res, nil
 }
 
-func (r *raftHost) Stop() {
+func (r *RaftHost) Stop() {
 	r.logger.Info().Msg("stopping raft host")
 	r.nh.Stop()
-}
-
-type HostInfo struct {
-	HostId          string
-	RaftAddress     string
-	Gossip          GossipInfo
-	ClusterInfoList []ClusterInfo
-	LogInfo         []NodeInfo
-}
-
-type GossipInfo struct {
-	Enabled             bool
-	AdvertiseAddress    string
-	NumOfLiveKnownHosts int
-}
-
-type ClusterInfo struct {
-	ShardId           uint64
-	ReplicaId         uint64
-	Nodes             map[uint64]string
-	ConfigChangeIndex uint64
-	IsLeader          bool
-	IsObserver        bool
-	IsWitness         bool
-	Pending           bool
-}
-
-type NodeInfo struct {
-	ShardId   uint64
-	ReplicaId uint64
-}
-
-type HostConfig struct {
-	DeploymentID        uint64
-	WALDir              string
-	NodeHostDir         string
-	RTTMillisecond      uint64
-	RaftAddress         string
-	AddressByNodeHostID bool
-	ListenAddress       string
-	MutualTLS           bool
-	CAFile              string
-	CertFile            string
-	KeyFile             string
-	EnableMetrics       bool
-	NotifyCommit        bool
-}
-
-type HostInfoOption struct {
-	SkipLogInfo bool
-}
-
-type SnapshotOption struct {
-	CompactionOverhead         uint64
-	ExportPath                 string
-	Exported                   bool
-	OverrideCompactionOverhead bool
 }

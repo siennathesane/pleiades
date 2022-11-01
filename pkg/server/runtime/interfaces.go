@@ -7,13 +7,14 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package runtime
 
 import (
 	"context"
 	"time"
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
+	dclient "github.com/lni/dragonboat/v3/client"
 )
 
 type IRaft interface {
@@ -54,6 +55,7 @@ type ITransactionManager interface {
 	Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction
 	GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction
 	GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error)
+	SessionFromClientId(clientId uint64) (*dclient.Session, bool)
 }
 
 type IKVStore interface {

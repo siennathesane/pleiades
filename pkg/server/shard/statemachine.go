@@ -7,19 +7,18 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package shard
 
 import (
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/cockroachdb/errors"
 )
 
 const (
-	systemShardStart = 1
-	systemShardStop = 100
+	testStateMachineType  runtime.StateMachineType = 0
+	BBoltStateMachineType runtime.StateMachineType = 1
 )
 
 var (
-	errNilTransaction = errors.New("cannot close an empty transaction")
-	errUnupportedTransaction = errors.New("unsupported transaction type")
-	ErrSystemShardRange = errors.New("shardId is within system shard range")
+	ErrUnsupportedStateMachine = errors.New("state machine type is unsupported")
 )

@@ -11,12 +11,7 @@ package eventing
 
 import (
 	"github.com/mxplusb/pleiades/pkg/messaging"
-	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
-)
-
-const (
-	SystemStreamName = "system"
 )
 
 var (
@@ -28,29 +23,14 @@ func NewServer(logger zerolog.Logger) (*Server, error) {
 		return serverSingleton, nil
 	}
 
-	srv, err := messaging.NewEmbeddedMessagingWithDefaults()
+	srv, err := messaging.NewEmbeddedMessagingWithDefaults(logger)
 	if err != nil {
 		return nil, err
 	}
+
+	srv.Start()
 
 	serverSingleton = &Server{srv, logger.With().Str("component", "eventing").Logger()}
-
-	client, err := serverSingleton.GetStreamClient()
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = client.AddStream(&nats.StreamConfig{
-		Name: SystemStreamName,
-		Description: "All internal system streams",
-		Subjects: []string{"system.>"},
-		Retention: nats.WorkQueuePolicy,
-		Discard:   nats.DiscardOld,
-		Storage:   nats.MemoryStorage,
-	})
-	if err != nil {
-		return nil, err
-	}
 
 	return serverSingleton, nil
 }
@@ -58,4 +38,20 @@ func NewServer(logger zerolog.Logger) (*Server, error) {
 type Server struct {
 	*messaging.EmbeddedMessaging
 	logger zerolog.Logger
+}
+
+func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
+	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't create pubsub client")
+		return nil, err
+	}
+
+	queueClient, err := s.EmbeddedMessaging.GetStreamClient()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't create stream client")
+		return nil, err
+	}
+
+	return messaging.NewRaftEventHandler(pubSubClient, queueClient, s.logger), nil
 }
