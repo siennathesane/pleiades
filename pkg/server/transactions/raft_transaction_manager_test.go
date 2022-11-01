@@ -7,13 +7,14 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package transactions
 
 import (
 	"context"
 	"testing"
 	"time"
 
+	utils2 "github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -29,9 +30,9 @@ func TestTransactionManager(t *testing.T) {
 
 type TransactionManagerTestSuite struct {
 	suite.Suite
-	logger  zerolog.Logger
-	shardId uint64
-	nh      *dragonboat.NodeHost
+	logger         zerolog.Logger
+	shardId        uint64
+	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
 }
 
@@ -42,21 +43,21 @@ func (smt *TransactionManagerTestSuite) SetupSuite() {
 	smt.logger = utils.NewTestLogger(smt.T())
 	smt.defaultTimeout = 500 * time.Millisecond
 
-	smt.nh = utils.BuildTestNodeHost(smt.T())
+	smt.nh = utils2.BuildTestNodeHost(smt.T())
 	smt.Require().NotNil(smt.nh, "node must not be nil")
 
-	shardConfig := utils.BuildTestShardConfig(smt.T())
+	shardConfig := utils2.BuildTestShardConfig(smt.T())
 	smt.shardId = shardConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
 	nodeClusters[shardConfig.NodeID] = smt.nh.RaftAddress()
 
-	err := smt.nh.StartCluster(nodeClusters, false, utils.NewTestStateMachine, shardConfig)
+	err := smt.nh.StartCluster(nodeClusters, false, utils2.NewTestStateMachine, shardConfig)
 	smt.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(smt.defaultTimeout)
 }
 
 func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
-	sm := newTransactionManager(smt.nh, smt.logger)
+	sm := NewTransactionManager(smt.nh, smt.logger)
 
 	transaction := sm.GetNoOpTransaction(smt.shardId)
 	smt.Require().NotNil(transaction, "the client transaction must not be nil")
@@ -74,7 +75,7 @@ func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
 }
 
 func (smt *TransactionManagerTestSuite) TestGetTransaction() {
-	sm := newTransactionManager(smt.nh, smt.logger)
+	sm := NewTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
@@ -94,7 +95,7 @@ func (smt *TransactionManagerTestSuite) TestGetTransaction() {
 }
 
 func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
-	sm := newTransactionManager(smt.nh, smt.logger)
+	sm := NewTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
@@ -118,7 +119,7 @@ func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
 }
 
 func (smt *TransactionManagerTestSuite) TestCommit() {
-	sm := newTransactionManager(smt.nh, smt.logger)
+	sm := NewTransactionManager(smt.nh, smt.logger)
 
 	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
 	transaction, err := sm.GetTransaction(ctx, smt.shardId)
@@ -135,5 +136,5 @@ func (smt *TransactionManagerTestSuite) TestCommit() {
 	transactionResult := sm.Commit(proposeContext, transaction)
 
 	smt.Require().True(transaction.TransactionId < transactionResult.TransactionId, "the post-proposal transaction id must have incremented")
-	smt.logger.Printf("increase after a single transaction in a shard: %d", transactionResult.TransactionId - transaction.TransactionId)
+	smt.logger.Printf("increase after a single transaction in a shard: %d", transactionResult.TransactionId-transaction.TransactionId)
 }

@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package shard
 
 import (
 	"context"
@@ -17,7 +17,8 @@ import (
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/server/eventing"
-	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -25,85 +26,27 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type resultCode int
-
-const (
-	timeoutResultCode resultCode = iota
-	completedResultCode
-	terminatedResultCode
-	rejectedResultCode
-	droppedResultCode
-	abortedResultCode
-	committedResultCode
-)
-
-type OperationResult struct {
-	Status resultCode
-	Index  uint64
-	Data   []byte
-}
-
-// MembershipEntry is the struct used to describe Raft cluster membership query
-// results.
-type MembershipEntry struct {
-	// ConfigChangeId is the Raft entry index of the last applied membership
-	// change entry.
-	ConfigChangeId uint64
-	// Nodes is a map of ReplicaId values to NodeHost Raft addresses for all regular
-	// Raft nodes.
-	Replicas map[uint64]string
-	// Observers is a map of ReplicaId values to NodeHost Raft addresses for all
-	// observers in the Raft cluster.
-	Observers map[uint64]string
-	// Witnesses is a map of ReplicaId values to NodeHost Raft addresses for all
-	// witnesses in the Raft cluster.
-	Witnesses map[uint64]string
-	// Removed is a set of ReplicaId values that have been removed from the Raft
-	// cluster. They are not allowed to be added back to the cluster.
-	Removed map[uint64]struct{}
-}
-
-func requestResultAdapter(req dragonboat.RequestResult) resultCode {
-	switch {
-	case req.Timeout():
-		return timeoutResultCode
-	case req.Committed():
-		return committedResultCode
-	case req.Completed():
-		return completedResultCode
-	case req.Terminated():
-		return terminatedResultCode
-	case req.Aborted():
-		return abortedResultCode
-	case req.Rejected():
-		return rejectedResultCode
-	case req.Dropped():
-		return droppedResultCode
-	default:
-		return droppedResultCode
-	}
-}
-
 var (
-	_ IShardManager = (*raftShardManager)(nil)
+	_ runtime.IShardManager = (*RaftShardManager)(nil)
 
 	defaultTimeout = 3000 * time.Millisecond
 
 	errNoConfigChangeId = errors.New("no config change id")
 )
 
-func newShardManager(nodeHost *dragonboat.NodeHost, client *messaging.EmbeddedMessagingStreamClient, logger zerolog.Logger) *raftShardManager {
+func NewShardManager(nodeHost *dragonboat.NodeHost, client *messaging.EmbeddedMessagingStreamClient, raftEventHandler *messaging.RaftEventHandler, logger zerolog.Logger) *RaftShardManager {
 	l := logger.With().Str("component", "shard-manager").Logger()
-	return &raftShardManager{l, nodeHost, client}
+	return &RaftShardManager{l, nodeHost, client, raftEventHandler}
 }
 
-type raftShardManager struct {
-	logger zerolog.Logger
-	nh     *dragonboat.NodeHost
-	client *messaging.EmbeddedMessagingStreamClient
+type RaftShardManager struct {
+	logger           zerolog.Logger
+	nh               *dragonboat.NodeHost
+	client           *messaging.EmbeddedMessagingStreamClient
+	raftEventHandler *messaging.RaftEventHandler
 }
 
-func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+func (c *RaftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding replica")
 
@@ -126,15 +69,10 @@ func (c *raftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost 
 		return err
 	}
 
-	//err = c.storeShardState(shardId)
-	//if err != nil {
-	//	l.Error().Err(err).Msg("can't store shard state")
-	//}
-
 	return nil
 }
 
-func (c *raftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+func (c *RaftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -157,15 +95,10 @@ func (c *raftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, 
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
-
 	return nil
 }
 
-func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
+func (c *RaftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("adding shard observer")
 
@@ -188,19 +121,15 @@ func (c *raftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, n
 		return err
 	}
 
-	//err = c.storeShardState(shardId)
-	//if err != nil {
-	//	l.Error().Err(err).Msg("can't store shard state")
-	//}
 	return nil
 }
 
-func (c *raftShardManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
+func (c *RaftShardManager) GetLeaderId(shardId uint64) (leader uint64, ok bool, err error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("getting leader id")
 	return c.nh.GetLeaderID(shardId)
 }
 
-func (c *raftShardManager) GetShardMembers(shardId uint64) (*MembershipEntry, error) {
+func (c *RaftShardManager) GetShardMembers(shardId uint64) (*runtime.MembershipEntry, error) {
 	l := c.logger.With().Uint64("shard", shardId).Logger()
 	l.Debug().Msg("getting shard members")
 
@@ -213,7 +142,7 @@ func (c *raftShardManager) GetShardMembers(shardId uint64) (*MembershipEntry, er
 		return nil, err
 	}
 
-	return &MembershipEntry{
+	return &runtime.MembershipEntry{
 		ConfigChangeId: membership.ConfigChangeID,
 		Replicas:       membership.Nodes,
 		Observers:      membership.Observers,
@@ -221,7 +150,7 @@ func (c *raftShardManager) GetShardMembers(shardId uint64) (*MembershipEntry, er
 	}, nil
 }
 
-func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error {
+func (c *RaftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType, _ time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("creating new shard")
 
@@ -235,7 +164,7 @@ func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("creating test state machine")
-		err = c.nh.StartCluster(members, false, utils.NewTestStateMachine, clusterConfig)
+		err = c.nh.StartCluster(members, false, serverutils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("creating bbolt state machine")
 		err = c.nh.StartOnDiskCluster(members, false, kv.NewBBoltFSM, clusterConfig)
@@ -249,15 +178,10 @@ func (c *raftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
-
 	return nil
 }
 
-func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error {
+func (c *RaftShardManager) StartReplica(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("starting replica")
 
@@ -267,7 +191,7 @@ func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("starting test state machine")
-		err = c.nh.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
+		err = c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("starting bbolt state machine")
 		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
@@ -281,15 +205,10 @@ func (c *raftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
-
 	return nil
 }
 
-func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error {
+func (c *RaftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("starting replica observer")
 
@@ -300,7 +219,7 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 	switch stateMachineType {
 	case testStateMachineType:
 		l.Info().Msg("starting test state machine observer")
-		return c.nh.StartCluster(nil, true, utils.NewTestStateMachine, clusterConfig)
+		return c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
 	case BBoltStateMachineType:
 		l.Info().Msg("starting bbolt state machine observer")
 		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
@@ -314,16 +233,12 @@ func (c *raftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("can't store shard state")
-	}
-
 	return nil
 }
 
+// StopReplica will stop a replica
 // todo (sienna): this should stop the replica, not the shard...
-func (c *raftShardManager) StopReplica(shardId uint64, replicaId uint64) (*OperationResult, error) {
+func (c *RaftShardManager) StopReplica(shardId uint64, replicaId uint64) (*runtime.OperationResult, error) {
 	c.logger.Info().Uint64("shard", shardId).Msg("stopping replica")
 	err := c.nh.StopNode(shardId, replicaId)
 	if err != nil {
@@ -331,15 +246,10 @@ func (c *raftShardManager) StopReplica(shardId uint64, replicaId uint64) (*Opera
 		return nil, errors.Wrap(err, "failed to stop replica")
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		c.logger.Error().Err(err).Msg("can't store shard state")
-	}
-
-	return &OperationResult{}, nil
+	return &runtime.OperationResult{}, nil
 }
 
-func (c *raftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error {
+func (c *RaftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error {
 	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
 	l.Info().Msg("deleting replica")
 
@@ -368,15 +278,10 @@ func (c *raftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeo
 		return err
 	}
 
-	err = c.storeShardState(shardId)
-	if err != nil {
-		c.logger.Error().Err(err).Msg("can't store shard state")
-	}
-
 	return nil
 }
 
-func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
+func (c *RaftShardManager) RemoveData(shardId, replicaId uint64) error {
 	c.logger.Info().Uint64("shard", shardId).Uint64("replica", replicaId).Msg("removing data")
 
 	err := c.nh.RemoveData(shardId, replicaId)
@@ -386,14 +291,22 @@ func (c *raftShardManager) RemoveData(shardId, replicaId uint64) error {
 	return err
 }
 
-func (c *raftShardManager) storeShardState(shardId uint64) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+func (c *RaftShardManager) storeShardState(shardId uint64, timeout time.Duration) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
+
+	resultChan := make(chan *raftv1.RaftEvent)
+	go c.raftEventHandler.WaitForMembershipChange(shardId, resultChan, timeout)
+	<-resultChan
 
 	memberState, err := c.nh.SyncGetClusterMembership(ctx, shardId)
 	if err != nil {
 		c.logger.Error().Err(err).Msg("can't get shard state")
-		return err
+	}
+
+	// if it's nil, we can't do anything
+	if memberState == nil {
+		return
 	}
 
 	msg := &raftv1.ShardState{
@@ -405,7 +318,7 @@ func (c *raftShardManager) storeShardState(shardId uint64) error {
 		Witnesses:      memberState.Witnesses,
 		Removed: func() map[uint64]string {
 			m := make(map[uint64]string)
-			for k, _ := range memberState.Removed {
+			for k := range memberState.Removed {
 				m[k] = ""
 			}
 			return m
@@ -416,15 +329,12 @@ func (c *raftShardManager) storeShardState(shardId uint64) error {
 	payload, err := msg.MarshalVT()
 	if err != nil {
 		c.logger.Error().Err(err).Msg("can't marshal shard state message")
-		return err
 	}
 
 	_, err = c.client.Publish(eventing.ShardConfigStream, payload)
 	if err != nil {
 		c.logger.Error().Err(err).Msg("can't publish shard state event")
 	}
-
-	return nil
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {
