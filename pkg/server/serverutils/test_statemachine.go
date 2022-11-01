@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package utils
+package serverutils
 
 import (
 	"encoding/binary"

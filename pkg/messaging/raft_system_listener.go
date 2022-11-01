@@ -23,7 +23,7 @@ const (
 	RaftSnapshotSubject   string = "system.raftv1.snapshot"
 	RaftConnectionSubject string = "system.raftv1.connection"
 	RaftSubject           string = "system.raftv1.raft"
-	SystemStreamName      string = "SYSTEM"
+	SystemStreamName      string = "system"
 )
 
 var _ raftio.ISystemEventListener = (*RaftSystemListener)(nil)
@@ -70,6 +70,13 @@ func (r *RaftSystemListener) LeaderUpdated(info raftio.LeaderInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft host shut down event")
 	}
+
+	r.logger.Debug().
+		Uint64("shard", info.ClusterID).
+		Uint64("replica", info.NodeID).
+		Uint64("term", info.Term).
+		Uint64("leader-id", info.LeaderID).
+		Msg("leader updated")
 }
 
 func (r *RaftSystemListener) NodeHostShuttingDown() {
