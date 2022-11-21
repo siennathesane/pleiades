@@ -32,328 +32,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private KVStoreWrapper(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            account_ = input.readUInt64();
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            bucket_ = s;
-            break;
-          }
-          case 24: {
-            int rawValue = input.readEnum();
-
-            typ_ = rawValue;
-            break;
-          }
-          case 34: {
-            io.a13s.api.kvstore.v1.CreateAccountRequest.Builder subBuilder = null;
-            if (payloadCase_ == 4) {
-              subBuilder = ((io.a13s.api.kvstore.v1.CreateAccountRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.CreateAccountRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.CreateAccountRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 4;
-            break;
-          }
-          case 42: {
-            io.a13s.api.kvstore.v1.CreateAccountResponse.Builder subBuilder = null;
-            if (payloadCase_ == 5) {
-              subBuilder = ((io.a13s.api.kvstore.v1.CreateAccountResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.CreateAccountResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.CreateAccountResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 5;
-            break;
-          }
-          case 50: {
-            io.a13s.api.kvstore.v1.DeleteAccountRequest.Builder subBuilder = null;
-            if (payloadCase_ == 6) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteAccountRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteAccountRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteAccountRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 6;
-            break;
-          }
-          case 58: {
-            io.a13s.api.kvstore.v1.DeleteAccountResponse.Builder subBuilder = null;
-            if (payloadCase_ == 7) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteAccountResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteAccountResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteAccountResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 7;
-            break;
-          }
-          case 66: {
-            io.a13s.api.kvstore.v1.GetAccountDescriptorRequest.Builder subBuilder = null;
-            if (payloadCase_ == 8) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetAccountDescriptorRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetAccountDescriptorRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetAccountDescriptorRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 8;
-            break;
-          }
-          case 74: {
-            io.a13s.api.kvstore.v1.GetAccountDescriptorResponse.Builder subBuilder = null;
-            if (payloadCase_ == 9) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetAccountDescriptorResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetAccountDescriptorResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetAccountDescriptorResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 9;
-            break;
-          }
-          case 82: {
-            io.a13s.api.kvstore.v1.CreateBucketRequest.Builder subBuilder = null;
-            if (payloadCase_ == 10) {
-              subBuilder = ((io.a13s.api.kvstore.v1.CreateBucketRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.CreateBucketRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.CreateBucketRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 10;
-            break;
-          }
-          case 90: {
-            io.a13s.api.kvstore.v1.CreateBucketResponse.Builder subBuilder = null;
-            if (payloadCase_ == 11) {
-              subBuilder = ((io.a13s.api.kvstore.v1.CreateBucketResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.CreateBucketResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.CreateBucketResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 11;
-            break;
-          }
-          case 98: {
-            io.a13s.api.kvstore.v1.DeleteBucketRequest.Builder subBuilder = null;
-            if (payloadCase_ == 12) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteBucketRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteBucketRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteBucketRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 12;
-            break;
-          }
-          case 106: {
-            io.a13s.api.kvstore.v1.DeleteBucketResponse.Builder subBuilder = null;
-            if (payloadCase_ == 13) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteBucketResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteBucketResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteBucketResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 13;
-            break;
-          }
-          case 114: {
-            io.a13s.api.kvstore.v1.GetKeyRequest.Builder subBuilder = null;
-            if (payloadCase_ == 14) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetKeyRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetKeyRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetKeyRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 14;
-            break;
-          }
-          case 122: {
-            io.a13s.api.kvstore.v1.GetKeyResponse.Builder subBuilder = null;
-            if (payloadCase_ == 15) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetKeyResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetKeyResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetKeyResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 15;
-            break;
-          }
-          case 130: {
-            io.a13s.api.kvstore.v1.PutKeyRequest.Builder subBuilder = null;
-            if (payloadCase_ == 16) {
-              subBuilder = ((io.a13s.api.kvstore.v1.PutKeyRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.PutKeyRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.PutKeyRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 16;
-            break;
-          }
-          case 138: {
-            io.a13s.api.kvstore.v1.PutKeyResponse.Builder subBuilder = null;
-            if (payloadCase_ == 17) {
-              subBuilder = ((io.a13s.api.kvstore.v1.PutKeyResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.PutKeyResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.PutKeyResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 17;
-            break;
-          }
-          case 146: {
-            io.a13s.api.kvstore.v1.DeleteKeyRequest.Builder subBuilder = null;
-            if (payloadCase_ == 18) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteKeyRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteKeyRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteKeyRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 18;
-            break;
-          }
-          case 154: {
-            io.a13s.api.kvstore.v1.DeleteKeyResponse.Builder subBuilder = null;
-            if (payloadCase_ == 19) {
-              subBuilder = ((io.a13s.api.kvstore.v1.DeleteKeyResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.DeleteKeyResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.DeleteKeyResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 19;
-            break;
-          }
-          case 162: {
-            io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.Builder subBuilder = null;
-            if (payloadCase_ == 20) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetBucketDescriptorRequest) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetBucketDescriptorRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetBucketDescriptorRequest) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 20;
-            break;
-          }
-          case 170: {
-            io.a13s.api.kvstore.v1.GetBucketDescriptorResponse.Builder subBuilder = null;
-            if (payloadCase_ == 21) {
-              subBuilder = ((io.a13s.api.kvstore.v1.GetBucketDescriptorResponse) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.kvstore.v1.GetBucketDescriptorResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.kvstore.v1.GetBucketDescriptorResponse) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 21;
-            break;
-          }
-          case 178: {
-            io.a13s.api.errors.v1.Error.Builder subBuilder = null;
-            if (payloadCase_ == 22) {
-              subBuilder = ((io.a13s.api.errors.v1.Error) payload_).toBuilder();
-            }
-            payload_ =
-                input.readMessage(io.a13s.api.errors.v1.Error.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.errors.v1.Error) payload_);
-              payload_ = subBuilder.buildPartial();
-            }
-            payloadCase_ = 22;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return io.a13s.api.kvstore.v1.KvProto.internal_static_kvstore_v1_KVStoreWrapper_descriptor;
@@ -1449,7 +1127,7 @@ private static final long serialVersionUID = 0L;
     if (payloadCase_ == 22) {
       output.writeMessage(22, (io.a13s.api.errors.v1.Error) payload_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -1545,7 +1223,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(22, (io.a13s.api.errors.v1.Error) payload_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -1646,7 +1324,7 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -1744,7 +1422,7 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -1861,18 +1539,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using io.a13s.api.kvstore.v1.KVStoreWrapper.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -1883,6 +1556,63 @@ private static final long serialVersionUID = 0L;
 
       typ_ = 0;
 
+      if (createAccountRequestBuilder_ != null) {
+        createAccountRequestBuilder_.clear();
+      }
+      if (createAccountReplyBuilder_ != null) {
+        createAccountReplyBuilder_.clear();
+      }
+      if (deleteAccountRequestBuilder_ != null) {
+        deleteAccountRequestBuilder_.clear();
+      }
+      if (deleteAccountReplyBuilder_ != null) {
+        deleteAccountReplyBuilder_.clear();
+      }
+      if (getAccountDescriptorRequestBuilder_ != null) {
+        getAccountDescriptorRequestBuilder_.clear();
+      }
+      if (getAccountDescriptorReplyBuilder_ != null) {
+        getAccountDescriptorReplyBuilder_.clear();
+      }
+      if (createBucketRequestBuilder_ != null) {
+        createBucketRequestBuilder_.clear();
+      }
+      if (createBucketReplyBuilder_ != null) {
+        createBucketReplyBuilder_.clear();
+      }
+      if (deleteBucketRequestBuilder_ != null) {
+        deleteBucketRequestBuilder_.clear();
+      }
+      if (deleteBucketReplyBuilder_ != null) {
+        deleteBucketReplyBuilder_.clear();
+      }
+      if (getKeyRequestBuilder_ != null) {
+        getKeyRequestBuilder_.clear();
+      }
+      if (getKeyReplyBuilder_ != null) {
+        getKeyReplyBuilder_.clear();
+      }
+      if (putKeyRequestBuilder_ != null) {
+        putKeyRequestBuilder_.clear();
+      }
+      if (putKeyReplyBuilder_ != null) {
+        putKeyReplyBuilder_.clear();
+      }
+      if (deleteKeyRequestBuilder_ != null) {
+        deleteKeyRequestBuilder_.clear();
+      }
+      if (deleteKeyReplyBuilder_ != null) {
+        deleteKeyReplyBuilder_.clear();
+      }
+      if (getBucketDescriptorRequestBuilder_ != null) {
+        getBucketDescriptorRequestBuilder_.clear();
+      }
+      if (getBucketDescriptorReplyBuilder_ != null) {
+        getBucketDescriptorReplyBuilder_.clear();
+      }
+      if (errorBuilder_ != null) {
+        errorBuilder_.clear();
+      }
       payloadCase_ = 0;
       payload_ = null;
       return this;
@@ -2187,7 +1917,7 @@ private static final long serialVersionUID = 0L;
           break;
         }
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -2202,17 +1932,178 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.kvstore.v1.KVStoreWrapper parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              account_ = input.readUInt64();
+
+              break;
+            } // case 8
+            case 18: {
+              bucket_ = input.readStringRequireUtf8();
+
+              break;
+            } // case 18
+            case 24: {
+              typ_ = input.readEnum();
+
+              break;
+            } // case 24
+            case 34: {
+              input.readMessage(
+                  getCreateAccountRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 4;
+              break;
+            } // case 34
+            case 42: {
+              input.readMessage(
+                  getCreateAccountReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 5;
+              break;
+            } // case 42
+            case 50: {
+              input.readMessage(
+                  getDeleteAccountRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 6;
+              break;
+            } // case 50
+            case 58: {
+              input.readMessage(
+                  getDeleteAccountReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 7;
+              break;
+            } // case 58
+            case 66: {
+              input.readMessage(
+                  getGetAccountDescriptorRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 8;
+              break;
+            } // case 66
+            case 74: {
+              input.readMessage(
+                  getGetAccountDescriptorReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 9;
+              break;
+            } // case 74
+            case 82: {
+              input.readMessage(
+                  getCreateBucketRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 10;
+              break;
+            } // case 82
+            case 90: {
+              input.readMessage(
+                  getCreateBucketReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 11;
+              break;
+            } // case 90
+            case 98: {
+              input.readMessage(
+                  getDeleteBucketRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 12;
+              break;
+            } // case 98
+            case 106: {
+              input.readMessage(
+                  getDeleteBucketReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 13;
+              break;
+            } // case 106
+            case 114: {
+              input.readMessage(
+                  getGetKeyRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 14;
+              break;
+            } // case 114
+            case 122: {
+              input.readMessage(
+                  getGetKeyReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 15;
+              break;
+            } // case 122
+            case 130: {
+              input.readMessage(
+                  getPutKeyRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 16;
+              break;
+            } // case 130
+            case 138: {
+              input.readMessage(
+                  getPutKeyReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 17;
+              break;
+            } // case 138
+            case 146: {
+              input.readMessage(
+                  getDeleteKeyRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 18;
+              break;
+            } // case 146
+            case 154: {
+              input.readMessage(
+                  getDeleteKeyReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 19;
+              break;
+            } // case 154
+            case 162: {
+              input.readMessage(
+                  getGetBucketDescriptorRequestFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 20;
+              break;
+            } // case 162
+            case 170: {
+              input.readMessage(
+                  getGetBucketDescriptorReplyFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 21;
+              break;
+            } // case 170
+            case 178: {
+              input.readMessage(
+                  getErrorFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              payloadCase_ = 22;
+              break;
+            } // case 178
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.kvstore.v1.KVStoreWrapper) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int payloadCase_ = 0;
@@ -5122,7 +5013,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new KVStoreWrapper(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

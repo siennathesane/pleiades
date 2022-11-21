@@ -103,8 +103,8 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR AddReplicaRequest::AddReplicaRequest(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.hostname_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
   , /*decltype(_impl_.shard_id_)*/uint64_t{0u}
+  , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
   , /*decltype(_impl_.timeout_)*/int64_t{0}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct AddReplicaRequestDefaultTypeInternal {
@@ -368,6 +368,7 @@ PROTOBUF_CONSTEXPR StartReplicaRequest::StartReplicaRequest(
     /*decltype(_impl_.shard_id_)*/uint64_t{0u}
   , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
   , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_.restart_)*/false
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct StartReplicaRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaRequestDefaultTypeInternal()
@@ -394,6 +395,7 @@ PROTOBUF_CONSTEXPR StartReplicaObserverRequest::StartReplicaObserverRequest(
     /*decltype(_impl_.shard_id_)*/uint64_t{0u}
   , /*decltype(_impl_.replica_id_)*/uint64_t{0u}
   , /*decltype(_impl_.type_)*/0
+  , /*decltype(_impl_.restart_)*/false
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct StartReplicaObserverRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR StartReplicaObserverRequestDefaultTypeInternal()
@@ -515,8 +517,8 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.replica_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.shard_id_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.replica_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.hostname_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::AddReplicaRequest, _impl_.timeout_),
   ~0u,  // no _has_bits_
@@ -687,6 +689,7 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.shard_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.replica_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaRequest, _impl_.restart_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -702,6 +705,7 @@ const uint32_t TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets[] PROTOBUF_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.shard_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.replica_id_),
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.type_),
+  PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverRequest, _impl_.restart_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::raft::v1::StartReplicaObserverResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -751,11 +755,11 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 217, -1, -1, sizeof(::raft::v1::RemoveDataRequest)},
   { 225, -1, -1, sizeof(::raft::v1::RemoveDataResponse)},
   { 231, -1, -1, sizeof(::raft::v1::StartReplicaRequest)},
-  { 240, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
-  { 246, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
-  { 255, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
-  { 261, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
-  { 269, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
+  { 241, -1, -1, sizeof(::raft::v1::StartReplicaResponse)},
+  { 247, -1, -1, sizeof(::raft::v1::StartReplicaObserverRequest)},
+  { 257, -1, -1, sizeof(::raft::v1::StartReplicaObserverResponse)},
+  { 263, -1, -1, sizeof(::raft::v1::StopReplicaRequest)},
+  { 271, -1, -1, sizeof(::raft::v1::StopReplicaResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -818,8 +822,8 @@ const char descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto[] PROTOBUF
   "ssesEntry\022\020\n\003key\030\001 \001(\004R\003key\022\024\n\005value\030\002 \001"
   "(\tR\005value:\0028\001\032:\n\014RemovedEntry\022\020\n\003key\030\001 \001"
   "(\004R\003key\022\024\n\005value\030\002 \001(\tR\005value:\0028\001\"\203\001\n\021Ad"
-  "dReplicaRequest\022\035\n\nreplica_id\030\001 \001(\004R\trep"
-  "licaId\022\031\n\010shard_id\030\002 \001(\004R\007shardId\022\032\n\010hos"
+  "dReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007shard"
+  "Id\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\022\032\n\010hos"
   "tname\030\004 \001(\tR\010hostname\022\030\n\007timeout\030\005 \001(\003R\007"
   "timeout\"\024\n\022AddReplicaResponse\"\213\001\n\031AddRep"
   "licaObserverRequest\022\031\n\010shard_id\030\001 \001(\004R\007s"
@@ -862,31 +866,32 @@ const char descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto[] PROTOBUF
   "imeout\030\005 \001(\003R\007timeout\"\022\n\020NewShardRespons"
   "e\"M\n\021RemoveDataRequest\022\031\n\010shard_id\030\001 \001(\004"
   "R\007shardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId"
-  "\"\024\n\022RemoveDataResponse\"~\n\023StartReplicaRe"
-  "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl"
-  "ica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031."
-  "raft.v1.StateMachineTypeR\004type\"\026\n\024StartR"
-  "eplicaResponse\"\206\001\n\033StartReplicaObserverR"
+  "\"\024\n\022RemoveDataResponse\"\230\001\n\023StartReplicaR"
   "equest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrep"
   "lica_id\030\002 \001(\004R\treplicaId\022-\n\004type\030\003 \001(\0162\031"
-  ".raft.v1.StateMachineTypeR\004type\"\036\n\034Start"
-  "ReplicaObserverResponse\"N\n\022StopReplicaRe"
-  "quest\022\031\n\010shard_id\030\001 \001(\004R\007shardId\022\035\n\nrepl"
-  "ica_id\030\002 \001(\004R\treplicaId\"\025\n\023StopReplicaRe"
-  "sponse*n\n\020StateMachineType\022\"\n\036STATE_MACH"
-  "INE_TYPE_UNSPECIFIED\020\000\022\033\n\027STATE_MACHINE_"
-  "TYPE_TEST\020\001\022\031\n\025STATE_MACHINE_TYPE_KV\020\002B~"
-  "\n\023io.a13s.api.raft.v1B\016RaftShardProtoP\001Z"
-  "\032a13s.io/api/raft/v1;raftv1\242\002\003RXX\252\002\007Raft"
-  ".V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010Ra"
-  "ft::V1b\006proto3"
+  ".raft.v1.StateMachineTypeR\004type\022\030\n\007resta"
+  "rt\030\004 \001(\010R\007restart\"\026\n\024StartReplicaRespons"
+  "e\"\240\001\n\033StartReplicaObserverRequest\022\031\n\010sha"
+  "rd_id\030\001 \001(\004R\007shardId\022\035\n\nreplica_id\030\002 \001(\004"
+  "R\treplicaId\022-\n\004type\030\003 \001(\0162\031.raft.v1.Stat"
+  "eMachineTypeR\004type\022\030\n\007restart\030\004 \001(\010R\007res"
+  "tart\"\036\n\034StartReplicaObserverResponse\"N\n\022"
+  "StopReplicaRequest\022\031\n\010shard_id\030\001 \001(\004R\007sh"
+  "ardId\022\035\n\nreplica_id\030\002 \001(\004R\treplicaId\"\025\n\023"
+  "StopReplicaResponse*n\n\020StateMachineType\022"
+  "\"\n\036STATE_MACHINE_TYPE_UNSPECIFIED\020\000\022\033\n\027S"
+  "TATE_MACHINE_TYPE_TEST\020\001\022\031\n\025STATE_MACHIN"
+  "E_TYPE_KV\020\002B~\n\023io.a13s.api.raft.v1B\016Raft"
+  "ShardProtoP\001Z\032a13s.io/api/raft/v1;raftv1"
+  "\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPB"
+  "Metadata\352\002\010Raft::V1b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2ftimestamp_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_raft_2fv1_2fraft_5fshard_2eproto = {
-    false, false, 3414, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
+    false, false, 3467, descriptor_table_protodef_raft_2fv1_2fraft_5fshard_2eproto,
     "raft/v1/raft_shard.proto",
     &descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_once, descriptor_table_raft_2fv1_2fraft_5fshard_2eproto_deps, 1, 32,
     schemas, file_default_instances, TableStruct_raft_2fv1_2fraft_5fshard_2eproto::offsets,
@@ -1760,8 +1765,8 @@ AddReplicaRequest::AddReplicaRequest(const AddReplicaRequest& from)
   AddReplicaRequest* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.hostname_){}
-    , decltype(_impl_.replica_id_){}
     , decltype(_impl_.shard_id_){}
+    , decltype(_impl_.replica_id_){}
     , decltype(_impl_.timeout_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
@@ -1774,9 +1779,9 @@ AddReplicaRequest::AddReplicaRequest(const AddReplicaRequest& from)
     _this->_impl_.hostname_.Set(from._internal_hostname(), 
       _this->GetArenaForAllocation());
   }
-  ::memcpy(&_impl_.replica_id_, &from._impl_.replica_id_,
+  ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timeout_) -
-    reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.timeout_));
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.AddReplicaRequest)
 }
 
@@ -1786,8 +1791,8 @@ inline void AddReplicaRequest::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.hostname_){}
-    , decltype(_impl_.replica_id_){uint64_t{0u}}
     , decltype(_impl_.shard_id_){uint64_t{0u}}
+    , decltype(_impl_.replica_id_){uint64_t{0u}}
     , decltype(_impl_.timeout_){int64_t{0}}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -1822,9 +1827,9 @@ void AddReplicaRequest::Clear() {
   (void) cached_has_bits;
 
   _impl_.hostname_.ClearToEmpty();
-  ::memset(&_impl_.replica_id_, 0, static_cast<size_t>(
+  ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&_impl_.timeout_) -
-      reinterpret_cast<char*>(&_impl_.replica_id_)) + sizeof(_impl_.timeout_));
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.timeout_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1834,18 +1839,18 @@ const char* AddReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCont
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // uint64 replica_id = 1 [json_name = "replicaId"];
+      // uint64 shard_id = 1 [json_name = "shardId"];
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // uint64 shard_id = 2 [json_name = "shardId"];
+      // uint64 replica_id = 2 [json_name = "replicaId"];
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.shard_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          _impl_.replica_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1897,16 +1902,16 @@ uint8_t* AddReplicaRequest::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint64 replica_id = 1 [json_name = "replicaId"];
-  if (this->_internal_replica_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(1, this->_internal_replica_id(), target);
-  }
-
-  // uint64 shard_id = 2 [json_name = "shardId"];
+  // uint64 shard_id = 1 [json_name = "shardId"];
   if (this->_internal_shard_id() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(2, this->_internal_shard_id(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(1, this->_internal_shard_id(), target);
+  }
+
+  // uint64 replica_id = 2 [json_name = "replicaId"];
+  if (this->_internal_replica_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(2, this->_internal_replica_id(), target);
   }
 
   // string hostname = 4 [json_name = "hostname"];
@@ -1948,14 +1953,14 @@ size_t AddReplicaRequest::ByteSizeLong() const {
         this->_internal_hostname());
   }
 
-  // uint64 replica_id = 1 [json_name = "replicaId"];
-  if (this->_internal_replica_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_replica_id());
-  }
-
-  // uint64 shard_id = 2 [json_name = "shardId"];
+  // uint64 shard_id = 1 [json_name = "shardId"];
   if (this->_internal_shard_id() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_shard_id());
+  }
+
+  // uint64 replica_id = 2 [json_name = "replicaId"];
+  if (this->_internal_replica_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_replica_id());
   }
 
   // int64 timeout = 5 [json_name = "timeout"];
@@ -1984,11 +1989,11 @@ void AddReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, cons
   if (!from._internal_hostname().empty()) {
     _this->_internal_set_hostname(from._internal_hostname());
   }
-  if (from._internal_replica_id() != 0) {
-    _this->_internal_set_replica_id(from._internal_replica_id());
-  }
   if (from._internal_shard_id() != 0) {
     _this->_internal_set_shard_id(from._internal_shard_id());
+  }
+  if (from._internal_replica_id() != 0) {
+    _this->_internal_set_replica_id(from._internal_replica_id());
   }
   if (from._internal_timeout() != 0) {
     _this->_internal_set_timeout(from._internal_timeout());
@@ -2019,9 +2024,9 @@ void AddReplicaRequest::InternalSwap(AddReplicaRequest* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(AddReplicaRequest, _impl_.timeout_)
       + sizeof(AddReplicaRequest::_impl_.timeout_)
-      - PROTOBUF_FIELD_OFFSET(AddReplicaRequest, _impl_.replica_id_)>(
-          reinterpret_cast<char*>(&_impl_.replica_id_),
-          reinterpret_cast<char*>(&other->_impl_.replica_id_));
+      - PROTOBUF_FIELD_OFFSET(AddReplicaRequest, _impl_.shard_id_)>(
+          reinterpret_cast<char*>(&_impl_.shard_id_),
+          reinterpret_cast<char*>(&other->_impl_.shard_id_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AddReplicaRequest::GetMetadata() const {
@@ -4716,12 +4721,13 @@ StartReplicaRequest::StartReplicaRequest(const StartReplicaRequest& from)
       decltype(_impl_.shard_id_){}
     , decltype(_impl_.replica_id_){}
     , decltype(_impl_.type_){}
+    , decltype(_impl_.restart_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
-    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.restart_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.restart_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaRequest)
 }
 
@@ -4733,6 +4739,7 @@ inline void StartReplicaRequest::SharedCtor(
       decltype(_impl_.shard_id_){uint64_t{0u}}
     , decltype(_impl_.replica_id_){uint64_t{0u}}
     , decltype(_impl_.type_){0}
+    , decltype(_impl_.restart_){false}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -4761,8 +4768,8 @@ void StartReplicaRequest::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.type_) -
-      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+      reinterpret_cast<char*>(&_impl_.restart_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.restart_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -4794,6 +4801,14 @@ const char* StartReplicaRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_type(static_cast<::raft::v1::StateMachineType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // bool restart = 4 [json_name = "restart"];
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          _impl_.restart_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -4845,6 +4860,12 @@ uint8_t* StartReplicaRequest::_InternalSerialize(
       3, this->_internal_type(), target);
   }
 
+  // bool restart = 4 [json_name = "restart"];
+  if (this->_internal_restart() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(4, this->_internal_restart(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -4877,6 +4898,11 @@ size_t StartReplicaRequest::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
+  // bool restart = 4 [json_name = "restart"];
+  if (this->_internal_restart() != 0) {
+    total_size += 1 + 1;
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -4904,6 +4930,9 @@ void StartReplicaRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, co
   if (from._internal_type() != 0) {
     _this->_internal_set_type(from._internal_type());
   }
+  if (from._internal_restart() != 0) {
+    _this->_internal_set_restart(from._internal_restart());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -4922,8 +4951,8 @@ void StartReplicaRequest::InternalSwap(StartReplicaRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(StartReplicaRequest, _impl_.type_)
-      + sizeof(StartReplicaRequest::_impl_.type_)
+      PROTOBUF_FIELD_OFFSET(StartReplicaRequest, _impl_.restart_)
+      + sizeof(StartReplicaRequest::_impl_.restart_)
       - PROTOBUF_FIELD_OFFSET(StartReplicaRequest, _impl_.shard_id_)>(
           reinterpret_cast<char*>(&_impl_.shard_id_),
           reinterpret_cast<char*>(&other->_impl_.shard_id_));
@@ -4994,12 +5023,13 @@ StartReplicaObserverRequest::StartReplicaObserverRequest(const StartReplicaObser
       decltype(_impl_.shard_id_){}
     , decltype(_impl_.replica_id_){}
     , decltype(_impl_.type_){}
+    , decltype(_impl_.restart_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&_impl_.shard_id_, &from._impl_.shard_id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.type_) -
-    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.restart_) -
+    reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.restart_));
   // @@protoc_insertion_point(copy_constructor:raft.v1.StartReplicaObserverRequest)
 }
 
@@ -5011,6 +5041,7 @@ inline void StartReplicaObserverRequest::SharedCtor(
       decltype(_impl_.shard_id_){uint64_t{0u}}
     , decltype(_impl_.replica_id_){uint64_t{0u}}
     , decltype(_impl_.type_){0}
+    , decltype(_impl_.restart_){false}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -5039,8 +5070,8 @@ void StartReplicaObserverRequest::Clear() {
   (void) cached_has_bits;
 
   ::memset(&_impl_.shard_id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.type_) -
-      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.type_));
+      reinterpret_cast<char*>(&_impl_.restart_) -
+      reinterpret_cast<char*>(&_impl_.shard_id_)) + sizeof(_impl_.restart_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -5072,6 +5103,14 @@ const char* StartReplicaObserverRequest::_InternalParse(const char* ptr, ::_pbi:
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_type(static_cast<::raft::v1::StateMachineType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // bool restart = 4 [json_name = "restart"];
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          _impl_.restart_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -5123,6 +5162,12 @@ uint8_t* StartReplicaObserverRequest::_InternalSerialize(
       3, this->_internal_type(), target);
   }
 
+  // bool restart = 4 [json_name = "restart"];
+  if (this->_internal_restart() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(4, this->_internal_restart(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -5155,6 +5200,11 @@ size_t StartReplicaObserverRequest::ByteSizeLong() const {
       ::_pbi::WireFormatLite::EnumSize(this->_internal_type());
   }
 
+  // bool restart = 4 [json_name = "restart"];
+  if (this->_internal_restart() != 0) {
+    total_size += 1 + 1;
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -5182,6 +5232,9 @@ void StartReplicaObserverRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to
   if (from._internal_type() != 0) {
     _this->_internal_set_type(from._internal_type());
   }
+  if (from._internal_restart() != 0) {
+    _this->_internal_set_restart(from._internal_restart());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -5200,8 +5253,8 @@ void StartReplicaObserverRequest::InternalSwap(StartReplicaObserverRequest* othe
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, _impl_.type_)
-      + sizeof(StartReplicaObserverRequest::_impl_.type_)
+      PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, _impl_.restart_)
+      + sizeof(StartReplicaObserverRequest::_impl_.restart_)
       - PROTOBUF_FIELD_OFFSET(StartReplicaObserverRequest, _impl_.shard_id_)>(
           reinterpret_cast<char*>(&_impl_.shard_id_),
           reinterpret_cast<char*>(&other->_impl_.shard_id_));

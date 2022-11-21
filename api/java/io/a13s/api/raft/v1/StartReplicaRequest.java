@@ -31,61 +31,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private StartReplicaRequest(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            shardId_ = input.readUInt64();
-            break;
-          }
-          case 16: {
-
-            replicaId_ = input.readUInt64();
-            break;
-          }
-          case 24: {
-            int rawValue = input.readEnum();
-
-            type_ = rawValue;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return io.a13s.api.raft.v1.RaftShardProto.internal_static_raft_v1_StartReplicaRequest_descriptor;
@@ -140,6 +85,17 @@ private static final long serialVersionUID = 0L;
     return result == null ? io.a13s.api.raft.v1.StateMachineType.UNRECOGNIZED : result;
   }
 
+  public static final int RESTART_FIELD_NUMBER = 4;
+  private boolean restart_;
+  /**
+   * <code>bool restart = 4 [json_name = "restart"];</code>
+   * @return The restart.
+   */
+  @java.lang.Override
+  public boolean getRestart() {
+    return restart_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -163,7 +119,10 @@ private static final long serialVersionUID = 0L;
     if (type_ != io.a13s.api.raft.v1.StateMachineType.STATE_MACHINE_TYPE_UNSPECIFIED.getNumber()) {
       output.writeEnum(3, type_);
     }
-    unknownFields.writeTo(output);
+    if (restart_ != false) {
+      output.writeBool(4, restart_);
+    }
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -184,7 +143,11 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(3, type_);
     }
-    size += unknownFields.getSerializedSize();
+    if (restart_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(4, restart_);
+    }
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -204,7 +167,9 @@ private static final long serialVersionUID = 0L;
     if (getReplicaId()
         != other.getReplicaId()) return false;
     if (type_ != other.type_) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (getRestart()
+        != other.getRestart()) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -223,7 +188,10 @@ private static final long serialVersionUID = 0L;
         getReplicaId());
     hash = (37 * hash) + TYPE_FIELD_NUMBER;
     hash = (53 * hash) + type_;
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (37 * hash) + RESTART_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getRestart());
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -340,18 +308,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using io.a13s.api.raft.v1.StartReplicaRequest.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -361,6 +324,8 @@ private static final long serialVersionUID = 0L;
       replicaId_ = 0L;
 
       type_ = 0;
+
+      restart_ = false;
 
       return this;
     }
@@ -391,6 +356,7 @@ private static final long serialVersionUID = 0L;
       result.shardId_ = shardId_;
       result.replicaId_ = replicaId_;
       result.type_ = type_;
+      result.restart_ = restart_;
       onBuilt();
       return result;
     }
@@ -448,7 +414,10 @@ private static final long serialVersionUID = 0L;
       if (other.type_ != 0) {
         setTypeValue(other.getTypeValue());
       }
-      this.mergeUnknownFields(other.unknownFields);
+      if (other.getRestart() != false) {
+        setRestart(other.getRestart());
+      }
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -463,17 +432,50 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.raft.v1.StartReplicaRequest parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              shardId_ = input.readUInt64();
+
+              break;
+            } // case 8
+            case 16: {
+              replicaId_ = input.readUInt64();
+
+              break;
+            } // case 16
+            case 24: {
+              type_ = input.readEnum();
+
+              break;
+            } // case 24
+            case 32: {
+              restart_ = input.readBool();
+
+              break;
+            } // case 32
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.raft.v1.StartReplicaRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
 
@@ -592,6 +594,37 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private boolean restart_ ;
+    /**
+     * <code>bool restart = 4 [json_name = "restart"];</code>
+     * @return The restart.
+     */
+    @java.lang.Override
+    public boolean getRestart() {
+      return restart_;
+    }
+    /**
+     * <code>bool restart = 4 [json_name = "restart"];</code>
+     * @param value The restart to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRestart(boolean value) {
+      
+      restart_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool restart = 4 [json_name = "restart"];</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRestart() {
+      
+      restart_ = false;
+      onChanged();
+      return this;
+    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -625,7 +658,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new StartReplicaRequest(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

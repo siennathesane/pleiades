@@ -32,154 +32,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private RaftEvent(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-            int rawValue = input.readEnum();
-
-            typ_ = rawValue;
-            break;
-          }
-          case 16: {
-            int rawValue = input.readEnum();
-
-            action_ = rawValue;
-            break;
-          }
-          case 26: {
-            com.google.protobuf.Timestamp.Builder subBuilder = null;
-            if (timestamp_ != null) {
-              subBuilder = timestamp_.toBuilder();
-            }
-            timestamp_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(timestamp_);
-              timestamp_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 34: {
-            io.a13s.api.raft.v1.RaftLogEntryEvent.Builder subBuilder = null;
-            if (eventCase_ == 4) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftLogEntryEvent) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftLogEntryEvent.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftLogEntryEvent) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 4;
-            break;
-          }
-          case 42: {
-            io.a13s.api.raft.v1.RaftSnapshotEvent.Builder subBuilder = null;
-            if (eventCase_ == 5) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftSnapshotEvent) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftSnapshotEvent.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftSnapshotEvent) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 5;
-            break;
-          }
-          case 50: {
-            io.a13s.api.raft.v1.RaftConnectionEvent.Builder subBuilder = null;
-            if (eventCase_ == 6) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftConnectionEvent) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftConnectionEvent.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftConnectionEvent) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 6;
-            break;
-          }
-          case 58: {
-            io.a13s.api.raft.v1.RaftNodeEvent.Builder subBuilder = null;
-            if (eventCase_ == 7) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftNodeEvent) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftNodeEvent.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftNodeEvent) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 7;
-            break;
-          }
-          case 66: {
-            io.a13s.api.raft.v1.RaftHostShutdown.Builder subBuilder = null;
-            if (eventCase_ == 8) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftHostShutdown) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftHostShutdown.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftHostShutdown) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 8;
-            break;
-          }
-          case 74: {
-            io.a13s.api.raft.v1.RaftLeaderInfo.Builder subBuilder = null;
-            if (eventCase_ == 9) {
-              subBuilder = ((io.a13s.api.raft.v1.RaftLeaderInfo) event_).toBuilder();
-            }
-            event_ =
-                input.readMessage(io.a13s.api.raft.v1.RaftLeaderInfo.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((io.a13s.api.raft.v1.RaftLeaderInfo) event_);
-              event_ = subBuilder.buildPartial();
-            }
-            eventCase_ = 9;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return io.a13s.api.raft.v1.RaftEventProto.internal_static_raft_v1_RaftEvent_descriptor;
@@ -533,7 +385,7 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 9) {
       output.writeMessage(9, (io.a13s.api.raft.v1.RaftLeaderInfo) event_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -578,7 +430,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(9, (io.a13s.api.raft.v1.RaftLeaderInfo) event_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -629,7 +481,7 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -676,7 +528,7 @@ private static final long serialVersionUID = 0L;
       case 0:
       default:
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -793,18 +645,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using io.a13s.api.raft.v1.RaftEvent.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -818,6 +665,24 @@ private static final long serialVersionUID = 0L;
       } else {
         timestamp_ = null;
         timestampBuilder_ = null;
+      }
+      if (logEntryBuilder_ != null) {
+        logEntryBuilder_.clear();
+      }
+      if (snapshotBuilder_ != null) {
+        snapshotBuilder_.clear();
+      }
+      if (connectionBuilder_ != null) {
+        connectionBuilder_.clear();
+      }
+      if (nodeBuilder_ != null) {
+        nodeBuilder_.clear();
+      }
+      if (hostShutdownBuilder_ != null) {
+        hostShutdownBuilder_.clear();
+      }
+      if (leaderUpdateBuilder_ != null) {
+        leaderUpdateBuilder_.clear();
       }
       eventCase_ = 0;
       event_ = null;
@@ -983,7 +848,7 @@ private static final long serialVersionUID = 0L;
           break;
         }
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -998,17 +863,89 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.raft.v1.RaftEvent parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              typ_ = input.readEnum();
+
+              break;
+            } // case 8
+            case 16: {
+              action_ = input.readEnum();
+
+              break;
+            } // case 16
+            case 26: {
+              input.readMessage(
+                  getTimestampFieldBuilder().getBuilder(),
+                  extensionRegistry);
+
+              break;
+            } // case 26
+            case 34: {
+              input.readMessage(
+                  getLogEntryFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 4;
+              break;
+            } // case 34
+            case 42: {
+              input.readMessage(
+                  getSnapshotFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 5;
+              break;
+            } // case 42
+            case 50: {
+              input.readMessage(
+                  getConnectionFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 6;
+              break;
+            } // case 50
+            case 58: {
+              input.readMessage(
+                  getNodeFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 7;
+              break;
+            } // case 58
+            case 66: {
+              input.readMessage(
+                  getHostShutdownFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 8;
+              break;
+            } // case 66
+            case 74: {
+              input.readMessage(
+                  getLeaderUpdateFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 9;
+              break;
+            } // case 74
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.raft.v1.RaftEvent) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int eventCase_ = 0;
@@ -2138,7 +2075,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new RaftEvent(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

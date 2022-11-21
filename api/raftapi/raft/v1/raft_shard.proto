@@ -33,9 +33,9 @@ enum StateMachineType {
 
 message AddReplicaRequest {
   // replica_id is a non-zero value used to identify a node within a Raft cluster.
-  uint64 replica_id = 1;
+  uint64 shard_id = 1;
   // shard_id is the unique value used to identify a Raft cluster.
-  uint64 shard_id = 2;
+  uint64 replica_id = 2;
   string hostname = 4;
   int64 timeout = 5;
 }
@@ -112,6 +112,7 @@ message StartReplicaRequest {
   uint64 shard_id = 1;
   uint64 replica_id = 2;
   StateMachineType type = 3;
+  bool restart = 4;
 }
 
 message StartReplicaResponse {}
@@ -120,6 +121,7 @@ message StartReplicaObserverRequest {
   uint64 shard_id = 1;
   uint64 replica_id = 2;
   StateMachineType type = 3;
+  bool restart = 4;
 }
 
 message StartReplicaObserverResponse {}

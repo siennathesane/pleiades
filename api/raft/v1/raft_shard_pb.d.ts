@@ -141,16 +141,16 @@ export declare class AddReplicaRequest extends Message<AddReplicaRequest> {
   /**
    * replica_id is a non-zero value used to identify a node within a Raft cluster.
    *
-   * @generated from field: uint64 replica_id = 1;
+   * @generated from field: uint64 shard_id = 1;
    */
-  replicaId: bigint;
+  shardId: bigint;
 
   /**
    * shard_id is the unique value used to identify a Raft cluster.
    *
-   * @generated from field: uint64 shard_id = 2;
+   * @generated from field: uint64 replica_id = 2;
    */
-  shardId: bigint;
+  replicaId: bigint;
 
   /**
    * @generated from field: string hostname = 4;
@@ -626,6 +626,11 @@ export declare class StartReplicaRequest extends Message<StartReplicaRequest> {
    */
   type: StateMachineType;
 
+  /**
+   * @generated from field: bool restart = 4;
+   */
+  restart: boolean;
+
   constructor(data?: PartialMessage<StartReplicaRequest>);
 
   static readonly runtime: typeof proto3;
@@ -678,6 +683,11 @@ export declare class StartReplicaObserverRequest extends Message<StartReplicaObs
    * @generated from field: raft.v1.StateMachineType type = 3;
    */
   type: StateMachineType;
+
+  /**
+   * @generated from field: bool restart = 4;
+   */
+  restart: boolean;
 
   constructor(data?: PartialMessage<StartReplicaObserverRequest>);
 
