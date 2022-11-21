@@ -29,4 +29,10 @@ public interface StartReplicaRequestOrBuilder extends
    * @return The type.
    */
   io.a13s.api.raft.v1.StateMachineType getType();
+
+  /**
+   * <code>bool restart = 4 [json_name = "restart"];</code>
+   * @return The restart.
+   */
+  boolean getRestart();
 }

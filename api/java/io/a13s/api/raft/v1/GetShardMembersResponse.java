@@ -30,103 +30,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GetShardMembersResponse(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    int mutable_bitField0_ = 0;
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            configChangeId_ = input.readUInt64();
-            break;
-          }
-          case 18: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              replicas_ = com.google.protobuf.MapField.newMapField(
-                  ReplicasDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000001;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            replicas__ = input.readMessage(
-                ReplicasDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            replicas_.getMutableMap().put(
-                replicas__.getKey(), replicas__.getValue());
-            break;
-          }
-          case 26: {
-            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-              observers_ = com.google.protobuf.MapField.newMapField(
-                  ObserversDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000002;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            observers__ = input.readMessage(
-                ObserversDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            observers_.getMutableMap().put(
-                observers__.getKey(), observers__.getValue());
-            break;
-          }
-          case 34: {
-            if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-              witnesses_ = com.google.protobuf.MapField.newMapField(
-                  WitnessesDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000004;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            witnesses__ = input.readMessage(
-                WitnessesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            witnesses_.getMutableMap().put(
-                witnesses__.getKey(), witnesses__.getValue());
-            break;
-          }
-          case 42: {
-            if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-              removed_ = com.google.protobuf.MapField.newMapField(
-                  RemovedDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000008;
-            }
-            com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
-            removed__ = input.readMessage(
-                RemovedDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            removed_.getMutableMap().put(
-                removed__.getKey(), removed__.getValue());
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return io.a13s.api.raft.v1.RaftShardProto.internal_static_raft_v1_GetShardMembersResponse_descriptor;
@@ -534,7 +437,7 @@ private static final long serialVersionUID = 0L;
         internalGetRemoved(),
         RemovedDefaultEntryHolder.defaultEntry,
         5);
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -587,7 +490,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, removed__);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -612,7 +515,7 @@ private static final long serialVersionUID = 0L;
         other.internalGetWitnesses())) return false;
     if (!internalGetRemoved().equals(
         other.internalGetRemoved())) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -642,7 +545,7 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + REMOVED_FIELD_NUMBER;
       hash = (53 * hash) + internalGetRemoved().hashCode();
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -793,18 +696,13 @@ private static final long serialVersionUID = 0L;
 
     // Construct using io.a13s.api.raft.v1.GetShardMembersResponse.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
@@ -910,7 +808,7 @@ private static final long serialVersionUID = 0L;
           other.internalGetWitnesses());
       internalGetMutableRemoved().mergeFrom(
           other.internalGetRemoved());
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -925,17 +823,67 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.raft.v1.GetShardMembersResponse parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              configChangeId_ = input.readUInt64();
+
+              break;
+            } // case 8
+            case 18: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+              replicas__ = input.readMessage(
+                  ReplicasDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableReplicas().getMutableMap().put(
+                  replicas__.getKey(), replicas__.getValue());
+              break;
+            } // case 18
+            case 26: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+              observers__ = input.readMessage(
+                  ObserversDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableObservers().getMutableMap().put(
+                  observers__.getKey(), observers__.getValue());
+              break;
+            } // case 26
+            case 34: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+              witnesses__ = input.readMessage(
+                  WitnessesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableWitnesses().getMutableMap().put(
+                  witnesses__.getKey(), witnesses__.getValue());
+              break;
+            } // case 34
+            case 42: {
+              com.google.protobuf.MapEntry<java.lang.Long, java.lang.String>
+              removed__ = input.readMessage(
+                  RemovedDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              internalGetMutableRemoved().getMutableMap().put(
+                  removed__.getKey(), removed__.getValue());
+              break;
+            } // case 42
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.raft.v1.GetShardMembersResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
     private int bitField0_;
@@ -1527,7 +1475,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GetShardMembersResponse(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

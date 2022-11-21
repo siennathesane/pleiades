@@ -31,66 +31,6 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private AddReplicaRequest(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 8: {
-
-            replicaId_ = input.readUInt64();
-            break;
-          }
-          case 16: {
-
-            shardId_ = input.readUInt64();
-            break;
-          }
-          case 34: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            hostname_ = s;
-            break;
-          }
-          case 40: {
-
-            timeout_ = input.readInt64();
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return io.a13s.api.raft.v1.RaftShardProto.internal_static_raft_v1_AddReplicaRequest_descriptor;
@@ -104,34 +44,34 @@ private static final long serialVersionUID = 0L;
             io.a13s.api.raft.v1.AddReplicaRequest.class, io.a13s.api.raft.v1.AddReplicaRequest.Builder.class);
   }
 
-  public static final int REPLICA_ID_FIELD_NUMBER = 1;
-  private long replicaId_;
+  public static final int SHARD_ID_FIELD_NUMBER = 1;
+  private long shardId_;
   /**
    * <pre>
    * replica_id is a non-zero value used to identify a node within a Raft cluster.
    * </pre>
    *
-   * <code>uint64 replica_id = 1 [json_name = "replicaId"];</code>
-   * @return The replicaId.
-   */
-  @java.lang.Override
-  public long getReplicaId() {
-    return replicaId_;
-  }
-
-  public static final int SHARD_ID_FIELD_NUMBER = 2;
-  private long shardId_;
-  /**
-   * <pre>
-   * shard_id is the unique value used to identify a Raft cluster.
-   * </pre>
-   *
-   * <code>uint64 shard_id = 2 [json_name = "shardId"];</code>
+   * <code>uint64 shard_id = 1 [json_name = "shardId"];</code>
    * @return The shardId.
    */
   @java.lang.Override
   public long getShardId() {
     return shardId_;
+  }
+
+  public static final int REPLICA_ID_FIELD_NUMBER = 2;
+  private long replicaId_;
+  /**
+   * <pre>
+   * shard_id is the unique value used to identify a Raft cluster.
+   * </pre>
+   *
+   * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+   * @return The replicaId.
+   */
+  @java.lang.Override
+  public long getReplicaId() {
+    return replicaId_;
   }
 
   public static final int HOSTNAME_FIELD_NUMBER = 4;
@@ -197,11 +137,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (replicaId_ != 0L) {
-      output.writeUInt64(1, replicaId_);
-    }
     if (shardId_ != 0L) {
-      output.writeUInt64(2, shardId_);
+      output.writeUInt64(1, shardId_);
+    }
+    if (replicaId_ != 0L) {
+      output.writeUInt64(2, replicaId_);
     }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hostname_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, hostname_);
@@ -209,7 +149,7 @@ private static final long serialVersionUID = 0L;
     if (timeout_ != 0L) {
       output.writeInt64(5, timeout_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -218,13 +158,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (replicaId_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeUInt64Size(1, replicaId_);
-    }
     if (shardId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt64Size(2, shardId_);
+        .computeUInt64Size(1, shardId_);
+    }
+    if (replicaId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(2, replicaId_);
     }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hostname_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, hostname_);
@@ -233,7 +173,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(5, timeout_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -248,15 +188,15 @@ private static final long serialVersionUID = 0L;
     }
     io.a13s.api.raft.v1.AddReplicaRequest other = (io.a13s.api.raft.v1.AddReplicaRequest) obj;
 
-    if (getReplicaId()
-        != other.getReplicaId()) return false;
     if (getShardId()
         != other.getShardId()) return false;
+    if (getReplicaId()
+        != other.getReplicaId()) return false;
     if (!getHostname()
         .equals(other.getHostname())) return false;
     if (getTimeout()
         != other.getTimeout()) return false;
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -267,18 +207,18 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + REPLICA_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getReplicaId());
     hash = (37 * hash) + SHARD_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getShardId());
+    hash = (37 * hash) + REPLICA_ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getReplicaId());
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
     hash = (53 * hash) + getHostname().hashCode();
     hash = (37 * hash) + TIMEOUT_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getTimeout());
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -395,25 +335,20 @@ private static final long serialVersionUID = 0L;
 
     // Construct using io.a13s.api.raft.v1.AddReplicaRequest.newBuilder()
     private Builder() {
-      maybeForceBuilderInitialization();
+
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      replicaId_ = 0L;
-
       shardId_ = 0L;
+
+      replicaId_ = 0L;
 
       hostname_ = "";
 
@@ -445,8 +380,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public io.a13s.api.raft.v1.AddReplicaRequest buildPartial() {
       io.a13s.api.raft.v1.AddReplicaRequest result = new io.a13s.api.raft.v1.AddReplicaRequest(this);
-      result.replicaId_ = replicaId_;
       result.shardId_ = shardId_;
+      result.replicaId_ = replicaId_;
       result.hostname_ = hostname_;
       result.timeout_ = timeout_;
       onBuilt();
@@ -497,11 +432,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(io.a13s.api.raft.v1.AddReplicaRequest other) {
       if (other == io.a13s.api.raft.v1.AddReplicaRequest.getDefaultInstance()) return this;
-      if (other.getReplicaId() != 0L) {
-        setReplicaId(other.getReplicaId());
-      }
       if (other.getShardId() != 0L) {
         setShardId(other.getShardId());
+      }
+      if (other.getReplicaId() != 0L) {
+        setReplicaId(other.getReplicaId());
       }
       if (!other.getHostname().isEmpty()) {
         hostname_ = other.hostname_;
@@ -510,7 +445,7 @@ private static final long serialVersionUID = 0L;
       if (other.getTimeout() != 0L) {
         setTimeout(other.getTimeout());
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -525,70 +460,60 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      io.a13s.api.raft.v1.AddReplicaRequest parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              shardId_ = input.readUInt64();
+
+              break;
+            } // case 8
+            case 16: {
+              replicaId_ = input.readUInt64();
+
+              break;
+            } // case 16
+            case 34: {
+              hostname_ = input.readStringRequireUtf8();
+
+              break;
+            } // case 34
+            case 40: {
+              timeout_ = input.readInt64();
+
+              break;
+            } // case 40
+            default: {
+              if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                done = true; // was an endgroup tag
+              }
+              break;
+            } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (io.a13s.api.raft.v1.AddReplicaRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
-      return this;
-    }
-
-    private long replicaId_ ;
-    /**
-     * <pre>
-     * replica_id is a non-zero value used to identify a node within a Raft cluster.
-     * </pre>
-     *
-     * <code>uint64 replica_id = 1 [json_name = "replicaId"];</code>
-     * @return The replicaId.
-     */
-    @java.lang.Override
-    public long getReplicaId() {
-      return replicaId_;
-    }
-    /**
-     * <pre>
-     * replica_id is a non-zero value used to identify a node within a Raft cluster.
-     * </pre>
-     *
-     * <code>uint64 replica_id = 1 [json_name = "replicaId"];</code>
-     * @param value The replicaId to set.
-     * @return This builder for chaining.
-     */
-    public Builder setReplicaId(long value) {
-      
-      replicaId_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <pre>
-     * replica_id is a non-zero value used to identify a node within a Raft cluster.
-     * </pre>
-     *
-     * <code>uint64 replica_id = 1 [json_name = "replicaId"];</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearReplicaId() {
-      
-      replicaId_ = 0L;
-      onChanged();
+        onChanged();
+      } // finally
       return this;
     }
 
     private long shardId_ ;
     /**
      * <pre>
-     * shard_id is the unique value used to identify a Raft cluster.
+     * replica_id is a non-zero value used to identify a node within a Raft cluster.
      * </pre>
      *
-     * <code>uint64 shard_id = 2 [json_name = "shardId"];</code>
+     * <code>uint64 shard_id = 1 [json_name = "shardId"];</code>
      * @return The shardId.
      */
     @java.lang.Override
@@ -597,10 +522,10 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * shard_id is the unique value used to identify a Raft cluster.
+     * replica_id is a non-zero value used to identify a node within a Raft cluster.
      * </pre>
      *
-     * <code>uint64 shard_id = 2 [json_name = "shardId"];</code>
+     * <code>uint64 shard_id = 1 [json_name = "shardId"];</code>
      * @param value The shardId to set.
      * @return This builder for chaining.
      */
@@ -612,15 +537,58 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * shard_id is the unique value used to identify a Raft cluster.
+     * replica_id is a non-zero value used to identify a node within a Raft cluster.
      * </pre>
      *
-     * <code>uint64 shard_id = 2 [json_name = "shardId"];</code>
+     * <code>uint64 shard_id = 1 [json_name = "shardId"];</code>
      * @return This builder for chaining.
      */
     public Builder clearShardId() {
       
       shardId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long replicaId_ ;
+    /**
+     * <pre>
+     * shard_id is the unique value used to identify a Raft cluster.
+     * </pre>
+     *
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @return The replicaId.
+     */
+    @java.lang.Override
+    public long getReplicaId() {
+      return replicaId_;
+    }
+    /**
+     * <pre>
+     * shard_id is the unique value used to identify a Raft cluster.
+     * </pre>
+     *
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @param value The replicaId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReplicaId(long value) {
+      
+      replicaId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * shard_id is the unique value used to identify a Raft cluster.
+     * </pre>
+     *
+     * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearReplicaId() {
+      
+      replicaId_ = 0L;
       onChanged();
       return this;
     }
@@ -764,7 +732,18 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new AddReplicaRequest(input, extensionRegistry);
+      Builder builder = newBuilder();
+      try {
+        builder.mergeFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(builder.buildPartial());
+      } catch (com.google.protobuf.UninitializedMessageException e) {
+        throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(e)
+            .setUnfinishedMessage(builder.buildPartial());
+      }
+      return builder.buildPartial();
     }
   };
 

@@ -12,20 +12,20 @@ public interface AddReplicaRequestOrBuilder extends
    * replica_id is a non-zero value used to identify a node within a Raft cluster.
    * </pre>
    *
-   * <code>uint64 replica_id = 1 [json_name = "replicaId"];</code>
-   * @return The replicaId.
+   * <code>uint64 shard_id = 1 [json_name = "shardId"];</code>
+   * @return The shardId.
    */
-  long getReplicaId();
+  long getShardId();
 
   /**
    * <pre>
    * shard_id is the unique value used to identify a Raft cluster.
    * </pre>
    *
-   * <code>uint64 shard_id = 2 [json_name = "shardId"];</code>
-   * @return The shardId.
+   * <code>uint64 replica_id = 2 [json_name = "replicaId"];</code>
+   * @return The replicaId.
    */
-  long getShardId();
+  long getReplicaId();
 
   /**
    * <code>string hostname = 4 [json_name = "hostname"];</code>

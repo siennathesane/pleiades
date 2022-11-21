@@ -63,8 +63,8 @@ export const ShardState = proto3.makeMessageType(
 export const AddReplicaRequest = proto3.makeMessageType(
   "raft.v1.AddReplicaRequest",
   () => [
-    { no: 1, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
-    { no: 2, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 1, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
+    { no: 2, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 4, name: "hostname", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 5, name: "timeout", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
   ],
@@ -237,6 +237,7 @@ export const StartReplicaRequest = proto3.makeMessageType(
     { no: 1, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 2, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 3, name: "type", kind: "enum", T: proto3.getEnumType(StateMachineType) },
+    { no: 4, name: "restart", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
   ],
 );
 
@@ -257,6 +258,7 @@ export const StartReplicaObserverRequest = proto3.makeMessageType(
     { no: 1, name: "shard_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 2, name: "replica_id", kind: "scalar", T: 4 /* ScalarType.UINT64 */ },
     { no: 3, name: "type", kind: "enum", T: proto3.getEnumType(StateMachineType) },
+    { no: 4, name: "restart", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
   ],
 );
 
