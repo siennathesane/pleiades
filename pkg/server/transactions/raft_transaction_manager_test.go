@@ -57,7 +57,7 @@ func (t *TransactionManagerTestSuite) SetupSuite() {
 }
 
 func (t *TransactionManagerTestSuite) TestGetNoOpSession() {
-	params := &TransactionManagerBuilderParams{
+	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
@@ -80,7 +80,7 @@ func (t *TransactionManagerTestSuite) TestGetNoOpSession() {
 }
 
 func (t *TransactionManagerTestSuite) TestGetTransaction() {
-	params := &TransactionManagerBuilderParams{
+	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
@@ -105,7 +105,7 @@ func (t *TransactionManagerTestSuite) TestGetTransaction() {
 }
 
 func (t *TransactionManagerTestSuite) TestCloseTransaction() {
-	params := &TransactionManagerBuilderParams{
+	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
@@ -134,7 +134,7 @@ func (t *TransactionManagerTestSuite) TestCloseTransaction() {
 }
 
 func (t *TransactionManagerTestSuite) TestCommit() {
-	params := &TransactionManagerBuilderParams{
+	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}

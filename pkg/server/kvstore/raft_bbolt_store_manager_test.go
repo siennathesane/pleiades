@@ -52,13 +52,13 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.defaultTimeout = 300 * time.Millisecond
 
 	t.nh = serverutils.BuildTestNodeHost(t.T())
-	tmParams := &transactions.TransactionManagerBuilderParams{
+	tmParams := transactions.TransactionManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
 	t.tm = transactions.NewManager(tmParams).TransactionManager
 
-	shardParams := &shard.ShardManagerBuilderParams{
+	shardParams := shard.ShardManagerBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
@@ -83,7 +83,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
-	params := &BboltStoreManagerBuilderParams{
+	params := BboltStoreManagerBuilderParams{
 		TransactionManager: t.tm,
 		NodeHost:           t.nh,
 		Logger:             t.logger,
@@ -119,7 +119,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
-	params := &BboltStoreManagerBuilderParams{
+	params := BboltStoreManagerBuilderParams{
 		TransactionManager: t.tm,
 		NodeHost:           t.nh,
 		Logger:             t.logger,
@@ -172,7 +172,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
-	params := &BboltStoreManagerBuilderParams{
+	params := BboltStoreManagerBuilderParams{
 		TransactionManager: t.tm,
 		NodeHost:           t.nh,
 		Logger:             t.logger,
@@ -222,7 +222,7 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
-	params := &BboltStoreManagerBuilderParams{
+	params := BboltStoreManagerBuilderParams{
 		TransactionManager: t.tm,
 		NodeHost:           t.nh,
 		Logger:             t.logger,
@@ -291,7 +291,7 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
-	params := &BboltStoreManagerBuilderParams{
+	params := BboltStoreManagerBuilderParams{
 		TransactionManager: t.tm,
 		NodeHost:           t.nh,
 		Logger:             t.logger,

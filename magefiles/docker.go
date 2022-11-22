@@ -7,6 +7,8 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
+//go:build mage
+
 package main
 
 import (
