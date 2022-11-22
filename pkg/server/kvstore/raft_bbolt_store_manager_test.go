@@ -17,6 +17,7 @@ import (
 	"time"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
@@ -49,7 +50,7 @@ type bboltStoreManagerTestSuite struct {
 
 func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
-	t.defaultTimeout = 300 * time.Millisecond
+	t.defaultTimeout = 600 * time.Millisecond
 
 	t.nh = serverutils.BuildTestNodeHost(t.T())
 	tmParams := transactions.TransactionManagerBuilderParams{
@@ -73,7 +74,13 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 		go func() {
 			wg.Add(1)
 			defer wg.Done()
-			err := t.sm.NewShard()
+			// i, i*4, shard.BBoltStateMachineType, utils.Timeout(t.defaultTimeout)
+			err := t.sm.NewShard(&raftv1.NewShardRequest{
+				ShardId:   i,
+				ReplicaId: i,
+				Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_KV,
+				Timeout:   int64(utils.Timeout(t.defaultTimeout)),
+			})
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
