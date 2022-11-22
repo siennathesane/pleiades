@@ -18,26 +18,48 @@ import (
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var (
 	_ runtime.IKVStore = (*BboltStoreManager)(nil)
 )
 
-func NewBboltStoreManager(tm *transactions.TransactionManager, nh *dragonboat.NodeHost, logger zerolog.Logger) *BboltStoreManager {
-	l := logger.With().Str("component", "store-manager").Logger()
-	return &BboltStoreManager{l, tm, nh, &routing.Shard{}, 1000 * time.Millisecond}
+type BboltStoreManagerBuilderParams struct {
+	fx.In
+
+	TransactionManager runtime.ITransactionManager
+	NodeHost           *dragonboat.NodeHost
+	Logger             zerolog.Logger
+}
+
+type BboltStoreManagerBuilderResults struct {
+	fx.Out
+
+	KVStoreManager runtime.IKVStore
+}
+
+func NewBboltStoreManager(params BboltStoreManagerBuilderParams) BboltStoreManagerBuilderResults {
+	l := params.Logger.With().Str("component", "store-manager").Logger()
+	return BboltStoreManagerBuilderResults{
+		KVStoreManager: &BboltStoreManager{
+			l,
+			params.TransactionManager,
+			params.NodeHost,
+			&routing.Shard{},
+			1000 * time.Millisecond,
+		},
+	}
 }
 
 type BboltStoreManager struct {
 	logger         zerolog.Logger
-	tm             *transactions.TransactionManager
+	tm             runtime.ITransactionManager
 	nh             *dragonboat.NodeHost
 	shardRouter    *routing.Shard
 	defaultTimeout time.Duration

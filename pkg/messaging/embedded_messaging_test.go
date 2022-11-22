@@ -62,8 +62,8 @@ func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
 	}, "the embedded server must not panic on start")
 
 	embeddedClient, err := e.GetPubSubClient()
-	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
-	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
+	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
+	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
@@ -76,6 +76,6 @@ func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
 	}, "the embedded server must not panic on start")
 
 	embeddedClient, err := e.GetStreamClient()
-	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
-	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
+	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
+	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }

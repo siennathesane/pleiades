@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	utils2 "github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -38,103 +38,123 @@ type TransactionManagerTestSuite struct {
 
 // we need to ensure that we use a single cluster the entire time to emulate multiple
 // sessions in a single cluster. it's a bit... hand-wavey, but like, it works, so fuck it
-func (smt *TransactionManagerTestSuite) SetupSuite() {
+func (t *TransactionManagerTestSuite) SetupSuite() {
 
-	smt.logger = utils.NewTestLogger(smt.T())
-	smt.defaultTimeout = 500 * time.Millisecond
+	t.logger = utils.NewTestLogger(t.T())
+	t.defaultTimeout = 500 * time.Millisecond
 
-	smt.nh = utils2.BuildTestNodeHost(smt.T())
-	smt.Require().NotNil(smt.nh, "node must not be nil")
+	t.nh = serverutils.BuildTestNodeHost(t.T())
+	t.Require().NotNil(t.nh, "node must not be nil")
 
-	shardConfig := utils2.BuildTestShardConfig(smt.T())
-	smt.shardId = shardConfig.ClusterID
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
+	t.shardId = shardConfig.ClusterID
 	nodeClusters := make(map[uint64]string)
-	nodeClusters[shardConfig.NodeID] = smt.nh.RaftAddress()
+	nodeClusters[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := smt.nh.StartCluster(nodeClusters, false, utils2.NewTestStateMachine, shardConfig)
-	smt.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(smt.defaultTimeout)
+	err := t.nh.StartCluster(nodeClusters, false, serverutils.NewTestStateMachine, shardConfig)
+	t.Require().NoError(err, "there must not be an error when starting the test state machine")
+	time.Sleep(t.defaultTimeout)
 }
 
-func (smt *TransactionManagerTestSuite) TestGetNoOpSession() {
-	sm := NewTransactionManager(smt.nh, smt.logger)
+func (t *TransactionManagerTestSuite) TestGetNoOpSession() {
+	params := &TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	smRes := NewManager(params)
+	sm := smRes.TransactionManager.(*TransactionManager)
 
-	transaction := sm.GetNoOpTransaction(smt.shardId)
-	smt.Require().NotNil(transaction, "the client transaction must not be nil")
+	transaction := sm.GetNoOpTransaction(t.shardId)
+	t.Require().NotNil(transaction, "the client transaction must not be nil")
 
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
-	smt.Require().True(ok, "the client session must exist in the cache")
+	t.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	_, err := smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
-	smt.Require().NoError(err, "there must not be an error when proposing a new message")
+	proposeContext, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	_, err := t.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	t.Require().NoError(err, "there must not be an error when proposing a new message")
 
-	smt.Require().Panics(func() {
+	t.Require().Panics(func() {
 		cs.ProposalCompleted()
 	}, "finishing a noop proposal must panic")
 }
 
-func (smt *TransactionManagerTestSuite) TestGetTransaction() {
-	sm := NewTransactionManager(smt.nh, smt.logger)
+func (t *TransactionManagerTestSuite) TestGetTransaction() {
+	params := &TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	smRes := NewManager(params)
+	sm := smRes.TransactionManager.(*TransactionManager)
 
-	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	transaction, err := sm.GetTransaction(ctx, smt.shardId)
-	smt.Require().NoError(err, "there must not be an error when getting the session")
-	smt.Require().NotNil(transaction, "the client session must not be nil")
+	ctx, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	transaction, err := sm.GetTransaction(ctx, t.shardId)
+	t.Require().NoError(err, "there must not be an error when getting the session")
+	t.Require().NotNil(transaction, "the client session must not be nil")
 
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
-	smt.Require().True(ok, "the client session must exist in the cache")
+	t.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
-	smt.Require().NoError(err, "there must not be an error when proposing a new message")
+	proposeContext, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	_, err = t.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	t.Require().NoError(err, "there must not be an error when proposing a new message")
 
-	smt.Require().NotPanics(func() {
+	t.Require().NotPanics(func() {
 		cs.ProposalCompleted()
 	}, "finishing a proposal must not panic")
 }
 
-func (smt *TransactionManagerTestSuite) TestCloseTransaction() {
-	sm := NewTransactionManager(smt.nh, smt.logger)
+func (t *TransactionManagerTestSuite) TestCloseTransaction() {
+	params := &TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	smRes := NewManager(params)
+	sm := smRes.TransactionManager.(*TransactionManager)
 
-	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	transaction, err := sm.GetTransaction(ctx, smt.shardId)
-	smt.Require().NoError(err, "there must not be an error when getting the session")
-	smt.Require().NotNil(transaction, "the client session must not be nil")
+	ctx, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	transaction, err := sm.GetTransaction(ctx, t.shardId)
+	t.Require().NoError(err, "there must not be an error when getting the session")
+	t.Require().NotNil(transaction, "the client session must not be nil")
 
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
-	smt.Require().True(ok, "the client session must exist in the cache")
+	t.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
-	smt.Require().NoError(err, "there must not be an error when proposing a new message")
+	proposeContext, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	_, err = t.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	t.Require().NoError(err, "there must not be an error when proposing a new message")
 
-	smt.Require().NotPanics(func() {
+	t.Require().NotPanics(func() {
 		cs.ProposalCompleted()
 	}, "finishing a proposal must not panic")
 
 	afterProposal := csToTransaction(*cs)
 	err = sm.CloseTransaction(ctx, afterProposal)
-	smt.Require().NoError(err, "there must not be an error when closing the transaction")
+	t.Require().NoError(err, "there must not be an error when closing the transaction")
 }
 
-func (smt *TransactionManagerTestSuite) TestCommit() {
-	sm := NewTransactionManager(smt.nh, smt.logger)
+func (t *TransactionManagerTestSuite) TestCommit() {
+	params := &TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	smRes := NewManager(params)
+	sm := smRes.TransactionManager.(*TransactionManager)
 
-	ctx, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	transaction, err := sm.GetTransaction(ctx, smt.shardId)
-	smt.Require().NoError(err, "there must not be an error when getting the session")
-	smt.Require().NotNil(transaction, "the client session must not be nil")
+	ctx, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	transaction, err := sm.GetTransaction(ctx, t.shardId)
+	t.Require().NoError(err, "there must not be an error when getting the session")
+	t.Require().NotNil(transaction, "the client session must not be nil")
 
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
-	smt.Require().True(ok, "the client session must exist in the cache")
+	t.Require().True(ok, "the client session must exist in the cache")
 
-	proposeContext, _ := context.WithTimeout(context.Background(), smt.defaultTimeout)
-	_, err = smt.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
-	smt.Require().NoError(err, "there must not be an error when proposing a new message")
+	proposeContext, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
+	_, err = t.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
+	t.Require().NoError(err, "there must not be an error when proposing a new message")
 
 	transactionResult := sm.Commit(proposeContext, transaction)
 
-	smt.Require().True(transaction.TransactionId < transactionResult.TransactionId, "the post-proposal transaction id must have incremented")
-	smt.logger.Printf("increase after a single transaction in a shard: %d", transactionResult.TransactionId-transaction.TransactionId)
+	t.Require().True(transaction.TransactionId < transactionResult.TransactionId, "the post-proposal transaction id must have incremented")
+	t.logger.Printf("increase after a single transaction in a shard: %d", transactionResult.TransactionId-transaction.TransactionId)
 }

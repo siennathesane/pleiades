@@ -16,14 +16,42 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var _ runtime.IHost = (*RaftHost)(nil)
 
-func NewRaftHost(host *dragonboat.NodeHost, logger zerolog.Logger) *RaftHost {
-	return &RaftHost{
-		logger: logger.With().Str("component", "raft-host").Logger(),
-		nh:     host,
+type RaftHostBuilderParams struct {
+	fx.In
+
+	NodeHost *dragonboat.NodeHost
+	Logger   zerolog.Logger
+}
+
+type RaftHostBuilderResults struct {
+	fx.Out
+
+	RaftHost runtime.IHost
+}
+
+func NewHost(lc fx.Lifecycle, params RaftHostBuilderParams) RaftHostBuilderResults {
+	host := &RaftHost{
+		logger: params.Logger.With().Str("component", "raft-host").Logger(),
+		nh:     params.NodeHost,
+	}
+
+	lc.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			host.Stop()
+			return nil
+		},
+	})
+
+	return RaftHostBuilderResults{
+		RaftHost: &RaftHost{
+			logger: params.Logger.With().Str("component", "raft-host").Logger(),
+			nh:     params.NodeHost,
+		},
 	}
 }
 

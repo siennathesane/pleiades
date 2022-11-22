@@ -42,7 +42,7 @@ func (Install) Local() error {
 // install the binary to a homebrew location - only for use with homebrew
 func (Install) Homebrew(path string) error {
 	fmt.Println("installing to homebrew...")
-	return compileWithPath(path)
+	return compileWithPath(path, nil)
 }
 
 // fetch the go dependencies

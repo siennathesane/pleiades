@@ -19,7 +19,8 @@ import (
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
-	utils2 "github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/server/shard"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/mxplusb/pleiades/pkg/utils"
@@ -38,8 +39,8 @@ func TestBBoltStoreManager(t *testing.T) {
 type bboltStoreManagerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
-	tm             *transactions.TransactionManager
-	sm             *shard.RaftShardManager
+	tm             runtime.ITransactionManager
+	sm             runtime.IShardManager
 	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
 	nats           *messaging.EmbeddedMessaging
@@ -50,23 +51,18 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 300 * time.Millisecond
 
-	m, err := messaging.NewEmbeddedMessagingWithDefaults(t.logger)
-	t.Require().NoError(err, "there must not be an error when creating the embedded nats")
-	t.nats = m
-	t.nats.Start()
+	t.nh = serverutils.BuildTestNodeHost(t.T())
+	tmParams := &transactions.TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	t.tm = transactions.NewManager(tmParams).TransactionManager
 
-	client, err := t.nats.GetStreamClient()
-	t.Require().NoError(err)
-	t.client = client
-
-	pubSubClient, err := t.nats.GetPubSubClient()
-	t.Require().NoError(err, "there must not be an error when creating the pubsub client")
-
-	eventHandler := messaging.NewRaftEventHandler(pubSubClient, client, t.logger)
-
-	t.nh = utils2.BuildTestNodeHost(t.T())
-	t.tm = transactions.NewTransactionManager(t.nh, t.logger)
-	t.sm = shard.NewShardManager(t.nh, t.client, eventHandler, t.logger)
+	shardParams := &shard.ShardManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	t.sm = shard.NewManager(shardParams).RaftShardManager
 
 	// ensure that bbolt uses the temp directory
 	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
@@ -77,7 +73,7 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 		go func() {
 			wg.Add(1)
 			defer wg.Done()
-			err := t.sm.NewShard(i, i*4, shard.BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
+			err := t.sm.NewShard()
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
@@ -87,7 +83,13 @@ func (t *bboltStoreManagerTestSuite) SetupSuite() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
-	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
+	params := &BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
@@ -117,7 +119,13 @@ func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
-	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
+	params := &BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
@@ -164,7 +172,13 @@ func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
-	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
+	params := &BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
@@ -208,7 +222,13 @@ func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
-	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
+	params := &BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
@@ -271,7 +291,13 @@ func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
 }
 
 func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
-	storeManager := NewBboltStoreManager(t.tm, t.nh, t.logger)
+	params := &BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
