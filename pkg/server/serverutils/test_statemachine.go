@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package serverutils
 
 import (
 	"encoding/binary"
@@ -19,21 +19,21 @@ import (
 	"github.com/rs/zerolog"
 )
 
-// testStateMachine is the IStateMachine implementation used in the
+// TestStateMachine is the IStateMachine implementation used in the
 // helloworld example.
 // See https://github.com/lni/dragonboat/blob/master/statemachine/rsm.go for
 // more details of the IStateMachine interface.
-type testStateMachine struct {
+type TestStateMachine struct {
 	ClusterID uint64
 	NodeID    uint64
 	Count     uint64
 	logger  zerolog.Logger
 }
 
-// NewExampleStateMachine creates and return a new testStateMachine object.
-func newTestStateMachine(clusterID uint64,
+// NewExampleStateMachine creates and return a new TestStateMachine object.
+func NewTestStateMachine(clusterID uint64,
 	nodeID uint64) sm.IStateMachine {
-	return &testStateMachine{
+	return &TestStateMachine{
 		ClusterID: clusterID,
 		NodeID:    nodeID,
 		Count:     0,
@@ -44,14 +44,14 @@ func newTestStateMachine(clusterID uint64,
 // Lookup performs local lookup on the testStateMachine instance. In this example,
 // we always return the Count value as a little endian binary encoded byte
 // slice.
-func (s *testStateMachine) Lookup(query interface{}) (interface{}, error) {
+func (s *TestStateMachine) Lookup(query interface{}) (interface{}, error) {
 	result := make([]byte, 8)
 	binary.LittleEndian.PutUint64(result, s.Count)
 	return result, nil
 }
 
 // Update updates the object using the specified committed raft entry.
-func (s *testStateMachine) Update(data []byte) (sm.Result, error) {
+func (s *TestStateMachine) Update(data []byte) (sm.Result, error) {
 	// in this example, we print out the following hello world message for each
 	// incoming update request. we also increase the counter by one to remember
 	// how many updates we have applied
@@ -62,7 +62,7 @@ func (s *testStateMachine) Update(data []byte) (sm.Result, error) {
 
 // SaveSnapshot saves the current IStateMachine state into a snapshot using the
 // specified io.Writer object.
-func (s *testStateMachine) SaveSnapshot(w io.Writer,
+func (s *TestStateMachine) SaveSnapshot(w io.Writer,
 	fc sm.ISnapshotFileCollection, done <-chan struct{}) error {
 	// as shown above, the only state that can be saved is the Count variable
 	// there is no external file in this IStateMachine example, we thus leave
@@ -74,7 +74,7 @@ func (s *testStateMachine) SaveSnapshot(w io.Writer,
 }
 
 // RecoverFromSnapshot recovers the state using the provided snapshot.
-func (s *testStateMachine) RecoverFromSnapshot(r io.Reader,
+func (s *TestStateMachine) RecoverFromSnapshot(r io.Reader,
 	files []sm.SnapshotFile,
 	done <-chan struct{}) error {
 	// restore the Count variable, that is the only state we maintain in this
@@ -91,4 +91,4 @@ func (s *testStateMachine) RecoverFromSnapshot(r io.Reader,
 // Close closes the IStateMachine instance. There is nothing for us to cleanup
 // or release as this is a pure in memory data store. Note that the Close
 // method is not guaranteed to be called as node can crash at any time.
-func (s *testStateMachine) Close() error { return nil }
+func (s *TestStateMachine) Close() error { return nil }

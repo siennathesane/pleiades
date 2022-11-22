@@ -33,11 +33,11 @@ func init() {
 
 	kvPutCmd.PersistentFlags().BytesBase64VarP(&payload, "value", "v", []byte{}, "a base64 encoded value")
 	kvPutCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to use")
-	kvPutCmd.PersistentFlags().Int64VarP(&keyVersion, "version", "n", 0, "key version")
+	kvPutCmd.PersistentFlags().Uint32VarP(&keyVersion, "version", "n", 0, "key version")
 }
 
 var (
-	keyVersion int64
+	keyVersion uint32
 )
 
 func putKey(cmd *cobra.Command, args []string) {
@@ -60,7 +60,7 @@ func putKey(cmd *cobra.Command, args []string) {
 		AccountId:  accountId,
 		BucketName: bucketName,
 		KeyValuePair: &kvstorev1.KeyValue{
-			Key:            key,
+			Key:            []byte(key),
 			CreateRevision: now,
 			ModRevision:    now,
 			Version:        keyVersion,

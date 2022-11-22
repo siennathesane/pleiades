@@ -16,17 +16,20 @@ const (
 
 type Configuration struct {
 	ConfigFilePath string        `flag:"config" default:"/etc/pleiades/config.yaml" usage:"config file location" mapstructure:"configPath"`
-	Debug bool `flag:"debug" default:"false" yaml:"debug" json:"debug" mapstructure:"debug"`
+	Debug          bool          `flag:"debug" default:"false" yaml:"debug" json:"debug" mapstructure:"debug"`
+	Trace          bool          `flag:"trace" default:"false" yaml:"trace" json:"trace" mapstructure:"trace"`
 	Server         *ServerConfig `json:"server" yaml:"server" mapstructure:"server"`
 	Client         *ClientConfig `json:"client" yaml:"client" mapstructure:"client"`
 }
 
-type ClientConfig struct{}
+type ClientConfig struct {
+	GrpcAddr string `flag:"host" default:"http://localhost:8080" usage:"address to call" json:"grpcAddr" yaml:"grpcAddr" mapstructure:"grpcAddr"`
+}
 
 type ServerConfig struct {
 	Datastore *Datastore `json:"datastore,omitempty" yaml:"datastore,omitempty" mapstructure:"datastore"`
 	Host      *Host      `json:"host,omitempty" yaml:"host,omitempty" mapstructure:"host"`
-	Reset bool // internal flag to reset the dev server
+	Reset     bool       // internal flag to reset the dev server
 }
 
 type Datastore struct {

@@ -12,7 +12,6 @@ package configuration
 import (
 	"testing"
 
-	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -22,16 +21,4 @@ func TestSchema(t *testing.T) {
 
 type schemaTestSuite struct {
 	suite.Suite
-}
-
-func (t *schemaTestSuite) TestGetFlagSet() {
-	dsFs := ToFlagSet[Datastore]("datastore")
-	hostFs := ToFlagSet[Host]("host")
-
-	fs := pflag.NewFlagSet("root", pflag.ExitOnError)
-	fs.AddFlagSet(dsFs)
-	fs.AddFlagSet(hostFs)
-
-	t.Require().NotNil(fs)
-	fs.PrintDefaults()
 }

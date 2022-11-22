@@ -385,7 +385,7 @@ func (b *bboltStore) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKey
 	}
 
 	keyName := request.GetKey()
-	if keyName == "" {
+	if len(keyName) == 0 {
 		b.logger.Trace().Msg("empty key identifier")
 		return &kvstorev1.GetKeyResponse{}, errors.New("empty key identifier")
 	}
@@ -409,7 +409,7 @@ func (b *bboltStore) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKey
 
 		payload := bucket.Get([]byte(keyName))
 		if payload == nil {
-			b.logger.Trace().Uint64("account-id", account).Str("bucket", keyName).Msg("key not found")
+			b.logger.Trace().Uint64("account-id", account).Str("bucket", string(keyName)).Msg("key not found")
 			return ErrKeyNotFound
 		}
 
@@ -439,7 +439,7 @@ func (b *bboltStore) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKey
 	}
 
 	keyValuePair := request.GetKeyValuePair()
-	if keyValuePair.GetKey() == "" {
+	if keyValuePair == nil {
 		b.logger.Error().Msg("empty key identifier")
 		return &kvstorev1.PutKeyResponse{}, errors.New("empty key identifier")
 	}
@@ -491,7 +491,7 @@ func (b *bboltStore) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKey
 			return errors.Wrap(err, "can't marshal kvp")
 		}
 
-		err = bucket.Put([]byte(keyValuePair.Key), payload)
+		err = bucket.Put(keyValuePair.Key, payload)
 		if err != nil {
 			b.logger.Error().Err(err).Msg("can't put key")
 		}
@@ -524,7 +524,7 @@ func (b *bboltStore) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.
 	}
 
 	keyName := request.GetKey()
-	if keyName == "" {
+	if len(keyName) == 0 {
 		b.logger.Trace().Msg("empty key identifier")
 		return &kvstorev1.DeleteKeyResponse{}, errors.New("empty key identifier")
 	}

@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package kvstore
 
 import (
 	"context"
@@ -17,31 +17,55 @@ import (
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
-	"github.com/lni/dragonboat/v3/client"
+	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var (
-	_ IKVStore = (*bboltStoreManager)(nil)
+	_ runtime.IKVStore = (*BboltStoreManager)(nil)
 )
 
-func newBboltStoreManager(tm *raftTransactionManager, nh *dragonboat.NodeHost, logger zerolog.Logger) *bboltStoreManager {
-	l := logger.With().Str("component", "store-manager").Logger()
-	return &bboltStoreManager{l, tm, nh, &routing.Shard{}, 1000 * time.Millisecond}
+type BboltStoreManagerBuilderParams struct {
+	fx.In
+
+	TransactionManager runtime.ITransactionManager
+	NodeHost           *dragonboat.NodeHost
+	Logger             zerolog.Logger
 }
 
-type bboltStoreManager struct {
+type BboltStoreManagerBuilderResults struct {
+	fx.Out
+
+	KVStoreManager runtime.IKVStore
+}
+
+func NewBboltStoreManager(params BboltStoreManagerBuilderParams) BboltStoreManagerBuilderResults {
+	l := params.Logger.With().Str("component", "store-manager").Logger()
+	return BboltStoreManagerBuilderResults{
+		KVStoreManager: &BboltStoreManager{
+			l,
+			params.TransactionManager,
+			params.NodeHost,
+			&routing.Shard{},
+			1000 * time.Millisecond,
+		},
+	}
+}
+
+type BboltStoreManager struct {
 	logger         zerolog.Logger
-	tm             *raftTransactionManager
+	tm             runtime.ITransactionManager
 	nh             *dragonboat.NodeHost
 	shardRouter    *routing.Shard
 	defaultTimeout time.Duration
 }
 
-func (s *bboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error) {
+func (s *BboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error) {
 
 	account := request.GetAccountId()
 	if account == 0 {
@@ -72,9 +96,14 @@ func (s *bboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountReques
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -86,7 +115,7 @@ func (s *bboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountReques
 		return &kvstorev1.CreateAccountResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -120,7 +149,7 @@ func (s *bboltStoreManager) CreateAccount(request *kvstorev1.CreateAccountReques
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error) {
+func (s *BboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -150,9 +179,14 @@ func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountReques
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -164,7 +198,7 @@ func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountReques
 		return &kvstorev1.DeleteAccountResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -186,7 +220,7 @@ func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountReques
 		Ok: resp.GetDeleteAccountReply().GetOk(),
 	}
 
-	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+	if request.Transaction == nil || cs.SeriesID != dclient.NoOPSeriesID {
 		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
@@ -195,7 +229,7 @@ func (s *bboltStoreManager) DeleteAccount(request *kvstorev1.DeleteAccountReques
 	return response, nil
 }
 
-func (s *bboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error) {
+func (s *BboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -232,9 +266,14 @@ func (s *bboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -246,7 +285,7 @@ func (s *bboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest)
 		return &kvstorev1.CreateBucketResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -280,7 +319,7 @@ func (s *bboltStoreManager) CreateBucket(request *kvstorev1.CreateBucketRequest)
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error) {
+func (s *BboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -311,9 +350,14 @@ func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest)
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -325,7 +369,7 @@ func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest)
 		return &kvstorev1.DeleteBucketResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -347,7 +391,7 @@ func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest)
 		Ok: resp.GetDeleteBucketReply().GetOk(),
 	}
 
-	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+	if request.Transaction == nil || cs.SeriesID != dclient.NoOPSeriesID {
 		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
@@ -356,7 +400,7 @@ func (s *bboltStoreManager) DeleteBucket(request *kvstorev1.DeleteBucketRequest)
 	return response, nil
 }
 
-func (s *bboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error) {
+func (s *BboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -370,7 +414,7 @@ func (s *bboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1
 	}
 
 	keyName := request.GetKey()
-	if keyName == "" {
+	if len(keyName) == 0 {
 		s.logger.Trace().Msg("empty key name")
 		return &kvstorev1.GetKeyResponse{}, errors.New("empty key name")
 	}
@@ -426,7 +470,7 @@ func (s *bboltStoreManager) GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1
 	return response, nil
 }
 
-func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error) {
+func (s *BboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -463,9 +507,14 @@ func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -477,7 +526,7 @@ func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1
 		return &kvstorev1.PutKeyResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -497,7 +546,7 @@ func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1
 
 	response := &kvstorev1.PutKeyResponse{}
 
-	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+	if request.Transaction == nil || cs.SeriesID != dclient.NoOPSeriesID {
 		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
@@ -506,7 +555,7 @@ func (s *bboltStoreManager) PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1
 	return response, nil
 }
 
-func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error) {
+func (s *BboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error) {
 	account := request.GetAccountId()
 	if account == 0 {
 		s.logger.Trace().Msg("empty account value")
@@ -520,7 +569,7 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 	}
 
 	key := request.GetKey()
-	if key == "" {
+	if len(key) == 0 {
 		s.logger.Trace().Msg("empty key value pair")
 		return &kvstorev1.DeleteKeyResponse{}, kv.ErrInvalidBucketName
 	}
@@ -543,9 +592,14 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(s.defaultTimeout))
 	defer cancel()
 
-	var cs *client.Session
+	var cs *dclient.Session
 	if request.Transaction != nil {
-		cs = s.tm.sessionCache[request.GetTransaction().GetClientId()]
+		sess, ok := s.tm.SessionFromClientId(request.GetTransaction().GetClientId())
+		if !ok {
+			// todo (sienna): figure out what to do here
+			s.logger.Error().Uint64("dclient-id", request.GetTransaction().GetClientId()).Msg("session not found in cache")
+		}
+		cs = sess
 	} else {
 		shard := s.shardRouter.AccountToShard(account)
 		cs = s.nh.GetNoOPSession(shard)
@@ -557,7 +611,7 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 		return &kvstorev1.DeleteKeyResponse{}, errors.Wrap(err, "can't apply message")
 	}
 
-	if cs.SeriesID != client.NoOPSeriesID {
+	if cs.SeriesID != dclient.NoOPSeriesID {
 		cs.ProposalCompleted()
 	}
 
@@ -577,7 +631,7 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 
 	response := &kvstorev1.DeleteKeyResponse{}
 
-	if request.Transaction == nil || cs.SeriesID != client.NoOPSeriesID {
+	if request.Transaction == nil || cs.SeriesID != dclient.NoOPSeriesID {
 		response.Transaction = &kvstorev1.Transaction{}
 	} else {
 		response.Transaction = csToTransaction(*cs)
@@ -590,4 +644,13 @@ func (s *bboltStoreManager) DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvs
 	}
 
 	return response, nil
+}
+
+func csToTransaction(cs dclient.Session) *kvstorev1.Transaction {
+	return &kvstorev1.Transaction{
+		ShardId:       cs.ClusterID,
+		ClientId:      cs.ClientID,
+		TransactionId: cs.SeriesID,
+		RespondedTo:   cs.RespondedTo,
+	}
 }

@@ -10,10 +10,17 @@
 package messaging
 
 import (
+	"fmt"
+	"runtime"
 	"time"
 
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
+	"github.com/rs/zerolog"
+)
+
+var (
+	singleton *EmbeddedMessaging
 )
 
 type EmbeddedMessagingStreamOpts struct {
@@ -29,13 +36,53 @@ type EmbeddedMessagingPubSubClient struct {
 	*nats.Conn
 }
 
-func NewEmbeddedMessaging(opts *EmbeddedMessagingStreamOpts) (*EmbeddedMessaging, error) {
-	// todo (sienna): ensure that StoreDir is set
-	srv, err := server.NewServer(opts.Options)
-	return &EmbeddedMessaging{
-		opts: opts,
+func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging, error) {
+	if singleton != nil {
+		return singleton, nil
+	}
+
+	opts := &server.Options{
+		Host:          "localhost",
+		JetStream:     true,
+		DontListen:    true,
+		WriteDeadline: 1_000 * time.Millisecond,
+
+	}
+	srv, err := server.NewServer(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	singleton = &EmbeddedMessaging{
+		opts: &EmbeddedMessagingStreamOpts{timeout: 4000 * time.Millisecond, Options: opts},
 		srv:  srv,
-	}, err
+	}
+
+	// set the right logging level
+	level := zerolog.GlobalLevel()
+	switch level {
+	case zerolog.TraceLevel:
+		srv.SetLoggerV2(&messagingLogger{
+			logger: logger.With().Str("component", "messaging").Logger(),
+		}, true, true, true)
+		break
+	case zerolog.DebugLevel:
+		srv.SetLoggerV2(&messagingLogger{
+			logger: logger.With().Str("component", "messaging").Logger(),
+		}, true, false, false)
+		break
+	default:
+		srv.SetLoggerV2(&messagingLogger{
+			logger: logger.With().Str("component", "messaging").Logger(),
+		}, false, false, false)
+	}
+
+	// ensure it's properly stopped when all references to this are deleted.
+	runtime.SetFinalizer(singleton, func(e *EmbeddedMessaging) {
+		e.Stop()
+	})
+
+	return singleton, err
 }
 
 type EmbeddedMessaging struct {
@@ -44,9 +91,39 @@ type EmbeddedMessaging struct {
 }
 
 func (ev *EmbeddedMessaging) Start() {
+	// verify it's already started
+	if ev.srv.ReadyForConnections(100 * time.Millisecond) {
+		return
+	}
+
 	go ev.srv.Start()
 	if !ev.srv.ReadyForConnections(ev.opts.timeout) {
-		panic("event server won't start")
+		panic("nats won't start")
+	}
+
+	client, err := ev.GetStreamClient()
+	if err != nil {
+		panic(fmt.Errorf("can't get stream pubSubClient: %s", err))
+	}
+
+	_, err = client.AddStream(&nats.StreamConfig{
+		Name:        SystemStreamName,
+		Description: "All internal system streams",
+		Subjects: []string{
+			RaftHostSubject,
+			RaftLogSubject,
+			RaftNodeSubject,
+			RaftSnapshotSubject,
+			RaftConnectionSubject,
+			RaftSubject,
+			SystemStreamName,
+		},
+		Retention: nats.WorkQueuePolicy,
+		Discard:   nats.DiscardOld,
+		Storage:   nats.MemoryStorage,
+	})
+	if err != nil {
+		panic(fmt.Errorf("can't add system stream: %s", err))
 	}
 }
 
