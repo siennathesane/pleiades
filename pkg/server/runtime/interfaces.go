@@ -11,9 +11,11 @@ package runtime
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	dclient "github.com/lni/dragonboat/v3/client"
 )
 
@@ -24,18 +26,23 @@ type IRaft interface {
 	IKVStore
 }
 
+type ServiceHandler interface {
+	http.Handler
+	Path() string
+}
+
 type IShardManager interface {
-	AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddReplica(req *raftv1.AddReplicaRequest) error
 	AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	// LeaderTransfer(shardId uint64, targetReplicaId uint64) error
-	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
+	NewShard(req *raftv1.NewShardRequest) error
 	RemoveData(shardId, replicaId uint64) error
 	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
-	StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
-	StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
+	StartReplica(req *raftv1.StartReplicaRequest) error
+	StartReplicaObserver(req *raftv1.StartReplicaObserverRequest) error
 	StopReplica(shardId uint64, replicaId uint64) (*OperationResult, error)
 }
 

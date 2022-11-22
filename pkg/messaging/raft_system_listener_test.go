@@ -53,8 +53,8 @@ func (t *RaftSystemListenerTestSuite) SetupSuite() {
 func (t *RaftSystemListenerTestSuite) SetupTest() {
 	var err error
 	t.pubSubClient, err = t.e.GetPubSubClient()
-	t.Require().NoError(err, "there must not be an error creating the eventStreamClient")
-	t.Require().NotNil(t.pubSubClient, "the eventStreamClient must not be nil")
+	t.Require().NoError(err, "there must not be an error creating the pubSubClient")
+	t.Require().NotNil(t.pubSubClient, "the pubSubClient must not be nil")
 
 	t.queueClient, err = t.e.GetStreamClient()
 	t.Require().NoError(err, "there must not be an error when getting a stream pubSubClient")

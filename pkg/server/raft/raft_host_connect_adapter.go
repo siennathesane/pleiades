@@ -11,6 +11,7 @@ package raft
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
@@ -19,17 +20,45 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
-var _ raftv1connect.HostServiceHandler = (*RaftHostConnectAdapter)(nil)
+var (
+	_ raftv1connect.HostServiceHandler = (*RaftHostConnectAdapter)(nil)
+	_ runtime.ServiceHandler           = (*RaftHostConnectAdapter)(nil)
+)
 
-type RaftHostConnectAdapter struct {
-	logger zerolog.Logger
-	host   runtime.IHost
+type RaftHostConnectAdapterBuilderParams struct {
+	fx.In
+
+	RaftHost runtime.IHost
+	Logger   zerolog.Logger
 }
 
-func NewRaftHostConnectAdapter(host runtime.IHost, logger zerolog.Logger) *RaftHostConnectAdapter {
-	return &RaftHostConnectAdapter{logger: logger, host: host}
+type RaftHostConnectAdapterBuilderResults struct {
+	fx.Out
+
+	ConnectAdapter *RaftHostConnectAdapter
+}
+
+type RaftHostConnectAdapter struct {
+	http.Handler
+	logger zerolog.Logger
+	host   runtime.IHost
+	path   string
+}
+
+func NewRaftHostConnectAdapter(raftHost runtime.IHost, logger zerolog.Logger) *RaftHostConnectAdapter {
+	if raftHost == nil {
+		logger.Fatal().Err(errors.New("raft host is nil")).Msg("can't load connect adapter")
+	}
+	adapter := &RaftHostConnectAdapter{logger: logger, host: raftHost}
+	adapter.path, adapter.Handler = raftv1connect.NewHostServiceHandler(adapter)
+	return adapter
+}
+
+func (r *RaftHostConnectAdapter) Path() string {
+	return r.path
 }
 
 func (r *RaftHostConnectAdapter) Compact(ctx context.Context, c *connect.Request[raftv1.CompactRequest]) (*connect.Response[raftv1.CompactResponse], error) {

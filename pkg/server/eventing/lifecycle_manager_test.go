@@ -36,7 +36,7 @@ func (t *shardConfigRunnerTestSuite) TestLifecycle() {
 	//
 	//nh, conf := serverutils.BuildTestShard(t.T())
 	//
-	//runner, err := NewShardConfigRunner(nh, t.logger)
+	//runner, err := NewLifecycleManager(nh, t.logger)
 	//t.Require().NoError(err, "there must not be an error when creating the shard config runner")
 	//t.Require().NotNil(runner, "the runner must not be nil")
 	//go runner.run()

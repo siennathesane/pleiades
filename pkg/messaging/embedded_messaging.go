@@ -46,6 +46,7 @@ func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging
 		JetStream:     true,
 		DontListen:    true,
 		WriteDeadline: 1_000 * time.Millisecond,
+
 	}
 	srv, err := server.NewServer(opts)
 	if err != nil {

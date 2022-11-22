@@ -16,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
@@ -53,7 +54,7 @@ func (t *shardManagerTestSuite) SetupSuite() {
 	t.nats.Start()
 
 	t.defaultTimeout = 200 * time.Millisecond
-	t.extendedDefaultTimeout = 600 * time.Millisecond
+	t.extendedDefaultTimeout = 1000 * time.Millisecond
 
 	pubSubClient, err := t.nats.GetPubSubClient()
 	t.Require().NoError(err, "there must not be an error when creating the pubsub client")
@@ -68,8 +69,15 @@ func (t *shardManagerTestSuite) SetupSuite() {
 //goland:noinspection GoVetLostCancel
 func (t *shardManagerTestSuite) TestAddReplica() {
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -92,7 +100,13 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.extendedDefaultTimeout))
+	// testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.extendedDefaultTimeout)
+	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondNodeClusterConfig.NodeID,
+		Hostname:  secondNode.RaftAddress(),
+		Timeout:   int64(t.extendedDefaultTimeout),
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.extendedDefaultTimeout)
 
@@ -113,8 +127,14 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 func (t *shardManagerTestSuite) TestAddShardObserver() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -170,8 +190,14 @@ func (t *shardManagerTestSuite) TestAddShardObserver() {
 func (t *shardManagerTestSuite) TestAddShardWitness() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -227,8 +253,14 @@ func (t *shardManagerTestSuite) TestAddShardWitness() {
 func (t *shardManagerTestSuite) TestDeleteReplica() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -264,7 +296,12 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
+	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondNodeClusterConfig.NodeID,
+		Hostname:  secondNode.RaftAddress(),
+		Timeout:   int64(t.extendedDefaultTimeout),
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
 	err = secondNode.StartCluster(nil, true, serverutils.NewTestStateMachine, secondNodeClusterConfig)
@@ -291,8 +328,14 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 func (t *shardManagerTestSuite) TestGetLeaderId() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -328,7 +371,12 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
+	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondNodeClusterConfig.NodeID,
+		Hostname:  secondNode.RaftAddress(),
+		Timeout:   int64(t.extendedDefaultTimeout),
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
 	err = secondNode.StartCluster(nil, true, serverutils.NewTestStateMachine, secondNodeClusterConfig)
@@ -345,8 +393,14 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 func (t *shardManagerTestSuite) TestGetShardMembers() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -388,7 +442,12 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.defaultTimeout))
+	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondNodeClusterConfig.NodeID,
+		Hostname:  secondNode.RaftAddress(),
+		Timeout:   int64(t.extendedDefaultTimeout),
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a replica")
 
 	err = secondNode.StartCluster(nil, true, serverutils.NewTestStateMachine, secondNodeClusterConfig)
@@ -406,13 +465,25 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 func (t *shardManagerTestSuite) TestNewShard() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
 	testShardId := firstNodeClusterConfig.ClusterID
 
-	err := shardManager.NewShard(testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout))
+	// testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout)
+	err := shardManager.NewShard(&raftv1.NewShardRequest{
+		ShardId: testShardId,
+		ReplicaId: firstNodeClusterConfig.NodeID,
+		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+	})
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.extendedDefaultTimeout)
 
@@ -441,8 +512,14 @@ func (t *shardManagerTestSuite) TestNewShard() {
 func (t *shardManagerTestSuite) TestRemoveData() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -507,8 +584,14 @@ func (t *shardManagerTestSuite) TestRemoveData() {
 func (t *shardManagerTestSuite) TestRemoveReplica() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := uint64(0)
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
@@ -576,12 +659,25 @@ func (t *shardManagerTestSuite) TestRemoveReplica() {
 func (t *shardManagerTestSuite) TestStartReplica() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	firstShardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(firstShardManager, "firstShardManager must not be nil")
+	firstParams := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(firstParams)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	firstShardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := rand.Uint64()
 	firstTestReplicaId := rand.Uint64()
-	err := firstShardManager.NewShard(testShardId, firstTestReplicaId, testStateMachineType, utils.Timeout(t.defaultTimeout))
+
+	// testShardId, firstTestReplicaId, testStateMachineType, utils.Timeout(t.defaultTimeout)
+	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
+		ShardId: testShardId,
+		ReplicaId: firstTestReplicaId,
+		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
 	utils.Wait(t.defaultTimeout)
 
@@ -599,16 +695,34 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 	}
 
 	secondTestHost := serverutils.BuildTestNodeHost(t.T())
-	secondShardManager := NewShardManager(secondTestHost, t.client, nil, t.logger)
-	t.Require().NotNil(secondShardManager, "firstShardManager must not be nil")
+	secondParams := ShardManagerBuilderParams{
+		NodeHost: secondTestHost,
+		Logger:   t.logger,
+	}
+
+	secondShardManagerResults := NewManager(secondParams)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	secondShardManager := secondShardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	secondTestReplicaId := rand.Uint64()
 
-	err = firstShardManager.AddReplica(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), utils.Timeout(t.defaultTimeout))
+	// testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), utils.Timeout(t.defaultTimeout)
+	err = firstShardManager.AddReplica(&raftv1.AddReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondTestReplicaId,
+		Hostname:  secondShardManager.nh.RaftAddress(),
+		Timeout:   int64(t.extendedDefaultTimeout),
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
-	err = secondShardManager.StartReplica(testShardId, secondTestReplicaId, testStateMachineType)
+	// testShardId, secondTestReplicaId, testStateMachineType
+	err = secondShardManager.StartReplica(&raftv1.StartReplicaRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondTestReplicaId,
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Restart:   false,
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
@@ -623,12 +737,24 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 func (t *shardManagerTestSuite) TestStartObserverReplica() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	firstShardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(firstShardManager, "firstShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	firstShardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	testShardId := rand.Uint64()
 	firstTestReplicaId := rand.Uint64()
-	err := firstShardManager.NewShard(testShardId, firstTestReplicaId, testStateMachineType, utils.Timeout(t.defaultTimeout))
+
+	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
+		ShardId: testShardId,
+		ReplicaId: firstTestReplicaId,
+		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
 	utils.Wait(t.defaultTimeout)
 
@@ -646,16 +772,27 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 	}
 
 	secondTestHost := serverutils.BuildTestNodeHost(t.T())
-	secondShardManager := NewShardManager(secondTestHost, t.client, nil, t.logger)
-	t.Require().NotNil(secondShardManager, "firstShardManager must not be nil")
+	params = ShardManagerBuilderParams{
+		NodeHost: secondTestHost,
+		Logger:   t.logger,
+	}
+
+	secondShardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	secondShardManager := secondShardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	secondTestReplicaId := rand.Uint64()
 
-	err = firstShardManager.AddReplicaObserver(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), utils.Timeout(t.defaultTimeout))
+	err = firstShardManager.AddReplicaObserver(testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), utils.Timeout(t.extendedDefaultTimeout))
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
-	err = secondShardManager.StartReplicaObserver(testShardId, secondTestReplicaId, testStateMachineType)
+	err = secondShardManager.StartReplicaObserver(&raftv1.StartReplicaObserverRequest{
+		ShardId:   testShardId,
+		ReplicaId: secondTestReplicaId,
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Restart:   false,
+	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
@@ -670,8 +807,14 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 func (t *shardManagerTestSuite) TestStopReplica() {
 
 	firstTestHost := serverutils.BuildTestNodeHost(t.T())
-	shardManager := NewShardManager(firstTestHost, t.client, t.eventHandler, t.logger)
-	t.Require().NotNil(shardManager, "RaftShardManager must not be nil")
+	params := ShardManagerBuilderParams{
+		NodeHost: firstTestHost,
+		Logger:   t.logger,
+	}
+
+	shardManagerResults := NewManager(params)
+	t.Require().NotNil(shardManagerResults.RaftShardManager, "RaftShardManager must not be nil")
+	shardManager := shardManagerResults.RaftShardManager.(*RaftShardManager)
 
 	firstNodeClusterConfig := serverutils.BuildTestShardConfig(t.T())
 	testShardId := firstNodeClusterConfig.ClusterID

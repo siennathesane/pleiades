@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	utils2 "github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
@@ -40,7 +40,7 @@ func (t *RaftHostTestSuite) SetupSuite() {
 }
 
 func (t *RaftHostTestSuite) SetupTest() {
-	t.nh = utils2.BuildTestNodeHost(t.T())
+	t.nh = serverutils.BuildTestNodeHost(t.T())
 }
 
 func (t *RaftHostTestSuite) TearDownTest() {
@@ -48,14 +48,19 @@ func (t *RaftHostTestSuite) TearDownTest() {
 }
 
 func (t *RaftHostTestSuite) TestCompact() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := utils2.BuildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, utils2.NewTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -78,21 +83,31 @@ func (t *RaftHostTestSuite) TestCompact() {
 }
 
 func (t *RaftHostTestSuite) TestGetHostInfo() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.GetHostInfo(runtime.HostInfoOption{SkipLogInfo: false})
 	t.Require().NotEmpty(resp, "the response must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestHasNodeInfo() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := utils2.BuildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, utils2.NewTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	time.Sleep(3000 * time.Millisecond)
 
@@ -101,7 +116,12 @@ func (t *RaftHostTestSuite) TestHasNodeInfo() {
 }
 
 func (t *RaftHostTestSuite) TestId() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	hostname := host.Id()
 	t.logger.Info().Str("host-id", hostname).Msg("got host id")
@@ -109,28 +129,43 @@ func (t *RaftHostTestSuite) TestId() {
 }
 
 func (t *RaftHostTestSuite) TestHostConfig() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.HostConfig()
 	t.Require().NotEmpty(resp, "the host config must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestRaftAddress() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.RaftAddress()
 	t.Require().NotEmpty(resp, "the raft address must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestSnapshot() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := utils2.BuildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, utils2.NewTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -162,6 +197,11 @@ func (t *RaftHostTestSuite) TestSnapshot() {
 }
 
 func (t *RaftHostTestSuite) TestStop() {
-	host := NewRaftHost(t.nh, t.logger)
+	params := &RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(params)
+	host := hostRes.RaftHost.(*RaftHost)
 	host.Stop()
 }

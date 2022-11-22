@@ -10,29 +10,52 @@
 package eventing
 
 import (
+	"context"
+
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var (
 	serverSingleton *Server
 )
 
-func NewServer(logger zerolog.Logger) (*Server, error) {
-	if serverSingleton != nil {
-		return serverSingleton, nil
-	}
+type EventServerBuilderParams struct {
+	fx.In
+	Logger zerolog.Logger
+}
 
-	srv, err := messaging.NewEmbeddedMessagingWithDefaults(logger)
+type EventServerBuilderResults struct {
+	fx.Out
+	Server *Server
+}
+
+func NewServer(lc fx.Lifecycle, params EventServerBuilderParams) EventServerBuilderResults {
+	srv, err := messaging.NewEmbeddedMessagingWithDefaults(params.Logger)
 	if err != nil {
-		return nil, err
+		params.Logger.Fatal().Err(err).Msg("can't create embedded message bus")
 	}
 
-	srv.Start()
+	serverSingleton = &Server{srv, params.Logger.With().Str("component", "eventing").Logger()}
 
-	serverSingleton = &Server{srv, logger.With().Str("component", "eventing").Logger()}
+	// this is started so the other constructors register properly
+	serverSingleton.Start()
 
-	return serverSingleton, nil
+	// lifecycle hooks
+	lc.Append(fx.Hook{
+		// empty hook for fx
+		OnStart: func(_ context.Context) error {
+			return nil
+		},
+		OnStop: func(ctx context.Context) error {
+			serverSingleton.Stop()
+			return nil
+		}})
+
+	return EventServerBuilderResults{
+		Server: serverSingleton,
+	}
 }
 
 type Server struct {
@@ -54,4 +77,40 @@ func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
 	}
 
 	return messaging.NewRaftEventHandler(pubSubClient, queueClient, s.logger), nil
+}
+
+func (s *Server) GetRaftSystemEventListener() (*messaging.RaftSystemListener, error) {
+	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't create pubsub client")
+		return nil, err
+	}
+
+	queueClient, err := s.EmbeddedMessaging.GetStreamClient()
+	if err != nil {
+		s.logger.Error().Err(err).Msg("can't create stream client")
+		return nil, err
+	}
+
+	return messaging.NewRaftSystemListener(pubSubClient, queueClient, s.logger)
+}
+
+type NewPubSubClientBuilderParams struct {
+	fx.In
+
+	Server *Server
+}
+
+func NewPubSubClient(params NewPubSubClientBuilderParams) (*messaging.EmbeddedMessagingPubSubClient, error) {
+	return params.Server.GetPubSubClient()
+}
+
+type NewStreamClientBuilderParams struct {
+	fx.In
+
+	Server *Server
+}
+
+func NewStreamClient(params NewStreamClientBuilderParams) (*messaging.EmbeddedMessagingStreamClient, error) {
+	return params.Server.GetStreamClient()
 }

@@ -11,6 +11,7 @@ package kvstore
 
 import (
 	"context"
+	"net/http"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
@@ -20,17 +21,41 @@ import (
 	"github.com/cockroachdb/errors"
 	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
-var _ kvstorev1connect.TransactionsServiceHandler = (*KvStoreTransactionConnectAdapter)(nil)
+var (
+	_ kvstorev1connect.TransactionsServiceHandler = (*KvStoreTransactionConnectAdapter)(nil)
+	_ runtime.ServiceHandler                      = (*KvStoreTransactionConnectAdapter)(nil)
+)
+
+type KvStoreTransactionConnectAdapterBuilderParams struct {
+	fx.In
+	TransactionManager runtime.ITransactionManager
+	Logger             zerolog.Logger
+}
+
+type KvStoreTransactionConnectAdapterBuilderResults struct {
+	fx.In
+
+	ConnectAdapter *KvStoreTransactionConnectAdapter
+}
 
 type KvStoreTransactionConnectAdapter struct {
+	http.Handler
 	logger             zerolog.Logger
 	transactionManager runtime.ITransactionManager
+	path               string
 }
 
 func NewKvstoreTransactionConnectAdapter(transactionManager runtime.ITransactionManager, logger zerolog.Logger) *KvStoreTransactionConnectAdapter {
-	return &KvStoreTransactionConnectAdapter{logger: logger, transactionManager: transactionManager}
+	adapter := &KvStoreTransactionConnectAdapter{logger: logger, transactionManager: transactionManager}
+	adapter.path, adapter.Handler = kvstorev1connect.NewTransactionsServiceHandler(adapter)
+	return adapter
+}
+
+func (k *KvStoreTransactionConnectAdapter) Path() string {
+	return k.path
 }
 
 func (k *KvStoreTransactionConnectAdapter) NewTransaction(ctx context.Context, c *connect.Request[kvstorev1.NewTransactionRequest]) (*connect.Response[kvstorev1.NewTransactionResponse], error) {
