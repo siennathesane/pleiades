@@ -1,4 +1,4 @@
-FROM golang:1.19
+FROM golang:latest
 
 ENV MAGE_VERSION "1.13.0"
 ADD ci/scripts/install-mage.sh .

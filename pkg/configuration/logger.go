@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	rootLogger = zlog.New(zlog.ConsoleWriter{Out: os.Stdout}).
+	rootLogger = zlog.New(os.Stdout).
 		With().
 		Str("sha", pkg.Sha).
 		Timestamp().

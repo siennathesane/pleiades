@@ -24,6 +24,7 @@ func init() {
 
 func Get() *vip.Viper {
 	if viper == nil {
+		print("here")
 		viper = vip.New()
 	}
 	return viper

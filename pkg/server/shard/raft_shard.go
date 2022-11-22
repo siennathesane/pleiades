@@ -15,15 +15,13 @@ import (
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
-	"github.com/mxplusb/pleiades/pkg/messaging"
-	"github.com/mxplusb/pleiades/pkg/server/eventing"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"go.uber.org/fx"
 )
 
 var (
@@ -34,36 +32,49 @@ var (
 	errNoConfigChangeId = errors.New("no config change id")
 )
 
-func NewShardManager(nodeHost *dragonboat.NodeHost, client *messaging.EmbeddedMessagingStreamClient, raftEventHandler *messaging.RaftEventHandler, logger zerolog.Logger) *RaftShardManager {
-	l := logger.With().Str("component", "shard-manager").Logger()
-	return &RaftShardManager{l, nodeHost, client, raftEventHandler}
+type ShardManagerBuilderParams struct {
+	fx.In
+
+	NodeHost *dragonboat.NodeHost
+	Logger   zerolog.Logger
+}
+
+type ShardManagerBuilderResults struct {
+	fx.Out
+
+	RaftShardManager runtime.IShardManager
+}
+
+func NewManager(params ShardManagerBuilderParams) ShardManagerBuilderResults {
+	l := params.Logger.With().Str("component", "shard-manager").Logger()
+	return ShardManagerBuilderResults{
+		RaftShardManager: &RaftShardManager{l, params.NodeHost},
+	}
 }
 
 type RaftShardManager struct {
-	logger           zerolog.Logger
-	nh               *dragonboat.NodeHost
-	client           *messaging.EmbeddedMessagingStreamClient
-	raftEventHandler *messaging.RaftEventHandler
+	logger zerolog.Logger
+	nh     *dragonboat.NodeHost
 }
 
-func (c *RaftShardManager) AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error {
-	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
+func (c *RaftShardManager) AddReplica(req *raftv1.AddReplicaRequest) error {
+	l := c.logger.With().Uint64("shard", req.GetShardId()).Uint64("replica", req.GetReplicaId()).Logger()
 	l.Info().Msg("adding replica")
 
-	if timeout == 0 {
+	if req.GetTimeout() == 0 {
 		l.Debug().Msg("using default timeout")
-		timeout = defaultTimeout
+		req.Timeout = int64(defaultTimeout)
 	}
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout())))
 	defer cancel()
 
-	members, err := c.GetShardMembers(shardId)
+	members, err := c.GetShardMembers(req.GetShardId())
 	if err != nil {
 		l.Error().Err(err).Msg("failed to get shard members")
 		return err
 	}
 
-	err = c.nh.SyncRequestAddNode(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
+	err = c.nh.SyncRequestAddNode(ctx, req.GetShardId(), req.GetReplicaId(), req.GetHostname(), members.ConfigChangeId)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add replica")
 		return err
@@ -150,22 +161,22 @@ func (c *RaftShardManager) GetShardMembers(shardId uint64) (*runtime.MembershipE
 	}, nil
 }
 
-func (c *RaftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType, _ time.Duration) error {
-	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
+func (c *RaftShardManager) NewShard(req *raftv1.NewShardRequest) error {
+	l := c.logger.With().Uint64("shard", req.GetShardId()).Uint64("replica", req.GetReplicaId()).Logger()
 	l.Info().Msg("creating new shard")
 
-	clusterConfig := newDConfig(shardId, replicaId)
+	clusterConfig := newDConfig(req.GetShardId(), req.GetReplicaId())
 
 	members := make(map[uint64]string)
-	members[replicaId] = c.nh.RaftAddress()
+	members[req.GetReplicaId()] = c.nh.RaftAddress()
 	l.Debug().Str("raft-address", c.nh.RaftAddress()).Msg("adding self to members")
 
 	var err error
-	switch stateMachineType {
-	case testStateMachineType:
+	switch req.GetType() {
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
 		l.Info().Msg("creating test state machine")
 		err = c.nh.StartCluster(members, false, serverutils.NewTestStateMachine, clusterConfig)
-	case BBoltStateMachineType:
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
 		l.Info().Msg("creating bbolt state machine")
 		err = c.nh.StartOnDiskCluster(members, false, kv.NewBBoltFSM, clusterConfig)
 	default:
@@ -181,20 +192,30 @@ func (c *RaftShardManager) NewShard(shardId uint64, replicaId uint64, stateMachi
 	return nil
 }
 
-func (c *RaftShardManager) StartReplica(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType) error {
-	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
+func (c *RaftShardManager) StartReplica(req *raftv1.StartReplicaRequest) error {
+	l := c.logger.With().Uint64("shard", req.GetShardId()).Uint64("replica", req.GetReplicaId()).Logger()
 	l.Info().Msg("starting replica")
 
-	clusterConfig := newDConfig(shardId, replicaId)
+	clusterConfig := newDConfig(req.GetShardId(), req.GetReplicaId())
 
 	var err error
-	switch stateMachineType {
-	case testStateMachineType:
-		l.Info().Msg("starting test state machine")
-		err = c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
-	case BBoltStateMachineType:
-		l.Info().Msg("starting bbolt state machine")
-		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+	switch req.GetType() {
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
+		if !req.GetRestart() {
+			l.Info().Msg("starting test state machine")
+			err = c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
+		} else {
+			l.Info().Msg("restarting test state machine")
+			err = c.nh.StartCluster(nil, false, serverutils.NewTestStateMachine, clusterConfig)
+		}
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
+		if !req.GetRestart() {
+			l.Info().Msg("starting bbolt state machine")
+			err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+		} else {
+			l.Info().Msg("restarting bbolt state machine")
+			err = c.nh.StartOnDiskCluster(nil, false, kv.NewBBoltFSM, clusterConfig)
+		}
 	default:
 		l.Error().Msg("unknown state machine type")
 		return ErrUnsupportedStateMachine
@@ -208,21 +229,31 @@ func (c *RaftShardManager) StartReplica(shardId uint64, replicaId uint64, stateM
 	return nil
 }
 
-func (c *RaftShardManager) StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType runtime.StateMachineType) error {
-	l := c.logger.With().Uint64("shard", shardId).Uint64("replica", replicaId).Logger()
+func (c *RaftShardManager) StartReplicaObserver(req *raftv1.StartReplicaObserverRequest) error {
+	l := c.logger.With().Uint64("shard", req.GetShardId()).Uint64("replica", req.GetReplicaId()).Logger()
 	l.Info().Msg("starting replica observer")
 
-	clusterConfig := newDConfig(shardId, replicaId)
+	clusterConfig := newDConfig(req.GetShardId(), req.GetReplicaId())
 	clusterConfig.IsObserver = true
 
 	var err error
-	switch stateMachineType {
-	case testStateMachineType:
+	switch req.GetType() {
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
 		l.Info().Msg("starting test state machine observer")
-		return c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
-	case BBoltStateMachineType:
+		if !req.GetRestart() {
+			err = c.nh.StartCluster(nil, true, serverutils.NewTestStateMachine, clusterConfig)
+		} else {
+			l.Info().Msg("restarting test state machine observer")
+			err = c.nh.StartCluster(nil, false, serverutils.NewTestStateMachine, clusterConfig)
+		}
+	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
 		l.Info().Msg("starting bbolt state machine observer")
-		err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+		if !req.GetRestart() {
+			err = c.nh.StartOnDiskCluster(nil, true, kv.NewBBoltFSM, clusterConfig)
+		} else {
+			l.Info().Msg("restarting bbolt state machine observer")
+			err = c.nh.StartOnDiskCluster(nil, false, kv.NewBBoltFSM, clusterConfig)
+		}
 	default:
 		l.Error().Msg("unknown state machine type")
 		return ErrUnsupportedStateMachine
@@ -289,52 +320,6 @@ func (c *RaftShardManager) RemoveData(shardId, replicaId uint64) error {
 		c.logger.Error().Err(err).Uint64("shard", shardId).Uint64("replica", replicaId).Msg("failed to remove data")
 	}
 	return err
-}
-
-func (c *RaftShardManager) storeShardState(shardId uint64, timeout time.Duration) {
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-
-	resultChan := make(chan *raftv1.RaftEvent)
-	go c.raftEventHandler.WaitForMembershipChange(shardId, resultChan, timeout)
-	<-resultChan
-
-	memberState, err := c.nh.SyncGetClusterMembership(ctx, shardId)
-	if err != nil {
-		c.logger.Error().Err(err).Msg("can't get shard state")
-	}
-
-	// if it's nil, we can't do anything
-	if memberState == nil {
-		return
-	}
-
-	msg := &raftv1.ShardState{
-		LastUpdated:    timestamppb.Now(),
-		ShardId:        shardId,
-		ConfigChangeId: memberState.ConfigChangeID,
-		Replicas:       memberState.Nodes,
-		Observers:      memberState.Observers,
-		Witnesses:      memberState.Witnesses,
-		Removed: func() map[uint64]string {
-			m := make(map[uint64]string)
-			for k := range memberState.Removed {
-				m[k] = ""
-			}
-			return m
-		}(),
-		Type: 0,
-	}
-
-	payload, err := msg.MarshalVT()
-	if err != nil {
-		c.logger.Error().Err(err).Msg("can't marshal shard state message")
-	}
-
-	_, err = c.client.Publish(eventing.ShardConfigStream, payload)
-	if err != nil {
-		c.logger.Error().Err(err).Msg("can't publish shard state event")
-	}
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {

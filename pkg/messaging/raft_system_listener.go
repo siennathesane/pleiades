@@ -71,12 +71,7 @@ func (r *RaftSystemListener) LeaderUpdated(info raftio.LeaderInfo) {
 		r.logger.Error().Err(err).Msg("can't publish raft host shut down event")
 	}
 
-	r.logger.Debug().
-		Uint64("shard", info.ClusterID).
-		Uint64("replica", info.NodeID).
-		Uint64("term", info.Term).
-		Uint64("leader-id", info.LeaderID).
-		Msg("leader updated")
+	r.logger.Info().Interface("payload", payload).Msg("leader updated")
 }
 
 func (r *RaftSystemListener) NodeHostShuttingDown() {
@@ -95,6 +90,8 @@ func (r *RaftSystemListener) NodeHostShuttingDown() {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft host shut down event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("node shutting down")
 }
 
 func (r *RaftSystemListener) NodeUnloaded(info raftio.NodeInfo) {
@@ -118,6 +115,8 @@ func (r *RaftSystemListener) NodeUnloaded(info raftio.NodeInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node unload event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("node unloading")
 }
 
 func (r *RaftSystemListener) NodeReady(info raftio.NodeInfo) {
@@ -141,6 +140,8 @@ func (r *RaftSystemListener) NodeReady(info raftio.NodeInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node ready event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("node ready")
 }
 
 func (r *RaftSystemListener) MembershipChanged(info raftio.NodeInfo) {
@@ -164,6 +165,8 @@ func (r *RaftSystemListener) MembershipChanged(info raftio.NodeInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft node membership change event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("membership changed")
 }
 
 func (r *RaftSystemListener) ConnectionEstablished(info raftio.ConnectionInfo) {
@@ -210,6 +213,8 @@ func (r *RaftSystemListener) ConnectionFailed(info raftio.ConnectionInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft connection failed event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("connection failed")
 }
 
 func (r *RaftSystemListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
@@ -235,6 +240,8 @@ func (r *RaftSystemListener) SendSnapshotStarted(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot started event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot started")
 }
 
 func (r *RaftSystemListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
@@ -260,6 +267,8 @@ func (r *RaftSystemListener) SendSnapshotCompleted(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot completed event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot completed")
 }
 
 func (r *RaftSystemListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
@@ -285,6 +294,8 @@ func (r *RaftSystemListener) SendSnapshotAborted(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot aborted event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot aborted")
 }
 
 func (r *RaftSystemListener) SnapshotReceived(info raftio.SnapshotInfo) {
@@ -310,6 +321,8 @@ func (r *RaftSystemListener) SnapshotReceived(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot received event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot received")
 }
 
 func (r *RaftSystemListener) SnapshotRecovered(info raftio.SnapshotInfo) {
@@ -335,6 +348,8 @@ func (r *RaftSystemListener) SnapshotRecovered(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot recovered event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot recovered")
 }
 
 func (r *RaftSystemListener) SnapshotCreated(info raftio.SnapshotInfo) {
@@ -360,6 +375,8 @@ func (r *RaftSystemListener) SnapshotCreated(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot created event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot created")
 }
 
 func (r *RaftSystemListener) SnapshotCompacted(info raftio.SnapshotInfo) {
@@ -385,6 +402,8 @@ func (r *RaftSystemListener) SnapshotCompacted(info raftio.SnapshotInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft snapshot compacted event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("snapshot compacted")
 }
 
 func (r *RaftSystemListener) LogCompacted(info raftio.EntryInfo) {
@@ -409,6 +428,8 @@ func (r *RaftSystemListener) LogCompacted(info raftio.EntryInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft log compacted event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("log compacted")
 }
 
 func (r *RaftSystemListener) LogDBCompacted(info raftio.EntryInfo) {
@@ -433,4 +454,6 @@ func (r *RaftSystemListener) LogDBCompacted(info raftio.EntryInfo) {
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't publish raft logdb compacted event")
 	}
+
+	r.logger.Info().Interface("payload", payload).Msg("logdb compacted")
 }

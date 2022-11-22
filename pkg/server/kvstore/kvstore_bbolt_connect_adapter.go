@@ -11,23 +11,44 @@ package kvstore
 
 import (
 	"context"
+	"net/http"
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/mxplusb/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/bufbuild/connect-go"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
-var _ kvstorev1connect.KvStoreServiceHandler = (*KVstoreBboltConnectAdapter)(nil)
+var (
+	_ kvstorev1connect.KvStoreServiceHandler = (*KVstoreBboltConnectAdapter)(nil)
+	_ runtime.ServiceHandler                 = (*KVstoreBboltConnectAdapter)(nil)
+)
+
+type KvStoreBboltConnectAdapterParams struct {
+	fx.In
+
+	StoreManager runtime.IKVStore
+	Logger       zerolog.Logger
+}
 
 type KVstoreBboltConnectAdapter struct {
+	http.Handler
 	logger       zerolog.Logger
 	storeManager runtime.IKVStore
+	path         string
 }
 
 func NewKvstoreBboltConnectAdapter(storeManager runtime.IKVStore, logger zerolog.Logger) *KVstoreBboltConnectAdapter {
-	return &KVstoreBboltConnectAdapter{logger: logger, storeManager: storeManager}
+	adapter := &KVstoreBboltConnectAdapter{logger: logger, storeManager: storeManager}
+	adapter.path, adapter.Handler = kvstorev1connect.NewKvStoreServiceHandler(adapter)
+
+	return adapter
+}
+
+func (k *KVstoreBboltConnectAdapter) Path() string {
+	return k.path
 }
 
 func (k *KVstoreBboltConnectAdapter) CreateAccount(ctx context.Context, c *connect.Request[kvstorev1.CreateAccountRequest]) (*connect.Response[kvstorev1.CreateAccountResponse], error) {

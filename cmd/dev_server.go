@@ -14,14 +14,9 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"sync"
 	"syscall"
-	"time"
 
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/server"
-	"github.com/mxplusb/pleiades/pkg/server/shard"
-	"github.com/mxplusb/pleiades/pkg/utils"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -29,8 +24,8 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
+// devServerCmd represents the server command
+var devServerCmd = &cobra.Command{
 	Use:   "server",
 	Short: "run a development server",
 	Long: `runs a development server.
@@ -48,34 +43,34 @@ DO NOT USE THIS IN PRODUCTION`,
 }
 
 func init() {
-	devCmd.AddCommand(serverCmd)
+	devCmd.AddCommand(devServerCmd)
 
-	serverCmd.LocalFlags().Uint64("deployment-id", 1, "identifier for this deployment")
-	config.BindPFlag("server.host.deploymentId", serverCmd.LocalFlags().Lookup("deployment-id"))
+	devServerCmd.LocalFlags().Uint64("deployment-id", 1, "identifier for this deployment")
+	config.BindPFlag("server.host.deploymentId", devServerCmd.LocalFlags().Lookup("deployment-id"))
 
-	serverCmd.LocalFlags().String("grpc-addr", "0.0.0.0:5050", "grpc listener address")
-	config.BindPFlag("server.host.grpcListenAddress", serverCmd.LocalFlags().Lookup("grpc-addr"))
+	devServerCmd.LocalFlags().String("grpc-addr", "0.0.0.0:5050", "grpc listener address")
+	config.BindPFlag("server.host.grpcListenAddress", devServerCmd.LocalFlags().Lookup("grpc-addr"))
 
-	serverCmd.LocalFlags().String("raft-addr", "0.0.0.0:5051", "raft listener address")
-	config.BindPFlag("server.host.listenAddress", serverCmd.LocalFlags().Lookup("raft-addr"))
+	devServerCmd.LocalFlags().String("raft-addr", "0.0.0.0:5051", "raft listener address")
+	config.BindPFlag("server.host.listenAddress", devServerCmd.LocalFlags().Lookup("raft-addr"))
 
-	serverCmd.LocalFlags().Bool("notify-commit", false, "enable raft commit notifications")
-	config.BindPFlag("server.host.notifyCommit", serverCmd.LocalFlags().Lookup("notify-commit"))
+	devServerCmd.LocalFlags().Bool("notify-commit", false, "enable raft commit notifications")
+	config.BindPFlag("server.host.notifyCommit", devServerCmd.LocalFlags().Lookup("notify-commit"))
 
-	serverCmd.LocalFlags().Uint64("round-trip", 1, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
-	config.BindPFlag("server.host.rtt", serverCmd.LocalFlags().Lookup("round-trip"))
+	devServerCmd.LocalFlags().Uint64("round-trip", 1, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
+	config.BindPFlag("server.host.rtt", devServerCmd.LocalFlags().Lookup("round-trip"))
 
-	serverCmd.LocalFlags().String("base-path", config.GetString("server.datastore.basePath"), "base directory for data")
-	config.BindPFlag("server.datastore.basePath", serverCmd.LocalFlags().Lookup("base-path"))
+	devServerCmd.LocalFlags().String("base-path", config.GetString("server.datastore.basePath"), "base directory for data")
+	config.BindPFlag("server.datastore.basePath", devServerCmd.LocalFlags().Lookup("base-path"))
 
-	serverCmd.LocalFlags().String("log-dir", "logs", "directory for raft logs, relative to base-path")
-	config.BindPFlag("server.datastore.logDir", serverCmd.LocalFlags().Lookup("log-dir"))
+	devServerCmd.LocalFlags().String("log-dir", "logs", "directory for raft logs, relative to base-path")
+	config.BindPFlag("server.datastore.logDir", devServerCmd.LocalFlags().Lookup("log-dir"))
 
-	serverCmd.LocalFlags().String("data-dir", "data", "directory for data, relative to base-path")
-	config.BindPFlag("server.datastore.dataDir", serverCmd.LocalFlags().Lookup("data-dir"))
+	devServerCmd.LocalFlags().String("data-dir", "data", "directory for data, relative to base-path")
+	config.BindPFlag("server.datastore.dataDir", devServerCmd.LocalFlags().Lookup("data-dir"))
 
-	serverCmd.LocalFlags().Bool("reset", false, "clean reset the dev server at init")
-	config.BindPFlag("server.reset", serverCmd.LocalFlags().Lookup("reset"))
+	devServerCmd.LocalFlags().Bool("reset", false, "clean reset the dev server at init")
+	config.BindPFlag("server.reset", devServerCmd.LocalFlags().Lookup("reset"))
 }
 
 func startServer(cmd *cobra.Command, args []string) {
@@ -122,22 +117,22 @@ func startServer(cmd *cobra.Command, args []string) {
 
 	mux := http.NewServeMux()
 
-	s, err := server.New(nhc, mux, logger)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("can't create pleiades server")
-	}
+	//s, err := server.New(nhc, mux, logger)
+	//if err != nil {
+	//	logger.Fatal().Err(err).Msg("can't create pleiades server")
+	//}
 
-	var wg sync.WaitGroup
-	// shardLimit+1
-	for i := uint64(1); i < 257; i++ {
-		go func() {
-			wg.Add(1)
-			defer wg.Done()
-			err = s.GetRaftShardManager().NewShard(i, i*257, shard.BBoltStateMachineType, 300*time.Millisecond)
-		}()
-		utils.Wait(100 * time.Millisecond)
-	}
-	wg.Wait()
+	//var wg sync.WaitGroup
+	//// shardLimit+1
+	//for i := uint64(1); i < 257; i++ {
+	//	go func() {
+	//		wg.Add(1)
+	//		defer wg.Done()
+	//		err = s.GetRaftShardManager().NewShard(i, i*257, shard.BBoltStateMachineType, 300*time.Millisecond)
+	//	}()
+	//	utils.Wait(100 * time.Millisecond)
+	//}
+	//wg.Wait()
 
 	logger.Debug().Msg("state machines finished, starting server")
 
@@ -156,5 +151,4 @@ func startServer(cmd *cobra.Command, args []string) {
 	}()
 
 	<-done
-	s.Stop()
 }

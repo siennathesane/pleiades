@@ -11,6 +11,7 @@ package shard
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
@@ -19,17 +20,41 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var _ raftv1connect.ShardServiceHandler = (*RaftShardConnectAdapter)(nil)
+var _ runtime.ServiceHandler = (*RaftShardConnectAdapter)(nil)
+
+type ConnectAdapterBuilderParams struct {
+	fx.In
+
+	Logger       zerolog.Logger
+	ShardManager runtime.IShardManager
+}
+
+type ConnectAdapterBuilderResults struct {
+	fx.Out
+
+	ConnectAdapter raftv1connect.ShardServiceHandler
+}
 
 type RaftShardConnectAdapter struct {
+	http.Handler
 	logger       zerolog.Logger
+	path         string
 	shardManager runtime.IShardManager
 }
 
 func NewRaftShardConnectAdapter(shardManager runtime.IShardManager, logger zerolog.Logger) *RaftShardConnectAdapter {
-	return &RaftShardConnectAdapter{logger: logger, shardManager: shardManager}
+	adapter := &RaftShardConnectAdapter{logger: logger, shardManager: shardManager}
+	adapter.path, adapter.Handler = raftv1connect.NewShardServiceHandler(adapter)
+
+	return adapter
+}
+
+func (r *RaftShardConnectAdapter) Path() string {
+	return r.path
 }
 
 func (r *RaftShardConnectAdapter) AddReplica(ctx context.Context, c *connect.Request[raftv1.AddReplicaRequest]) (*connect.Response[raftv1.AddReplicaResponse], error) {
@@ -37,9 +62,7 @@ func (r *RaftShardConnectAdapter) AddReplica(ctx context.Context, c *connect.Req
 		return connect.NewResponse(&raftv1.AddReplicaResponse{}), err
 	}
 
-	timeout := time.Duration(c.Msg.GetTimeout()) * time.Millisecond
-
-	err := r.shardManager.AddReplica(c.Msg.GetShardId(), c.Msg.GetReplicaId(), c.Msg.GetHostname(), timeout)
+	err := r.shardManager.AddReplica(c.Msg)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't add replica")
 		return nil, err
@@ -123,19 +146,9 @@ func (r *RaftShardConnectAdapter) NewShard(ctx context.Context, c *connect.Reque
 		return connect.NewResponse(&raftv1.NewShardResponse{}), err
 	}
 
-	var t runtime.StateMachineType
-	switch c.Msg.GetType() {
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
-		t = testStateMachineType
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
-		t = BBoltStateMachineType
-	default:
-		return nil, ErrUnsupportedStateMachine
-	}
+	r.logger.Trace().Str("state-machine", c.Msg.GetType().String()).Msg("state machine is supported")
 
-	timeout := time.Duration(c.Msg.Timeout) * time.Millisecond
-
-	err := r.shardManager.NewShard(c.Msg.GetShardId(), c.Msg.GetReplicaId(), t, timeout)
+	err := r.shardManager.NewShard(c.Msg)
 	if err != nil {
 		r.logger.Error().Err(err).Msg("can't create new shard")
 		return nil, err
@@ -176,17 +189,7 @@ func (r *RaftShardConnectAdapter) StartReplica(ctx context.Context, c *connect.R
 		return connect.NewResponse(&raftv1.StartReplicaResponse{}), err
 	}
 
-	var t runtime.StateMachineType
-	switch c.Msg.GetType() {
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
-		t = testStateMachineType
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
-		t = BBoltStateMachineType
-	default:
-		return nil, ErrUnsupportedStateMachine
-	}
-
-	err := r.shardManager.StartReplica(c.Msg.GetShardId(), c.Msg.GetReplicaId(), t)
+	err := r.shardManager.StartReplica(c.Msg)
 
 	return connect.NewResponse(&raftv1.StartReplicaResponse{}), err
 }
@@ -196,17 +199,7 @@ func (r *RaftShardConnectAdapter) StartReplicaObserver(ctx context.Context, c *c
 		return connect.NewResponse(&raftv1.StartReplicaObserverResponse{}), err
 	}
 
-	var t runtime.StateMachineType
-	switch c.Msg.GetType() {
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST:
-		t = testStateMachineType
-	case raftv1.StateMachineType_STATE_MACHINE_TYPE_KV:
-		t = BBoltStateMachineType
-	default:
-		return nil, ErrUnsupportedStateMachine
-	}
-
-	err := r.shardManager.StartReplicaObserver(c.Msg.GetShardId(), c.Msg.GetReplicaId(), t)
+	err := r.shardManager.StartReplicaObserver(c.Msg)
 
 	return connect.NewResponse(&raftv1.StartReplicaObserverResponse{}), err
 }

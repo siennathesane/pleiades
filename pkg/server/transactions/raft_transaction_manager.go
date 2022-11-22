@@ -18,6 +18,7 @@ import (
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var (
@@ -26,9 +27,28 @@ var (
 	ErrUnupportedTransaction                             = errors.New("unsupported transaction type")
 )
 
-func NewTransactionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *TransactionManager {
-	l := logger.With().Str("component", "session-manager").Logger()
-	return &TransactionManager{l, nh, make(map[uint64]*dclient.Session)}
+type TransactionManagerBuilderParams struct {
+	fx.In
+
+	NodeHost *dragonboat.NodeHost
+	Logger   zerolog.Logger
+}
+
+type TransactionManagerBuilderResults struct {
+	fx.Out
+
+	TransactionManager runtime.ITransactionManager
+}
+
+func NewManager(params TransactionManagerBuilderParams) TransactionManagerBuilderResults {
+	l := params.Logger.With().Str("component", "session-manager").Logger()
+	return TransactionManagerBuilderResults{
+		TransactionManager: &TransactionManager{
+			l,
+			params.NodeHost,
+			make(map[uint64]*dclient.Session),
+		},
+	}
 }
 
 type TransactionManager struct {

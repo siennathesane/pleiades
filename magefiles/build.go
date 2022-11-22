@@ -33,12 +33,12 @@ func (Build) Setup() {
 // compile pleiades with the local build information
 func (Build) Compile() error {
 	fmt.Println("compiling...")
-	return compileWithPath("build/pleiades")
+	return compileWithPath("build/pleiades", nil)
 }
 
 // compile pleiades with the local build information
-func compileWithPath(path string) error {
-	return sh.RunWithV(nil, "go", "build", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", path, "./main.go")
+func compileWithPath(path string, env map[string]string) error {
+	return sh.RunWithV(env, "go", "build", "-v", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", path, "./main.go")
 }
 
 func ldflags() string {

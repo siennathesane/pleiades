@@ -3,8 +3,8 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
-	github.com/mxplusb/api v0.0.0-20221019191523-cc717f4cd45f
-	github.com/bufbuild/connect-go v0.4.0
+	github.com/mxplusb/api v0.0.0-20221121235144-347395d17e21
+	github.com/bufbuild/connect-go v1.0.0
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13
 	github.com/go-git/go-git/v5 v5.4.2
@@ -35,6 +35,7 @@ require (
 	github.com/VictoriaMetrics/metrics v1.6.2 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
+	github.com/bufbuild/connect-grpcreflect-go v1.0.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
 	github.com/cockroachdb/pebble v0.0.0-20210331181633-27fc006b8bfb // indirect
 	github.com/cockroachdb/redact v1.0.6 // indirect
@@ -69,6 +70,7 @@ require (
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
+	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/nats-io/jwt/v2 v2.3.0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
@@ -87,6 +89,11 @@ require (
 	github.com/valyala/fastrand v1.0.0 // indirect
 	github.com/valyala/histogram v1.0.1 // indirect
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/dig v1.15.0 // indirect
+	go.uber.org/fx v1.18.2 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
+	go.uber.org/zap v1.17.0 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect
