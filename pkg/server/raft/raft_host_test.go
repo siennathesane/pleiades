@@ -21,6 +21,7 @@ import (
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 )
 
 func TestRaftHost(t *testing.T) {
@@ -32,11 +33,13 @@ type RaftHostTestSuite struct {
 	logger         zerolog.Logger
 	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
+	lifecycle      *fxtest.Lifecycle
 }
 
 func (t *RaftHostTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 300 * time.Millisecond
+	t.lifecycle = fxtest.NewLifecycle(t.T())
 }
 
 func (t *RaftHostTestSuite) SetupTest() {
@@ -48,11 +51,11 @@ func (t *RaftHostTestSuite) TearDownTest() {
 }
 
 func (t *RaftHostTestSuite) TestCompact() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	shardConfig := serverutils.BuildTestShardConfig(t.T())
@@ -83,11 +86,11 @@ func (t *RaftHostTestSuite) TestCompact() {
 }
 
 func (t *RaftHostTestSuite) TestGetHostInfo() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.GetHostInfo(runtime.HostInfoOption{SkipLogInfo: false})
@@ -95,11 +98,11 @@ func (t *RaftHostTestSuite) TestGetHostInfo() {
 }
 
 func (t *RaftHostTestSuite) TestHasNodeInfo() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	shardConfig := serverutils.BuildTestShardConfig(t.T())
@@ -116,11 +119,11 @@ func (t *RaftHostTestSuite) TestHasNodeInfo() {
 }
 
 func (t *RaftHostTestSuite) TestId() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	hostname := host.Id()
@@ -129,11 +132,11 @@ func (t *RaftHostTestSuite) TestId() {
 }
 
 func (t *RaftHostTestSuite) TestHostConfig() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.HostConfig()
@@ -141,11 +144,11 @@ func (t *RaftHostTestSuite) TestHostConfig() {
 }
 
 func (t *RaftHostTestSuite) TestRaftAddress() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.RaftAddress()
@@ -153,11 +156,11 @@ func (t *RaftHostTestSuite) TestRaftAddress() {
 }
 
 func (t *RaftHostTestSuite) TestSnapshot() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 
 	shardConfig := serverutils.BuildTestShardConfig(t.T())
@@ -197,11 +200,11 @@ func (t *RaftHostTestSuite) TestSnapshot() {
 }
 
 func (t *RaftHostTestSuite) TestStop() {
-	params := &RaftHostBuilderParams{
+	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
 		Logger:   t.logger,
 	}
-	hostRes := NewHost(params)
+	hostRes := NewHost(t.lifecycle, params)
 	host := hostRes.RaftHost.(*RaftHost)
 	host.Stop()
 }
