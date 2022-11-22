@@ -16,11 +16,13 @@ import (
 )
 
 func NewTestLogger(t *testing.T) zerolog.Logger {
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	testWriter := zerolog.NewTestWriter(t)
 	return zerolog.New(testWriter)
 }
 
 func NewFuzzLogger(t *testing.F) zerolog.Logger {
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	testWriter := zerolog.NewTestWriter(t)
 	return zerolog.New(testWriter)
 }

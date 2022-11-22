@@ -7,19 +7,8 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
-
-import (
-	"github.com/cockroachdb/errors"
-)
-
-type StateMachineType uint64
+package eventing
 
 const (
-	testStateMachineType StateMachineType = 0
-	BBoltStateMachineType StateMachineType = 1
-)
-
-var (
-	ErrUnsupportedStateMachine = errors.New("state machine type is unsupported")
+	ShardConfigStream string = "system.raftv1.shard-config"
 )

@@ -7,13 +7,16 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package runtime
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
+	raftv1 "github.com/mxplusb/api/raft/v1"
+	dclient "github.com/lni/dragonboat/v3/client"
 )
 
 type IRaft interface {
@@ -23,19 +26,24 @@ type IRaft interface {
 	IKVStore
 }
 
+type ServiceHandler interface {
+	http.Handler
+	Path() string
+}
+
 type IShardManager interface {
-	AddReplica(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
+	AddReplica(req *raftv1.AddReplicaRequest) error
 	AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	// LeaderTransfer(shardId uint64, targetReplicaId uint64) error
-	NewShard(shardId uint64, replicaId uint64, stateMachineType StateMachineType, timeout time.Duration) error
+	NewShard(req *raftv1.NewShardRequest) error
 	RemoveData(shardId, replicaId uint64) error
 	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
-	StartReplica(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
-	StartReplicaObserver(shardId uint64, replicaId uint64, stateMachineType StateMachineType) error
-	StopReplica(shardId uint64) (*OperationResult, error)
+	StartReplica(req *raftv1.StartReplicaRequest) error
+	StartReplicaObserver(req *raftv1.StartReplicaObserverRequest) error
+	StopReplica(shardId uint64, replicaId uint64) (*OperationResult, error)
 }
 
 type IHost interface {
@@ -54,6 +62,7 @@ type ITransactionManager interface {
 	Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction
 	GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction
 	GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error)
+	SessionFromClientId(clientId uint64) (*dclient.Session, bool)
 }
 
 type IKVStore interface {

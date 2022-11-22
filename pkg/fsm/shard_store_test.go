@@ -10,6 +10,7 @@
 package fsm
 
 import (
+	"fmt"
 	"testing"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
@@ -35,25 +36,38 @@ func (t *shardStoreTestSuite) SetupSuite() {
 func (t *shardStoreTestSuite) TestLifecycle() {
 	configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
 
-	store, err := NewShardStore(t.logger)
+	store, err := NewSystemStore(t.logger)
 	t.Require().NoError(err, "there must not be an error when opening the shard store")
 	t.Require().NotNil(store, "the shard store must not be empty")
 
-	testPayload := &raftv1.NewShardRequest{
-		ShardId:   1,
-		ReplicaId: 1,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
-		Hostname:  "test.local",
-		Timeout:   100,
+	count := uint64(10)
+	for i := uint64(0); i < count; i++ {
+		testPayload := &raftv1.ShardState{
+			ShardId:   i,
+			Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+			Replicas: map[uint64]string{
+				i+4: fmt.Sprintf("test.local.%d", i),
+			},
+		}
+		err = store.Put(testPayload)
+		t.Require().NoError(err, "there must not be an error when putting a configuration")
 	}
 
-	err = store.Put(testPayload)
-	t.Require().NoError(err, "there must not be an error when putting a configuration")
+	testPayload := &raftv1.ShardState{
+		ShardId:   1,
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+	}
 
 	resp, err := store.Get(testPayload.GetShardId())
 	t.Require().NoError(err, "there must not be an error when fetching a configuration")
 	t.Require().NotNil(resp, "the response must not be nil")
-	t.Require().Equal(testPayload.GetTimeout(), resp.GetTimeout(), "the test values must match up")
+	t.Require().Equal(testPayload.GetShardId(), resp.GetShardId(), "the test values must match up")
+
+	resps, err := store.GetAll()
+	t.Require().NoError(err, "there must not be an error when fetching a configuration")
+	t.Require().NotEmpty(resps, "the response must not be nil")
+	t.Require().Len(resps, int(count), "there must be ten items")
+	t.Require().Equal(testPayload.GetShardId(), resps[1].GetShardId(), "the test values must match up")
 
 	err = store.Delete(testPayload.GetShardId())
 	t.Require().NoError(err, "there must not be an error deleting a configuration")

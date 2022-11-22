@@ -7,56 +7,66 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package kvstore
 
 import (
-	"context"
 	"fmt"
 	"math/rand"
-	"net"
 	"sync"
 	"testing"
 	"time"
 
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
+	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/shard"
+	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/test/bufconn"
 )
 
-func TestRaftBBoltStoreManagerGrpcAdapter(t *testing.T) {
-	suite.Run(t, new(raftBboltStoreManagerGrpcAdapterTestSuite))
+func TestBBoltStoreManager(t *testing.T) {
+	if testing.Short() {
+		t.Skipf("skipping bbolt store manager tests")
+	}
+	suite.Run(t, new(bboltStoreManagerTestSuite))
 }
 
-type raftBboltStoreManagerGrpcAdapterTestSuite struct {
+type bboltStoreManagerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
-	tm             *raftTransactionManager
-	sm             *raftShardManager
-	storem         *bboltStoreManager
-	conn           *grpc.ClientConn
-	srv            *grpc.Server
+	tm             runtime.ITransactionManager
+	sm             runtime.IShardManager
 	nh             *dragonboat.NodeHost
-	rh             *raftHost
 	defaultTimeout time.Duration
+	nats           *messaging.EmbeddedMessaging
+	client         *messaging.EmbeddedMessagingStreamClient
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
+func (t *bboltStoreManagerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
-	t.defaultTimeout = 300 * time.Millisecond
+	t.defaultTimeout = 600 * time.Millisecond
+
+	t.nh = serverutils.BuildTestNodeHost(t.T())
+	tmParams := transactions.TransactionManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	t.tm = transactions.NewManager(tmParams).TransactionManager
+
+	shardParams := shard.ShardManagerBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	t.sm = shard.NewManager(shardParams).RaftShardManager
 
 	// ensure that bbolt uses the temp directory
 	configuration.Get().SetDefault("server.datastore.dataDir", t.T().TempDir())
-
-	t.nh = buildTestNodeHost(t.T())
-	t.tm = newTransactionManager(t.nh, t.logger)
-	t.sm = newShardManager(t.nh, t.logger)
-	t.storem = newBboltStoreManager(t.tm, t.nh, t.logger)
 
 	// shardLimit+1
 	var wg sync.WaitGroup
@@ -64,44 +74,35 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) SetupSuite() {
 		go func() {
 			wg.Add(1)
 			defer wg.Done()
-			err := t.sm.NewShard(i, i*4, BBoltStateMachineType, utils.Timeout(t.defaultTimeout))
+			// i, i*4, shard.BBoltStateMachineType, utils.Timeout(t.defaultTimeout)
+			err := t.sm.NewShard(&raftv1.NewShardRequest{
+				ShardId:   i,
+				ReplicaId: i,
+				Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_KV,
+				Timeout:   int64(utils.Timeout(t.defaultTimeout)),
+			})
 			t.Require().NoError(err, "there must not be an error when starting the bbolt state machine")
 			utils.Wait(t.defaultTimeout)
 		}()
 		utils.Wait(100 * time.Millisecond)
 	}
-	defer wg.Wait()
-
-	buffer := 1024 * 1024
-	listener := bufconn.Listen(buffer)
-
-	ctx := context.Background()
-	t.srv = grpc.NewServer()
-
-	kvstorev1.RegisterKvStoreServiceServer(t.srv, &raftBBoltStoreManagerGrpcAdapter{
-		logger:       t.logger,
-		storeManager: t.storem,
-	})
-
-	go func() {
-		if err := t.srv.Serve(listener); err != nil {
-			panic(err)
-		}
-	}()
-
-	t.conn, _ = grpc.DialContext(ctx, "", grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
-		return listener.Dial()
-	}), grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+	wg.Wait()
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateAccount() {
-	client := kvstorev1.NewKvStoreServiceClient(t.conn)
+func (t *bboltStoreManagerTestSuite) TestCreateAccount() {
+	params := BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
 
 	// no transaction
-	resp, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+	resp, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -112,7 +113,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateAccount() {
 
 	// create 20 new accounts
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
-		resp, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+		resp, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -124,14 +125,20 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateAccount() {
 	}
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteAccount() {
-	client := kvstorev1.NewKvStoreServiceClient(t.conn)
+func (t *bboltStoreManagerTestSuite) TestDeleteAccount() {
+	params := BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testOwner := "test@test.com"
 
 	// no transaction
-	_, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+	_, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -139,7 +146,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteAccount() {
 	t.Require().NoError(err, "there must not be an error when creating an account")
 
 	// no transaction
-	resp, err := client.DeleteAccount(context.TODO(), &kvstorev1.DeleteAccountRequest{
+	resp, err := storeManager.DeleteAccount(&kvstorev1.DeleteAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -150,7 +157,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteAccount() {
 
 	// create and delete 20 new accounts
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
-		createAccountReply, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+		createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -160,7 +167,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteAccount() {
 		t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 		t.Require().NotEmpty(i, createAccountReply.GetAccountDescriptor().GetAccountId(), "the account descriptor must not be empty")
 
-		deleteAccountReply, err := client.DeleteAccount(context.TODO(), &kvstorev1.DeleteAccountRequest{
+		deleteAccountReply, err := storeManager.DeleteAccount(&kvstorev1.DeleteAccountRequest{
 			AccountId:   i,
 			Owner:       testOwner,
 			Transaction: nil,
@@ -171,15 +178,21 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteAccount() {
 	}
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateBucket() {
-	client := kvstorev1.NewKvStoreServiceClient(t.conn)
+func (t *bboltStoreManagerTestSuite) TestCreateBucket() {
+	params := BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -189,7 +202,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateBucket() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := client.CreateBucket(context.TODO(), &kvstorev1.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -202,7 +215,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateBucket() {
 	//create 20 new buckets
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
 		testBucketName = utils.RandomString(10)
-		resp, err := client.CreateBucket(context.TODO(), &kvstorev1.CreateBucketRequest{
+		resp, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 			AccountId:   testBaseAccountId,
 			Owner:       testOwner,
 			Name:        testBucketName,
@@ -215,15 +228,21 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestCreateBucket() {
 	}
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
-	client := kvstorev1.NewKvStoreServiceClient(t.conn)
+func (t *bboltStoreManagerTestSuite) TestDeleteBucket() {
+	params := BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -233,7 +252,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := client.CreateBucket(context.TODO(), &kvstorev1.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -244,7 +263,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
 	t.Require().NotEmpty(createBucketReply.GetBucketDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	deleteBucketReply, err := client.DeleteBucket(context.TODO(), &kvstorev1.DeleteBucketRequest{
+	deleteBucketReply, err := storeManager.DeleteBucket(&kvstorev1.DeleteBucketRequest{
 		AccountId:   testBaseAccountId,
 		Name:        testBucketName,
 		Transaction: nil,
@@ -256,7 +275,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
 	//create 20 new buckets
 	for i := testBaseAccountId + 2; i < testBaseAccountId+2+20; i++ {
 		testBucketName = utils.RandomString(10)
-		bucketReply, err := client.CreateBucket(context.TODO(), &kvstorev1.CreateBucketRequest{
+		bucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 			AccountId:   testBaseAccountId,
 			Owner:       testOwner,
 			Name:        testBucketName,
@@ -267,7 +286,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
 		t.Require().NotEmpty(bucketReply.GetBucketDescriptor(), "the bucket descriptor must not be empty")
 		t.Require().Empty(bucketReply.GetBucketDescriptor().GetKeyCount(), "the key count must be zero")
 
-		deleteBucket, err := client.DeleteBucket(context.TODO(), &kvstorev1.DeleteBucketRequest{
+		deleteBucket, err := storeManager.DeleteBucket(&kvstorev1.DeleteBucketRequest{
 			AccountId:   testBaseAccountId,
 			Name:        testBucketName,
 			Transaction: nil,
@@ -278,15 +297,21 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestDeleteBucket() {
 	}
 }
 
-func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
-	client := kvstorev1.NewKvStoreServiceClient(t.conn)
+func (t *bboltStoreManagerTestSuite) TestKeyLifecycle() {
+	params := BboltStoreManagerBuilderParams{
+		TransactionManager: t.tm,
+		NodeHost:           t.nh,
+		Logger:             t.logger,
+	}
+	storeManagerRes := NewBboltStoreManager(params)
+	storeManager := storeManagerRes.KVStoreManager.(*BboltStoreManager)
 
 	testBaseAccountId := rand.Uint64()
 	testBucketName := utils.RandomString(10)
 	testOwner := "test@test.com"
 
 	// no transaction
-	createAccountReply, err := client.CreateAccount(context.TODO(), &kvstorev1.CreateAccountRequest{
+	createAccountReply, err := storeManager.CreateAccount(&kvstorev1.CreateAccountRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Transaction: nil,
@@ -296,7 +321,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 	t.Require().NotEmpty(createAccountReply.GetAccountDescriptor(), "the account descriptor must not be empty")
 
 	// no transaction
-	createBucketReply, err := client.CreateBucket(context.TODO(), &kvstorev1.CreateBucketRequest{
+	createBucketReply, err := storeManager.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId:   testBaseAccountId,
 		Owner:       testOwner,
 		Name:        testBucketName,
@@ -308,7 +333,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 
 	testPutValue, _ := utils.RandomBytes(128)
 	testKvp := &kvstorev1.KeyValue{
-		Key:            "test-key",
+		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
 		Version:        0,
@@ -316,7 +341,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 		Lease:          0,
 	}
 
-	putKeyReply, err := client.PutKey(context.TODO(), &kvstorev1.PutKeyRequest{
+	putKeyReply, err := storeManager.PutKey(&kvstorev1.PutKeyRequest{
 		AccountId:    testBaseAccountId,
 		BucketName:   testBucketName,
 		KeyValuePair: testKvp,
@@ -325,7 +350,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 	t.Require().NoError(err, "there must not be an error when putting a key")
 	t.Require().NotNil(putKeyReply, "the key response must not be empty")
 
-	getKeyReply, err := client.GetKey(context.TODO(), &kvstorev1.GetKeyRequest{
+	getKeyReply, err := storeManager.GetKey(&kvstorev1.GetKeyRequest{
 		AccountId:  testBaseAccountId,
 		BucketName: testBucketName,
 		Key:        testKvp.Key,
@@ -335,7 +360,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 	t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
 	t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
 
-	deleteKeyReply, err := client.DeleteKey(context.TODO(), &kvstorev1.DeleteKeyRequest{
+	deleteKeyReply, err := storeManager.DeleteKey(&kvstorev1.DeleteKeyRequest{
 		AccountId:   testBaseAccountId,
 		BucketName:  testBucketName,
 		Key:         testKvp.Key,
@@ -349,7 +374,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 	for i := 0; i < 20; i++ {
 		testPutValue, _ = utils.RandomBytes(128)
 		testKvp = &kvstorev1.KeyValue{
-			Key:            fmt.Sprintf("test-key-%d", i),
+			Key:            []byte(fmt.Sprintf("test-key-%d", i)),
 			CreateRevision: 0,
 			ModRevision:    0,
 			Version:        0,
@@ -357,7 +382,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 			Lease:          0,
 		}
 
-		putKeyReply, err = client.PutKey(context.TODO(), &kvstorev1.PutKeyRequest{
+		putKeyReply, err = storeManager.PutKey(&kvstorev1.PutKeyRequest{
 			AccountId:    testBaseAccountId,
 			BucketName:   testBucketName,
 			KeyValuePair: testKvp,
@@ -366,7 +391,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 		t.Require().NoError(err, "there must not be an error when putting a key")
 		t.Require().NotNil(putKeyReply, "the key response must not be empty")
 
-		getKeyReply, err = client.GetKey(context.TODO(), &kvstorev1.GetKeyRequest{
+		getKeyReply, err = storeManager.GetKey(&kvstorev1.GetKeyRequest{
 			AccountId:  testBaseAccountId,
 			BucketName: testBucketName,
 			Key:        testKvp.Key,
@@ -376,7 +401,7 @@ func (t *raftBboltStoreManagerGrpcAdapterTestSuite) TestKeyLifecycle() {
 		t.Require().NotEmpty(getKeyReply.GetKeyValuePair(), "the key value pair must not be empty")
 		t.Require().Equal(testKvp, getKeyReply.GetKeyValuePair(), "the kvps must match")
 
-		deleteKeyReply, err = client.DeleteKey(context.TODO(), &kvstorev1.DeleteKeyRequest{
+		deleteKeyReply, err = storeManager.DeleteKey(&kvstorev1.DeleteKeyRequest{
 			AccountId:   testBaseAccountId,
 			BucketName:  testBucketName,
 			Key:         testKvp.Key,

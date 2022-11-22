@@ -13,6 +13,7 @@ import (
 	"encoding/binary"
 	"os"
 	"path/filepath"
+	"sort"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
@@ -22,36 +23,74 @@ import (
 	"go.etcd.io/bbolt"
 )
 
-func NewShardStore(logger zerolog.Logger) (*ShardStore, error) {
+var (
+	ErrNoShards = errors.New("no shards configured")
+)
+
+func NewSystemStore(logger zerolog.Logger) (*SystemStore, error) {
 	basePath := configuration.Get().GetString("server.datastore.basePath")
-	dbPath := filepath.Join(basePath, "shard-config.db")
+	dbPath := filepath.Join(basePath, "system.db")
 
 	db, err := bbolt.Open(dbPath, os.FileMode(dbDirModeVal), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ShardStore{
-		logger: logger.With().Str("component", "shard-config").Logger(),
+	return &SystemStore{
+		logger: logger.With().Str("component", "system-config").Logger(),
 		db:     db,
 	}, nil
 }
 
-type ShardStore struct {
+type SystemStore struct {
 	logger zerolog.Logger
-	db *bbolt.DB
+	db     *bbolt.DB
 }
 
-func (s *ShardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
-	req := &raftv1.NewShardRequest{}
-	err :=  s.db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(shardConfigBucket))
+func (s *SystemStore) Close() error {
+	s.logger.Debug().Msg("shutting down shard storage")
+	return s.db.Close()
+}
+
+func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
+	reqs := make([]*raftv1.ShardState, 0)
+	err := s.db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
-			return errors.New("no shards configured")
+			return ErrNoShards
+		}
+
+		return bucket.ForEach(func(k, v []byte) error {
+			req := &raftv1.ShardState{}
+			err := req.UnmarshalVT(v)
+			if err != nil {
+				s.logger.Trace().Err(err).Msg("can't unmarshal shard configuration")
+			}
+
+			s.logger.Trace().Interface("shard-state", req).Msg("found shard configuration")
+			reqs = append(reqs, req)
+
+			return nil
+		})
+	})
+
+	sort.SliceStable(reqs, func(i, j int) bool {
+		return reqs[i].GetShardId() < reqs[j].GetShardId()
+	})
+
+	return reqs, err
+}
+
+func (s *SystemStore) Get(shardId uint64) (*raftv1.ShardState, error) {
+	req := &raftv1.ShardState{}
+	err := s.db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
+		if bucket == nil {
+			return ErrNoShards
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,shardId)
+		binary.LittleEndian.PutUint64(shardIdBuf, shardId)
 
 		payload := bucket.Get(shardIdBuf)
 		if payload == nil {
@@ -67,13 +106,15 @@ func (s *ShardStore) Get(shardId uint64) (*raftv1.NewShardRequest, error) {
 	return req, err
 }
 
-func (s *ShardStore) Put(req *raftv1.NewShardRequest) error {
+func (s *SystemStore) Put(req *raftv1.ShardState) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(shardConfigBucket))
+		bucket, err := tx.CreateBucketIfNotExists([]byte(ShardConfigBucket))
 		if err != nil {
 			s.logger.Trace().Err(err).Msg("can't open shard config bucket")
 			return err
 		}
+
+		s.logger.Trace().Interface("request", req).Msg("storing shard state")
 
 		payload, err := req.MarshalVT()
 		if err != nil {
@@ -82,21 +123,21 @@ func (s *ShardStore) Put(req *raftv1.NewShardRequest) error {
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,req.GetShardId())
+		binary.LittleEndian.PutUint64(shardIdBuf, req.GetShardId())
 
 		return bucket.Put(shardIdBuf, payload)
 	})
 }
 
-func (s *ShardStore) Delete(shardId uint64) error {
+func (s *SystemStore) Delete(shardId uint64) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(shardConfigBucket))
+		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
-			return errors.New("no shards configured")
+			return ErrNoShards
 		}
 
 		shardIdBuf := make([]byte, 8)
-		binary.LittleEndian.PutUint64(shardIdBuf,shardId)
+		binary.LittleEndian.PutUint64(shardIdBuf, shardId)
 
 		return bucket.Delete(shardIdBuf)
 	})

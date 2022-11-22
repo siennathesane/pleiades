@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package raft
 
 import (
 	"context"
@@ -15,10 +15,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 )
 
 func TestRaftHost(t *testing.T) {
@@ -27,18 +30,20 @@ func TestRaftHost(t *testing.T) {
 
 type RaftHostTestSuite struct {
 	suite.Suite
-	logger zerolog.Logger
-	nh *dragonboat.NodeHost
+	logger         zerolog.Logger
+	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
+	lifecycle      *fxtest.Lifecycle
 }
 
 func (t *RaftHostTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
-	t.defaultTimeout = 300*time.Millisecond
+	t.defaultTimeout = 300 * time.Millisecond
+	t.lifecycle = fxtest.NewLifecycle(t.T())
 }
 
 func (t *RaftHostTestSuite) SetupTest() {
-	t.nh = buildTestNodeHost(t.T())
+	t.nh = serverutils.BuildTestNodeHost(t.T())
 }
 
 func (t *RaftHostTestSuite) TearDownTest() {
@@ -46,14 +51,19 @@ func (t *RaftHostTestSuite) TearDownTest() {
 }
 
 func (t *RaftHostTestSuite) TestCompact() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 5
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -76,30 +86,45 @@ func (t *RaftHostTestSuite) TestCompact() {
 }
 
 func (t *RaftHostTestSuite) TestGetHostInfo() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	resp := host.GetHostInfo(HostInfoOption{SkipLogInfo: false})
+	resp := host.GetHostInfo(runtime.HostInfoOption{SkipLogInfo: false})
 	t.Require().NotEmpty(resp, "the response must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestHasNodeInfo() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
-	time.Sleep(3000*time.Millisecond)
+	time.Sleep(3000 * time.Millisecond)
 
 	resp := host.HasNodeInfo(shardConfig.ClusterID, shardConfig.NodeID)
 	t.Require().True(resp, "the host must have a replica it started")
 }
 
 func (t *RaftHostTestSuite) TestId() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	hostname := host.Id()
 	t.logger.Info().Str("host-id", hostname).Msg("got host id")
@@ -107,28 +132,43 @@ func (t *RaftHostTestSuite) TestId() {
 }
 
 func (t *RaftHostTestSuite) TestHostConfig() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.HostConfig()
 	t.Require().NotEmpty(resp, "the host config must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestRaftAddress() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.RaftAddress()
 	t.Require().NotEmpty(resp, "the raft address must not be empty")
 }
 
 func (t *RaftHostTestSuite) TestSnapshot() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 
-	shardConfig := buildTestShardConfig(t.T())
+	shardConfig := serverutils.BuildTestShardConfig(t.T())
 	shardConfig.SnapshotEntries = 0
 	members := make(map[uint64]string)
 	members[shardConfig.NodeID] = t.nh.RaftAddress()
 
-	err := t.nh.StartCluster(members, false, newTestStateMachine, shardConfig)
+	err := t.nh.StartCluster(members, false, serverutils.NewTestStateMachine, shardConfig)
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.defaultTimeout)
 
@@ -152,14 +192,19 @@ func (t *RaftHostTestSuite) TestSnapshot() {
 	//t.Require().NoError(err, "there must not be an error when creating the temp directory")
 	//target := filepath.Join(x, "test.bin")
 
-	_, err = host.Snapshot(shardConfig.ClusterID, SnapshotOption{
-		ExportPath:                 ".", // replace with target once you figure this problem out
-		Exported:                   true,
+	_, err = host.Snapshot(shardConfig.ClusterID, runtime.SnapshotOption{
+		ExportPath: ".", // replace with target once you figure this problem out
+		Exported:   true,
 	}, 3000*time.Millisecond)
 	t.Require().NoError(err, "there must not be an error when requesting a snapshot")
 }
 
 func (t *RaftHostTestSuite) TestStop() {
-	host := newRaftHost(t.nh, t.logger)
+	params := RaftHostBuilderParams{
+		NodeHost: t.nh,
+		Logger:   t.logger,
+	}
+	hostRes := NewHost(t.lifecycle, params)
+	host := hostRes.RaftHost.(*RaftHost)
 	host.Stop()
 }

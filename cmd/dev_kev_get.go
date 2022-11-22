@@ -51,7 +51,7 @@ func getKey(cmd *cobra.Command, args []string) {
 	descriptor, err := client.GetKey(context.Background(), connect.NewRequest(&kvstorev1.GetKeyRequest{
 		AccountId:  accountId,
 		BucketName: bucketName,
-		Key:        key,
+		Key:        []byte(key),
 	}))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't delete bucket")

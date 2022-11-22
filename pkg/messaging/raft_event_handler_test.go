@@ -15,7 +15,6 @@ import (
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/nats-io/nats-server/v2/server"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -29,7 +28,7 @@ type RaftEventHandlerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
 	e              *EmbeddedMessaging
-	client         *EmbeddedMessagingPubSubClient
+	pubSubClient   *EmbeddedMessagingPubSubClient
 	queueClient    *EmbeddedMessagingStreamClient
 	defaultTimeout time.Duration
 }
@@ -38,17 +37,8 @@ func (t *RaftEventHandlerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 500 * time.Millisecond
 
-	opts := &EmbeddedMessagingStreamOpts{
-		Options: &server.Options{
-			Host:       "localhost",
-			JetStream:  true,
-			DontListen: true,
-		},
-		timeout: utils.Timeout(4000 * time.Millisecond),
-	}
-
 	var err error
-	t.e, err = NewEmbeddedMessaging(opts)
+	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating the event stream")
 
 	t.e.Start()
@@ -56,40 +46,83 @@ func (t *RaftEventHandlerTestSuite) SetupSuite() {
 
 func (t *RaftEventHandlerTestSuite) SetupTest() {
 	var err error
-	t.client, err = t.e.GetPubSubClient()
-	t.Require().NoError(err, "there must not be an error creating the eventStreamClient")
-	t.Require().NotNil(t.client, "the eventStreamClient must not be nil")
+	t.pubSubClient, err = t.e.GetPubSubClient()
+	t.Require().NoError(err, "there must not be an error creating the pubSubClient")
+	t.Require().NotNil(t.pubSubClient, "the pubSubClient must not be nil")
 
 	t.queueClient, err = t.e.GetStreamClient()
-	t.Require().NoError(err, "there must not be an error when getting a stream client")
-	t.Require().NotNil(t.queueClient, "the queue client must not be nil")
+	t.Require().NoError(err, "there must not be an error when getting a stream pubSubClient")
+	t.Require().NotNil(t.queueClient, "the queue pubSubClient must not be nil")
 }
 
-func (t *RaftEventHandlerTestSuite) TestWaitForMembershipChange() {
-	testShardId := uint64(10)
-	testReplicaId := uint64(100)
+func (t *RaftEventHandlerTestSuite) TestRegisterCallback() {
+	ev := NewRaftEventHandler(t.pubSubClient, t.queueClient, t.logger)
 
-	eh := NewRaftEventHandler(t.client, t.queueClient, t.logger)
+	t.Require().NotPanics(func() {
+		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+			t.Require().NotNil(event, "the event payload must not be nil")
+			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
+		})
+	})
 
-	go func() {
-		for i := uint64(0); i < 500; i++ {
-			payload := &raftv1.RaftEvent{
-				Typ:       raftv1.EventType_EVENT_TYPE_NODE,
-				Action:    raftv1.Event_EVENT_MEMBERSHIP_CHANGED,
-				Timestamp: timestamppb.Now(),
-				Event: &raftv1.RaftEvent_Node{Node: &raftv1.RaftNodeEvent{
-					ShardId:   i,
-					ReplicaId: i * 10,
-				}},
-			}
-			buf, _ := payload.MarshalVT()
-			err := t.client.Publish(raftNodeSubject, buf)
-			t.Require().NoError(err, "there must not be an error when publishing an event")
-			utils.Wait(1 * time.Millisecond)
-		}
-	}()
+	t.Require().NotNil(ev.cbTable, "the callback table must not be nil")
+	t.Require().NotEmpty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
+}
 
-	err := eh.WaitForMembershipChange(testShardId, testReplicaId, utils.Timeout(100*time.Millisecond))
-	t.Require().NoError(err, "there must not be an error when waiting for a specific membership change message")
+func (t *RaftEventHandlerTestSuite) TestUnregisterCallback() {
+	ev := NewRaftEventHandler(t.pubSubClient, t.queueClient, t.logger)
 
+	t.Require().NotPanics(func() {
+		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+			t.Require().NotNil(event, "the event payload must not be nil")
+			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
+		})
+	}, "registering a call back must not panic")
+
+	t.Require().NotNil(ev.cbTable, "the callback table must not be nil")
+	t.Require().NotEmpty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
+
+	t.Require().NotPanics(func() {
+		ev.UnregisterCallback("test", raftv1.Event_EVENT_NODE_READY)
+	}, "unregistering a callback must not panic")
+
+	t.Require().Empty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must not be a function under 'test")
+}
+
+func (t *RaftEventHandlerTestSuite) TestCallback() {
+	ev := NewRaftEventHandler(t.pubSubClient, t.queueClient, t.logger)
+
+	called := 0
+	t.Require().NotPanics(func() {
+		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+			t.Require().NotNil(event, "the event payload must not be nil")
+			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Action, "the event must match the expected type")
+			called += 1
+		})
+	}, "registering a call back must not panic")
+
+	payload := &raftv1.RaftEvent{
+		Typ:       raftv1.EventType_EVENT_TYPE_NODE,
+		Action:    raftv1.Event_EVENT_NODE_READY,
+		Timestamp: timestamppb.Now(),
+		Event: &raftv1.RaftEvent_Node{
+			Node: &raftv1.RaftNodeEvent{
+				ShardId:   10,
+				ReplicaId: 10,
+			},
+		},
+	}
+
+	go ev.Run()
+	utils.Wait(100 * time.Millisecond)
+
+	buf, _ := payload.MarshalVT()
+	err := t.pubSubClient.Publish(RaftNodeSubject, buf)
+	t.Require().NoError(err, "there must not be a publishing error")
+
+	utils.Wait(100 * time.Millisecond)
+	t.Require().Equal(1, called, "the callback must have been triggered at most once")
+
+
+	ev.Stop()
 }
