@@ -7,28 +7,51 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package server
+package transactions
 
 import (
 	"context"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
 
 var (
-	_ ITransactionManager = (*raftTransactionManager)(nil)
+	_                        runtime.ITransactionManager = (*TransactionManager)(nil)
+	ErrNilTransaction                                    = errors.New("cannot close an empty transaction")
+	ErrUnupportedTransaction                             = errors.New("unsupported transaction type")
 )
 
-func newTransactionManager(nh *dragonboat.NodeHost, logger zerolog.Logger) *raftTransactionManager {
-	l := logger.With().Str("component", "session-manager").Logger()
-	return &raftTransactionManager{l, nh, make(map[uint64]*dclient.Session)}
+type TransactionManagerBuilderParams struct {
+	fx.In
+
+	NodeHost *dragonboat.NodeHost
+	Logger   zerolog.Logger
 }
 
-type raftTransactionManager struct {
+type TransactionManagerBuilderResults struct {
+	fx.Out
+
+	TransactionManager runtime.ITransactionManager
+}
+
+func NewManager(params TransactionManagerBuilderParams) TransactionManagerBuilderResults {
+	l := params.Logger.With().Str("component", "session-manager").Logger()
+	return TransactionManagerBuilderResults{
+		TransactionManager: &TransactionManager{
+			l,
+			params.NodeHost,
+			make(map[uint64]*dclient.Session),
+		},
+	}
+}
+
+type TransactionManager struct {
 	logger zerolog.Logger
 	nh     *dragonboat.NodeHost
 
@@ -36,7 +59,7 @@ type raftTransactionManager struct {
 	sessionCache map[uint64]*dclient.Session
 }
 
-func (t *raftTransactionManager) CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error {
+func (t *TransactionManager) CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error {
 	t.logger.Debug().Uint64("shard", transaction.ShardId).Msg("closing transaction")
 
 	cs, ok := t.sessionCache[transaction.GetClientId()]
@@ -53,7 +76,7 @@ func (t *raftTransactionManager) CloseTransaction(ctx context.Context, transacti
 	return err
 }
 
-func (t *raftTransactionManager) Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction {
+func (t *TransactionManager) Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction {
 	// nb (sienna): I know, I know. stop judging me.
 	// is this hacky? yes.
 	// does it work? yes.
@@ -73,14 +96,14 @@ func (t *raftTransactionManager) Commit(ctx context.Context, transaction *kvstor
 	return ta
 }
 
-func (t *raftTransactionManager) GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction {
+func (t *TransactionManager) GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting noop transaction")
 	cs := t.nh.GetNoOPSession(shardId)
 	t.sessionCache[cs.ClientID] = cs
 	return csToTransaction(*cs)
 }
 
-func (t *raftTransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error) {
+func (t *TransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error) {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting transaction")
 	cs, err := t.nh.SyncGetSession(ctx, shardId)
 	if err != nil {
@@ -91,6 +114,11 @@ func (t *raftTransactionManager) GetTransaction(ctx context.Context, shardId uin
 	t.sessionCache[cs.ClientID] = cs
 
 	return csToTransaction(*cs), nil
+}
+
+func (t *TransactionManager) SessionFromClientId(clientId uint64) (*dclient.Session, bool) {
+	sess, ok := t.sessionCache[clientId]
+	return sess, ok
 }
 
 func csToTransaction(cs dclient.Session) *kvstorev1.Transaction {

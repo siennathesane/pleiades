@@ -11,10 +11,9 @@ package messaging
 
 import (
 	"testing"
-	"time"
 
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/nats-io/nats-server/v2/server"
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -24,28 +23,27 @@ func TestEmbeddedEventStream(t *testing.T) {
 
 type EmbeddedEventStreamTestSuite struct {
 	suite.Suite
-	opts *EmbeddedMessagingStreamOpts
+	opts   *EmbeddedMessagingStreamOpts
+	logger zerolog.Logger
 }
 
 func (t *EmbeddedEventStreamTestSuite) SetupSuite() {
-	t.opts = &EmbeddedMessagingStreamOpts{
-		Options: &server.Options{
-			Host: "localhost",
-			JetStream: true,
-			DontListen: true,
-		},
-		timeout: utils.Timeout(4000*time.Millisecond),
-	}
+	t.logger = utils.NewTestLogger(t.T())
+}
+
+func (t *EmbeddedEventStreamTestSuite) TearDownTest() {
+	singleton.Stop()
+	singleton = nil
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestNew() {
-	e, err := NewEmbeddedMessaging(t.opts)
+	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
-	e, err := NewEmbeddedMessaging(t.opts)
+	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
@@ -55,7 +53,7 @@ func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
-	e, err := NewEmbeddedMessaging(t.opts)
+	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
@@ -64,12 +62,12 @@ func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
 	}, "the embedded server must not panic on start")
 
 	embeddedClient, err := e.GetPubSubClient()
-	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
-	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
+	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
+	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
-	e, err := NewEmbeddedMessaging(t.opts)
+	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
 	t.Require().NotNil(e, "the event stream must not be nil")
 
@@ -78,6 +76,6 @@ func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
 	}, "the embedded server must not panic on start")
 
 	embeddedClient, err := e.GetStreamClient()
-	t.Require().NoError(err, "there must not be an error when creating an embedded eventStreamClient")
-	t.Require().NotNil(embeddedClient, "the eventStreamClient must not be nil")
+	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
+	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }
