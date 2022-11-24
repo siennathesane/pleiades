@@ -14,6 +14,8 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
+	"github.com/mxplusb/pleiades/pkg/messaging/raft"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
@@ -28,14 +30,6 @@ type EmbeddedMessagingStreamOpts struct {
 	timeout time.Duration
 }
 
-type EmbeddedMessagingStreamClient struct {
-	nats.JetStreamContext
-}
-
-type EmbeddedMessagingPubSubClient struct {
-	*nats.Conn
-}
-
 func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging, error) {
 	if singleton != nil {
 		return singleton, nil
@@ -46,7 +40,6 @@ func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging
 		JetStream:     true,
 		DontListen:    true,
 		WriteDeadline: 1_000 * time.Millisecond,
-
 	}
 	srv, err := server.NewServer(opts)
 	if err != nil {
@@ -107,16 +100,16 @@ func (ev *EmbeddedMessaging) Start() {
 	}
 
 	_, err = client.AddStream(&nats.StreamConfig{
-		Name:        SystemStreamName,
+		Name:        raft.SystemStreamName,
 		Description: "All internal system streams",
 		Subjects: []string{
-			RaftHostSubject,
-			RaftLogSubject,
-			RaftNodeSubject,
-			RaftSnapshotSubject,
-			RaftConnectionSubject,
-			RaftSubject,
-			SystemStreamName,
+			raft.RaftHostSubject,
+			raft.RaftLogSubject,
+			raft.RaftNodeSubject,
+			raft.RaftSnapshotSubject,
+			raft.RaftConnectionSubject,
+			raft.RaftSubject,
+			raft.SystemStreamName,
 		},
 		Retention: nats.WorkQueuePolicy,
 		Discard:   nats.DiscardOld,
@@ -131,17 +124,17 @@ func (ev *EmbeddedMessaging) Stop() {
 	ev.srv.Shutdown()
 }
 
-func (ev *EmbeddedMessaging) GetPubSubClient() (*EmbeddedMessagingPubSubClient, error) {
+func (ev *EmbeddedMessaging) GetPubSubClient() (*clients.EmbeddedMessagingPubSubClient, error) {
 	conn, err := nats.Connect(ev.srv.ClientURL(), nats.InProcessServer(ev.srv))
-	return &EmbeddedMessagingPubSubClient{conn}, err
+	return &clients.EmbeddedMessagingPubSubClient{conn}, err
 }
 
-func (ev *EmbeddedMessaging) GetStreamClient() (*EmbeddedMessagingStreamClient, error) {
+func (ev *EmbeddedMessaging) GetStreamClient() (*clients.EmbeddedMessagingStreamClient, error) {
 	conn, err := nats.Connect(ev.srv.ClientURL(), nats.InProcessServer(ev.srv))
 	if err != nil {
 		return nil, err
 	}
 
 	js, err := conn.JetStream()
-	return &EmbeddedMessagingStreamClient{js}, err
+	return &clients.EmbeddedMessagingStreamClient{js}, err
 }

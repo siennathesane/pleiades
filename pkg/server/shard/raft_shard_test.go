@@ -19,6 +19,8 @@ import (
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
+	"github.com/mxplusb/pleiades/pkg/messaging/raft"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
@@ -40,8 +42,8 @@ type shardManagerTestSuite struct {
 	defaultTimeout         time.Duration
 	extendedDefaultTimeout time.Duration
 	nats                   *messaging.EmbeddedMessaging
-	client                 *messaging.EmbeddedMessagingStreamClient
-	eventHandler           *messaging.RaftEventHandler
+	client                 *clients.EmbeddedMessagingStreamClient
+	eventHandler           *raft.RaftEventHandler
 }
 
 func (t *shardManagerTestSuite) SetupSuite() {
@@ -63,7 +65,7 @@ func (t *shardManagerTestSuite) SetupSuite() {
 	t.Require().NoError(err, "there must not be an error when creating the queue client")
 	t.client = client
 
-	t.eventHandler = messaging.NewRaftEventHandler(pubSubClient, client, t.logger)
+	t.eventHandler = raft.NewRaftEventHandler(pubSubClient, client, t.logger)
 }
 
 //goland:noinspection GoVetLostCancel

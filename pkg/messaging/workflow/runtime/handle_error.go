@@ -7,13 +7,16 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package runtime
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
+import (
+	"fmt"
+	"net/http"
 )
+
+func handleError(w http.ResponseWriter, message string) {
+	errorStr := fmt.Sprintf("[ Failed ] %v\n", message)
+	fmt.Printf(errorStr)
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write([]byte(errorStr))
+}

@@ -13,8 +13,10 @@ import (
 	"context"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/fsm"
+	"github.com/mxplusb/pleiades/pkg/fsm/systemstore"
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
+	"github.com/mxplusb/pleiades/pkg/messaging/raft"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
@@ -22,14 +24,17 @@ import (
 )
 
 var (
-	evSingleton *messaging.RaftEventHandler
+	evSingleton       *raft.RaftEventHandler
+	gossipSingleton   *messaging.EmbeddedGossipServer
+	workflowSingleton *messaging.EmbeddedWorkflowServer
 )
 
 type LifecycleManagerBuilderParams struct {
 	fx.In
 
-	StreamClient *messaging.EmbeddedMessagingStreamClient
-	PubSubClient *messaging.EmbeddedMessagingPubSubClient
+	WorkflowHost *messaging.EmbeddedWorkflowServer
+	StreamClient *clients.EmbeddedMessagingStreamClient
+	PubSubClient *clients.EmbeddedMessagingPubSubClient
 	ShardManager runtime.IShardManager
 	RaftHost     runtime.IHost
 	Logger       zerolog.Logger
@@ -44,23 +49,33 @@ type LifecycleManagerBuilderResults struct {
 func NewLifecycleManager(lc fx.Lifecycle, params LifecycleManagerBuilderParams) LifecycleManagerBuilderResults {
 	l := params.Logger.With().Str("component", "lifecycle-manager").Logger()
 
-	store, err := fsm.NewSystemStore(l)
+	store, err := systemstore.NewSystemStore(l)
 	if err != nil {
 		l.Fatal().Err(err).Msg("can't create shard storage")
 	}
 
-	evSingleton = messaging.NewRaftEventHandler(params.PubSubClient, params.StreamClient, l)
+	evSingleton = raft.NewRaftEventHandler(params.PubSubClient, params.StreamClient, l)
+
+	gossipSingleton, err = messaging.NewEmbeddedGossip(params.Logger)
+	if err != nil {
+		l.Fatal().Err(err).Msg("can't start embedded gossip")
+	}
+
+	workflowSingleton = params.WorkflowHost
 
 	runner := &LifecycleManager{
-		logger: l,
-		store: store,
+		logger:       l,
+		store:        store,
 		shardManager: params.ShardManager,
 		pubSubClient: params.PubSubClient,
 		eventHandler: evSingleton,
-		raftHost: params.RaftHost,
+		gossip:       gossipSingleton,
+		raftHost:     params.RaftHost,
+		workflowHost: workflowSingleton,
 	}
 	runner.registerCallbacks()
 
+	// reload the shards
 	lc.Append(fx.Hook{
 		OnStart: func(_ context.Context) error {
 			// we start the shards before we start the listener to prevent random startup issues
@@ -69,33 +84,59 @@ func NewLifecycleManager(lc fx.Lifecycle, params LifecycleManagerBuilderParams) 
 				l.Error().Err(err).Msg("can't ")
 				return err
 			}
+			return err
+		},
+		OnStop: func(_ context.Context) error {
+			if err := runner.StopShards(); err != nil {
+				return err
+			}
 
+			return nil
+		},
+	})
+
+	// start the message bus (nats)
+	lc.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
 			go evSingleton.Run()
 			return nil
 		},
-		OnStop: func(_ context.Context) error {
+		OnStop: func(ctx context.Context) error {
 			evSingleton.Stop()
-			return runner.StopShards()
+			return nil
 		},
 	})
+
+	lc.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			return workflowSingleton.Start()
+		},
+	})
+
+	// stop gossip
+	lc.Append(fx.Hook{OnStop: func(ctx context.Context) error {
+		return gossipSingleton.Stop()
+	}})
 
 	return LifecycleManagerBuilderResults{Runner: runner}
 }
 
 type LifecycleManager struct {
 	logger       zerolog.Logger
-	store        *fsm.SystemStore
-	eventHandler *messaging.RaftEventHandler
+	store        *systemstore.SystemStore
+	eventHandler *raft.RaftEventHandler
+	gossip       *messaging.EmbeddedGossipServer
+	pubSubClient *clients.EmbeddedMessagingPubSubClient
 	shardManager runtime.IShardManager
 	raftHost     runtime.IHost
-	pubSubClient *messaging.EmbeddedMessagingPubSubClient
+	workflowHost *messaging.EmbeddedWorkflowServer
 }
 
 // StartShards will attempt to boot any replicas that were running on the node
 func (l *LifecycleManager) StartShards() error {
-	all, err := l.store.GetAll()
+	all, err := l.store.GetAllShards()
 	if err != nil {
-		if !errors.Is(err, fsm.ErrNoShards) {
+		if !errors.Is(err, systemstore.ErrNoShards) {
 			l.logger.Error().Err(err).Msg("failed to get all shards")
 			return err
 		}
@@ -153,8 +194,8 @@ func (l *LifecycleManager) StartShards() error {
 
 // StopShards will attempt to stop any replicas that were running on the node
 func (l *LifecycleManager) StopShards() error {
-	all, err := l.store.GetAll()
-	if !errors.Is(err, fsm.ErrNoShards) {
+	all, err := l.store.GetAllShards()
+	if !errors.Is(err, systemstore.ErrNoShards) {
 		l.logger.Error().Err(err).Msg("failed to get all shards")
 		return err
 	}
@@ -190,7 +231,7 @@ func (l *LifecycleManager) registerCallbacks() {
 }
 
 func (l *LifecycleManager) handleLeaderUpdate(event *raftv1.RaftEvent) {
-	l.logger.Debug().Interface("payload", event).Msg("leader update recieved")
+	l.logger.Debug().Interface("payload", event).Msg("leader update received")
 
 	// safety check
 	if event.Typ != raftv1.EventType_EVENT_TYPE_RAFT {
@@ -227,7 +268,7 @@ func (l *LifecycleManager) handleLeaderUpdate(event *raftv1.RaftEvent) {
 		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_KV,
 	}
 
-	err = l.store.Put(update)
+	err = l.store.PutShard(update)
 	if err != nil {
 		l.logger.Error().Err(err).Msg("can't put the update")
 	}

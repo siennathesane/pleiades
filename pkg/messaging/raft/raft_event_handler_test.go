@@ -7,13 +7,15 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package messaging
+package raft
 
 import (
 	"testing"
 	"time"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -27,9 +29,9 @@ func TestRaftEventHandler(t *testing.T) {
 type RaftEventHandlerTestSuite struct {
 	suite.Suite
 	logger         zerolog.Logger
-	e              *EmbeddedMessaging
-	pubSubClient   *EmbeddedMessagingPubSubClient
-	queueClient    *EmbeddedMessagingStreamClient
+	e              *messaging.EmbeddedMessaging
+	pubSubClient   *clients.EmbeddedMessagingPubSubClient
+	queueClient    *clients.EmbeddedMessagingStreamClient
 	defaultTimeout time.Duration
 }
 
@@ -38,7 +40,7 @@ func (t *RaftEventHandlerTestSuite) SetupSuite() {
 	t.defaultTimeout = 500 * time.Millisecond
 
 	var err error
-	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
+	t.e, err = messaging.NewEmbeddedMessagingWithDefaults(t.logger)
 	t.Require().NoError(err, "there must not be an error creating the event stream")
 
 	t.e.Start()
@@ -122,7 +124,6 @@ func (t *RaftEventHandlerTestSuite) TestCallback() {
 
 	utils.Wait(100 * time.Millisecond)
 	t.Require().Equal(1, called, "the callback must have been triggered at most once")
-
 
 	ev.Stop()
 }

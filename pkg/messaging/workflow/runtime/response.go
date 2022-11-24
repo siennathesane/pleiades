@@ -7,13 +7,14 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package runtime
 
-const (
+type Response struct {
+	RequestID string
+	Header    map[string][]string
+	Body      []byte
+}
 
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
-)
+func (response *Response) SetHeader(header string, value string) {
+	response.Header[header] = []string{value}
+}

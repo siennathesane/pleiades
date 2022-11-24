@@ -7,13 +7,14 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package runtime
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
-)
+// Logger logs the flow logs
+type Logger interface {
+	// Configure configure a logger with flowname and requestID
+	Configure(flowName string, requestId string)
+	// Init initialize a logger
+	Init() error
+	// Log logs a flow log
+	Log(str string)
+}

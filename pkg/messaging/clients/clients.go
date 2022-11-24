@@ -7,13 +7,16 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package clients
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
+import (
+	"github.com/nats-io/nats.go"
 )
+
+type EmbeddedMessagingStreamClient struct {
+	nats.JetStreamContext
+}
+
+type EmbeddedMessagingPubSubClient struct {
+	*nats.Conn
+}

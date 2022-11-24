@@ -20,6 +20,7 @@ import (
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	runtime2 "github.com/mxplusb/pleiades/pkg/messaging/clients"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/server/shard"
@@ -45,7 +46,7 @@ type bboltStoreManagerTestSuite struct {
 	nh             *dragonboat.NodeHost
 	defaultTimeout time.Duration
 	nats           *messaging.EmbeddedMessaging
-	client         *messaging.EmbeddedMessagingStreamClient
+	client         *runtime2.EmbeddedMessagingStreamClient
 }
 
 func (t *bboltStoreManagerTestSuite) SetupSuite() {

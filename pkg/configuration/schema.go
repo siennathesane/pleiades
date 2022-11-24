@@ -29,7 +29,19 @@ type ClientConfig struct {
 type ServerConfig struct {
 	Datastore *Datastore `json:"datastore,omitempty" yaml:"datastore,omitempty" mapstructure:"datastore"`
 	Host      *Host      `json:"host,omitempty" yaml:"host,omitempty" mapstructure:"host"`
+	Gossip    *Gossip    `json:"gossip,omitempty" yaml:"gossip,omitempty" mapstructure:"gossip"`
 	Reset     bool       // internal flag to reset the dev server
+}
+
+type Gossip struct {
+	Continent string `flag:"continent" json:"continent" yaml:"continent" mapstructure:"continent"`
+	Region    string `flag:"region" json:"region" yaml:"region" mapstructure:"region"`
+	Zone      string `flag:"zone" json:"zone" yaml:"zone" mapstructure:"zone"`
+	Port      int    `flag:"gossip-port" json:"port" yaml:"port" mapstructure:"port"`
+}
+
+type WorkflowHost struct {
+	Port int `flag:"workflow-port" json:"port" yaml:"port"`
 }
 
 type Datastore struct {

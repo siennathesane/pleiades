@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package systemstore
 
 import (
 	"encoding/binary"
@@ -17,17 +17,30 @@ import (
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
 )
 
+const (
+	ShardConfigBucket   string = "shards"
+	dbDirModeVal int = 484
+)
+
 var (
 	ErrNoShards = errors.New("no shards configured")
+	ErrNoKeys = errors.New("no keys found")
+
+	systemStoreSingleton *SystemStore
 )
 
 func NewSystemStore(logger zerolog.Logger) (*SystemStore, error) {
+	if systemStoreSingleton != nil {
+		return systemStoreSingleton, nil
+	}
+
 	basePath := configuration.Get().GetString("server.datastore.basePath")
 	dbPath := filepath.Join(basePath, "system.db")
 
@@ -52,10 +65,10 @@ func (s *SystemStore) Close() error {
 	return s.db.Close()
 }
 
-func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
+func (s *SystemStore) GetAllShards() ([]*raftv1.ShardState, error) {
 	reqs := make([]*raftv1.ShardState, 0)
 	err := s.db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(ShardConfigBucket))
+		bucket := tx.Bucket([]byte(fsm.ShardConfigBucket))
 		if bucket == nil {
 			return ErrNoShards
 		}
@@ -81,10 +94,11 @@ func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
 	return reqs, err
 }
 
-func (s *SystemStore) Get(shardId uint64) (*raftv1.ShardState, error) {
+// Deprecated: use Get
+func (s *SystemStore) GetShard(shardId uint64) (*raftv1.ShardState, error) {
 	req := &raftv1.ShardState{}
 	err := s.db.View(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(ShardConfigBucket))
+		bucket := tx.Bucket([]byte(fsm.ShardConfigBucket))
 		if bucket == nil {
 			return ErrNoShards
 		}
@@ -106,9 +120,82 @@ func (s *SystemStore) Get(shardId uint64) (*raftv1.ShardState, error) {
 	return req, err
 }
 
-func (s *SystemStore) Put(req *raftv1.ShardState) error {
+func (s *SystemStore) GetAll(bucket string) (map[string][]byte, error) {
+	reqs := make(map[string][]byte, 0)
+	err := s.db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(bucket))
+		if bucket == nil {
+			return errors.New("bucket doesn't exist")
+		}
+
+		return bucket.ForEach(func(k, v []byte) error {
+			reqs[string(k)] = v
+			return nil
+		})
+	})
+
+	return reqs, err
+}
+
+func (s *SystemStore) Get(bucket, key string) ([]byte, error) {
+	var resp []byte
+	err := s.db.View(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(bucket))
+		if bucket == nil {
+			return ErrNoKeys
+		}
+
+		payload := bucket.Get([]byte(key))
+		if payload == nil {
+			return kv.ErrKeyNotFound
+		}
+
+		resp = make([]byte, len(payload))
+		copy(resp, payload)
+		return nil
+	})
+	return resp, err
+}
+
+func (s *SystemStore) Put(bucket, key string, payload []byte) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte(ShardConfigBucket))
+		if bucket == "" {
+			return errors.New("empty bucket")
+		}
+		if key == "" {
+			return errors.New("empty key")
+		}
+		bucket, err := tx.CreateBucketIfNotExists([]byte(bucket))
+		if err != nil {
+			s.logger.Trace().Err(err).Msg("can't open bucket")
+			return err
+		}
+
+		return bucket.Put([]byte(key), payload)
+	})
+}
+
+func (s *SystemStore) Delete(bucket, key string) error {
+	return s.db.Update(func(tx *bbolt.Tx) error {
+		bucket := tx.Bucket([]byte(bucket))
+		if bucket == nil {
+			return errors.New("bucket doesn't exist")
+		}
+
+		return bucket.Delete([]byte(key))
+	})
+}
+
+func (s *SystemStore) DeleteBucket(bucket string) error {
+	return s.db.Update(func(tx *bbolt.Tx) error {
+		return tx.DeleteBucket([]byte(bucket))
+	})
+}
+
+// Deprecated: use Put
+func (s *SystemStore) PutShard(req *raftv1.ShardState) error {
+	return s.db.Update(func(tx *bbolt.Tx) error {
+		bucket, err := tx.CreateBucketIfNotExists([]byte(fsm.ShardConfigBucket))
 		if err != nil {
 			s.logger.Trace().Err(err).Msg("can't open shard config bucket")
 			return err
@@ -129,9 +216,10 @@ func (s *SystemStore) Put(req *raftv1.ShardState) error {
 	})
 }
 
-func (s *SystemStore) Delete(shardId uint64) error {
+// Deprecated: use Delete
+func (s *SystemStore) DeleteShard(shardId uint64) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
-		bucket := tx.Bucket([]byte(ShardConfigBucket))
+		bucket := tx.Bucket([]byte(fsm.ShardConfigBucket))
 		if bucket == nil {
 			return ErrNoShards
 		}

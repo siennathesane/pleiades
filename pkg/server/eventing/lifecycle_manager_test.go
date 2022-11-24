@@ -32,7 +32,7 @@ func (t *shardConfigRunnerTestSuite) SetupSuite() {
 
 // todo (sienna): figure out why this isn't working.
 func (t *shardConfigRunnerTestSuite) TestLifecycle() {
-	//configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
+	//configuration.GetShard().SetDefault("server.datastore.basePath", t.T().TempDir())
 	//
 	//nh, conf := serverutils.BuildTestShard(t.T())
 	//
@@ -57,7 +57,7 @@ func (t *shardConfigRunnerTestSuite) TestLifecycle() {
 	//runner.done <- struct{}{}
 	//
 	// check the db to ensure the value was stored.
-	//state, err := runner.store.Get(testState.GetEvent().GetShardId())
+	//state, err := runner.store.GetShard(testState.GetEvent().GetShardId())
 	//t.Require().NoError(err, "there must not be an error fetching the state")
 	//t.Require().Equal(testState.GetEvent().GetShardId(), state.GetShardId(), "the shard ids must match")
 }

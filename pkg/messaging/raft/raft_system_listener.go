@@ -7,10 +7,11 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package messaging
+package raft
 
 import (
 	raftv1 "github.com/mxplusb/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
 	"github.com/lni/dragonboat/v3/raftio"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -29,11 +30,11 @@ const (
 var _ raftio.ISystemEventListener = (*RaftSystemListener)(nil)
 var _ raftio.IRaftEventListener = (*RaftSystemListener)(nil)
 
-func NewRaftSystemListener(client *EmbeddedMessagingPubSubClient, queueClient *EmbeddedMessagingStreamClient, logger zerolog.Logger) (*RaftSystemListener, error) {
+func NewRaftSystemListener(client *clients.EmbeddedMessagingPubSubClient, queueClient *clients.EmbeddedMessagingStreamClient, logger zerolog.Logger) (*RaftSystemListener, error) {
 	rl := &RaftSystemListener{
 		logger:            logger.With().Str("component", "raft-listener").Logger(),
 		eventStreamClient: client,
-		queueClient: &EmbeddedMessagingStreamClient{
+		queueClient: &clients.EmbeddedMessagingStreamClient{
 			JetStreamContext: queueClient,
 		},
 	}
@@ -43,8 +44,8 @@ func NewRaftSystemListener(client *EmbeddedMessagingPubSubClient, queueClient *E
 
 type RaftSystemListener struct {
 	logger            zerolog.Logger
-	eventStreamClient *EmbeddedMessagingPubSubClient
-	queueClient       *EmbeddedMessagingStreamClient
+	eventStreamClient *clients.EmbeddedMessagingPubSubClient
+	queueClient       *clients.EmbeddedMessagingStreamClient
 }
 
 func (r *RaftSystemListener) LeaderUpdated(info raftio.LeaderInfo) {

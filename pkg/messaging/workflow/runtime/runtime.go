@@ -7,13 +7,13 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package runtime
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
+import (
+	"github.com/mxplusb/pleiades/pkg/messaging/workflow/runtime/execution"
 )
+
+type Runtime interface {
+	Init() error
+	CreateExecutor(*Request) (execution.IExecutor, error)
+}

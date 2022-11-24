@@ -5,23 +5,29 @@ go 1.18
 require (
 	github.com/mxplusb/api v0.0.0-20221121235144-347395d17e21
 	github.com/bufbuild/connect-go v1.0.0
+	github.com/bufbuild/connect-grpcreflect-go v1.0.0
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13
+	github.com/go-co-op/gocron v1.18.0
 	github.com/go-git/go-git/v5 v5.4.2
+	github.com/hashicorp/serf v0.10.1
 	github.com/lithammer/go-jump-consistent-hash v1.0.2
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/nats-io/nats-server/v2 v2.9.0
 	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
 	github.com/planetscale/vtprotobuf v0.3.0
+	github.com/rs/xid v1.4.0
 	github.com/rs/zerolog v1.28.0
+	github.com/s8sg/goflow v0.1.1-0.20221023055151-3c89264a9f2e
 	github.com/spf13/cobra v1.5.0
-	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	go.etcd.io/bbolt v1.3.6
+	go.uber.org/fx v1.18.2
 	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
 	gonum.org/v1/gonum v0.11.0
@@ -35,7 +41,6 @@ require (
 	github.com/VictoriaMetrics/metrics v1.6.2 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
-	github.com/bufbuild/connect-grpcreflect-go v1.0.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
 	github.com/cockroachdb/pebble v0.0.0-20210331181633-27fc006b8bfb // indirect
 	github.com/cockroachdb/redact v1.0.6 // indirect
@@ -52,11 +57,11 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-msgpack v0.5.3 // indirect
-	github.com/hashicorp/go-multierror v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/hashicorp/memberlist v0.2.2 // indirect
+	github.com/hashicorp/memberlist v0.5.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
@@ -70,7 +75,6 @@ require (
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
-	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/nats-io/jwt/v2 v2.3.0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
@@ -79,19 +83,20 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/valyala/fastrand v1.0.0 // indirect
 	github.com/valyala/histogram v1.0.1 // indirect
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/dig v1.15.0 // indirect
-	go.uber.org/fx v1.18.2 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0 // indirect
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect

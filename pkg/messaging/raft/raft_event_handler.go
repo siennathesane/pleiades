@@ -7,26 +7,27 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package messaging
+package raft
 
 import (
 	raftv1 "github.com/mxplusb/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 )
 
 type RaftEventHandler struct {
 	logger       zerolog.Logger
-	pubSubClient *EmbeddedMessagingPubSubClient
-	queueClient  *EmbeddedMessagingStreamClient
+	pubSubClient *clients.EmbeddedMessagingPubSubClient
+	queueClient  *clients.EmbeddedMessagingStreamClient
 	cbTable      map[raftv1.Event]map[string]EventCallback
 	done         chan struct{}
 }
 
 type EventCallback func(event *raftv1.RaftEvent)
 
-func NewRaftEventHandler(eventStreamClient *EmbeddedMessagingPubSubClient,
-	queueClient *EmbeddedMessagingStreamClient,
+func NewRaftEventHandler(eventStreamClient *clients.EmbeddedMessagingPubSubClient,
+	queueClient *clients.EmbeddedMessagingStreamClient,
 	logger zerolog.Logger) *RaftEventHandler {
 
 	// generate the callback table.

@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/messaging/raft"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -75,7 +76,7 @@ func BuildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 		t.Fatalf("error getting queue client: %s", err)
 	}
 
-	sysListener, err := messaging.NewRaftSystemListener(pubSubClient, queueClient, utils.NewTestLogger(t))
+	sysListener, err := raft.NewRaftSystemListener(pubSubClient, queueClient, utils.NewTestLogger(t))
 
 	logger := utils.NewTestLogger(t)
 	SetRootLogger(logger)

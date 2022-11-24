@@ -7,7 +7,7 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package systemstore
 
 import (
 	"fmt"
@@ -49,7 +49,7 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 				i+4: fmt.Sprintf("test.local.%d", i),
 			},
 		}
-		err = store.Put(testPayload)
+		err = store.PutShard(testPayload)
 		t.Require().NoError(err, "there must not be an error when putting a configuration")
 	}
 
@@ -58,17 +58,17 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
 	}
 
-	resp, err := store.Get(testPayload.GetShardId())
+	resp, err := store.GetShard(testPayload.GetShardId())
 	t.Require().NoError(err, "there must not be an error when fetching a configuration")
 	t.Require().NotNil(resp, "the response must not be nil")
 	t.Require().Equal(testPayload.GetShardId(), resp.GetShardId(), "the test values must match up")
 
-	resps, err := store.GetAll()
+	resps, err := store.GetAllShards()
 	t.Require().NoError(err, "there must not be an error when fetching a configuration")
 	t.Require().NotEmpty(resps, "the response must not be nil")
 	t.Require().Len(resps, int(count), "there must be ten items")
 	t.Require().Equal(testPayload.GetShardId(), resps[1].GetShardId(), "the test values must match up")
 
-	err = store.Delete(testPayload.GetShardId())
+	err = store.DeleteShard(testPayload.GetShardId())
 	t.Require().NoError(err, "there must not be an error deleting a configuration")
 }

@@ -13,6 +13,8 @@ import (
 	"context"
 
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/messaging/clients"
+	"github.com/mxplusb/pleiades/pkg/messaging/raft"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
@@ -37,7 +39,7 @@ func NewServer(lc fx.Lifecycle, params EventServerBuilderParams) EventServerBuil
 		params.Logger.Fatal().Err(err).Msg("can't create embedded message bus")
 	}
 
-	serverSingleton = &Server{srv, params.Logger.With().Str("component", "eventing").Logger()}
+	serverSingleton = &Server{EmbeddedMessaging: srv, logger: params.Logger.With().Str("component", "eventing").Logger()}
 
 	// this is started so the other constructors register properly
 	serverSingleton.Start()
@@ -61,9 +63,10 @@ func NewServer(lc fx.Lifecycle, params EventServerBuilderParams) EventServerBuil
 type Server struct {
 	*messaging.EmbeddedMessaging
 	logger zerolog.Logger
+	gossip *messaging.EmbeddedGossipServer
 }
 
-func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
+func (s *Server) GetRaftEventHandler() (*raft.RaftEventHandler, error) {
 	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't create pubsub client")
@@ -76,10 +79,10 @@ func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
 		return nil, err
 	}
 
-	return messaging.NewRaftEventHandler(pubSubClient, queueClient, s.logger), nil
+	return raft.NewRaftEventHandler(pubSubClient, queueClient, s.logger), nil
 }
 
-func (s *Server) GetRaftSystemEventListener() (*messaging.RaftSystemListener, error) {
+func (s *Server) GetRaftSystemEventListener() (*raft.RaftSystemListener, error) {
 	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't create pubsub client")
@@ -92,7 +95,7 @@ func (s *Server) GetRaftSystemEventListener() (*messaging.RaftSystemListener, er
 		return nil, err
 	}
 
-	return messaging.NewRaftSystemListener(pubSubClient, queueClient, s.logger)
+	return raft.NewRaftSystemListener(pubSubClient, queueClient, s.logger)
 }
 
 type NewPubSubClientBuilderParams struct {
@@ -101,7 +104,7 @@ type NewPubSubClientBuilderParams struct {
 	Server *Server
 }
 
-func NewPubSubClient(params NewPubSubClientBuilderParams) (*messaging.EmbeddedMessagingPubSubClient, error) {
+func NewPubSubClient(params NewPubSubClientBuilderParams) (*clients.EmbeddedMessagingPubSubClient, error) {
 	return params.Server.GetPubSubClient()
 }
 
@@ -111,6 +114,6 @@ type NewStreamClientBuilderParams struct {
 	Server *Server
 }
 
-func NewStreamClient(params NewStreamClientBuilderParams) (*messaging.EmbeddedMessagingStreamClient, error) {
+func NewStreamClient(params NewStreamClientBuilderParams) (*clients.EmbeddedMessagingStreamClient, error) {
 	return params.Server.GetStreamClient()
 }

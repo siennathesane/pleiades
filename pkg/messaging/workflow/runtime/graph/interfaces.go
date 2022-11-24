@@ -7,13 +7,12 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package graph
 
-const (
-
-	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal int = 484
-
-	ShardConfigBucket   string = "shards"
-	WorkflowStateBucketFormat string = "workflow-%s-%s"
-)
+type IOperation interface {
+	GetId() string
+	Encode() []byte
+	GetProperties() map[string][]string
+	// Execute executes an operation, executor can pass configuration
+	Execute([]byte, map[string]interface{}) ([]byte, error)
+}
