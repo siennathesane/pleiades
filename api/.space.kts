@@ -30,7 +30,7 @@ job("lint") {
             interpreter = "/bin/bash"
             content = """
                 buf lint
-                buf breaking --against ".git#branch=mainline"
+                buf breaking --against "ssh://git@git.jetbrains.space/anthroposlabs/pleiades/Pleiades.git#branch=mainline"
             """
         }
     }
