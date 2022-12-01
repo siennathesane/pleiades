@@ -1,4 +1,11 @@
-job("Build CI Image") {
+job("build-ci-image") {
+    startOn {
+        gitPush {
+            pathFilter {
+                +"Dockerfile"
+            }
+        }
+    }
     kaniko {
         build {
             context = "docker"
@@ -8,6 +15,18 @@ job("Build CI Image") {
             tags {
                 +"latest"
             }
+        }
+    }
+}
+
+job("lint") {
+    container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
+        shellScript {
+            interpreter = "/bin/bash"
+            content = """
+                buf lint
+                buf breaking --against ".git#branch=mainline"
+            """
         }
     }
 }
