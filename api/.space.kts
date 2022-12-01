@@ -20,6 +20,10 @@ job("build-ci-image") {
 }
 
 job("lint") {
+    refSpec {
+        +"refs/heads/mainline"
+        +"refs/tags/*:refs/tags/*"
+    }
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
         shellScript {
             interpreter = "/bin/bash"
