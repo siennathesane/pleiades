@@ -21,6 +21,22 @@ job("Build CI Image") {
     }
 }
 
+job("Mirror") {
+    git {
+        refSpec {
+            +"refs/*:refs/*"
+        }
+        depth = UNLIMITED_DEPTH
+    }
+    container(displayName = "mirror", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
+        env["DEPLOY_PUBLIC_KEY"] = Secrets("pleiades-deploy-public-key")
+        env["DEPLOY_PRIVATE_KEY"] = Secrets("pleiades-deploy-private-key")
+        shellScript {
+            location = "./ci/mirror.sh"
+        }
+    }
+}
+
 // run on any push
 job("Lint & Build") {
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
