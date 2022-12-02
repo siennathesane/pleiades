@@ -29,8 +29,8 @@ job("Mirror") {
         depth = UNLIMITED_DEPTH
     }
     container(displayName = "mirror", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
-        env["DEPLOY_PUBLIC_KEY"] = Secrets("pleiades-deploy-public-key")
-        env["DEPLOY_PRIVATE_KEY"] = Secrets("pleiades-deploy-private-key")
+        env["DEPLOY_PUBLIC_KEY"] = Secrets("api-deploy-public-key")
+        env["DEPLOY_PRIVATE_KEY"] = Secrets("api-deploy-private-key")
         shellScript {
             location = "./ci/mirror.sh"
         }
