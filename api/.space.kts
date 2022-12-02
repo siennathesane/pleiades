@@ -24,6 +24,7 @@ job("lint") {
         shellScript {
             interpreter = "/bin/bash"
             content = """
+                set +eux
                 buf lint
 
                 # kvstore

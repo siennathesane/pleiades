@@ -2,7 +2,8 @@ version: v1
 name: buf.build/anthropos-labs/errors
 breaking:
   use:
-    - FILE
+    - WIRE
+    - WIRE_JSON
 lint:
   use:
     - DEFAULT
