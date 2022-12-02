@@ -20,19 +20,30 @@ job("build-ci-image") {
 }
 
 job("lint") {
-    git {
-        refSpec {
-            +"refs/heads/mainline"
-        }
-    }
+    git("API"){}
+
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
+        env["BUF_INPUT_HTTPS_USERNAME"] = Secrets("git_clone_https_user")
+        env["BUF_INPUT_HTTPS_PASSWORD"] = Secrets("git_clone_https_user")
         shellScript {
             interpreter = "/bin/bash"
             content = """
                 buf lint
-                export BUF_INPUT_HTTPS_USERNAME=${'$'}JB_SPACE_CLIENT_ID
-                export BUF_INPUT_HTTPS_PASSWORD=${'$'}JB_SPACE_CLIENT_SECRET
-                buf breaking --against "https://git.jetbrains.space/anthroposlabs/pleiades/Pleiades.git#branch=mainline"
+
+                # kvstore
+                pushd databaseapi
+                buf breaking --against buf.build/anthropos-labs/kvstore
+                popd
+
+                # errors
+                pushd errorapi
+                buf breaking --against buf.build/anthropos-labs/errors
+                popd
+
+                # raft
+                pushd raftapi
+                buf breaking --against buf.build/anthropos-labs/raft
+                popd
             """
         }
     }
