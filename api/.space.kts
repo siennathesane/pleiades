@@ -20,11 +20,7 @@ job("build-ci-image") {
 }
 
 job("lint") {
-    git("API"){}
-
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
-        env["BUF_INPUT_HTTPS_USERNAME"] = Secrets("git_clone_https_user")
-        env["BUF_INPUT_HTTPS_PASSWORD"] = Secrets("git_clone_https_user")
         shellScript {
             interpreter = "/bin/bash"
             content = """
