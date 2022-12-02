@@ -37,7 +37,7 @@ job("Push to Registry") {
     }
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
         env["BUF_USER"] = "sienna-al"
-        env["BUF_API_TOKEN"] = Secret("buf-api-token")
+        env["BUF_API_TOKEN"] = Secrets("buf-api-token")
         shellScript {
             location = "./ci/push.sh"
         }
