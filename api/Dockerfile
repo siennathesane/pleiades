@@ -1,4 +1,4 @@
-from --platform=linux/amd64 ubuntu:jammy
+from ubuntu:jammy
 
 run apt update -y && \
     apt upgrade -y && \

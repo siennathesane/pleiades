@@ -1,10 +1,12 @@
-job("build-ci-image") {
+// only run when the image has changed or on Sunday to ensure the image gets updates
+job("Build CI Image") {
     startOn {
         gitPush {
             pathFilter {
                 +"Dockerfile"
             }
         }
+        schedule { cron("0 0 * * 0") }
     }
     kaniko {
         build {
@@ -19,29 +21,25 @@ job("build-ci-image") {
     }
 }
 
-job("lint") {
+// run on any push
+job("Lint & Build") {
     container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
         shellScript {
-            interpreter = "/bin/bash"
-            content = """
-                set +eux
-                buf lint
+            location = "./ci/lint.sh"
+        }
+    }
+}
 
-                # kvstore
-                pushd databaseapi
-                buf breaking --against buf.build/anthropos-labs/kvstore
-                popd
-
-                # errors
-                pushd errorapi
-                buf breaking --against buf.build/anthropos-labs/errors
-                popd
-
-                # raft
-                pushd raftapi
-                buf breaking --against buf.build/anthropos-labs/raft
-                popd
-            """
+// only run on mainline
+job("Push to Registry") {
+    startOn {
+        codeReviewClosed{}
+    }
+    container(displayName = "buf lint", image = "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/api-ci") {
+        env["BUF_USER"] = "sienna-al"
+        env["BUF_API_TOKEN"] = Secret("buf-api-token")
+        shellScript {
+            location = "./ci/push.sh"
         }
     }
 }
