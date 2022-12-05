@@ -1,3 +1,5 @@
+//go:build mage
+
 /*
  * Copyright (c) 2022 Sienna Lloyd
  *
@@ -6,8 +8,6 @@
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
-
-//go:build mage
 
 package main
 
@@ -19,12 +19,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-git/go-git/v5"
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 	"github.com/magefile/mage/sh"
 )
 
 type Build mg.Namespace
+
+var (
+	platforms  = []string{"linux", "windows", "darwin"}
+	invariants = []string{"amd64", "arm64"}
+)
 
 func (Build) Setup() {
 	mg.Deps(Install.Godeps)
@@ -32,8 +36,18 @@ func (Build) Setup() {
 
 // compile pleiades with the local build information
 func (Build) Compile() error {
-	fmt.Println("compiling...")
-	return compileWithPath("build/pleiades", nil)
+	for _, platform := range platforms {
+		for _, variant := range invariants {
+			fmt.Printf("build %s/%s", platform, variant)
+			if err := compileWithPath("build/pleiades", map[string]string{
+				"GOOS":   platform,
+				"GOARCH": variant,
+			}); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // compile pleiades with the local build information

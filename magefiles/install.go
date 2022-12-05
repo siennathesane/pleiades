@@ -1,3 +1,5 @@
+//go:build mage
+
 /*
  * Copyright (c) 2022 Sienna Lloyd
  *
@@ -6,8 +8,6 @@
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
-
-//go:build mage
 
 package main
 
@@ -48,13 +48,6 @@ func (Install) Homebrew(path string) error {
 // fetch the go dependencies
 func (Install) Godeps() error {
 	fmt.Println("installing go dependencies")
-
-	mg.Deps(func() error {
-		if err := sh.RunWithV(nil, "go", "install", "github.com/nomad-software/vend@latest"); err != nil {
-			return err
-		}
-		return nil
-	})
 
 	mg.Deps(func() error {
 		if err := sh.RunWithV(nil, "go", "install", "github.com/boumenot/gocover-cobertura@latest"); err != nil {
