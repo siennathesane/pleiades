@@ -19,6 +19,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-git/go-git/v5"
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 	"github.com/magefile/mage/sh"
 )
@@ -26,7 +27,7 @@ import (
 type Build mg.Namespace
 
 var (
-	platforms  = []string{"linux", "windows", "darwin"}
+	platforms  = []string{"linux", "darwin"}
 	invariants = []string{"amd64", "arm64"}
 )
 
@@ -38,8 +39,7 @@ func (Build) Setup() {
 func (Build) Compile() error {
 	for _, platform := range platforms {
 		for _, variant := range invariants {
-			fmt.Printf("build %s/%s", platform, variant)
-			if err := compileWithPath("build/pleiades", map[string]string{
+			if err := compileWithPath(fmt.Sprintf("build/pleiades-%s-%s", platform, variant), map[string]string{
 				"GOOS":   platform,
 				"GOARCH": variant,
 			}); err != nil {
@@ -64,42 +64,35 @@ func ldflags() string {
 		}
 	}
 
-	headReceiver := make(chan string)
-	dirtyHead := make(chan bool)
-	go func(hr chan string) {
-		fmt.Println("getting git head...")
-		localRepo, err := git.PlainOpen(".")
-		if err != nil {
-			hr <- ""
-			return
-		}
+	fmt.Println("getting git head...")
+	localRepo, err := git.PlainOpen(".")
+	if err != nil {
+		fmt.Printf("error: %s", err)
+	}
 
-		head, err := localRepo.Head()
-		if err != nil {
-			hr <- ""
-			return
-		}
-		fmt.Printf("got git head: %s\n", head.Hash().String())
-		hr <- head.Hash().String()
+	head, err := localRepo.Head()
+	if err != nil {
+		fmt.Printf("error: %s", err)
+	}
+	fmt.Printf("got git head: %s\n", head.Hash().String())
+	headHash := head.Hash().String()
 
-		worktreeStatus, err := localRepo.Worktree()
-		if err != nil {
-			hr <- ""
-			return
-		}
+	worktreeStatus, err := localRepo.Worktree()
+	if err != nil {
+		fmt.Printf("error: %s", err)
+	}
 
-		status, err := worktreeStatus.Status()
-		if err != nil {
-			hr <- ""
-			return
-		}
+	status, err := worktreeStatus.Status()
+	if err != nil {
+		fmt.Printf("error: %s", err)
+	}
 
-		if status.IsClean() {
-			dirtyHead <- false
-			return
-		}
-		dirtyHead <- true
-	}(headReceiver)
+	var dirtyHead bool
+	if status.IsClean() {
+		dirtyHead = false
+	} else {
+		dirtyHead = true
+	}
 
 	sb := strings.Builder{}
 
@@ -118,22 +111,18 @@ func ldflags() string {
 	sb.WriteString("'")
 	writeComma(&sb)
 
-	localHash := <-headReceiver
-	shortHead := localHash[len(localHash)-7:]
+	shortHead := headHash[len(headHash)-7:]
 	fmt.Printf("using git hash: %s\n", shortHead)
 	sb.WriteString("-X '")
 	sb.WriteString("github.com/mxplusb/pleiades/pkg.Sha=")
 	sb.WriteString(shortHead)
 	sb.WriteString("'")
 
-	headIsDirty := <-dirtyHead
-	fmt.Printf("is head dirty: %v\n", headIsDirty)
+	fmt.Printf("is head dirty: %v\n", dirtyHead)
 	sb.WriteString("-X '")
 	sb.WriteString("github.com/mxplusb/pleiades/pkg.Dirty=")
-	sb.WriteString(strconv.FormatBool(headIsDirty))
+	sb.WriteString(strconv.FormatBool(dirtyHead))
 	sb.WriteString("'")
-
-	close(headReceiver)
 
 	fmt.Printf("using ldflags: %s\n", sb.String())
 
