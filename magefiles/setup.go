@@ -11,5 +11,5 @@ import (
 // prep your workspace
 func Setup() {
 	fmt.Println("setting up workspace")
-	mg.SerialDeps(Install.Tools, CI.Setup, Install.Homebrew, Install.Godeps)
+	mg.SerialDeps(Install.Tools, Install.Godeps)
 }

@@ -9,8 +9,10 @@
 #  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
 #
 
-wget https://github.com/magefile/mage/releases/download/v${MAGE_VERSION}/mage_${MAGE_VERSION}_Linux-ARM64.tar.gz
+wget -q -O mage-linux.tar.gz $(curl -s https://api.github.com/repos/magefile/mage/releases/latest | jq -r '.assets[] | select(.name | contains("Linux-64bit")) | .browser_download_url')
 
-tar zxvf mage_${MAGE_VERSION}_Linux-ARM64.tar.gz
+tar zxvf mage-linux.tar.gz
 
 mv mage /usr/local/bin/mage
+
+mage -version
