@@ -20,21 +20,13 @@ type Docker mg.Namespace
 
 // build the docker image
 func (Docker) Build() error {
-	if err := compileWithPath("build/pleiades", map[string]string{
-		"GOARCH": "arm64",
-		"GOOS":   "linux",
-	}); err != nil {
+	mg.Deps(Build.Compile)
+
+	if err := sh.RunWithV(nil, "docker", "build", "-t", "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/pleiades", "."); err != nil {
 		return err
 	}
 
-	if err := sh.RunWithV(nil, "docker", "buildx", "build", "-t", "registry.gitlab.com/anthropos-labs/pleiades/pleiades", "."); err != nil {
-		return err
-	}
-
-	return compileWithPath("build/pleiades", map[string]string{
-		"GOARCH": "arm64",
-		"GOOS":   "darwin",
-	})
+	return nil
 }
 
 func (Docker) Run() error {
@@ -46,7 +38,7 @@ func (Docker) Run() error {
 		"8080:8080",
 		"-p",
 		"8081:8081",
-		"registry.gitlab.com/anthropos-labs/pleiades/pleiades",
+		"anthroposlabs.registry.jetbrains.space/p/pleiades/containers/pleiades",
 		"server",
 		"--debug",
 		"--round-trip",
