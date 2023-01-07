@@ -1,7 +1,5 @@
-//go:build mage
-
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,17 +7,18 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
+//go:build mage
+
 package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
-	"github.com/go-git/go-git/v5"
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 	"github.com/magefile/mage/sh"
 )
@@ -39,12 +38,16 @@ func (Build) Setup() {
 func (Build) Compile() error {
 	for _, platform := range platforms {
 		for _, variant := range invariants {
+			fmt.Printf("##teamcity[progressMessage 'Started %s-%s compilation']\n", platform, variant)
 			if err := compileWithPath(fmt.Sprintf("build/pleiades-%s-%s", platform, variant), map[string]string{
 				"GOOS":   platform,
 				"GOARCH": variant,
+				"CGO_ENABLED": "0",
 			}); err != nil {
+				fmt.Printf("##teamcity[progressMessage 'Error with %s-%s compilation']\n", platform, variant)
 				return err
 			}
+			fmt.Printf("##teamcity[progressMessage 'Finished %s-%s compilation']\n", platform, variant)
 		}
 	}
 	return nil
@@ -52,7 +55,7 @@ func (Build) Compile() error {
 
 // compile pleiades with the local build information
 func compileWithPath(path string, env map[string]string) error {
-	return sh.RunWithV(env, "go", "build", "-v", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", path, "./main.go")
+	return sh.RunWith(env, "go", "build", "-v", fmt.Sprintf("-ldflags=%s", ldflags()), "-o", path, "./main.go")
 }
 
 func ldflags() string {
@@ -62,36 +65,6 @@ func ldflags() string {
 		if sb.Len() > 0 {
 			sb.WriteString(" ")
 		}
-	}
-
-	fmt.Println("getting git head...")
-	localRepo, err := git.PlainOpen(".")
-	if err != nil {
-		fmt.Printf("error: %s", err)
-	}
-
-	head, err := localRepo.Head()
-	if err != nil {
-		fmt.Printf("error: %s", err)
-	}
-	fmt.Printf("got git head: %s\n", head.Hash().String())
-	headHash := head.Hash().String()
-
-	worktreeStatus, err := localRepo.Worktree()
-	if err != nil {
-		fmt.Printf("error: %s", err)
-	}
-
-	status, err := worktreeStatus.Status()
-	if err != nil {
-		fmt.Printf("error: %s", err)
-	}
-
-	var dirtyHead bool
-	if status.IsClean() {
-		dirtyHead = false
-	} else {
-		dirtyHead = true
 	}
 
 	sb := strings.Builder{}
@@ -111,17 +84,15 @@ func ldflags() string {
 	sb.WriteString("'")
 	writeComma(&sb)
 
-	shortHead := headHash[len(headHash)-7:]
-	fmt.Printf("using git hash: %s\n", shortHead)
+	version := os.Getenv("BUILD_TAG")
+	if len(version) == 0 {
+		x, _ := newVersion()
+		version = x.String()
+	}
+	fmt.Printf("using version: %s\n", version)
 	sb.WriteString("-X '")
-	sb.WriteString("github.com/mxplusb/pleiades/pkg.Sha=")
-	sb.WriteString(shortHead)
-	sb.WriteString("'")
-
-	fmt.Printf("is head dirty: %v\n", dirtyHead)
-	sb.WriteString("-X '")
-	sb.WriteString("github.com/mxplusb/pleiades/pkg.Dirty=")
-	sb.WriteString(strconv.FormatBool(dirtyHead))
+	sb.WriteString("github.com/mxplusb/pleiades/pkg.Version=")
+	sb.WriteString(version)
 	sb.WriteString("'")
 
 	fmt.Printf("using ldflags: %s\n", sb.String())
