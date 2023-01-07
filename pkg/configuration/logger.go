@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ var (
 func init() {
 	rootLogger = zlog.New(os.Stdout).
 		With().
-		Str("sha", pkg.Sha).
+		Str("sha", pkg.Version).
 		Timestamp().
 		Logger().
 		Level(zlog.InfoLevel)
