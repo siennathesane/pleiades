@@ -1,0 +1,103 @@
+{{ $shard := required "The deployment shard must be set!" .Values.pleiades.server.deploymentShard | default 1 }}
+{{ $dc := required "The data centre must be set!" .Values.pleiades.server.dataCentre | default ""}}
+{{ $region := required "The region must be set!" .Values.pleiades.server.region | default "" }}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: server
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: disk-check
+          image: busybox:latest
+          command:
+            - "sh"
+            - "-c"
+            - "chown -R 1000:1000 /var/pleiades/"
+          volumeMounts:
+            - name: pleiades-server
+              mountPath: "/var/pleiades"
+      containers:
+        - name: server
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.image.repository }}:{{ required "The version of pleiades to deploy is required!" .Values.image.tag }}
+          imagePullPolicy: Always
+          command:
+            - /pleiades
+          args:
+            - server
+            - --base-path=/var/pleiades
+            - --deployment-id={{ $shard }}
+            - --grpc-port={{ .Values.pleiades.server.ports.http | default 8080 }}
+            - --raft-port={{ .Values.pleiades.server.ports.raft | default 8081 }}
+            - --round-trip={{ .Values.pleiades.server.roundTrip | default 10 }}
+            {{ if .Values.pleiades.server.raft.clusterHostname }}
+            - --sd-address={{ .Values.pleiades.server.raft.clusterHostname }}
+            {{ else }}
+            - --sd-address=$(SERVER_NAME).$(SERVICE_NAME).$(KUBERNETES_NAMESPACE).svc.cluster.local
+            {{ end }}
+          env:
+            - name: DATA_CENTRE
+              value: {{ $dc }}
+            - name: REGION
+              value: {{ $region }}
+            - name: DEPLOYMENT_SHARD
+              value: {{ $shard | quote }}
+            - name: SERVER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: SERVICE_NAME
+              value: {{ include "helm.fullname" . }}
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.pleiades.server.ports.http | default 8080 }}
+              protocol: TCP
+            - name: raft
+              containerPort: {{ .Values.pleiades.server.ports.raft | default 8081 }}
+              protocol: TCP
+            - name: serf
+              containerPort: {{ .Values.pleiades.server.ports.gossip | default 8082 }} # 10.12.2.4
+              protocol: TCP
+          livenessProbe:
+            grpc:
+              port: {{ .Values.pleiades.server.ports.http | default 8080 }}
+              service: "kvstore.v1.KvStoreService"
+            initialDelaySeconds: 30
+          readinessProbe:
+            grpc:
+              port: {{ .Values.pleiades.server.ports.http | default 8080 }}
+              service: "kvstore.v1.KvStoreService"
+            initialDelaySeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/pleiades
+              name: pleiades-server
+      volumes:
+        - name: pleiades-server
+          persistentVolumeClaim:
+            claimName: {{ include "helm.fullname" . }}

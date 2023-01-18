@@ -3,7 +3,7 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
-	github.com/mxplusb/pleiades/pkg/api v0.0.0-20221121235144-347395d17e21
+	github.com/mxplusb/pleiades/pkg/api v0.0.0-20221202042317-9659f2b0e5c9
 	github.com/bufbuild/connect-go v1.0.0
 	github.com/bufbuild/connect-grpcreflect-go v1.0.0
 	github.com/cockroachdb/errors v1.7.5
@@ -38,6 +38,7 @@ require (
 	github.com/VictoriaMetrics/metrics v1.6.2 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
+	github.com/bufbuild/connect-grpchealth-go v1.0.0 // indirect
 	github.com/cloudflare/circl v1.1.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
 	github.com/cockroachdb/pebble v0.0.0-20210331181633-27fc006b8bfb // indirect

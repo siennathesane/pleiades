@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,6 +11,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
@@ -18,6 +19,7 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/eventing"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
+	grpchealth "github.com/bufbuild/connect-grpchealth-go"
 	grpcreflect "github.com/bufbuild/connect-grpcreflect-go"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
@@ -55,6 +57,17 @@ type HttpServeMuxBuilderResults struct {
 func NewHttpServeMux(params HttpServeMuxBuilderParams) HttpServeMuxBuilderResults {
 	mux := http.NewServeMux()
 
+	for _, route := range params.Handlers {
+		params.Logger.Debug().Str("path", route.Path()).Msg("registering handler")
+		mux.Handle(route.Path(), route)
+	}
+
+	// add grpc health checking
+	checker := grpchealth.NewStaticChecker(
+		kvstorev1connect.KvStoreServiceName,
+		raftv1connect.HostServiceName)
+	mux.Handle(grpchealth.NewHandler(checker))
+
 	// add grpc reflection for grpcurl and other tools
 	reflector := grpcreflect.NewStaticReflector(
 		kvstorev1connect.KvStoreServiceName,
@@ -63,10 +76,6 @@ func NewHttpServeMux(params HttpServeMuxBuilderParams) HttpServeMuxBuilderResult
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
 
-	for _, route := range params.Handlers {
-		params.Logger.Debug().Str("path", route.Path()).Msg("registering handler")
-		mux.Handle(route.Path(), route)
-	}
 	return HttpServeMuxBuilderResults{Mux: mux}
 }
 
@@ -85,12 +94,17 @@ type HttpServerBuilderResults struct {
 }
 
 func NewHttpServer(lc fx.Lifecycle, params HttpServerBuilderParams) HttpServerBuilderResults {
+	port := params.Config.GetUint("server.host.grpcListenPort")
+	if port == 0 {
+		params.Logger.Fatal().Msg("grpc port cannot be 0!")
+	}
+	addr := fmt.Sprintf("%s:%d", params.Config.GetString("server.host.listenAddress"), params.Config.GetUint("server.host.grpcListenPort"))
 	httpServer = &http.Server{
-		Addr:    params.Config.GetString("server.host.grpcListenAddress"),
+		Addr:    addr,
 		Handler: h2c.NewHandler(params.Mux, &http2.Server{}),
 	}
 
-	params.Logger.Info().Str("grpc-addr", params.Config.GetString("server.host.grpcListenAddress")).Msg("http listen address")
+	params.Logger.Info().Str("grpc-addr", addr).Msg("http listen address")
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

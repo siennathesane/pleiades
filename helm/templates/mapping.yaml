@@ -1,0 +1,10 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Mapping
+metadata:
+  name: {{ include "helm.fullname" . }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  hostname: {{ required "The external hostname is required!" .Values.pleiades.externalHostname }}
+  prefix: /
+  service: "http://{{ include "helm.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.pleiades.server.ports.http | default 8080 }}"

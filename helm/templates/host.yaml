@@ -1,0 +1,15 @@
+{{- $tlsName := printf "%s-%s" .Values.pleiades.externalHostname "tls-certificate" }}
+apiVersion: getambassador.io/v3alpha1
+kind: Host
+metadata:
+  name: {{ include "helm.fullname" . }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  hostname: {{ required "The external hostname is required for the certificate and proxy!" .Values.pleiades.externalHostname }}
+  # tls:
+  #   min_tls_version: v1.3
+  #   alpn_protocols: h2,http/1.1
+  tlsSecret:
+    name: {{ $tlsName }}
+    namespace: {{ .Release.Namespace }}

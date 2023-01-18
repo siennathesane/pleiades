@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,26 @@ import (
 
 type Docker mg.Namespace
 
+const (
+	containerImageName string = "gcr.io/pleiades-353402/pleiades"
+)
+
 // build the docker image
 func (Docker) Build() error {
 	mg.Deps(Build.Compile)
 
-	if err := sh.RunWithV(nil, "docker", "build", "-t", "anthroposlabs.registry.jetbrains.space/p/pleiades/containers/pleiades", "."); err != nil {
+	if err := sh.RunWith(nil, "docker", "build", "-t", containerImageName, "."); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// build and push the docker image
+func (Docker) Push() error {
+	mg.Deps(Docker.Build)
+
+	if err := sh.RunWith(nil, "docker", "push", containerImageName); err != nil {
 		return err
 	}
 
@@ -38,10 +53,10 @@ func (Docker) Run() error {
 		"8080:8080",
 		"-p",
 		"8081:8081",
-		"anthroposlabs.registry.jetbrains.space/p/pleiades/containers/pleiades",
+		containerImageName,
 		"server",
 		"--debug",
 		"--round-trip",
 		"10"}...)
-	return sh.RunWithV(nil, "docker", args...)
+	return sh.RunWith(nil, "docker", args...)
 }
