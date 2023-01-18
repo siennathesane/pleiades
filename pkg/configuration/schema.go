@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -8,6 +8,10 @@
  */
 
 package configuration
+
+import (
+	"net"
+)
 
 const (
 	DefaultBaseDataPath   string = "/var/pleiades"
@@ -39,13 +43,15 @@ type Datastore struct {
 }
 
 type Host struct {
-	CaFile            string `flag:"ca-file" default:"/etc/pleiades/ca.pem" usage:"location of the certificate authority file" json:"caFile" yaml:"caFile" mapstructure:"caFile"`
-	CertFile          string `flag:"cert-file" default:"/etc/pleiades/cert.pem" usage:"location of the tls cert file" json:"certFile" yaml:"certFile" mapstructure:"certFile"`
-	DeploymentId      uint64 `flag:"deployment-id" default:"1" usage:"deployment id of this host" json:"deploymentId" yaml:"deploymentId" mapstructure:"deploymentId"`
-	KeyFile           string `flag:"key-file" default:"/etc/pleiades/key.pem" usage:"location of the tls key file" json:"keyFile" yaml:"keyFile" mapstructure:"keyFile"`
-	ListenAddress     string `flag:"listen-address" default:"0.0.0.0:5051" usage:"address to listen on" json:"listenAddress" yaml:"listenAddress" mapstructure:"listenAddress"`
-	GrpcListenAddress string `flag:"grpc-listen-address" default:"0.0.0.0:5050" usage:"address to listen on" json:"grpcListenAddress" yaml:"grpcListenAddress" mapstructure:"grpcListenAddress"`
-	MutualTLS         bool   `flag:"mtls" default:"false" usage:"require mutual tls?" mapstructure:"mtls"`
-	NotifyCommit      bool   `flag:"notify-commit" default:"false" usage:"notify consumers of when the data is committed?" json:"notifyCommit" yaml:"notifyCommit" mapstructure:"notifyCommit"`
-	Rtt               uint64 `flag:"rtt" default:"10" usage:"average round trip time, plus processing, in milliseconds to other hosts in the data centre" json:"rtt" yaml:"rtt" mapstructure:"rtt"`
+	CaFile                  string `flag:"ca-file" default:"/etc/pleiades/ca.pem" usage:"location of the certificate authority file" json:"caFile" yaml:"caFile" mapstructure:"caFile"`
+	CertFile                string `flag:"cert-file" default:"/etc/pleiades/cert.pem" usage:"location of the tls cert file" json:"certFile" yaml:"certFile" mapstructure:"certFile"`
+	DeploymentId            uint64 `flag:"deployment-id" default:"1" usage:"deployment id of this host" json:"deploymentId" yaml:"deploymentId" mapstructure:"deploymentId"`
+	KeyFile                 string `flag:"key-file" default:"/etc/pleiades/key.pem" usage:"location of the tls key file" json:"keyFile" yaml:"keyFile" mapstructure:"keyFile"`
+	ListenAddress           *net.IP `flag:"listen-address" default:"0.0.0.0" usage:"address to listen on" json:"listenAddress" yaml:"listenAddress" mapstructure:"listenAddress"`
+	GrpcListenPort          uint   `flag:"grpc-port" default:"8080" usage:"address to listen on" json:"grpcListenPort" yaml:"grpcListenPort" mapstructure:"grpcListenPort"`
+	RaftListenPort          uint   `flag:"raft-port" default:"8081" usage:"address to listen on" json:"raftListenPort" yaml:"raftListenPort" mapstructure:"raftListenPort"`
+	MutualTLS               bool   `flag:"mtls" default:"false" usage:"require mutual tls?" mapstructure:"mtls"`
+	NotifyCommit            bool   `flag:"notify-commit" default:"false" usage:"notify consumers of when the data is committed?" json:"notifyCommit" yaml:"notifyCommit" mapstructure:"notifyCommit"`
+	Rtt                     uint64 `flag:"rtt" default:"10" usage:"average round trip time, plus processing, in milliseconds to other hosts in the data centre" json:"rtt" yaml:"rtt" mapstructure:"rtt"`
+	ServiceDiscoveryAddress string `flag:"sd-address" default:"" json:"serviceDiscoveryAddress" yaml:"serviceDiscoveryAddress" mapstructure:"serviceDiscoveryAddress"`
 }

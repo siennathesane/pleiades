@@ -1,5 +1,7 @@
 github.com/mxplusb/api v0.0.0-20221121235144-347395d17e21 h1:EFBFQ/m8gRpVhKeBpM5gLX2kVPA0c/3iVMnIfhj6M90=
 github.com/mxplusb/api v0.0.0-20221121235144-347395d17e21/go.mod h1:1R514X3lXPASmY3pkI7flZ9XwKu1uAaLIenbZPBXVHo=
+github.com/mxplusb/api v0.0.0-20221202042317-9659f2b0e5c9 h1:AFvqpUcMRintc8C4VU2k+FT79LQbUbs9I11kBXSqu3k=
+github.com/mxplusb/api v0.0.0-20221202042317-9659f2b0e5c9/go.mod h1:1R514X3lXPASmY3pkI7flZ9XwKu1uAaLIenbZPBXVHo=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=
@@ -78,6 +80,8 @@ github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+Ce
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/bufbuild/connect-go v1.0.0 h1:htSflKUT8y1jxhoPhPYTZMrsY3ipUXjjrbcZR5O2cVo=
 github.com/bufbuild/connect-go v1.0.0/go.mod h1:9iNvh/NOsfhNBUH5CtvXeVUskQO1xsrEviH7ZArwZ3I=
+github.com/bufbuild/connect-grpchealth-go v1.0.0 h1:33v883tL86jLomQT6R2ZYVYaI2cRkuUXvU30WfbQ/ko=
+github.com/bufbuild/connect-grpchealth-go v1.0.0/go.mod h1:6OEb4J3rh5+Wdvt4/muOIfZo1lt9cPU8ggwpsjBaZ3Y=
 github.com/bufbuild/connect-grpcreflect-go v1.0.0 h1:zWsLFYqrT1O2sNJFYfTXI5WxbAyiY2dvevvnJHPtV5A=
 github.com/bufbuild/connect-grpcreflect-go v1.0.0/go.mod h1:825I20H8bfE9rLnBH/046JSpmm3uwpNYdG4duCARetc=
 github.com/bwesterb/go-ristretto v1.2.0/go.mod h1:fUIoIZaG73pV5biE2Blr2xEzDoMj7NFEuV9ekS419A0=

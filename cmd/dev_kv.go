@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ var (
 )
 
 func init() {
-	devCmd.AddCommand(kvCmd)
+	rootCmd	.AddCommand(kvCmd)
 	kvCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
 	kvCmd.PersistentFlags().StringVarP(&bucketName, "bucket", "b", "","bucket to place the key in")
 }

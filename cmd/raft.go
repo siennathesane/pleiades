@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,7 +11,6 @@ package cmd
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
 	"net"
 	"net/http"
 
@@ -24,16 +23,13 @@ var raftCmd = &cobra.Command{
 	Use:   "raft",
 	Short: "operations on the raft subsystem",
 	Long: `various operations used to control various aspects of the raft subsystems`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("raft called")
-	},
 }
 
 func init() {
 	rootCmd.AddCommand(raftCmd)
 
 	raftCmd.PersistentFlags().String("host", "http://localhost:8080", "target host for a pleiades cluster")
-	config.BindPFlag("server.client.grpcAddr", raftCmd.PersistentFlags().Lookup("host"))
+	config.BindPFlag("client.grpcAddr", raftCmd.PersistentFlags().Lookup("host"))
 }
 
 func newInsecureClient() *http.Client {

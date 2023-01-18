@@ -2,5 +2,10 @@
 <project version="4">
   <component name="KubernetesSettings">
     <option name="getSpecFromCluster" value="true" />
+    <specSources>
+      <SpecSource>
+        <option name="pathOrUrl" value="https://app.getambassador.io/yaml/emissary/3.4.0/emissary-crds.yaml" />
+      </SpecSource>
+    </specSources>
   </component>
 </project>

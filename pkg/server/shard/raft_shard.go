@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ func (c *RaftShardManager) AddReplica(req *raftv1.AddReplicaRequest) error {
 		l.Debug().Msg("using default timeout")
 		req.Timeout = int64(defaultTimeout)
 	}
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout())))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout()) * time.Millisecond))
 	defer cancel()
 
 	members, err := c.GetShardMembers(req.GetShardId())

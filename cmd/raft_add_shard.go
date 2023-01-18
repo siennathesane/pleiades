@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,6 +11,8 @@ package cmd
 
 import (
 	"context"
+	"net/http"
+	"net/url"
 	"time"
 
 	raftv1 "github.com/mxplusb/api/raft/v1"
@@ -66,9 +68,19 @@ func runAddShard(cmd *cobra.Command, args []string) {
 
 	logger := setupLogger(cmd, args)
 
-	logger.Debug().Str("host", config.GetString("server.client.grpcAddr")).Msg("creating client")
+	logger.Debug().Str("host", config.GetString("client.grpcAddr")).Msg("creating client")
 
-	host := raftv1connect.NewShardServiceClient(newInsecureClient(),config.GetString("server.client.grpcAddr"))
+	targetHost, err := url.Parse(config.GetString("client.grpcAddr"))
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't parse remote host")
+	}
+
+	var host raftv1connect.ShardServiceClient
+	if targetHost.Scheme != "https" {
+		host = raftv1connect.NewShardServiceClient(newInsecureClient(),targetHost.String())
+	} else {
+		host = raftv1connect.NewShardServiceClient(http.DefaultClient, targetHost.String())
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), utils.Timeout(time.Duration(raftAddShardFlags.Timeout) * time.Millisecond))
 	defer cancel()
