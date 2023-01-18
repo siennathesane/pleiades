@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import (
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -50,7 +51,9 @@ var (
 )
 
 func init() {
-	config = configuration.Get()
+	if config == nil {
+		config = configuration.Get()
+	}
 
 	viper.SetConfigName("pleiades") // name of config file (without extension)
 	viper.SetConfigType("yaml")     // REQUIRED if the config file does not have the extension in the name
@@ -70,6 +73,19 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
+	defaultDataBasePath := ""
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOOS == "darwin" {
+		dir, err := homedir.Dir()
+		if err != nil {
+			log.Fatal().Err(err).Msg("failed to get home directory")
+		}
+		defaultDataBasePath = filepath.Join(dir, "Library", "pleiades")
+	} else {
+		defaultDataBasePath = configuration.DefaultBaseDataPath
+	}
+	config.Set("server.datastore.basePath", defaultDataBasePath)
+
 	rootCmd.PersistentFlags().Bool("trace", false, "enable trace logging")
 	config.BindPFlag("trace", rootCmd.PersistentFlags().Lookup("trace"))
 
@@ -77,6 +93,20 @@ func init() {
 	config.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
 
 	rootCmd.MarkFlagsMutuallyExclusive("debug", "trace")
+
+	// mtls settings
+	//region
+	rootCmd.PersistentFlags().String("ca-cert", filepath.Join(defaultDataBasePath, "tls", "ca.pem"), "mtls ca")
+	config.BindPFlag("server.host.caFile", rootCmd.PersistentFlags().Lookup("ca-cert"))
+
+	rootCmd.PersistentFlags().String("cert-file", filepath.Join(defaultDataBasePath, "tls", "cert.pem"), "mtls cert")
+	config.BindPFlag("server.host.certFile", rootCmd.PersistentFlags().Lookup("cert-file"))
+
+	rootCmd.PersistentFlags().String("cert-key", filepath.Join(defaultDataBasePath, "tls", "key.pem"), "mtls key")
+	config.BindPFlag("server.host.keyFile", rootCmd.PersistentFlags().Lookup("cert-key"))
+
+	rootCmd.MarkFlagsRequiredTogether("ca-cert", "cert-file", "cert-key")
+	//endregion
 }
 
 func setupLogger(cmd *cobra.Command, args []string) zerolog.Logger {

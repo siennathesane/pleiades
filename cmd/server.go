@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,6 +11,8 @@ package cmd
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -27,6 +29,7 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/mitchellh/go-homedir"
+	"github.com/mitchellh/mapstructure"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -65,18 +68,36 @@ func init() {
 	config.Set("server.datastore.basePath", defaultDataBasePath)
 
 	serverCmd.PersistentFlags().Uint64("deployment-id", 0, "identifier for this deployment")
+	err := serverCmd.MarkPersistentFlagRequired("deployment-id")
+	if err != nil {
+		log.Fatal().Err(err).Msg("can't mark flag deployment-id as required")
+	}
 	config.BindPFlag("server.host.deploymentId", serverCmd.PersistentFlags().Lookup("deployment-id"))
 
-	serverCmd.PersistentFlags().String("grpc-addr", "0.0.0.0:8080", "grpc listener address")
-	config.BindPFlag("server.host.grpcListenAddress", serverCmd.PersistentFlags().Lookup("grpc-addr"))
+	serverCmd.PersistentFlags().String("sd-address", "", "the externally addressable hostname of this instance")
+	err = serverCmd.MarkPersistentFlagRequired("sd-address")
+	if err != nil {
+		log.Fatal().Err(err).Msg("can't mark flag sd-address as required")
+	}
+	config.BindPFlag("server.host.serviceDiscoveryAddress", serverCmd.PersistentFlags().Lookup("sd-address"))
 
-	serverCmd.PersistentFlags().String("raft-addr", "0.0.0.0:8081", "raft listener address")
-	config.BindPFlag("server.host.listenAddress", serverCmd.PersistentFlags().Lookup("raft-addr"))
+	serverCmd.PersistentFlags().IP("listen-address", net.IPv4(0, 0, 0, 0), "the listener address")
+	config.BindPFlag("server.host.listenAddress", serverCmd.PersistentFlags().Lookup("listen-address"))
+
+	serverCmd.PersistentFlags().Uint("grpc-port", 8080, "grpc listener port")
+	config.BindPFlag("server.host.grpcListenPort", serverCmd.PersistentFlags().Lookup("grpc-port"))
+
+	serverCmd.PersistentFlags().Uint("raft-port", 8081, "raft listener port")
+	config.BindPFlag("server.host.raftListenPort", serverCmd.PersistentFlags().Lookup("raft-port"))
 
 	serverCmd.LocalFlags().Bool("notify-commit", false, "enable raft commit notifications")
 	config.BindPFlag("server.host.notifyCommit", serverCmd.LocalFlags().Lookup("notify-commit"))
 
 	serverCmd.PersistentFlags().Uint64("round-trip", 0, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
+	err = serverCmd.MarkPersistentFlagRequired("round-trip")
+	if err != nil {
+		log.Fatal().Err(err).Msg("can't mark flag round-trip as required")
+	}
 	config.BindPFlag("server.host.rtt", serverCmd.PersistentFlags().Lookup("round-trip"))
 
 	serverCmd.PersistentFlags().String("base-path", config.GetString("server.datastore.basePath"), "base directory for data")
@@ -101,7 +122,7 @@ func run(cmd *cobra.Command, args []string) {
 	serverutils.SetRootLogger(logger)
 
 	var serverConfig configuration.Configuration
-	err = config.Unmarshal(&serverConfig)
+	err = config.Unmarshal(&serverConfig, viper.DecodeHook(mapstructure.StringToIPHookFunc()))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("can't unmarshal configuration")
 	}
@@ -127,22 +148,8 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	config.Set("server.datastore.dataDir", dataDir)
 
-	nhc := dconfig.NodeHostConfig{
-		DeploymentID:   serverConfig.Server.Host.DeploymentId,
-		WALDir:         logDir,
-		NodeHostDir:    dataDir,
-		RTTMillisecond: serverConfig.Server.Host.Rtt,
-		RaftAddress:    serverConfig.Server.Host.ListenAddress,
-		EnableMetrics:  true,
-		NotifyCommit:   serverConfig.Server.Host.NotifyCommit,
-	}
-
-	if serverConfig.Server.Host.MutualTLS {
-		nhc.MutualTLS = serverConfig.Server.Host.MutualTLS
-		nhc.CAFile = serverConfig.Server.Host.CaFile
-		nhc.CertFile = serverConfig.Server.Host.CertFile
-		nhc.KeyFile = serverConfig.Server.Host.KeyFile
-	}
+	raftAddr := fmt.Sprintf("%s:%d", serverConfig.Server.Host.ServiceDiscoveryAddress, serverConfig.Server.Host.RaftListenPort)
+	nodeAddr := fmt.Sprintf("%s:%d", serverConfig.Server.Host.ListenAddress, serverConfig.Server.Host.RaftListenPort)
 
 	app := fx.New(
 		fx.Provide(func() *viper.Viper {
@@ -154,7 +161,8 @@ func run(cmd *cobra.Command, args []string) {
 				WALDir:         logDir,
 				NodeHostDir:    dataDir,
 				RTTMillisecond: serverConfig.Server.Host.Rtt,
-				RaftAddress:    serverConfig.Server.Host.ListenAddress,
+				ListenAddress:  nodeAddr,
+				RaftAddress:    raftAddr,
 				EnableMetrics:  true,
 				NotifyCommit:   serverConfig.Server.Host.NotifyCommit,
 			}

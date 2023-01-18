@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@ package cmd
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
@@ -45,9 +46,21 @@ func createAccount(cmd *cobra.Command, args []string) {
 		logger.Fatal().Msg("account id cannot be zero")
 	}
 
-	client := kvstorev1connect.NewKvStoreServiceClient(http.DefaultClient, "http://localhost:8080")
+	logger.Debug().Str("host", config.GetString("client.grpcAddr")).Msg("creating client")
 
-	descriptor, err := client.CreateAccount(context.Background(), connect.NewRequest(&kvstorev1.CreateAccountRequest{AccountId: accountId, Owner: accountOwner}))
+	targetHost, err := url.Parse(config.GetString("client.grpcAddr"))
+	if err != nil {
+		logger.Fatal().Err(err).Msg("can't parse remote host")
+	}
+
+	var host kvstorev1connect.KvStoreServiceClient
+	if targetHost.Scheme != "https" {
+		host = kvstorev1connect.NewKvStoreServiceClient(newInsecureClient(),targetHost.String())
+	} else {
+		host = kvstorev1connect.NewKvStoreServiceClient(http.DefaultClient, targetHost.String())
+	}
+
+	descriptor, err := host.CreateAccount(context.Background(), connect.NewRequest(&kvstorev1.CreateAccountRequest{AccountId: accountId, Owner: accountOwner}))
 	if err != nil {
 		logger.Fatal().Err(err).Uint64("account-id", accountId).Msg("can't create account")
 	}

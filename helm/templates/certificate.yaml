@@ -1,0 +1,15 @@
+{{- $tlsName := printf "%s-%s" .Values.pleiades.externalHostname "tls-certificate" }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $tlsName }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  secretName: {{ $tlsName }}
+  issuerRef:
+    name: {{ required "The name of the issuer is required!" .Values.tls.issuerRef.name }}
+    kind: {{ required "The kind of issuer is required!" .Values.tls.issuerRef.kind }}
+  commonName: {{ .Values.pleiades.externalHostname }}
+  dnsNames:
+    - {{ .Values.pleiades.externalHostname }}

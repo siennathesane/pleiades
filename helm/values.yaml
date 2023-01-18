@@ -1,0 +1,75 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+tls:
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+
+pleiades:
+  externalHostname: kv.dev.a13s.io
+  storage:
+    storageClass: premium-rwo
+    size: 10G
+  server:
+    dataCentre: "" # us-central1, etc. the availability zone isn't important
+    deploymentShard: 1
+    raft:
+      clusterHostname: ""
+    region: "" # americas
+    roundTrip: 10 # in ms
+    ports: # defaults are embedded, this is optional
+      http: 8080
+      raft: 8081
+      gossip: 8082
+
+replicaCount: 1
+
+image:
+  repository: gcr.io/pleiades-353402/pleiades
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: { }
+  name: ""
+
+podAnnotations: { }
+
+podSecurityContext: { }
+# fsGroup: 2000
+
+securityContext: { }
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4096Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
