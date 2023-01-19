@@ -14,7 +14,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 
@@ -28,7 +27,6 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/mitchellh/cli"
-	"github.com/mitchellh/go-homedir"
 	"github.com/posener/complete"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -40,22 +38,6 @@ import (
 var (
 	_ cli.Command = (*ServerCommand)(nil)
 )
-
-func init() {
-
-	defaultDataBasePath := ""
-	//goland:noinspection GoBoolExpressions
-	if runtime.GOOS == "darwin" {
-		dir, err := homedir.Dir()
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed to get home directory")
-		}
-		defaultDataBasePath = filepath.Join(dir, "Library", "pleiades")
-	} else {
-		defaultDataBasePath = configuration.DefaultBaseDataPath
-	}
-	config.Set("server.datastore.basePath", defaultDataBasePath)
-}
 
 type ServerCommand struct {
 	*BaseCommand
