@@ -28,12 +28,6 @@ var (
 	_ cli.Command = (*KvCommand)(nil)
 )
 
-func init() {
-	rootCmd.AddCommand(kvCmd)
-	kvCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
-	kvCmd.PersistentFlags().StringVarP(&bucketName, "bucket", "b", "", "bucket to place the key in")
-}
-
 type KvCommand struct {
 	*BaseCommand
 }
@@ -50,5 +44,5 @@ func (k *KvCommand) Run(args []string) int {
 }
 
 func (k *KvCommand) Synopsis() string {
-	return "Operations on key value pairs"
+	return "Operations on key value pairs!"
 }
