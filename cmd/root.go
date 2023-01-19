@@ -94,28 +94,6 @@ func init() {
 		defaultDataBasePath = configuration.DefaultBaseDataPath
 	}
 	config.Set("server.datastore.basePath", defaultDataBasePath)
-
-	//rootCmd.PersistentFlags().Bool("trace", false, "enable trace logging")
-	//config.BindPFlag("trace", rootCmd.PersistentFlags().Lookup("trace"))
-	//
-	//rootCmd.PersistentFlags().Bool("debug", false, "enable debug logging")
-	//config.BindPFlag("debug", rootCmd.PersistentFlags().Lookup("debug"))
-
-	//rootCmd.MarkFlagsMutuallyExclusive("debug", "trace")
-
-	// mtls settings
-	//region
-	rootCmd.PersistentFlags().String("ca-cert", filepath.Join(defaultDataBasePath, "tls", "ca.pem"), "mtls ca")
-	config.BindPFlag("server.host.caFile", rootCmd.PersistentFlags().Lookup("ca-cert"))
-
-	rootCmd.PersistentFlags().String("cert-file", filepath.Join(defaultDataBasePath, "tls", "cert.pem"), "mtls cert")
-	config.BindPFlag("server.host.certFile", rootCmd.PersistentFlags().Lookup("cert-file"))
-
-	rootCmd.PersistentFlags().String("cert-key", filepath.Join(defaultDataBasePath, "tls", "key.pem"), "mtls key")
-	config.BindPFlag("server.host.keyFile", rootCmd.PersistentFlags().Lookup("cert-key"))
-
-	rootCmd.MarkFlagsRequiredTogether("ca-cert", "cert-file", "cert-key")
-	//endregion
 }
 
 func setupLogger() zerolog.Logger {
@@ -248,7 +226,7 @@ func groupedHelpFunc(f cli.HelpFunc) cli.HelpFunc {
 		var b bytes.Buffer
 		tw := tabwriter.NewWriter(&b, 0, 2, 6, ' ', 0)
 
-		fmt.Fprintf(tw, "usage: pleiades <command> [args]\n")
+		fmt.Fprintf(tw, "Usage: pleiades <command> [args]\n")
 
 		otherCommands := make([]string, 0, len(commands))
 		for k := range commands {
@@ -257,7 +235,7 @@ func groupedHelpFunc(f cli.HelpFunc) cli.HelpFunc {
 		sort.Strings(otherCommands)
 
 		fmt.Fprintf(tw, "\n")
-		fmt.Fprintf(tw, "commands:\n")
+		fmt.Fprintf(tw, "Commands:\n")
 		for _, v := range otherCommands {
 			printCommand(tw, v, commands[v])
 		}
