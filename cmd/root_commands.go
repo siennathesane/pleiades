@@ -27,36 +27,12 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "pleiades",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
-}
-
 var (
-	config *viper.Viper
+	config   *viper.Viper
+	Commands map[string]cli.CommandFactory
 )
 
 func init() {
@@ -96,6 +72,11 @@ func init() {
 	config.Set("server.datastore.basePath", defaultDataBasePath)
 }
 
+type PleiadesUi struct {
+	cli.Ui
+	format string
+}
+
 func setupLogger() zerolog.Logger {
 	var logger zerolog.Logger
 	if config.GetBool("logging.trace") {
@@ -106,11 +87,6 @@ func setupLogger() zerolog.Logger {
 		logger = configuration.NewRootLogger().Level(zerolog.InfoLevel)
 	}
 	return logger
-}
-
-type PleiadesUi struct {
-	cli.Ui
-	format string
 }
 
 // setupEnv parses args and may replace them and sets some env vars to known
@@ -252,4 +228,80 @@ func printCommand(w io.Writer, name string, cmdFn cli.CommandFactory) {
 		panic(fmt.Sprintf("failed to load %q command: %s", name, err))
 	}
 	fmt.Fprintf(w, "    %s\t%s\n", name, cmd.Synopsis())
+}
+
+func initCommands(ui cli.Ui) {
+	getBaseCmd := func() *BaseCommand {
+		return &BaseCommand{
+			UI: ui,
+		}
+	}
+
+	Commands = map[string]cli.CommandFactory{
+		"kv": func() (cli.Command, error) {
+			return &KvCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"kv get": func() (cli.Command, error) {
+			return &KvGetCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"kv put": func() (cli.Command, error) {
+			return &KvPutCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"kv delete": func() (cli.Command, error) {
+			return &KvDeleteCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"server": func() (cli.Command, error) {
+			return &ServerCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"account": func() (cli.Command, error) {
+			return &AccountCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"account create": func() (cli.Command, error) {
+			return &AccountCreateCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"account delete": func() (cli.Command, error) {
+			return &AccountDeleteCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"bucket": func() (cli.Command, error) {
+			return &BucketCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"bucket create": func() (cli.Command, error) {
+			return &BucketCreateCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"bucket delete": func() (cli.Command, error) {
+			return &BucketDeleteCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric": func() (cli.Command, error) {
+			return &FabricCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric add-shard": func() (cli.Command, error) {
+			return &FabricAddShardCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+	}
 }

@@ -14,24 +14,23 @@ import (
 )
 
 var (
-	_ cli.Command = (*AccountCommand)(nil)
+	_ cli.Command = (*FabricCommand)(nil)
 )
 
-type AccountCommand struct {
+type FabricCommand struct {
 	*BaseCommand
 }
 
-func (a *AccountCommand) Help() string {
-	helpText := `Commands to manage accounts.`
+func (f *FabricCommand) Help() string {
+	helpText := `Commands to manage the Pleiades data fabric.`
 
 	return helpText
 }
 
-func (a *AccountCommand) Run(args []string) int {
+func (f *FabricCommand) Run(args []string) int {
 	return cli.RunResultHelp
 }
 
-func (a *AccountCommand) Synopsis() string {
-	return "Operations on accounts!"
+func (f *FabricCommand) Synopsis() string {
+	return "Operations on the data fabric."
 }
-

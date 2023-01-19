@@ -44,6 +44,7 @@ const (
 	FlagSetHTTP
 	FlagSetFormat
 	FlagSetTls
+	FlagSetTimeout
 
 	globalFlagFormat = "format"
 )
@@ -67,6 +68,7 @@ type BaseCommand struct {
 	flagDebug         bool
 	flagTrace         bool
 	flagFormat        string
+	flagTimeout int32
 
 	client *http.Client
 }
@@ -105,6 +107,19 @@ func (b *BaseCommand) Client() (*http.Client, error) {
 func (b *BaseCommand) flagSet(bit FlagSetBit) *FlagSets {
 	b.flagsOnce.Do(func() {
 		set := NewFlagSets(b.UI)
+
+		if bit&FlagSetTimeout != 0 {
+			f := set.NewFlagSet("Timeout Options")
+
+			f.Int32Var(&Int32Var{
+				Name:              "timeout",
+				Usage:             "Set the timeout for the command runtime, in seconds.",
+				Default:           30,
+				Target:            &b.flagTimeout,
+				Completion:        complete.PredictNothing,
+				ConfigurationPath: "client.timeout",
+			})
+		}
 
 		if bit&FlagSetHTTP != 0 {
 			f := set.NewFlagSet("HTTP Options")
