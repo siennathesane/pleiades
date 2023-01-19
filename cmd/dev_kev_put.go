@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,9 @@ var kvPutCmd = &cobra.Command{
 func init() {
 	kvCmd.AddCommand(kvPutCmd)
 
-	kvPutCmd.PersistentFlags().BytesBase64VarP(&payload, "value", "v", []byte{}, "a base64 encoded value")
-	kvPutCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to use")
-	kvPutCmd.PersistentFlags().Uint32VarP(&keyVersion, "version", "n", 0, "key version")
+	//kvPutCmd.PersistentFlags().BytesBase64VarP(&payload, "value", "v", []byte{}, "a base64 encoded value")
+	//kvPutCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to use")
+	//kvPutCmd.PersistentFlags().Uint32VarP(&keyVersion, "version", "n", 0, "key version")
 }
 
 var (

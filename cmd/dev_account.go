@@ -28,7 +28,7 @@ func init() {
 	rootCmd.AddCommand(accountCmd)
 
 	accountCmd.PersistentFlags().String("host", "http://localhost:8080", "target host for a pleiades cluster")
-	config.BindPFlag("client.grpcAddr", accountCmd.PersistentFlags().Lookup("host"))
+	//config.BindPFlag("client.grpcAddr", accountCmd.PersistentFlags().Lookup("host"))
 
 	accountCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
 }

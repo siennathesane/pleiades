@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ var bucketCreateCmd = &cobra.Command{
 
 func init() {
 	bucketCmd.AddCommand(bucketCreateCmd)
-	bucketCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the bucket")
-	bucketCreateCmd.PersistentFlags().StringVar(&bucketName, "name", "", "name of the bucket")
+	//bucketCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the bucket")
+	//bucketCreateCmd.PersistentFlags().StringVar(&bucketName, "name", "", "name of the bucket")
 }
 
 func bucketCreate(cmd *cobra.Command, args []string) {

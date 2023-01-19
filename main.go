@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -10,6 +10,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/mxplusb/pleiades/cmd"
 	"github.com/planetscale/vtprotobuf/codec/grpc"
 	"github.com/spf13/viper"
@@ -28,5 +30,5 @@ func main() {
 	viper.AddConfigPath("$HOME/.pleiades")  // call multiple times to add many search paths
 	viper.AddConfigPath(".")               // optionally look for config in the working directory
 
-	cmd.Execute()
+	os.Exit(cmd.Run(os.Args[1:]))
 }
