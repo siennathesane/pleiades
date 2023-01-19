@@ -325,6 +325,96 @@ func (i *intValue) String() string   { return strconv.Itoa(*i.target) }
 func (i *intValue) Example() string  { return "int" }
 func (i *intValue) Hidden() bool     { return i.hidden }
 
+// -- Int32Var and int32Value
+type Int32Var struct {
+	Name              string
+	Aliases           []string
+	Usage             string
+	Default           int32
+	Hidden            bool
+	EnvVar            string
+	Target            *int32
+	Completion        complete.Predictor
+	ConfigurationPath string
+}
+
+func (f *FlagSet) Int32Var(i *Int32Var) {
+	initial := i.Default
+	if v, exist := os.LookupEnv(i.EnvVar); exist {
+		if i, err := strconv.ParseInt(v, 0, 32); err == nil {
+			initial = int32(i)
+		}
+	}
+
+	def := ""
+	if i.Default != 0 {
+		def = strconv.FormatInt(int64(i.Default), 10)
+	}
+
+	flagVal := newInt32Value(i.ConfigurationPath, initial, i.Target, i.Hidden)
+	if i.ConfigurationPath != "" {
+		config.SetDefault(i.ConfigurationPath, def)
+		if err := config.BindFlagValue(i.ConfigurationPath, flagVal); err != nil {
+			fmt.Printf("error binding flag value: %s", err.Error())
+		}
+	}
+
+	f.VarFlag(&VarFlag{
+		FlagName:   i.Name,
+		Aliases:    i.Aliases,
+		Usage:      i.Usage,
+		Default:    def,
+		EnvVar:     i.EnvVar,
+		Value:      flagVal,
+		Completion: i.Completion,
+	})
+}
+
+func newInt32Value(name string, def int32, target *int32, hidden bool) *int32Value {
+	*target = def
+	return &int32Value{
+		hidden: hidden,
+		target: target,
+	}
+}
+
+type int32Value struct {
+	name   string
+	hidden bool
+	target *int32
+}
+
+func (i *int32Value) HasChanged() bool {
+	return true
+}
+
+func (i *int32Value) Name() string {
+	return i.name
+}
+
+func (i *int32Value) ValueString() string {
+	return i.String()
+}
+
+func (i *int32Value) ValueType() string {
+	return "int32"
+}
+
+func (i *int32Value) Set(s string) error {
+	v, err := strconv.ParseInt(s, 0, 64)
+	if err != nil {
+		return err
+	}
+
+	*i.target = int32(v)
+	return nil
+}
+
+func (i *int32Value) Get() interface{} { return int32(*i.target) }
+func (i *int32Value) String() string   { return strconv.FormatInt(int64(*i.target), 10) }
+func (i *int32Value) Example() string  { return "int" }
+func (i *int32Value) Hidden() bool     { return i.hidden }
+
 // -- Int64Var and int64Value
 type Int64Var struct {
 	Name              string

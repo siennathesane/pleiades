@@ -9,10 +9,6 @@
 
 package cmd
 
-import (
-	"github.com/mitchellh/cli"
-)
-
 const (
 	/* A group! */
 	EnvPleiadesUrl                = "PLEIADES_ADDR"
@@ -44,71 +40,3 @@ const (
 	exitCodeFailureToParseArgs = 2
 	exitCodeRemote             = 3
 )
-
-var Commands map[string]cli.CommandFactory
-
-func initCommands(ui cli.Ui) {
-	getBaseCmd := func() *BaseCommand {
-		return &BaseCommand{
-			UI: ui,
-		}
-	}
-
-	Commands = map[string]cli.CommandFactory{
-		"kv": func() (cli.Command, error) {
-			return &KvCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"kv get": func() (cli.Command, error) {
-			return &KvGetCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"kv put": func() (cli.Command, error) {
-			return &KvPutCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"kv delete": func() (cli.Command, error) {
-			return &KvDeleteCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"server": func() (cli.Command, error) {
-			return &ServerCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"account": func() (cli.Command, error) {
-			return &AccountCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"account create": func() (cli.Command, error) {
-			return &AccountCreateCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"account delete": func() (cli.Command, error) {
-			return &AccountDeleteCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"bucket": func() (cli.Command, error) {
-			return &BucketCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"bucket create": func() (cli.Command, error) {
-			return &BucketCreateCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-		"bucket delete": func() (cli.Command, error) {
-			return &BucketDeleteCommand{
-				BaseCommand: getBaseCmd(),
-			}, nil
-		},
-	}
-}
