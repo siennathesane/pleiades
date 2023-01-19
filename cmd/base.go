@@ -40,9 +40,10 @@ type (
 
 const (
 	FlagSetNone FlagSetBit = 1 << iota
+	FlagSetLogging
 	FlagSetHTTP
 	FlagSetFormat
-	FlagSetLogging
+	FlagSetTls
 
 	globalFlagFormat = "format"
 )
@@ -105,8 +106,6 @@ func (b *BaseCommand) flagSet(bit FlagSetBit) *FlagSets {
 	b.flagsOnce.Do(func() {
 		set := NewFlagSets(b.UI)
 
-		bit = bit | FlagSetHTTP
-
 		if bit&FlagSetHTTP != 0 {
 			f := set.NewFlagSet("HTTP Options")
 
@@ -121,24 +120,48 @@ func (b *BaseCommand) flagSet(bit FlagSetBit) *FlagSets {
 				ConfigurationPath: "client.http.address",
 			})
 
-			f.StringVar(&StringVar{
-				Name:       "ca-cert",
-				Usage:      "Local on-disk path to a PEM-encoded CA certificate if using a custom TLS certificate.",
-				Default:    "",
-				EnvVar:     EnvPleiadesCaCert,
-				Target:     &b.flagCACert,
-				ConfigurationPath: "client.http.ca-cert",
-				Completion: complete.PredictFiles("*"),
-			})
-
 			f.BoolVar(&BoolVar{
 				Name:    "tls-skip-verify",
-				Usage:   "disable tls sni checking",
+				Usage:   "Disable TLS SNI checking.",
 				Default: false,
 				Hidden:  false,
 				EnvVar:  EnvPleiadesInsecureSkipVerify,
-				ConfigurationPath: "client.http.tls-skip-verify",
+				ConfigurationPath: "tls.skip-verify",
 				Target:  &b.flagTlsSkipVerify,
+			})
+		}
+
+		if bit&FlagSetTls != 0 {
+			f := set.NewFlagSet("TLS Options")
+
+			f.StringVar(&StringVar{
+				Name:       "ca-cert-file",
+				Usage:      `Local on-disk path to a PEM-encoded CA certificate if using a custom TLS certificate.`,
+				Default:    "",
+				EnvVar:     EnvPleiadesCaCert,
+				Target:     &b.flagCACert,
+				ConfigurationPath: "tls.ca-cert-file",
+				Completion: complete.PredictFiles("*"),
+			})
+
+			f.StringVar(&StringVar{
+				Name:       "cert-file",
+				Usage:      "Local on-disk path to a PEM-encoded certificate.",
+				Default:    "",
+				EnvVar:     EnvPleiadesCertFile,
+				Target:     &b.flagCACert,
+				ConfigurationPath: "tls.cert-file",
+				Completion: complete.PredictFiles("*"),
+			})
+
+			f.StringVar(&StringVar{
+				Name:       "key-file",
+				Usage:      "Local on-disk path to a PEM-encoded certificate.",
+				Default:    "",
+				EnvVar:     EnvPleiadesKeyFile,
+				Target:     &b.flagCACert,
+				ConfigurationPath: "tls.key-file",
+				Completion: complete.PredictFiles("*"),
 			})
 		}
 
@@ -161,7 +184,7 @@ func (b *BaseCommand) flagSet(bit FlagSetBit) *FlagSets {
 					"extensive amounts of logging data. Never use this in a production environment.",
 				Default: false,
 				Hidden:  false,
-				EnvVar:  EnvPleiadesDebug,
+				EnvVar:  EnvPleiadesTrace,
 				Target:  &b.flagDebug,
 				ConfigurationPath: "logging.trace",
 			})

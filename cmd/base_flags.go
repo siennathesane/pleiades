@@ -134,8 +134,6 @@ func (f *FlagSet) BoolPtrVar(i *BoolPtrVar) {
 		}
 	}
 
-	config.SetDefault(i.ConfigurationPath, def)
-
 	f.VarFlag(&VarFlag{
 		FlagName:   i.Name,
 		Aliases:    i.Aliases,
@@ -258,6 +256,14 @@ func (f *FlagSet) IntVar(i *IntVar) {
 		def = strconv.FormatInt(int64(i.Default), 10)
 	}
 
+	flagVal := newIntValue(i.ConfigurationPath, initial, i.Target, i.Hidden)
+	if i.ConfigurationPath != "" {
+		config.SetDefault(i.ConfigurationPath, def)
+		if err := config.BindFlagValue(i.ConfigurationPath, flagVal); err != nil {
+			fmt.Printf("error binding flag value: %s", err.Error())
+		}
+	}
+
 	config.SetDefault(i.ConfigurationPath, def)
 
 	f.VarFlag(&VarFlag{
@@ -266,22 +272,40 @@ func (f *FlagSet) IntVar(i *IntVar) {
 		Usage:      i.Usage,
 		Default:    def,
 		EnvVar:     i.EnvVar,
-		Value:      newIntValue(initial, i.Target, i.Hidden),
+		Value:      newIntValue(i.ConfigurationPath, initial, i.Target, i.Hidden),
 		Completion: i.Completion,
 	})
 }
 
+func newIntValue(name string, def int, target *int, hidden bool) *intValue {
+	*target = def
+	return &intValue{
+		name:   name,
+		hidden: hidden,
+		target: target,
+	}
+}
+
 type intValue struct {
+	name   string
 	hidden bool
 	target *int
 }
 
-func newIntValue(def int, target *int, hidden bool) *intValue {
-	*target = def
-	return &intValue{
-		hidden: hidden,
-		target: target,
-	}
+func (i *intValue) HasChanged() bool {
+	return true
+}
+
+func (i *intValue) Name() string {
+	return i.name
+}
+
+func (i *intValue) ValueString() string {
+	return i.String()
+}
+
+func (i *intValue) ValueType() string {
+	return "int"
 }
 
 func (i *intValue) Set(s string) error {
@@ -553,13 +577,15 @@ func (f *FlagSet) Uint64Var(i *Uint64Var) {
 
 	def := ""
 	if i.Default != 0 {
-		strconv.FormatUint(i.Default, 10)
+		def = strconv.FormatUint(i.Default, 10)
 	}
 
 	flagVal := newUint64Value(i.ConfigurationPath, initial, i.Target, i.Hidden)
-	//config.SetDefault(i.ConfigurationPath, def)
-	if err := config.BindFlagValue(i.ConfigurationPath, flagVal); err != nil {
-		fmt.Printf("error binding flag value: %s", err.Error())
+	if i.ConfigurationPath != "" {
+		config.SetDefault(i.ConfigurationPath, def)
+		if err := config.BindFlagValue(i.ConfigurationPath, flagVal); err != nil {
+			fmt.Printf("error binding flag value: %s", err.Error())
+		}
 	}
 
 	f.VarFlag(&VarFlag{
@@ -1165,30 +1191,57 @@ func (f *FlagSet) TimeVar(i *TimeVar) {
 		def = i.Default.String()
 	}
 
+	flagVal := newTimeValue(i.ConfigurationPath, initial, i.Target, i.Hidden, i.Formats)
+
+	if i.ConfigurationPath != "" {
+		config.SetDefault(i.ConfigurationPath, def)
+		if err := config.BindFlagValue(i.ConfigurationPath, flagVal); err != nil {
+			fmt.Printf("error binding flag value: %s", err.Error())
+		}
+	}
+
 	f.VarFlag(&VarFlag{
 		FlagName:   i.Name,
 		Aliases:    i.Aliases,
 		Usage:      i.Usage,
 		Default:    def,
 		EnvVar:     i.EnvVar,
-		Value:      newTimeValue(initial, i.Target, i.Hidden, i.Formats),
+		Value:      flagVal,
 		Completion: i.Completion,
 	})
 }
 
+func newTimeValue(name string, def time.Time, target *time.Time, hidden bool, f TimeFormat) *timeValue {
+	*target = def
+	return &timeValue{
+		name:    name,
+		hidden:  hidden,
+		target:  target,
+		formats: f,
+	}
+}
+
 type timeValue struct {
+	name    string
 	hidden  bool
 	target  *time.Time
 	formats TimeFormat
 }
 
-func newTimeValue(def time.Time, target *time.Time, hidden bool, f TimeFormat) *timeValue {
-	*target = def
-	return &timeValue{
-		hidden:  hidden,
-		target:  target,
-		formats: f,
-	}
+func (d *timeValue) HasChanged() bool {
+	return true
+}
+
+func (d *timeValue) Name() string {
+	return d.name
+}
+
+func (d *timeValue) ValueString() string {
+	return d.String()
+}
+
+func (d *timeValue) ValueType() string {
+	return "string"
 }
 
 func (d *timeValue) Set(s string) error {

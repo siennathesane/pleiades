@@ -118,11 +118,11 @@ func init() {
 	//endregion
 }
 
-func setupLogger(cmd *cobra.Command, args []string) zerolog.Logger {
+func setupLogger() zerolog.Logger {
 	var logger zerolog.Logger
-	if config.GetBool("trace") {
+	if config.GetBool("logging.trace") {
 		logger = configuration.NewRootLogger().Level(zerolog.TraceLevel)
-	} else if config.GetBool("debug") {
+	} else if config.GetBool("logging.debug") {
 		logger = configuration.NewRootLogger().Level(zerolog.DebugLevel)
 	} else {
 		logger = configuration.NewRootLogger().Level(zerolog.InfoLevel)

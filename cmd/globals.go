@@ -16,18 +16,33 @@ import (
 const (
 	/* A group! */
 	EnvPleiadesUrl                = "PLEIADES_ADDR"
-	EnvPleiadesInsecureSkipVerify = "PLEIADES_TLS_SKIP_VERIFY"
-	EnvPleiadesCaCert             = "PLEIADES_CA_CERT"
+	EnvPleiadesInsecureSkipVerify = "PLEIADES_INSECURE_SKIP_VERIFY"
 	EnvPleiadesDebug              = "PLEIADES_DEBUG"
 	EnvPleiadesTrace              = "PLEIADES_TRACE"
 	EnvPleiadesDefaultOutput      = "PLEIADES_OUTPUT"
+
+	/* TLS Configs */
+	EnvPleiadesCaCert   = "PLEIADES_CA_CERT_FILE"
+	EnvPleiadesCertFile = "PLEIADES_CERT_FILE"
+	EnvPleiadesKeyFile  = "PLEIADES_KEY_FILE"
+
+	/* Server Variables */
+	EnvPleiadesDeploymentId      = "PLEIADES_DEPLOYMENT_ID"
+	EnvPleiadesDataDir           = "PLEIADES_DATA_DIR"
+	EnvPleiadesFabricAddr        = "PLEIADES_FABRIC_ADDR"
+	EnvPleidesListenAddr         = "PLEIADES_LISTEN_ADDR"
+	EnvPleiadesHttpPort          = "PLEIADES_HTTP_PORT"
+	EnvPleiadesFabricPort        = "PLEIADES_FABRIC_PORT"
+	EnvPleiadesConstellationPort = "PLEIADES_CONSTELLATION_PORT"
+	EnvPleiadesNotifyCommit      = "PLEIADES_NOTIFY_COMMIT"
+	EnvPleiadesRoundTrip         = "PLEIADES_ROUND_TRIP_MS"
 
 	flagNameHost = "address"
 
 	exitCodeGood               = 0
 	exitCodeGenericBad         = 1
 	exitCodeFailureToParseArgs = 2
-	exitCodeRemote = 3
+	exitCodeRemote             = 3
 )
 
 var Commands map[string]cli.CommandFactory
@@ -47,6 +62,11 @@ func initCommands(ui cli.Ui) {
 		},
 		"kv get": func() (cli.Command, error) {
 			return &KvGetCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"server": func() (cli.Command, error) {
+			return &ServerCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},
