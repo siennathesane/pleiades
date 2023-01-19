@@ -5,30 +5,39 @@ go 1.18
 require (
 	github.com/mxplusb/api v0.0.0-20221202042317-9659f2b0e5c9
 	github.com/bufbuild/connect-go v1.0.0
+	github.com/bufbuild/connect-grpchealth-go v1.0.0
 	github.com/bufbuild/connect-grpcreflect-go v1.0.0
 	github.com/cockroachdb/errors v1.7.5
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13
 	github.com/go-git/go-git/v5 v5.5.0
+	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7
+	github.com/kr/text v0.2.0
 	github.com/lithammer/go-jump-consistent-hash v1.0.2
 	github.com/lni/dragonboat/v3 v3.3.5
 	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.13.0
+	github.com/mitchellh/cli v1.1.5
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/nats-io/nats-server/v2 v2.9.0
 	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
 	github.com/planetscale/vtprotobuf v0.3.0
+	github.com/posener/complete v1.2.3
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.13.0
 	github.com/stretchr/testify v1.8.1
 	go.etcd.io/bbolt v1.3.6
+	go.opentelemetry.io/otel v1.11.2
+	go.opentelemetry.io/otel/exporters/jaeger v1.11.2
+	go.opentelemetry.io/otel/sdk v1.11.2
 	go.uber.org/fx v1.18.2
 	golang.org/x/exp v0.0.0-20220827204233-334a2380cb91
 	golang.org/x/net v0.2.0
 	gonum.org/v1/gonum v0.11.0
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -43,7 +52,6 @@ require (
 	github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
-	github.com/bufbuild/connect-grpchealth-go v1.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cloudflare/circl v1.1.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f // indirect
@@ -68,7 +76,6 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-msgpack v0.5.3 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
-	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7 // indirect
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.1 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
@@ -82,14 +89,12 @@ require (
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/miekg/dns v1.1.50 // indirect
 	github.com/minio/highwayhash v1.0.2 // indirect
-	github.com/mitchellh/cli v1.1.5 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.0 // indirect
@@ -101,7 +106,6 @@ require (
 	github.com/pjbgf/sha1cd v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/posener/complete v1.2.3 // indirect
 	github.com/prometheus/client_golang v1.14.0 // indirect
 	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
@@ -121,11 +125,8 @@ require (
 	github.com/valyala/histogram v1.0.1 // indirect
 	github.com/xanzy/ssh-agent v0.3.2 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.37.0 // indirect
-	go.opentelemetry.io/otel v1.11.2 // indirect
-	go.opentelemetry.io/otel/exporters/jaeger v1.11.2 // indirect
 	go.opentelemetry.io/otel/exporters/prometheus v0.34.0 // indirect
 	go.opentelemetry.io/otel/metric v0.34.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.11.2 // indirect
 	go.opentelemetry.io/otel/sdk/metric v0.34.0 // indirect
 	go.opentelemetry.io/otel/trace v1.11.2 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
@@ -143,5 +144,4 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
