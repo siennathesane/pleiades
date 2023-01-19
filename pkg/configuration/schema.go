@@ -16,6 +16,9 @@ import (
 const (
 	DefaultBaseDataPath   string = "/var/pleiades"
 	DefaultBaseConfigPath string = "/etc/pleiades"
+
+	DefaultLogDir = "logs"
+	DefaultDataDir = "data"
 )
 
 type Configuration struct {

@@ -39,7 +39,7 @@ func deleteKey(cmd *cobra.Command, args []string) {
 		log.Fatal().Err(err).Msg("can't parse flags")
 	}
 
-	logger := setupLogger(cmd, args)
+	logger := setupLogger()
 	logger = logger.With().Uint64("account-id", accountId).Str("bucket", bucketName).Logger()
 
 	if accountId == 0 {

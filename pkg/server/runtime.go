@@ -94,17 +94,17 @@ type HttpServerBuilderResults struct {
 }
 
 func NewHttpServer(lc fx.Lifecycle, params HttpServerBuilderParams) HttpServerBuilderResults {
-	port := params.Config.GetUint("server.host.grpcListenPort")
+	port := params.Config.GetUint("server.host.httpListenPort")
 	if port == 0 {
-		params.Logger.Fatal().Msg("grpc port cannot be 0!")
+		params.Logger.Fatal().Msg("http port cannot be 0!")
 	}
-	addr := fmt.Sprintf("%s:%d", params.Config.GetString("server.host.listenAddress"), params.Config.GetUint("server.host.grpcListenPort"))
+	addr := fmt.Sprintf("%s:%d", params.Config.GetString("server.host.listenAddr"), params.Config.GetUint("server.host.httpListenPort"))
 	httpServer = &http.Server{
 		Addr:    addr,
 		Handler: h2c.NewHandler(params.Mux, &http2.Server{}),
 	}
 
-	params.Logger.Info().Str("grpc-addr", addr).Msg("http listen address")
+	params.Logger.Debug().Str("http-addr", addr).Msg("http listen address")
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

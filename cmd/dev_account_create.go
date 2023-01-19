@@ -40,7 +40,7 @@ func createAccount(cmd *cobra.Command, args []string) {
 		log.Fatal().Err(err).Msg("can't parse flags")
 	}
 
-	logger := setupLogger(cmd, args)
+	logger := setupLogger()
 
 	if accountId == 0 {
 		logger.Fatal().Msg("account id cannot be zero")

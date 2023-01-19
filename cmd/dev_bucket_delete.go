@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ func bucketDelete(cmd *cobra.Command, args []string) {
 		log.Fatal().Err(err).Msg("can't parse flags")
 	}
 
-	logger := setupLogger(cmd, args)
+	logger := setupLogger()
 	logger = logger.With().Uint64("account-id", accountId).Str("bucket", bucketName).Logger()
 
 	if accountId == 0 {

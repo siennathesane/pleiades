@@ -66,7 +66,7 @@ func runAddShard(cmd *cobra.Command, args []string) {
 		log.Fatal().Err(err).Msg("can't parse flags")
 	}
 
-	logger := setupLogger(cmd, args)
+	logger := setupLogger()
 
 	logger.Debug().Str("host", config.GetString("client.grpcAddr")).Msg("creating client")
 
