@@ -24,5 +24,5 @@ var (
 
 func init() {
 	rootCmd.AddCommand(bucketCmd)
-	bucketCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
+	//bucketCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
 }

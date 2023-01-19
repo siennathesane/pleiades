@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ var kvDeleteCmd = &cobra.Command{
 func init() {
 	kvCmd.AddCommand(kvDeleteCmd)
 
-	kvDeleteCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to delete")
+	//kvDeleteCmd.PersistentFlags().StringVarP(&key, "key", "k", "", "key to delete")
 }
 
 func deleteKey(cmd *cobra.Command, args []string) {

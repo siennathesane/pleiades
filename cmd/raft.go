@@ -9,13 +9,7 @@
 package cmd
 
 import (
-	"context"
-	"crypto/tls"
-	"net"
-	"net/http"
-
 	"github.com/spf13/cobra"
-	"golang.org/x/net/http2"
 )
 
 // raftCmd represents the raft command
@@ -29,17 +23,5 @@ func init() {
 	rootCmd.AddCommand(raftCmd)
 
 	raftCmd.PersistentFlags().String("host", "http://localhost:8080", "target host for a pleiades cluster")
-	config.BindPFlag("client.grpcAddr", raftCmd.PersistentFlags().Lookup("host"))
-}
-
-func newInsecureClient() *http.Client {
-	return &http.Client{
-		Transport: &http2.Transport{
-			AllowHTTP: true,
-			DialTLSContext: func(_ context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
-				return net.Dial(network, addr)
-			},
-			// Don't forget timeouts!
-		},
-	}
+	//config.BindPFlag("client.grpcAddr", raftCmd.PersistentFlags().Lookup("host"))
 }
