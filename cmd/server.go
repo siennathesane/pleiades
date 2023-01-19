@@ -12,7 +12,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,31 +27,21 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/shard"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	dconfig "github.com/lni/dragonboat/v3/config"
+	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-homedir"
-	"github.com/mitchellh/mapstructure"
+	"github.com/posener/complete"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 )
 
-// serverCmd represents the server command
-var serverCmd = &cobra.Command{
-	Use:   "server",
-	Short: "run a local instance of pleiades",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: run,
-}
+var (
+	_ cli.Command = (*ServerCommand)(nil)
+)
 
 func init() {
-	rootCmd.AddCommand(serverCmd)
 
 	defaultDataBasePath := ""
 	//goland:noinspection GoBoolExpressions
@@ -66,72 +55,186 @@ func init() {
 		defaultDataBasePath = configuration.DefaultBaseDataPath
 	}
 	config.Set("server.datastore.basePath", defaultDataBasePath)
-
-	serverCmd.PersistentFlags().Uint64("deployment-id", 0, "identifier for this deployment")
-	err := serverCmd.MarkPersistentFlagRequired("deployment-id")
-	if err != nil {
-		log.Fatal().Err(err).Msg("can't mark flag deployment-id as required")
-	}
-	config.BindPFlag("server.host.deploymentId", serverCmd.PersistentFlags().Lookup("deployment-id"))
-
-	serverCmd.PersistentFlags().String("sd-address", "", "the externally addressable hostname of this instance")
-	err = serverCmd.MarkPersistentFlagRequired("sd-address")
-	if err != nil {
-		log.Fatal().Err(err).Msg("can't mark flag sd-address as required")
-	}
-	config.BindPFlag("server.host.serviceDiscoveryAddress", serverCmd.PersistentFlags().Lookup("sd-address"))
-
-	serverCmd.PersistentFlags().IP("listen-address", net.IPv4(0, 0, 0, 0), "the listener address")
-	config.BindPFlag("server.host.listenAddress", serverCmd.PersistentFlags().Lookup("listen-address"))
-
-	serverCmd.PersistentFlags().Uint("grpc-port", 8080, "grpc listener port")
-	config.BindPFlag("server.host.grpcListenPort", serverCmd.PersistentFlags().Lookup("grpc-port"))
-
-	serverCmd.PersistentFlags().Uint("raft-port", 8081, "raft listener port")
-	config.BindPFlag("server.host.raftListenPort", serverCmd.PersistentFlags().Lookup("raft-port"))
-
-	serverCmd.LocalFlags().Bool("notify-commit", false, "enable raft commit notifications")
-	config.BindPFlag("server.host.notifyCommit", serverCmd.LocalFlags().Lookup("notify-commit"))
-
-	serverCmd.PersistentFlags().Uint64("round-trip", 0, "average round trip time, plus processing, in milliseconds to other hosts in the data centre")
-	err = serverCmd.MarkPersistentFlagRequired("round-trip")
-	if err != nil {
-		log.Fatal().Err(err).Msg("can't mark flag round-trip as required")
-	}
-	config.BindPFlag("server.host.rtt", serverCmd.PersistentFlags().Lookup("round-trip"))
-
-	serverCmd.PersistentFlags().String("base-path", config.GetString("server.datastore.basePath"), "base directory for data")
-	config.BindPFlag("server.datastore.basePath", serverCmd.PersistentFlags().Lookup("base-path"))
-
-	serverCmd.PersistentFlags().String("log-dir", "logs", "directory for raft logs, relative to base-path")
-	config.BindPFlag("server.datastore.logDir", serverCmd.PersistentFlags().Lookup("log-dir"))
-
-	serverCmd.PersistentFlags().String("data-dir", "data", "directory for data, relative to base-path")
-	config.BindPFlag("server.datastore.dataDir", serverCmd.PersistentFlags().Lookup("data-dir"))
 }
 
-func run(cmd *cobra.Command, args []string) {
-	ctx := context.Background()
-	logger := setupLogger(cmd, args)
+type ServerCommand struct {
+	*BaseCommand
 
-	err := cmd.Flags().Parse(args)
+	flagDeploymentId            uint64
+	flagBasePath                string
+	flagServiceDiscoveryAddress string
+	flagListenAddr              string
+	flagHttpPort                int
+	flagFabricPort              int
+	flagConstellationPort       int
+	flagNotifyCommit            bool
+	flagRoundTrip               uint64
+	flagDryRun                  bool
+}
+
+func (s *ServerCommand) Help() string {
+	helpText := `Runs an instance of the Pleiades Database Constellation.
+
+An instance of Pleiades involves multiple internal processes and several open 
+ports. It's recommended to run Pleiades on a large system to get proper 
+performance. This command is configured to use recommended defaults, and very 
+little of the defaults should be changed. 
+
+` + s.Flags().Help()
+
+	return helpText
+}
+
+func (s *ServerCommand) Flags() *FlagSets {
+	set := s.flagSet(FlagSetTls)
+
+	f := set.NewFlagSet("Server Options")
+
+	f.Uint64Var(&Uint64Var{
+		Name:              "deployment-id",
+		Usage:             `Set the deployment ID of this node. It's how nodes determine if they are a part of the same deployment.`,
+		Default:           1,
+		EnvVar:            EnvPleiadesDeploymentId,
+		Target:            &s.flagDeploymentId,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.deployment-id",
+	})
+
+	f.StringVar(&StringVar{
+		Name: "base-path",
+		Usage: `The base directory for all of the node data. This can be changed, but changing it between 
+runs will reset the node configuration, essentially wiping it clean.`,
+		Default:           config.GetString("server.datastore.basePath"),
+		Hidden:            false,
+		EnvVar:            EnvPleiadesDataDir,
+		Target:            &s.flagBasePath,
+		Completion:        complete.PredictDirs("*"),
+		ConfigurationPath: "server.datastore.basePath",
+	})
+
+	hname, err := os.Hostname()
 	if err != nil {
-		log.Fatal().Err(err).Msg("can't parse flags")
+		// I have no idea why this would cause an error but meh
+		s.UI.Error(err.Error())
+		return nil
 	}
+	f.StringVar(&StringVar{
+		Name: "fabric-hostname",
+		Usage: `Address the fabric subsystems will use to identify this node to other fabric nodes. This 
+cannot be changed between runs, so it's best to set it to the externally addressable hostname.`,
+		Default:           strings.ToLower(hname),
+		Hidden:            false,
+		EnvVar:            EnvPleiadesFabricAddr,
+		Target:            &s.flagServiceDiscoveryAddress,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.fabricHostname",
+	})
+
+	f.StringVar(&StringVar{
+		Name:              "listen-addr",
+		Usage:             "The IP address to listen on.",
+		Default:           "0.0.0.0",
+		Hidden:            false,
+		EnvVar:            EnvPleidesListenAddr,
+		Target:            &s.flagListenAddr,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.listenAddr",
+	})
+
+	f.IntVar(&IntVar{
+		Name:              "http-port",
+		Usage:             "The HTTP port to listen on.",
+		Default:           8080,
+		Hidden:            false,
+		EnvVar:            EnvPleiadesHttpPort,
+		Target:            &s.flagHttpPort,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.httpListenPort",
+	})
+
+	f.IntVar(&IntVar{
+		Name:              "fabric-port",
+		Usage:             "The fabric port to listen on.",
+		Default:           8081,
+		Hidden:            false,
+		EnvVar:            EnvPleiadesFabricPort,
+		Target:            &s.flagFabricPort,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.fabricListenPort",
+	})
+
+	f.IntVar(&IntVar{
+		Name:              "constellation-port",
+		Usage:             "The constellation port to listen on.",
+		Default:           8082,
+		Hidden:            false,
+		EnvVar:            EnvPleiadesConstellationPort,
+		Target:            &s.flagConstellationPort,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.constellationListenPort",
+	})
+
+	f.BoolVar(&BoolVar{
+		Name:              "notify-commit",
+		Usage:             "Enable commit notifications. This is an alpha feature and is considered unstable.",
+		Default:           false,
+		Hidden:            false,
+		EnvVar:            EnvPleiadesNotifyCommit,
+		Target:            &s.flagNotifyCommit,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.notifyCommit",
+	})
+
+	f.Uint64Var(&Uint64Var{
+		Name: "round-trip",
+		Usage: `The length of time it takes to process fabric messages to the nearest nodes in the data 
+centre, in milliseconds.`,
+		Default:           10,
+		Hidden:            false,
+		EnvVar:            EnvPleiadesRoundTrip,
+		Target:            &s.flagRoundTrip,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.host.rtt",
+	})
+
+	f.BoolVar(&BoolVar{
+		Name:              "dry-run",
+		Usage:             `Dry run an instance of Pleiades. This will print out all of the configurations but not boot 
+the server.`,
+		Default:           false,
+		Hidden:            true,
+		Target:            &s.flagDryRun,
+		Completion:        complete.PredictNothing,
+	})
+
+	return set
+}
+
+func (s *ServerCommand) Synopsis() string {
+	return `Run an instance of Pleiades`
+}
+
+func (s *ServerCommand) Run(args []string) int {
+	f := s.Flags()
+
+	if err := f.Parse(args); err != nil {
+		s.UI.Error(err.Error())
+		return exitCodeFailureToParseArgs
+	}
+
+	if config.GetBool("logging.debug") && config.GetBool("logging.trace") {
+		s.UI.Error("Only the -trace or -debug flag may be provided.")
+		return exitCodeFailureToParseArgs
+	}
+
+	ctx := context.Background()
+	logger := setupLogger()
 
 	serverutils.SetRootLogger(logger)
 
-	var serverConfig configuration.Configuration
-	err = config.Unmarshal(&serverConfig, viper.DecodeHook(mapstructure.StringToIPHookFunc()))
-	if err != nil {
-		logger.Fatal().Err(err).Msg("can't unmarshal configuration")
-	}
-
-	logger.Info().Interface("config", serverConfig).Msg("runtime configuration")
-
 	// make the directories
-	logDir := filepath.Join(config.GetString("server.datastore.basePath"), serverConfig.Server.Datastore.LogDir)
-	err = os.MkdirAll(logDir, 0750)
+	logDir := filepath.Join(config.GetString("server.datastore.basePath"), configuration.DefaultLogDir)
+	err := os.MkdirAll(logDir, 0750)
 	if err != nil {
 		if !os.IsExist(err) {
 			log.Fatal().Err(err).Msg("can't create log directory")
@@ -139,17 +242,27 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	config.Set("server.datastore.logDir", logDir)
 
-	dataDir := filepath.Join(config.GetString("server.datastore.basePath"), serverConfig.Server.Datastore.DataDir)
+	dataDir := filepath.Join(config.GetString("server.datastore.basePath"), configuration.DefaultDataDir)
 	err = os.MkdirAll(dataDir, 0750)
 	if err != nil {
 		if !os.IsExist(err) {
-			log.Fatal().Err(err).Msg("can't create log directory")
+			log.Fatal().Err(err).Msg("can't create data directory")
 		}
 	}
 	config.Set("server.datastore.dataDir", dataDir)
 
-	raftAddr := fmt.Sprintf("%s:%d", serverConfig.Server.Host.ServiceDiscoveryAddress, serverConfig.Server.Host.RaftListenPort)
-	nodeAddr := fmt.Sprintf("%s:%d", serverConfig.Server.Host.ListenAddress, serverConfig.Server.Host.RaftListenPort)
+	raftAddr := fmt.Sprintf("%s:%d", config.GetString("server.host.fabricHostname"), config.GetUint("server.host.fabricListenPort"))
+	config.Set("server.host.fabricAddr", raftAddr)
+
+	nodeAddr := fmt.Sprintf("%s:%d", config.GetString("server.host.listenAddr"), config.GetUint("server.host.httpListenPort"))
+	config.Set("server.host.nodeAddr", nodeAddr)
+
+	if s.flagDryRun {
+		OutputData(s.UI, config.AllSettings())
+		return exitCodeGood
+	}
+
+	logger.Debug().Interface("config", config.AllSettings()).Msg("runtime configuration")
 
 	app := fx.New(
 		fx.Provide(func() *viper.Viper {
@@ -157,21 +270,25 @@ func run(cmd *cobra.Command, args []string) {
 		}),
 		fx.Provide(func() dconfig.NodeHostConfig {
 			nhc := dconfig.NodeHostConfig{
-				DeploymentID:   serverConfig.Server.Host.DeploymentId,
+				DeploymentID:   config.GetUint64("server.host.deployment-id"),
 				WALDir:         logDir,
 				NodeHostDir:    dataDir,
-				RTTMillisecond: serverConfig.Server.Host.Rtt,
+				RTTMillisecond: config.GetUint64("server.host.rtt"),
 				ListenAddress:  nodeAddr,
 				RaftAddress:    raftAddr,
 				EnableMetrics:  true,
-				NotifyCommit:   serverConfig.Server.Host.NotifyCommit,
+				NotifyCommit:   config.GetBool("server.host.notifyCommit"),
 			}
 
-			if serverConfig.Server.Host.MutualTLS {
-				nhc.MutualTLS = serverConfig.Server.Host.MutualTLS
-				nhc.CAFile = serverConfig.Server.Host.CaFile
-				nhc.CertFile = serverConfig.Server.Host.CertFile
-				nhc.KeyFile = serverConfig.Server.Host.KeyFile
+			certFile := config.GetString("tls.cert-file")
+			keyFile := config.GetString("tls.key-file")
+			caFile := config.GetString("tls.ca-cert-file")
+
+			if certFile != "" && keyFile != "" && caFile != "" {
+				nhc.MutualTLS = true
+				nhc.CAFile = caFile
+				nhc.CertFile = certFile
+				nhc.KeyFile = keyFile
 			}
 			return nhc
 		}),
@@ -213,6 +330,8 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	logger.Info().Msg("done")
+
+	return exitCodeGood
 }
 
 type zerologAdapter struct {
