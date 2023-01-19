@@ -31,7 +31,7 @@ var accountCreateCmd = &cobra.Command{
 
 func init() {
 	accountCmd.AddCommand(accountCreateCmd)
-	accountCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the account")
+	//accountCreateCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the account")
 }
 
 func createAccount(cmd *cobra.Command, args []string) {

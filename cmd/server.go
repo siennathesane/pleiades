@@ -223,54 +223,54 @@ type zerologAdapter struct {
 func (zl zerologAdapter) LogEvent(event fxevent.Event) {
 	switch e := event.(type) {
 	case *fxevent.OnStartExecuting:
-		zl.logger.Info().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on start hook executing")
+		zl.logger.Debug().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on start hook executing")
 	case *fxevent.OnStartExecuted:
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on start hook executed")
 		} else {
-			zl.logger.Info().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on start hook executed")
+			zl.logger.Debug().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on start hook executed")
 		}
 	case *fxevent.OnStopExecuting:
-		zl.logger.Info().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on stop hook executing")
+		zl.logger.Debug().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on stop hook executing")
 	case *fxevent.OnStopExecuted:
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on stop hook failed")
 		} else {
-			zl.logger.Info().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on stop hook executed")
+			zl.logger.Debug().Str("callee", e.FunctionName).Str("caller", e.CallerName).Msg("on stop hook executed")
 		}
 	case *fxevent.Supplied:
-		zl.logger.Info().Str("type", e.TypeName).Str("module", e.ModuleName).Msg("supplied")
+		zl.logger.Debug().Str("type", e.TypeName).Str("module", e.ModuleName).Msg("supplied")
 	case *fxevent.Provided:
 		for _, rtype := range e.OutputTypeNames {
-			zl.logger.Info().Str("constructor", e.ConstructorName).Str("module", e.ModuleName).Str("type", rtype).Msg("constructor provided")
+			zl.logger.Debug().Str("constructor", e.ConstructorName).Str("module", e.ModuleName).Str("type", rtype).Msg("constructor provided")
 		}
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Str("module", e.ModuleName).Msg("error encountered while applying options")
 		}
 	case *fxevent.Replaced:
 		for _, rtype := range e.OutputTypeNames {
-			zl.logger.Info().Str("module", e.ModuleName).Str("type", rtype).Msg("replaced")
+			zl.logger.Debug().Str("module", e.ModuleName).Str("type", rtype).Msg("replaced")
 		}
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Str("module", e.ModuleName).Msg("error while replacing")
 		}
 	case *fxevent.Decorated:
 		for _, rtype := range e.OutputTypeNames {
-			zl.logger.Info().Str("module", e.ModuleName).Str("type", rtype).Str("decorated", e.DecoratorName).Msg("decorated")
+			zl.logger.Debug().Str("module", e.ModuleName).Str("type", rtype).Str("decorated", e.DecoratorName).Msg("decorated")
 		}
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Str("module", e.ModuleName).Msg("error encountered while applying options")
 		}
 	case *fxevent.Invoking:
 		// Do not log stack as it will make logs hard to read.
-		zl.logger.Info().Str("module", e.ModuleName).Str("function", e.FunctionName).Msg("invoking")
+		zl.logger.Debug().Str("module", e.ModuleName).Str("function", e.FunctionName).Msg("invoking")
 	case *fxevent.Invoked:
 		if e.Err != nil {
-			zl.logger.Info().Str("module", e.ModuleName).Err(e.Err).Str("stack", e.Trace).Str("function", e.FunctionName).Msg("invoke failed")
+			zl.logger.Debug().Str("module", e.ModuleName).Err(e.Err).Str("stack", e.Trace).Str("function", e.FunctionName).Msg("invoke failed")
 		}
-		zl.logger.Info().Str("module", e.ModuleName).Str("function", e.FunctionName).Msg("invoked")
+		zl.logger.Debug().Str("module", e.ModuleName).Str("function", e.FunctionName).Msg("invoked")
 	case *fxevent.Stopping:
-		zl.logger.Info().Str("signal", strings.ToUpper(e.Signal.String())).Msg("received signal")
+		zl.logger.Debug().Str("signal", strings.ToUpper(e.Signal.String())).Msg("received signal")
 	case *fxevent.Stopped:
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Msg("stop failed")
@@ -285,13 +285,13 @@ func (zl zerologAdapter) LogEvent(event fxevent.Event) {
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Msg("start failed")
 		} else {
-			zl.logger.Info().Msg("started the server")
+			zl.logger.Debug().Msg("started the server")
 		}
 	case *fxevent.LoggerInitialized:
 		if e.Err != nil {
 			zl.logger.Error().Err(e.Err).Msg("custom logger initialization failed")
 		} else {
-			zl.logger.Info().Str("function", e.ConstructorName).Msg("initialized logger")
+			zl.logger.Debug().Str("function", e.ConstructorName).Msg("initialized logger")
 		}
 	}
 }

@@ -9,6 +9,9 @@
 package cmd
 
 import (
+	"strings"
+
+	"github.com/mitchellh/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -20,11 +23,32 @@ var kvCmd = &cobra.Command{
 
 var (
 	payload []byte
-	key string
+	key     string
+
+	_ cli.Command = (*KvCommand)(nil)
 )
 
 func init() {
-	rootCmd	.AddCommand(kvCmd)
+	rootCmd.AddCommand(kvCmd)
 	kvCmd.PersistentFlags().Uint64Var(&accountId, "account-id", 0, "the account to operate on")
-	kvCmd.PersistentFlags().StringVarP(&bucketName, "bucket", "b", "","bucket to place the key in")
+	kvCmd.PersistentFlags().StringVarP(&bucketName, "bucket", "b", "", "bucket to place the key in")
+}
+
+type KvCommand struct {
+	*BaseCommand
+}
+
+func (k *KvCommand) Help() string {
+	helpText := `
+Commands to operate on key value pairs.
+`
+	return strings.TrimSpace(helpText)
+}
+
+func (k *KvCommand) Run(args []string) int {
+	return cli.RunResultHelp
+}
+
+func (k *KvCommand) Synopsis() string {
+	return "Operations on key value pairs"
 }

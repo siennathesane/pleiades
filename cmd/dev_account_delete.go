@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ var accountDeleteCmd = &cobra.Command{
 
 func init() {
 	accountCmd.AddCommand(accountDeleteCmd)
-	accountDeleteCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the account")
+	//accountDeleteCmd.PersistentFlags().StringVar(&accountOwner, "owner", "", "the email owning the account")
 }
 
 func deleteAccountCmd(cmd *cobra.Command, args []string) {
