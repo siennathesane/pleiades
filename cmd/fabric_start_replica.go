@@ -22,21 +22,20 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricAddShardCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricAddShardCommand)(nil)
+	_ cli.Command             = (*FabricStartReplicaCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricStartReplicaCommand)(nil)
 )
 
-type FabricAddShardCommand struct {
+type FabricStartReplicaCommand struct {
 	*BaseCommand
 
 	flagShardId   uint64
 	flagReplicaId uint64
 	flagType      string
-	flagHostname  string
-	flagTimeout   int64
+	flagRestart   bool
 }
 
-func (f *FabricAddShardCommand) Flags() *FlagSets {
+func (f *FabricStartReplicaCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -46,7 +45,7 @@ func (f *FabricAddShardCommand) Flags() *FlagSets {
 data fabric size.`,
 		Target:            &f.flagShardId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-shard.shard-id",
+		ConfigurationPath: "fabric.start-replica.shard-id",
 	})
 
 	fs.Uint64Var(&Uint64Var{
@@ -54,7 +53,7 @@ data fabric size.`,
 		Usage:             `The ID of the new replica. This is specific to each shard.`,
 		Target:            &f.flagReplicaId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-shard.replica-id",
+		ConfigurationPath: "fabric.start-replica.replica-id",
 	})
 
 	fs.StringVar(&StringVar{
@@ -63,38 +62,41 @@ data fabric size.`,
 specific values.`,
 		Target:            &f.flagType,
 		Completion:        complete.PredictSet("kv"),
-		ConfigurationPath: "fabric.add-shard.shard-type",
+		ConfigurationPath: "fabric.start-replica.shard-type",
+	})
+
+	fs.BoolVar(&BoolVar{
+		Name:              "restart",
+		Usage:             "Restart a previously stopped replica.",
+		Default:           false,
+		Target:            &f.flagRestart,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "fabric.start-replica.restart",
 	})
 
 	return set
 }
 
-func (f *FabricAddShardCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricStartReplicaCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricAddShardCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricStartReplicaCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
 // nb (sienna): use word wrap in the editor as this will format properly in the terminal
-func (f *FabricAddShardCommand) Help() string {
-	helpText := `Create a new shard for this node.
+func (f *FabricStartReplicaCommand) Help() string {
+	helpText := `Start a replica.
 
-The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). With that, when creating new shards, operators must make a one-time choice of which state machine type to use. FSM types are one-time choices, and you cannot change the type of a state machine after it's been created. The list of supported FSMs can be found below.
-
-Key Value FSM
-
-The key value FSM is a generic key value store which can store large amounts of data. Data in the key value store is sharded evenly across all shards based on the key name. Pleiades will self-cluster and self-route all of the shards.
-
-Currently, shards are added for the individual node called, and do not support multiple hosts being configured. This is to prevent bootstrapping issues common with the underlying Raft implementation. This behaviour is subject to change in later versions of Pleiades. The replica ID is unique to the shard, and so does not require ahead-of-time planning.
+In order for a replica to be properly provisioned, it must be started after it's created. This command starts the specific replica on the target host.
 
 ` + f.Flags().Help()
 
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricAddShardCommand) Run(args []string) int {
+func (f *FabricStartReplicaCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -113,7 +115,7 @@ func (f *FabricAddShardCommand) Run(args []string) int {
 		return exitCodeGenericBad
 	}
 
-	expiry := time.Now().UTC().Add(time.Duration(config.GetInt32("client.timeout"))*time.Second)
+	expiry := time.Now().UTC().Add(time.Duration(config.GetInt32("client.timeout")) * time.Second)
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
@@ -128,25 +130,24 @@ func (f *FabricAddShardCommand) Run(args []string) int {
 
 	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	descriptor, err := client.NewShard(ctx, connect.NewRequest(&raftv1.NewShardRequest{
+	descriptor, err := client.StartReplica(ctx, connect.NewRequest(&raftv1.StartReplicaRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 		Type:      smType,
-		Hostname:  "",
-		Timeout:   f.flagTimeout,
+		Restart:   false,
 	}))
 	if err != nil {
 		f.UI.Error(err.Error())
 		return exitCodeRemote
 	}
 
-	if descriptor!= nil {
+	if descriptor != nil {
 		OutputData(f.UI, descriptor.Msg)
 	}
 
 	return exitCodeGood
 }
 
-func (f *FabricAddShardCommand) Synopsis() string {
-	return "Create a new shard."
+func (f *FabricStartReplicaCommand) Synopsis() string {
+	return "Start a replica."
 }
