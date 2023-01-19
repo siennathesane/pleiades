@@ -9,6 +9,19 @@
 
 package cmd
 
+import (
+	"context"
+	"fmt"
+	"time"
+
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
+	"github.com/bufbuild/connect-go"
+	"github.com/mitchellh/cli"
+	"github.com/mitchellh/go-wordwrap"
+	"github.com/posener/complete"
+)
+
 var raftAddReplicaHelp = `add a replica to a shard.
 
 while a replica can be added to the same host which has the primary shard, it's recommended this be a different host. the replica id only matters for uniqueness, but has no other effect. state machine types are one-time choices handled by the primary shard, and you cannot change the type of a state machine after it's been created. the current supported state machine types are:
@@ -18,61 +31,137 @@ while a replica can be added to the same host which has the primary shard, it's 
 2. kv
 
 currently, unspecified will return nothing, and the test state machine will only store uint64s as a way to safely test functionality. the kv state machine will provide all the features of the kv store, so check the documentation for current supported features.`
-//
-//// raftAddReplicaCmd represents the raftAddReplicaCmd command
-//var raftAddReplicaCmd = &cobra.Command{
-//	Use:   "add-replica",
-//	Short: "add a replica to a shard",
-//	Long: wordwrap.WrapString(raftAddShardHelp, 80),
-//	Run: runAddReplica,
-//}
-//
-//var (
-//	raftAddReplicaFlags *raftv1.AddReplicaRequest = &raftv1.AddReplicaRequest{}
-//)
-//
-//func init() {
-//	raftCmd.AddCommand(raftAddReplicaCmd)
-//
-//	raftAddReplicaCmd.Flags().Uint64Var(&raftAddReplicaFlags.ShardId, "shard-id", 0, "id of the shard to create")
-//	raftAddReplicaCmd.Flags().Uint64Var(&raftAddReplicaFlags.ReplicaId, "replica-id", 0, "id of the replica to create")
-//	raftAddReplicaCmd.Flags().StringVar(&raftAddReplicaFlags.Hostname, "shard-host", "", "type of state machine")
-//	raftAddReplicaCmd.Flags().Int64Var(&raftAddReplicaFlags.Timeout, "timeout", 5000, "timeout length in milliseconds")
-//	raftAddReplicaCmd.MarkFlagRequired("shard-id")
-//	raftAddReplicaCmd.MarkFlagRequired("replica-id")
-//}
-//
-//func runAddReplica(cmd *cobra.Command, args []string) {
-//	err := cmd.Flags().Parse(args)
-//	if err != nil {
-//		log.Fatal().Err(err).Msg("can't parse flags")
-//	}
-//
-//	logger := setupLogger()
-//
-//	logger.Debug().Str("host", config.GetString("client.grpcAddr")).Msg("creating client")
-//
-//	targetHost, err := url.Parse(config.GetString("client.grpcAddr"))
-//	if err != nil {
-//		logger.Fatal().Err(err).Msg("can't parse remote host")
-//	}
-//
-//	var host raftv1connect.ShardServiceClient
-//	if targetHost.Scheme != "https" {
-//		host = raftv1connect.NewShardServiceClient(newInsecureClient(),targetHost.String())
-//	} else {
-//		host = raftv1connect.NewShardServiceClient(http.DefaultClient, targetHost.String())
-//	}
-//
-//	//ctx, cancel := context.WithTimeout(context.Background(), time.Duration(raftAddReplicaFlags.Timeout) * time.Millisecond)
-//	//defer cancel()
-//
-//	logger.Debug().Interface("request", raftAddReplicaFlags).Msg("request payload")
-//
-//	resp, err := host.AddReplica(context.Background(), connect.NewRequest[raftv1.AddReplicaRequest](raftAddReplicaFlags))
-//	if err != nil {
-//		logger.Fatal().Err(err).Msg("can't add replica")
-//	}
-//
-//	print(protojson.Format(resp.Msg))
-//}
+
+var (
+	_ cli.Command             = (*FabricAddReplicaCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricAddReplicaCommand)(nil)
+)
+
+type FabricAddReplicaCommand struct {
+	*BaseCommand
+
+	flagShardId    uint64
+	flagReplicaId  uint64
+	flagHostname   string
+	flagFabricPort uint32
+}
+
+func (f *FabricAddReplicaCommand) Flags() *FlagSets {
+	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
+	fs := set.NewFlagSet("Fabric Options")
+
+	fs.Uint64Var(&Uint64Var{
+		Name:              "shard-id",
+		Usage:             `The ID of the target shard. This is global to the node constellation as it increases the data fabric size.`,
+		Target:            &f.flagShardId,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "fabric.add-replica.shard-id",
+	})
+
+	fs.Uint64Var(&Uint64Var{
+		Name:              "replica-id",
+		Usage:             `The ID of the new replica. This is specific to each shard.`,
+		Target:            &f.flagReplicaId,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "fabric.add-replica.replica-id",
+	})
+
+	fs.StringVar(&StringVar{
+		Name:              "fabric-hostname",
+		Usage:             `The internally addressable data fabric hostname where the replica will be created. This address must be accessible by other hosts in the data fabric but not necessarily external to the constellation. For example, if the data fabric is externally accessible at kv.example.io, and the internal fabric nodes are addressable at server-[0,1,2).internal.example.io, operators must use the internal addresses.`,
+		Target:            &f.flagHostname,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "fabric.add-replica.fabric-hostname",
+	})
+
+	fs.Uint32Var(&Uint32Var{
+		Name:              "fabric-port",
+		Usage:             `The port the internally addressable data fabric node listens on.`,
+		Default:           8081,
+		Target:            &f.flagFabricPort,
+		Completion:        complete.PredictNothing,
+		ConfigurationPath: "fabric.add-replica.fabric-port",
+	})
+
+	return set
+}
+
+func (f *FabricAddReplicaCommand) AutocompleteArgs() complete.Predictor {
+	return complete.PredictNothing
+}
+
+func (f *FabricAddReplicaCommand) AutocompleteFlags() complete.Flags {
+	return f.Flags().Completions()
+}
+
+func (f *FabricAddReplicaCommand) Help() string {
+	helpText := `Add a replica to a shard.
+
+The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades. Pleiades requires manual replica management right now, but future work will automate the shards and replicas.
+
+Replicas are created through this command, but they are not started. In order to start a replica, you must call "pleiades fabric start-replica" with the shard and replica IDs.
+
+Replica can be added to the same host which have the primary shard, it's recommended this be a different host. The replica ID only matters for uniqueness, but has no other effect. State machine types are one-time choices handled by the primary shard, and you cannot change the type of a state machine after it's been created. You can see the shard documentation via the "pleiades fabric add-shard" command.
+
+` + f.Flags().Help()
+
+	return wordwrap.WrapString(helpText, 80)
+}
+
+func (f *FabricAddReplicaCommand) Run(args []string) int {
+	fs := f.Flags()
+
+	if err := fs.Parse(args); err != nil {
+		f.UI.Error(err.Error())
+		return exitCodeFailureToParseArgs
+	}
+
+	trace := config.GetBool("logging.trace")
+	if trace {
+		OutputData(f.UI, config.AllSettings())
+	}
+
+	httpClient, err := f.Client()
+	if err != nil {
+		f.UI.Error(err.Error())
+		return exitCodeGenericBad
+	}
+
+	expiry := time.Now().UTC().Add(time.Duration(config.GetInt32("client.timeout")) * time.Second)
+
+	if trace {
+		f.UI.Info(fmt.Sprintf("operation expires on %s", expiry.Local()))
+	}
+
+	ctx, cancel := context.WithDeadline(context.Background(), expiry)
+	defer cancel()
+
+	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
+
+	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.add-replica.fabric-hostname"), config.GetUint32("fabric.add-replica.fabric-port"))
+
+	if trace {
+		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
+	}
+
+	descriptor, err := client.AddReplica(ctx, connect.NewRequest(&raftv1.AddReplicaRequest{
+		ShardId:   f.flagShardId,
+		ReplicaId: f.flagReplicaId,
+		Hostname:  fabricHost,
+		Timeout:   int64(config.GetInt32("client.timeout")),
+	}))
+	if err != nil {
+		f.UI.Error(err.Error())
+		return exitCodeRemote
+	}
+
+	if descriptor != nil {
+		OutputData(f.UI, descriptor.Msg)
+	}
+
+	return exitCodeGood
+}
+
+func (f *FabricAddReplicaCommand) Synopsis() string {
+	return "Add a new replica."
+}

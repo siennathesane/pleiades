@@ -26,7 +26,6 @@ import (
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-homedir"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
@@ -53,23 +52,6 @@ func init() {
 
 	viper.AddConfigPath("$HOME/.pleiades") // call multiple times to add many search paths
 	viper.AddConfigPath(".")               // optionally look for config in the working directory
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	defaultDataBasePath := ""
-	//goland:noinspection GoBoolExpressions
-	if runtime.GOOS == "darwin" {
-		dir, err := homedir.Dir()
-		if err != nil {
-			log.Fatal().Err(err).Msg("failed to get home directory")
-		}
-		defaultDataBasePath = filepath.Join(dir, "Library", "pleiades")
-	} else {
-		defaultDataBasePath = configuration.DefaultBaseDataPath
-	}
-	config.Set("server.datastore.basePath", defaultDataBasePath)
 }
 
 type PleiadesUi struct {
@@ -300,6 +282,16 @@ func initCommands(ui cli.Ui) {
 		},
 		"fabric add-shard": func() (cli.Command, error) {
 			return &FabricAddShardCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric add-replica": func() (cli.Command, error) {
+			return &FabricAddReplicaCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric start-replica": func() (cli.Command, error) {
+			return &FabricStartReplicaCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},

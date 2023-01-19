@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ func (Install) Godeps() error {
 		return nil
 	})
 
-	err := sh.RunWithV(nil, "go", "get", "-v", "./...")
+	err := sh.RunWithV(nil, "go", "get", "-v", "-t", "./...")
 	if err != nil {
 		return err
 	}
