@@ -56,15 +56,18 @@ spec:
             - /pleiades
           args:
             - server
-            - --base-path=/var/pleiades
-            - --deployment-id={{ $shard }}
-            - --grpc-port={{ .Values.pleiades.server.ports.http | default 8080 }}
-            - --raft-port={{ .Values.pleiades.server.ports.raft | default 8081 }}
-            - --round-trip={{ .Values.pleiades.server.roundTrip | default 10 }}
+            - -base-path=/var/pleiades
+            - -deployment-id={{ $shard }}
+            - -http-port={{ .Values.pleiades.server.ports.http | default 8080 }}
+            - -fabric-port={{ .Values.pleiades.server.ports.raft | default 8081 }}
+            - -round-trip={{ .Values.pleiades.server.roundTrip | default 10 }}
             {{ if .Values.pleiades.server.raft.clusterHostname }}
-            - --sd-address={{ .Values.pleiades.server.raft.clusterHostname }}
+            - -fabric-hostname={{ .Values.pleiades.server.raft.clusterHostname }}
             {{ else }}
-            - --sd-address=$(SERVER_NAME).$(FABRIC_SERVICE_NAME).$(KUBERNETES_NAMESPACE).svc.cluster.local
+            - -fabric-hostname=$(SERVER_NAME).$(FABRIC_SERVICE_NAME).$(KUBERNETES_NAMESPACE).svc.cluster.local
+            {{ end }}
+            {{ if .Values.pleiades.server.debug }}
+            - -debug
             {{ end }}
           env:
             - name: DATA_CENTRE
@@ -97,7 +100,7 @@ spec:
             grpc:
               port: {{ .Values.pleiades.server.ports.http | default 8080 }}
               service: "kvstore.v1.KvStoreService"
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
           readinessProbe:
             grpc:
               port: {{ .Values.pleiades.server.ports.http | default 8080 }}

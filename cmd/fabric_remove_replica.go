@@ -23,20 +23,18 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricAddReplicaCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricAddReplicaCommand)(nil)
+	_ cli.Command             = (*FabricRemoveReplicaCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricRemoveReplicaCommand)(nil)
 )
 
-type FabricAddReplicaCommand struct {
+type FabricRemoveReplicaCommand struct {
 	*BaseCommand
 
 	flagShardId    uint64
 	flagReplicaId  uint64
-	flagHostname   string
-	flagFabricPort uint32
 }
 
-func (f *FabricAddReplicaCommand) Flags() *FlagSets {
+func (f *FabricRemoveReplicaCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -56,49 +54,30 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 		ConfigurationPath: "fabric.add-replica.replica-id",
 	})
 
-	fs.StringVar(&StringVar{
-		Name:              "fabric-hostname",
-		Usage:             `The internally addressable data fabric hostname where the replica will be created. This address must be accessible by other hosts in the data fabric but not necessarily external to the constellation. For example, if the data fabric is externally accessible at kv.example.io, and the internal fabric nodes are addressable at server-[0,1,2).internal.example.io, operators must use the internal addresses.`,
-		Target:            &f.flagHostname,
-		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.fabric-hostname",
-	})
-
-	fs.Uint32Var(&Uint32Var{
-		Name:              "fabric-port",
-		Usage:             `The port the internally addressable data fabric node listens on.`,
-		Default:           8081,
-		Target:            &f.flagFabricPort,
-		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.fabric-port",
-	})
-
 	return set
 }
 
-func (f *FabricAddReplicaCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricRemoveReplicaCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricAddReplicaCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricRemoveReplicaCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
-func (f *FabricAddReplicaCommand) Help() string {
-	helpText := `Add a replica to a shard.
+func (f *FabricRemoveReplicaCommand) Help() string {
+	helpText := `Remove a replica of a shard.
 
 The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades. Pleiades requires manual replica management right now, but future work will automate the shards and replicas.
 
-Replicas are created through this command, but they are not started. In order to start a replica, you must call "pleiades fabric start-replica" with the shard and replica IDs.
 
-Replica can be added to the same host which have the primary shard, it's recommended this be a different host. The replica ID only matters for uniqueness, but has no other effect. State machine types are one-time choices handled by the primary shard, and you cannot change the type of a state machine after it's been created. You can see the shard documentation via the "pleiades fabric add-shard" command.
 
 ` + f.Flags().Help()
 
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricAddReplicaCommand) Run(args []string) int {
+func (f *FabricRemoveReplicaCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -134,10 +113,9 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
 	}
 
-	descriptor, err := client.AddReplica(ctx, connect.NewRequest(&raftv1.AddReplicaRequest{
+	descriptor, err := client.RemoveReplica(ctx, connect.NewRequest(&raftv1.RemoveReplicaRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
-		Hostname:  fabricHost,
 		Timeout:   int64(config.GetInt32("client.timeout")),
 	}))
 	if err != nil {
@@ -152,6 +130,6 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 	return exitCodeGood
 }
 
-func (f *FabricAddReplicaCommand) Synopsis() string {
+func (f *FabricRemoveReplicaCommand) Synopsis() string {
 	return "Add a new replica."
 }

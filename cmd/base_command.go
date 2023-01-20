@@ -190,17 +190,18 @@ func (b *BaseCommand) flagSet(bit FlagSetBit) *FlagSets {
 				Hidden:  false,
 				EnvVar:  EnvPleiadesDebug,
 				Target:  &b.flagDebug,
+				Completion: complete.PredictNothing,
 				ConfigurationPath: "logging.debug",
 			})
 
 			logSet.BoolVar(&BoolVar{
 				Name: "trace",
-				Usage: "Enable trace logging. WARNING: this will substantially slow down pleiades and generate " +
-					"extensive amounts of logging data. Never use this in a production environment.",
+				Usage: `Enable trace logging. Trace logging takes precedence over debug logging. WARNING: this will substantially slow down pleiades and generate extensive amounts of logging data. Never use this in a production environment.`,
 				Default: false,
 				Hidden:  false,
 				EnvVar:  EnvPleiadesTrace,
-				Target:  &b.flagDebug,
+				Target:  &b.flagTrace,
+				Completion: complete.PredictNothing,
 				ConfigurationPath: "logging.trace",
 			})
 		}
