@@ -295,5 +295,45 @@ func initCommands(ui cli.Ui) {
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},
+		"fabric stop-replica": func() (cli.Command, error) {
+			return &FabricStopReplicaCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric start-replica-observer": func() (cli.Command, error) {
+			return &FabricStartReplicaObserverCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric remove-replica": func() (cli.Command, error) {
+			return &FabricRemoveReplicaCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric remove-data": func() (cli.Command, error) {
+			return &FabricRemoveDataCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric add-replica-observer": func() (cli.Command, error) {
+			return &FabricAddReplicaObserverCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric add-replica-witness": func() (cli.Command, error) {
+			return &FabricAddReplicaWitnessCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric get-leader-id": func() (cli.Command, error) {
+			return &FabricGetLeaderIdCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
+		"fabric get-shard-members": func() (cli.Command, error) {
+			return &FabricGetShardMembersCommand{
+				BaseCommand: getBaseCmd(),
+			}, nil
+		},
 	}
 }

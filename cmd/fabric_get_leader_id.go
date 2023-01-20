@@ -23,18 +23,17 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricRemoveReplicaCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricRemoveReplicaCommand)(nil)
+	_ cli.Command             = (*FabricGetLeaderIdCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricGetLeaderIdCommand)(nil)
 )
 
-type FabricRemoveReplicaCommand struct {
+type FabricGetLeaderIdCommand struct {
 	*BaseCommand
 
 	flagShardId    uint64
-	flagReplicaId  uint64
 }
 
-func (f *FabricRemoveReplicaCommand) Flags() *FlagSets {
+func (f *FabricGetLeaderIdCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -43,39 +42,33 @@ func (f *FabricRemoveReplicaCommand) Flags() *FlagSets {
 		Usage:             `The ID of the target shard. This is global to the node constellation as it increases the data fabric size.`,
 		Target:            &f.flagShardId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.remove-replica.shard-id",
-	})
-
-	fs.Uint64Var(&Uint64Var{
-		Name:              "replica-id",
-		Usage:             `The ID of the new replica. This is specific to each shard.`,
-		Target:            &f.flagReplicaId,
-		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.remove-replica.replica-id",
+		ConfigurationPath: "fabric.get-leader-id.shard-id",
 	})
 
 	return set
 }
 
-func (f *FabricRemoveReplicaCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricGetLeaderIdCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricRemoveReplicaCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricGetLeaderIdCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
-func (f *FabricRemoveReplicaCommand) Help() string {
-	helpText := `Remove a replica of a shard.
+func (f *FabricGetLeaderIdCommand) Help() string {
+	helpText := `Get a shard's leader ID.
 
-The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades. Pleiades requires manual replica management right now, but future work will automate the shards and replicas.
+The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades.
+
+This command will query the data fabric node's shard and return the ID of the leader from it's perspective. If the data fabric node doesn't contain an instance of the target shard, the shard is currently electing a new leader, or quorum cannot be guaranteed, the result will be 0.
 
 ` + f.Flags().Help()
 
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricRemoveReplicaCommand) Run(args []string) int {
+func (f *FabricGetLeaderIdCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -105,15 +98,14 @@ func (f *FabricRemoveReplicaCommand) Run(args []string) int {
 
 	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.remove-replica.fabric-hostname"), config.GetUint32("fabric.remove-replica.fabric-port"))
+	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.get-leader-id.fabric-hostname"), config.GetUint32("fabric.get-leader-id.fabric-port"))
 
 	if trace {
 		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
 	}
 
-	descriptor, err := client.RemoveReplica(ctx, connect.NewRequest(&raftv1.RemoveReplicaRequest{
+	descriptor, err := client.GetLeaderId(ctx, connect.NewRequest(&raftv1.GetLeaderIdRequest{
 		ShardId:   f.flagShardId,
-		ReplicaId: f.flagReplicaId,
 		Timeout:   int64(config.GetInt32("client.timeout")),
 	}))
 	if err != nil {
@@ -128,6 +120,6 @@ func (f *FabricRemoveReplicaCommand) Run(args []string) int {
 	return exitCodeGood
 }
 
-func (f *FabricRemoveReplicaCommand) Synopsis() string {
-	return "Remove a replica."
+func (f *FabricGetLeaderIdCommand) Synopsis() string {
+	return "Get a shard's leader ID."
 }
