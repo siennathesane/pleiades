@@ -22,20 +22,18 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricStartReplicaCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricStartReplicaCommand)(nil)
+	_ cli.Command             = (*FabricRemoveDataCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricRemoveDataCommand)(nil)
 )
 
-type FabricStartReplicaCommand struct {
+type FabricRemoveDataCommand struct {
 	*BaseCommand
 
 	flagShardId   uint64
 	flagReplicaId uint64
-	flagType      string
-	flagRestart   bool
 }
 
-func (f *FabricStartReplicaCommand) Flags() *FlagSets {
+func (f *FabricRemoveDataCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -45,7 +43,7 @@ func (f *FabricStartReplicaCommand) Flags() *FlagSets {
 data fabric size.`,
 		Target:            &f.flagShardId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.shard-id",
+		ConfigurationPath: "fabric.remove-data.shard-id",
 	})
 
 	fs.Uint64Var(&Uint64Var{
@@ -53,50 +51,32 @@ data fabric size.`,
 		Usage:             `The ID of the new replica. This is specific to each shard.`,
 		Target:            &f.flagReplicaId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.replica-id",
-	})
-
-	fs.StringVar(&StringVar{
-		Name: "type",
-		Usage: `The type of shard to create. See the greater help message for more information on the 
-specific values.`,
-		Target:            &f.flagType,
-		Completion:        complete.PredictSet("kv"),
-		ConfigurationPath: "fabric.start-replica.shard-type",
-	})
-
-	fs.BoolVar(&BoolVar{
-		Name:              "restart",
-		Usage:             "Restart a previously stopped replica.",
-		Default:           false,
-		Target:            &f.flagRestart,
-		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.restart",
+		ConfigurationPath: "fabric.remove-data.replica-id",
 	})
 
 	return set
 }
 
-func (f *FabricStartReplicaCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricRemoveDataCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricStartReplicaCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricRemoveDataCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
 // nb (sienna): use word wrap in the editor as this will format properly in the terminal
-func (f *FabricStartReplicaCommand) Help() string {
-	helpText := `Start a replica.
+func (f *FabricRemoveDataCommand) Help() string {
+	helpText := `Remove a replica's data.
 
-In order for a replica to be properly provisioned, it must be started after it's created. This command starts the specific replica on the targeted host.
+This command tries to remove all data associated with the specified replica. This command should only be used after the replica has been deleted from its shard. Calling this command on a replica that is still a shard member will corrupt the shard. This command returns an error when the specified node has not been fully offloaded from the node.
 
 ` + f.Flags().Help()
 
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricStartReplicaCommand) Run(args []string) int {
+func (f *FabricRemoveDataCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -119,22 +99,11 @@ func (f *FabricStartReplicaCommand) Run(args []string) int {
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
-	var smType raftv1.StateMachineType
-	switch f.flagType {
-	case "kv":
-		smType = raftv1.StateMachineType_STATE_MACHINE_TYPE_KV
-	default:
-		f.UI.Error("unsupported state machine type")
-		return exitCodeGenericBad
-	}
-
 	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	descriptor, err := client.StartReplica(ctx, connect.NewRequest(&raftv1.StartReplicaRequest{
+	descriptor, err := client.RemoveData(ctx, connect.NewRequest(&raftv1.RemoveDataRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
-		Type:      smType,
-		Restart:   false,
 	}))
 	if err != nil {
 		f.UI.Error(err.Error())
@@ -148,6 +117,6 @@ func (f *FabricStartReplicaCommand) Run(args []string) int {
 	return exitCodeGood
 }
 
-func (f *FabricStartReplicaCommand) Synopsis() string {
-	return "Start a replica."
+func (f *FabricRemoveDataCommand) Synopsis() string {
+	return "Remove a replica's data."
 }
