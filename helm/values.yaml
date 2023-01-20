@@ -14,6 +14,7 @@ pleiades:
     size: 10G
   server:
     dataCentre: "" # us-central1, etc. the availability zone isn't important
+    debug: true
     deploymentShard: 1
     raft:
       clusterHostname: ""

@@ -85,7 +85,7 @@ little of the defaults should be changed.
 }
 
 func (s *ServerCommand) Flags() *FlagSets {
-	set := s.flagSet(FlagSetTls)
+	set := s.flagSet(FlagSetTls | FlagSetLogging)
 
 	f := set.NewFlagSet("Server Options")
 
@@ -204,6 +204,7 @@ the server.`,
 		Hidden:            true,
 		Target:            &s.flagDryRun,
 		Completion:        complete.PredictNothing,
+		ConfigurationPath: "server.dry-run",
 	})
 
 	return set
@@ -218,11 +219,6 @@ func (s *ServerCommand) Run(args []string) int {
 
 	if err := f.Parse(args); err != nil {
 		s.UI.Error(err.Error())
-		return exitCodeFailureToParseArgs
-	}
-
-	if config.GetBool("logging.debug") && config.GetBool("logging.trace") {
-		s.UI.Error("Only the -trace or -debug flag may be provided.")
 		return exitCodeFailureToParseArgs
 	}
 
@@ -253,7 +249,7 @@ func (s *ServerCommand) Run(args []string) int {
 	raftAddr := fmt.Sprintf("%s:%d", config.GetString("server.host.fabricHostname"), config.GetUint("server.host.fabricListenPort"))
 	config.Set("server.host.fabricAddr", raftAddr)
 
-	nodeAddr := fmt.Sprintf("%s:%d", config.GetString("server.host.listenAddr"), config.GetUint("server.host.httpListenPort"))
+	nodeAddr := fmt.Sprintf("%s:%d", config.GetString("server.host.listenAddr"), config.GetUint("server.host.fabricListenPort"))
 	config.Set("server.host.nodeAddr", nodeAddr)
 
 	if s.flagDryRun {

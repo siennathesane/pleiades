@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,21 +62,8 @@ func NewLifecycleManager(lc fx.Lifecycle, params LifecycleManagerBuilderParams) 
 	runner.registerCallbacks()
 
 	lc.Append(fx.Hook{
-		OnStart: func(_ context.Context) error {
-			// we start the shards before we start the listener to prevent random startup issues
-			err = runner.StartShards()
-			if err != nil {
-				l.Error().Err(err).Msg("can't ")
-				return err
-			}
-
-			go evSingleton.Run()
-			return nil
-		},
-		OnStop: func(_ context.Context) error {
-			evSingleton.Stop()
-			return runner.StopShards()
-		},
+		OnStart: runner.StartHook,
+		OnStop: runner.StopHook,
 	})
 
 	return LifecycleManagerBuilderResults{Runner: runner}
@@ -91,6 +78,24 @@ type LifecycleManager struct {
 	pubSubClient *messaging.EmbeddedMessagingPubSubClient
 }
 
+func (l *LifecycleManager) StartHook(ctx context.Context) error {
+	// we start the shards before we start the listener to prevent random startup issues
+	err := l.StartShards()
+	if err != nil {
+		l.logger.Error().Err(err).Msg("can't start shards")
+		return err
+	}
+	l.logger.Debug().Msg("started shards")
+
+	go evSingleton.Run()
+	return nil
+}
+
+func (l *LifecycleManager) StopHook(ctx context.Context) error {
+	evSingleton.Stop()
+	return l.StopShards()
+}
+
 // StartShards will attempt to boot any replicas that were running on the node
 func (l *LifecycleManager) StartShards() error {
 	all, err := l.store.GetAll()
@@ -100,11 +105,12 @@ func (l *LifecycleManager) StartShards() error {
 			return err
 		}
 	} else {
-		l.logger.Info().Msg("no existing shards found")
 		if len(all) == 0 {
+			l.logger.Info().Msg("no existing shards found")
 			return nil
 		}
 	}
+	l.logger.Trace().Interface("shards", all).Msgf("found %d shards, will attempt to start", len(all))
 
 	raftAddr := l.raftHost.RaftAddress()
 
@@ -114,6 +120,8 @@ func (l *LifecycleManager) StartShards() error {
 			if addr != raftAddr {
 				continue
 			}
+
+			l.logger.Trace().Interface("shard", shard).Msgf("attempting to start shard %d", shard.GetShardId())
 			err = l.shardManager.StartReplica(&raftv1.StartReplicaRequest{
 				ShardId:   shard.GetShardId(),
 				ReplicaId: replicaId,
@@ -127,11 +135,15 @@ func (l *LifecycleManager) StartShards() error {
 					Uint64("replica-id", replicaId).
 					Msg("can't start replica")
 			}
+
+			l.logger.Debug().Interface("shard", shard).Msgf("started shard %d", shard.GetShardId())
 		}
 		for replicaId, addr := range shard.GetObservers() {
 			if addr != raftAddr {
 				continue
 			}
+
+			l.logger.Trace().Interface("shard", shard).Msgf("attempting to start shard %d observer", shard.GetShardId())
 			err = l.shardManager.StartReplicaObserver(&raftv1.StartReplicaObserverRequest{
 				ShardId:   shard.GetShardId(),
 				ReplicaId: replicaId,
@@ -145,6 +157,8 @@ func (l *LifecycleManager) StartShards() error {
 					Uint64("replica-id", replicaId).
 					Msg("can't start replica observer")
 			}
+
+			l.logger.Debug().Interface("shard", shard).Msgf("started shard %d observer", shard.GetShardId())
 		}
 	}
 

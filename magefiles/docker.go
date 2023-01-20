@@ -12,6 +12,8 @@
 package main
 
 import (
+	"runtime"
+
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
 )
@@ -26,8 +28,15 @@ const (
 func (Docker) Build() error {
 	mg.Deps(Build.Compile)
 
-	if err := sh.RunWith(nil, "docker", "build", "-t", containerImageName, "."); err != nil {
-		return err
+	//goland:noinspection GoBoolExpressions
+	if runtime.GOARCH == "arm64" {
+		if err := sh.RunWith(nil, "docker", "buildx", "build", "--platform", "linux/amd64", "-t", containerImageName, "."); err != nil {
+			return err
+		}
+	} else {
+		if err := sh.RunWith(nil, "docker", "build", "-t", containerImageName, "."); err != nil {
+			return err
+		}
 	}
 
 	return nil
