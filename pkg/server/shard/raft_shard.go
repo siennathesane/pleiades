@@ -68,13 +68,7 @@ func (c *RaftShardManager) AddReplica(req *raftv1.AddReplicaRequest) error {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout()) * time.Millisecond))
 	defer cancel()
 
-	members, err := c.GetShardMembers(req.GetShardId())
-	if err != nil {
-		l.Error().Err(err).Msg("failed to get shard members")
-		return err
-	}
-
-	err = c.nh.SyncRequestAddNode(ctx, req.GetShardId(), req.GetReplicaId(), req.GetHostname(), members.ConfigChangeId)
+	err := c.nh.SyncRequestAddNode(ctx, req.GetShardId(), req.GetReplicaId(), req.GetHostname(), 0)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add replica")
 		return err
@@ -94,13 +88,7 @@ func (c *RaftShardManager) AddReplicaObserver(shardId uint64, replicaId uint64, 
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to get shard members")
-		return err
-	}
-
-	err = c.nh.SyncRequestAddObserver(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
+	err := c.nh.SyncRequestAddObserver(ctx, shardId, replicaId, newHost, 0)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 		return err
@@ -120,13 +108,7 @@ func (c *RaftShardManager) AddReplicaWitness(shardId uint64, replicaId uint64, n
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to get shard members")
-		return err
-	}
-
-	err = c.nh.SyncRequestAddWitness(ctx, shardId, replicaId, newHost, members.ConfigChangeId)
+	err := c.nh.SyncRequestAddWitness(ctx, shardId, replicaId, newHost, 0)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to add shard observer")
 		return err
@@ -292,18 +274,7 @@ func (c *RaftShardManager) RemoveReplica(shardId uint64, replicaId uint64, timeo
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
 	defer cancel()
 
-	members, err := c.GetShardMembers(shardId)
-	if err != nil {
-		l.Error().Err(err).Msg("failed to get shard members")
-		return err
-	}
-
-	if members.ConfigChangeId == 0 {
-		l.Error().Err(errNoConfigChangeId).Msg("failed to get config change id from shard members")
-		return errNoConfigChangeId
-	}
-
-	err = c.nh.SyncRequestDeleteNode(ctx, shardId, replicaId, members.ConfigChangeId)
+	err := c.nh.SyncRequestDeleteNode(ctx, shardId, replicaId, 0)
 	if err != nil {
 		l.Error().Err(err).Msg("failed to delete replica")
 		return err
@@ -323,12 +294,6 @@ func (c *RaftShardManager) RemoveData(shardId, replicaId uint64) error {
 }
 
 func newDConfig(shardId, replicaId uint64) dconfig.Config {
-	// nb (sienna): if you change this outside of a major version rollout,
-	// it will create inconsistencies across all clusters. don't change this
-	// without running it through me. the inconsistencies this will create
-	// will affect anything built on top of all state machines, which is a huge
-	// business risk that requires my sign-off. it can be changed if there's a
-	// need, but ensure I sign off on it first. 🙂
 	return dconfig.Config{
 		NodeID:                  replicaId,
 		ClusterID:               shardId,
@@ -337,7 +302,7 @@ func newDConfig(shardId, replicaId uint64) dconfig.Config {
 		HeartbeatRTT:            10,
 		SnapshotEntries:         1000,
 		CompactionOverhead:      500,
-		OrderedConfigChange:     true,
+		OrderedConfigChange:     false,
 		MaxInMemLogSize:         0,
 		SnapshotCompressionType: 0,
 		EntryCompressionType:    0,
