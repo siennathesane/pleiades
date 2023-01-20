@@ -187,6 +187,7 @@ func newBoolValue(name string, def bool, target *bool, hidden bool) *boolValue {
 	*target = def
 
 	return &boolValue{
+		name: name,
 		hidden: hidden,
 		target: target,
 	}

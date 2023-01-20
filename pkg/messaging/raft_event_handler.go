@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ type RaftEventHandler struct {
 	pubSubClient *EmbeddedMessagingPubSubClient
 	queueClient  *EmbeddedMessagingStreamClient
 	cbTable      map[raftv1.Event]map[string]EventCallback
+	sub *nats.Subscription
 	done         chan struct{}
 }
 
@@ -76,47 +77,69 @@ func (r *RaftEventHandler) UnregisterCallback(name string, action raftv1.Event) 
 
 // Run this with `go Run()`
 func (r *RaftEventHandler) Run() {
-	listener := make(chan *nats.Msg)
-	sub, err := r.pubSubClient.ChanSubscribe("system.raftv1.*", listener)
-	if err != nil {
-		r.logger.Error().Err(err).Msg("channel subscription failed")
-		return
-	}
-	defer func(sub *nats.Subscription) {
-		err := sub.Unsubscribe()
-		if err != nil {
-			r.logger.Error().Err(err).Msg("unsubscription failed")
-		}
-		close(listener)
-	}(sub)
-
-	for event := range listener {
+	var err error
+	r.sub, err = r.pubSubClient.Subscribe("system.raftv1.*", func(msg *nats.Msg) {
 		payload := &raftv1.RaftEvent{}
-		err := payload.UnmarshalVT(event.Data)
+		err := payload.UnmarshalVT(msg.Data)
 		if err != nil {
 			r.logger.Error().
-				Str("subject", event.Subject).
-				Str("reply", event.Reply).
-				Int("size", len(event.Data)).
+				Str("subject", msg.Subject).
+				Str("reply", msg.Reply).
+				Int("size", len(msg.Data)).
 				Err(err).
 				Msg("can't unmarshal event data")
-			continue
+			return
 		}
 
 		for k, callback := range r.cbTable[payload.Action] {
 			r.logger.Trace().Interface("payload", payload).Str("callback", k).Msg("activated callback")
 			go callback(payload)
 		}
-
-		// check if we're done or not
-		select {
-		case <-r.done:
-			return
-		default:
-		}
+	})
+	if err != nil {
+		r.logger.Error().Err(err).Msg("channel subscription failed")
+		return
 	}
+	//defer func(sub *nats.Subscription) {
+	//	err := sub.Unsubscribe()
+	//	if err != nil {
+	//		r.logger.Error().Err(err).Msg("unsubscription failed")
+	//	}
+	//	close(listener)
+	//}(sub)
+
+	r.logger.Debug().Msg("raft event handler callback defined")
+
+	//for event := range listener {
+	//	payload := &raftv1.RaftEvent{}
+	//	err := payload.UnmarshalVT(event.Data)
+	//	if err != nil {
+	//		r.logger.Error().
+	//			Str("subject", event.Subject).
+	//			Str("reply", event.Reply).
+	//			Int("size", len(event.Data)).
+	//			Err(err).
+	//			Msg("can't unmarshal event data")
+	//		continue
+	//	}
+	//
+	//	for k, callback := range r.cbTable[payload.Action] {
+	//		r.logger.Trace().Interface("payload", payload).Str("callback", k).Msg("activated callback")
+	//		go callback(payload)
+	//	}
+	//
+	//	// check if we're done or not
+	//	select {
+	//	case <-r.done:
+	//		return
+	//	default:
+	//		break
+	//	}
+	//}
 }
 
 func (r *RaftEventHandler) Stop() {
-	r.done <- struct{}{}
+	if err := r.sub.Unsubscribe(); err != nil {
+		r.logger.Error().Err(err).Msg("error unsubscribing from nats")
+	}
 }
