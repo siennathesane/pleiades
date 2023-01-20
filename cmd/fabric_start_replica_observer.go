@@ -22,11 +22,11 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricStartReplicaCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricStartReplicaCommand)(nil)
+	_ cli.Command             = (*FabricStartReplicaObserverCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricStartReplicaObserverCommand)(nil)
 )
 
-type FabricStartReplicaCommand struct {
+type FabricStartReplicaObserverCommand struct {
 	*BaseCommand
 
 	flagShardId   uint64
@@ -35,7 +35,7 @@ type FabricStartReplicaCommand struct {
 	flagRestart   bool
 }
 
-func (f *FabricStartReplicaCommand) Flags() *FlagSets {
+func (f *FabricStartReplicaObserverCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -45,7 +45,7 @@ func (f *FabricStartReplicaCommand) Flags() *FlagSets {
 data fabric size.`,
 		Target:            &f.flagShardId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.shard-id",
+		ConfigurationPath: "fabric.start-replica-observer.shard-id",
 	})
 
 	fs.Uint64Var(&Uint64Var{
@@ -53,7 +53,7 @@ data fabric size.`,
 		Usage:             `The ID of the new replica. This is specific to each shard.`,
 		Target:            &f.flagReplicaId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.replica-id",
+		ConfigurationPath: "fabric.start-replica-observer.replica-id",
 	})
 
 	fs.StringVar(&StringVar{
@@ -62,7 +62,7 @@ data fabric size.`,
 specific values.`,
 		Target:            &f.flagType,
 		Completion:        complete.PredictSet("kv"),
-		ConfigurationPath: "fabric.start-replica.shard-type",
+		ConfigurationPath: "fabric.start-replica-observer.shard-type",
 	})
 
 	fs.BoolVar(&BoolVar{
@@ -71,32 +71,32 @@ specific values.`,
 		Default:           false,
 		Target:            &f.flagRestart,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.start-replica.restart",
+		ConfigurationPath: "fabric.start-replica-observer.restart",
 	})
 
 	return set
 }
 
-func (f *FabricStartReplicaCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricStartReplicaObserverCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricStartReplicaCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricStartReplicaObserverCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
 // nb (sienna): use word wrap in the editor as this will format properly in the terminal
-func (f *FabricStartReplicaCommand) Help() string {
-	helpText := `Start a replica.
+func (f *FabricStartReplicaObserverCommand) Help() string {
+	helpText := `Start a replica observer.
 
-In order for a replica to be properly provisioned, it must be started after it's created. This command starts the specific replica on the targeted host.
+In order for a replica observer to be properly provisioned, it must be started after it's created. This command starts the specific replica observer on the targeted host.
 
 ` + f.Flags().Help()
 
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricStartReplicaCommand) Run(args []string) int {
+func (f *FabricStartReplicaObserverCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -130,7 +130,7 @@ func (f *FabricStartReplicaCommand) Run(args []string) int {
 
 	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	descriptor, err := client.StartReplica(ctx, connect.NewRequest(&raftv1.StartReplicaRequest{
+	descriptor, err := client.StartReplicaObserver(ctx, connect.NewRequest(&raftv1.StartReplicaObserverRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 		Type:      smType,
@@ -148,6 +148,6 @@ func (f *FabricStartReplicaCommand) Run(args []string) int {
 	return exitCodeGood
 }
 
-func (f *FabricStartReplicaCommand) Synopsis() string {
-	return "Start a replica."
+func (f *FabricStartReplicaObserverCommand) Synopsis() string {
+	return "Start a replica observer."
 }

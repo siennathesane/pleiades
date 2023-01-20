@@ -23,11 +23,11 @@ import (
 )
 
 var (
-	_ cli.Command             = (*FabricAddReplicaCommand)(nil)
-	_ cli.CommandAutocomplete = (*FabricAddReplicaCommand)(nil)
+	_ cli.Command             = (*FabricAddReplicaWitnessCommand)(nil)
+	_ cli.CommandAutocomplete = (*FabricAddReplicaWitnessCommand)(nil)
 )
 
-type FabricAddReplicaCommand struct {
+type FabricAddReplicaWitnessCommand struct {
 	*BaseCommand
 
 	flagShardId    uint64
@@ -36,7 +36,7 @@ type FabricAddReplicaCommand struct {
 	flagFabricPort uint32
 }
 
-func (f *FabricAddReplicaCommand) Flags() *FlagSets {
+func (f *FabricAddReplicaWitnessCommand) Flags() *FlagSets {
 	set := f.flagSet(FlagSetHTTP | FlagSetFormat | FlagSetLogging | FlagSetTimeout)
 	fs := set.NewFlagSet("Fabric Options")
 
@@ -45,7 +45,7 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 		Usage:             `The ID of the target shard. This is global to the node constellation as it increases the data fabric size.`,
 		Target:            &f.flagShardId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.shard-id",
+		ConfigurationPath: "fabric.add-replica-witness.shard-id",
 	})
 
 	fs.Uint64Var(&Uint64Var{
@@ -53,7 +53,7 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 		Usage:             `The ID of the new replica. This is specific to each shard.`,
 		Target:            &f.flagReplicaId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.replica-id",
+		ConfigurationPath: "fabric.add-replica-witness.replica-id",
 	})
 
 	fs.StringVar(&StringVar{
@@ -61,7 +61,7 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 		Usage:             `The internally addressable data fabric hostname where the replica will be created. This address must be accessible by other hosts in the data fabric but not necessarily external to the constellation. For example, if the data fabric is externally accessible at kv.example.io, and the internal fabric nodes are addressable at server-[0,1,2).internal.example.io, operators must use the internal addresses.`,
 		Target:            &f.flagHostname,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.fabric-hostname",
+		ConfigurationPath: "fabric.add-replica-observer.fabric-hostname",
 	})
 
 	fs.Uint32Var(&Uint32Var{
@@ -70,26 +70,28 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 		Default:           8081,
 		Target:            &f.flagFabricPort,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "fabric.add-replica.fabric-port",
+		ConfigurationPath: "fabric.add-replica-witness.fabric-port",
 	})
 
 	return set
 }
 
-func (f *FabricAddReplicaCommand) AutocompleteArgs() complete.Predictor {
+func (f *FabricAddReplicaWitnessCommand) AutocompleteArgs() complete.Predictor {
 	return complete.PredictNothing
 }
 
-func (f *FabricAddReplicaCommand) AutocompleteFlags() complete.Flags {
+func (f *FabricAddReplicaWitnessCommand) AutocompleteFlags() complete.Flags {
 	return f.Flags().Completions()
 }
 
-func (f *FabricAddReplicaCommand) Help() string {
-	helpText := `Add a replica to a shard.
+func (f *FabricAddReplicaWitnessCommand) Help() string {
+	helpText := `Add a replica witness to a shard.
 
-The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades.
+The data fabric is built on top of sharded, replicated, deterministic finite state machines (FSMs). Each FSM consists of one or more replicas, identified by their replica ID. These replicas allow for distributed FSMs, furthering the durability, performance, and scalability of Pleiades. Replica witnesses are replicas that only participate in voting but do not normally participate in log replication and do not have state machines at all.
 
-Replicas are created through this command, but they are not started. In order to start a replica, you must call "pleiades fabric start-replica" with the shard and replica IDs. Replicas, observers included, cannot be added to the same host which have the primary shard. The replica ID only matters for uniqueness within a shard, but has no other effect.
+When a standard replica goes offline, a replica witness steps in to store log entries for the shard until it recovers or is replaced. Replica witnesses allow the cluster to make consensus decisions even when some of the main servers have failed. It is rare for a data fabric to need a witness, so most users will never need to deploy a witness. This command is for advanced use only.
+
+Replicas observers are created through this command, but they are not started. In order to start a replica, you must call "pleiades fabric start-replica" with the shard and replica IDs. Replicas, observers included, cannot be added to the same host which have the primary shard. The replica ID only matters for uniqueness within a shard, but has no other effect.
 
 Pleiades requires manual replica management right now, but future work will automate the shards and replicas.
 
@@ -98,7 +100,7 @@ Pleiades requires manual replica management right now, but future work will auto
 	return wordwrap.WrapString(helpText, 80)
 }
 
-func (f *FabricAddReplicaCommand) Run(args []string) int {
+func (f *FabricAddReplicaWitnessCommand) Run(args []string) int {
 	fs := f.Flags()
 
 	if err := fs.Parse(args); err != nil {
@@ -128,13 +130,13 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 
 	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.add-replica.fabric-hostname"), config.GetUint32("fabric.add-replica.fabric-port"))
+	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.add-replica-witness.fabric-hostname"), config.GetUint32("fabric.add-replica-witness.fabric-port"))
 
 	if trace {
 		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
 	}
 
-	descriptor, err := client.AddReplica(ctx, connect.NewRequest(&raftv1.AddReplicaRequest{
+	descriptor, err := client.AddReplicaWitness(ctx, connect.NewRequest(&raftv1.AddReplicaWitnessRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 		Hostname:  fabricHost,
@@ -152,6 +154,6 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 	return exitCodeGood
 }
 
-func (f *FabricAddReplicaCommand) Synopsis() string {
-	return "Add a new replica."
+func (f *FabricAddReplicaWitnessCommand) Synopsis() string {
+	return "Add a new replica witness."
 }
