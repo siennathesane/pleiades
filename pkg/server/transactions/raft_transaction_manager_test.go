@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,7 @@ func (t *TransactionManagerTestSuite) TestGetNoOpSession() {
 	cs, ok := sm.sessionCache[transaction.GetClientId()]
 	t.Require().True(ok, "the client session must exist in the cache")
 
+	//goland:noinspection GoVetLostCancel
 	proposeContext, _ := context.WithTimeout(context.Background(), t.defaultTimeout)
 	_, err := t.nh.SyncPropose(proposeContext, cs, []byte("test-message"))
 	t.Require().NoError(err, "there must not be an error when proposing a new message")
@@ -79,6 +80,7 @@ func (t *TransactionManagerTestSuite) TestGetNoOpSession() {
 	}, "finishing a noop proposal must panic")
 }
 
+//goland:noinspection GoVetLostCancel
 func (t *TransactionManagerTestSuite) TestGetTransaction() {
 	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
@@ -104,6 +106,7 @@ func (t *TransactionManagerTestSuite) TestGetTransaction() {
 	}, "finishing a proposal must not panic")
 }
 
+//goland:noinspection GoVetLostCancel
 func (t *TransactionManagerTestSuite) TestCloseTransaction() {
 	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,
@@ -133,6 +136,7 @@ func (t *TransactionManagerTestSuite) TestCloseTransaction() {
 	t.Require().NoError(err, "there must not be an error when closing the transaction")
 }
 
+//goland:noinspection GoVetLostCancel
 func (t *TransactionManagerTestSuite) TestCommit() {
 	params := TransactionManagerBuilderParams{
 		NodeHost: t.nh,

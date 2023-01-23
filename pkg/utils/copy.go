@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2022 Sienna Lloyd
+ * Copyright (c) 2015-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -174,6 +174,7 @@ func set(to, from reflect.Value) bool {
 		if from.Type().ConvertibleTo(to.Type()) {
 			to.Set(from.Convert(to.Type()))
 		} else if scanner, ok := to.Addr().Interface().(sql.Scanner); ok {
+			//goland:noinspection GoUnhandledErrorResult
 			scanner.Scan(from.Interface())
 		} else if from.Kind() == reflect.Ptr {
 			return set(to, from.Elem())

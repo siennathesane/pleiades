@@ -108,6 +108,7 @@ func NewHttpServer(lc fx.Lifecycle, params HttpServerBuilderParams) HttpServerBu
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
+			//goland:noinspection GoUnhandledErrorResult
 			go httpServer.ListenAndServe()
 			params.Logger.Info().Msg("started http server")
 			return nil
