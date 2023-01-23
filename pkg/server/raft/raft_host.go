@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,7 +150,8 @@ func (r *RaftHost) RaftAddress() string {
 
 func (r *RaftHost) Snapshot(shardId uint64, opt runtime.SnapshotOption, timeout time.Duration) (uint64, error) {
 	l := r.logger.With().Uint64("shard", shardId).Logger()
-	ctx, _ := context.WithTimeout(context.Background(), timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
 
 	l.Info().Msg("requesting snapshot")
 
