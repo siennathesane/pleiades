@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -413,7 +413,8 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 	err = fsm.SaveSnapshot(context.TODO(), file, make(chan struct{}))
 	t.Require().NoError(err, "there must not be an error when saving the snapshot")
 
-	file.Close()
+	err = file.Close()
+	t.Require().NoError(err, "there must not be an error closing the file")
 
 	db, err := bbolt.Open(snapshotFile, os.FileMode(484), nil)
 	t.Require().NoError(err, "there must not be an error opening the snapshot file")

@@ -172,7 +172,7 @@ func Run(args []string) int {
 
 	code, err := root.Run()
 	if err != nil {
-		fmt.Fprint(os.Stderr, err.Error())
+		_, _ = fmt.Fprint(os.Stderr, err.Error())
 		return 1
 	}
 
@@ -184,7 +184,7 @@ func groupedHelpFunc(f cli.HelpFunc) cli.HelpFunc {
 		var b bytes.Buffer
 		tw := tabwriter.NewWriter(&b, 0, 2, 6, ' ', 0)
 
-		fmt.Fprintf(tw, "Usage: pleiades <command> [args]\n")
+		_, _ = fmt.Fprintf(tw, "Usage: pleiades <command> [args]\n")
 
 		otherCommands := make([]string, 0, len(commands))
 		for k := range commands {
@@ -192,13 +192,13 @@ func groupedHelpFunc(f cli.HelpFunc) cli.HelpFunc {
 		}
 		sort.Strings(otherCommands)
 
-		fmt.Fprintf(tw, "\n")
-		fmt.Fprintf(tw, "Commands:\n")
+		_, _ = fmt.Fprintf(tw, "\n")
+		_, _ = fmt.Fprintf(tw, "Commands:\n")
 		for _, v := range otherCommands {
 			printCommand(tw, v, commands[v])
 		}
 
-		tw.Flush()
+		_ = tw.Flush()
 
 		return strings.TrimSpace(b.String())
 	}
@@ -209,7 +209,7 @@ func printCommand(w io.Writer, name string, cmdFn cli.CommandFactory) {
 	if err != nil {
 		panic(fmt.Sprintf("failed to load %q command: %s", name, err))
 	}
-	fmt.Fprintf(w, "    %s\t%s\n", name, cmd.Synopsis())
+	_, _ = fmt.Fprintf(w, "    %s\t%s\n", name, cmd.Synopsis())
 }
 
 func initCommands(ui cli.Ui) {

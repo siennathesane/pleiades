@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ func (t *RaftHostTestSuite) TearDownTest() {
 	t.nh = nil
 }
 
+//goland:noinspection GoVetLostCancel
 func (t *RaftHostTestSuite) TestCompact() {
 	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
@@ -155,6 +156,7 @@ func (t *RaftHostTestSuite) TestRaftAddress() {
 	t.Require().NotEmpty(resp, "the raft address must not be empty")
 }
 
+//goland:noinspection GoVetLostCancel
 func (t *RaftHostTestSuite) TestSnapshot() {
 	params := RaftHostBuilderParams{
 		NodeHost: t.nh,
