@@ -6,20 +6,14 @@
  * You may obtain a copy of the License here:
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
+
 package cmd
 
 import (
 	"strings"
 
 	"github.com/mitchellh/cli"
-	"github.com/spf13/cobra"
 )
-
-// kvCmd represents the kv command
-var kvCmd = &cobra.Command{
-	Use:   "kv",
-	Short: "operations on keys!",
-}
 
 var (
 	payload []byte
