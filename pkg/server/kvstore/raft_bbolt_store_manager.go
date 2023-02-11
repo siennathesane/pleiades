@@ -51,7 +51,7 @@ func NewBboltStoreManager(params BboltStoreManagerBuilderParams) BboltStoreManag
 			l,
 			params.TransactionManager,
 			params.NodeHost,
-			&routing.Shard{},
+			&routing.ShardRouter{},
 			1000 * time.Millisecond,
 		},
 	}
@@ -61,7 +61,7 @@ type BboltStoreManager struct {
 	logger         zerolog.Logger
 	tm             runtime.ITransactionManager
 	nh             *dragonboat.NodeHost
-	shardRouter    *routing.Shard
+	shardRouter    *routing.ShardRouter
 	defaultTimeout time.Duration
 }
 
