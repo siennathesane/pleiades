@@ -10,9 +10,10 @@
 package routing
 
 import (
+	crand "crypto/rand"
+	"math/rand"
 	"testing"
 
-	"github.com/lithammer/go-jump-consistent-hash"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,21 +22,40 @@ const (
 )
 
 func FuzzGetShardAssignment(f *testing.F) {
-	for i := uint64(0); i < fuzzLimit; i++ {
+	for i := 0; i < fuzzLimit; i++ {
+		buf := make([]byte, rand.Uint32())
+		_, err := crand.Read(buf)
+		if err != nil {
+			f.Fatal(err)
+		}
 		f.Add(i)
 	}
-	f.Fuzz(func(t *testing.T, a uint64) {
-		shardRouter := &Shard{}
-		shard := shardRouter.AccountToShard(a)
+	f.Fuzz(func(t *testing.T, k []byte) {
+		shardRouter := NewShardRouter()
+		shardRouter.shardCount = 128
+		shard, err := shardRouter.CalcShard(k)
 		assert.LessOrEqual(t, shard, shardLimit, "the shard must be within the shard range")
+		assert.NoError(t, err, "there must not be an error trying to calculate the shard assignment")
 	})
 }
 
 func BenchmarkGetShardAssignment(b *testing.B) {
-	shardRouter := &Shard{
-		j: jump.New(int(shardLimit), &farmHash{}),
-	}
+	shardRouter := NewShardRouter()
+	shardRouter.shardCount = 128
 	for i := 0; i < b.N; i++ {
-		shardRouter.AccountToShard(uint64(i))
+
+		// this is <10ns, it will hang the benchmark if the timer is excluded
+		buf := make([]byte, rand.Intn(128))
+		_, err := crand.Read(buf)
+		if err != nil {
+			b.Fatal(err)
+		}
+
+		_, err = shardRouter.CalcShard(buf)
+		if err != nil {
+			b.Fatal(err)
+		}
 	}
+
+	b.ReportAllocs()
 }
