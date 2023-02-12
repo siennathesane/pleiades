@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@ import (
 	aerrs "github.com/mxplusb/api/errors/v1"
 	kvstorev1 "github.com/mxplusb/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
-	"github.com/mxplusb/pleiades/pkg/routing"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/cockroachdb/errors"
@@ -51,7 +50,7 @@ func NewBboltStoreManager(params BboltStoreManagerBuilderParams) BboltStoreManag
 			l,
 			params.TransactionManager,
 			params.NodeHost,
-			&routing.ShardRouter{},
+			&ShardRouter{},
 			1000 * time.Millisecond,
 		},
 	}
@@ -61,7 +60,7 @@ type BboltStoreManager struct {
 	logger         zerolog.Logger
 	tm             runtime.ITransactionManager
 	nh             *dragonboat.NodeHost
-	shardRouter    *routing.ShardRouter
+	shardRouter    *ShardRouter
 	defaultTimeout time.Duration
 }
 
