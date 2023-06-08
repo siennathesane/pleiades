@@ -13,8 +13,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/hashicorp/serf/serf"
+	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
@@ -58,5 +58,5 @@ type Server struct {
 }
 
 func (s *Server) StartHook(ctx context.Context) error {
-
+ return nil
 }

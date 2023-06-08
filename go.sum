@@ -1,5 +1,3 @@
-github.com/mxplusb/pleiades/pkg/api v0.0.0-20221202042317-9659f2b0e5c9 h1:AFvqpUcMRintc8C4VU2k+FT79LQbUbs9I11kBXSqu3k=
-github.com/mxplusb/pleiades/pkg/api v0.0.0-20221202042317-9659f2b0e5c9/go.mod h1:1R514X3lXPASmY3pkI7flZ9XwKu1uAaLIenbZPBXVHo=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=
