@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package raft.v1;
+
+message CompactRequest {
+  // replica_id is a non-zero value used to identify a node within a Raft cluster.
+  uint64 replica_id = 1;
+  // shard_id is the unique value used to identify a Raft cluster.
+  uint64 shard_id = 2;
+}
+
+message CompactResponse {}
+
+message LeaderTransferRequest {
+  // shard_id is the unique value used to identify a Raft cluster.
+  uint64 shard_id = 1;
+  string target_node_id = 2;
+}
+
+message LeaderTransferResponse {}
+
+message SnapshotRequest {
+  // shard_id is the unique value used to identify a Raft cluster.
+  uint64 shard_id = 1;
+  int64 timeout = 2;
+}
+
+message SnapshotResponse {
+  uint64 snapshot_index_captured = 1;
+}
+
+message StopRequest {}
+
+message StopResponse {}
+
+message GetHostConfigRequest {}
+
+message GetHostConfigResponse {
+  HostConfig config = 1;
+}
+
+message GetShardMembershipRequest {
+  uint64 shard_id = 1;
+}
+
+message HostConfig {
+  uint64 deployment_id = 1;
+  string wal_dir = 2;
+  string host_dir = 3;
+  uint64 round_trip_time_in_milliseconds = 4;
+  string raft_address = 5;
+  bool address_by_host_id = 6;
+  string listen_address = 7;
+  bool mutual_tls = 8;
+  string ca_file = 9;
+  string cert_file = 10;
+  string key_file = 11;
+  bool enable_metrics = 12;
+  bool notify_commit = 13;
+}
