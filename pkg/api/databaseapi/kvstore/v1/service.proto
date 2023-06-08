@@ -10,7 +10,9 @@ service KvStoreService {
   rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse) {}
   rpc CreateBucket(CreateBucketRequest) returns (CreateBucketResponse) {}
   rpc DeleteBucket(DeleteBucketRequest) returns (DeleteBucketResponse) {}
-  rpc GetKey(GetKeyRequest) returns (GetKeyResponse) {}
+  rpc GetKey(GetKeyRequest) returns (GetKeyResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
   rpc PutKey(PutKeyRequest) returns (PutKeyResponse) {}
   rpc DeleteKey(DeleteKeyRequest) returns (DeleteKeyResponse) {}
 }
