@@ -1,0 +1,5 @@
+version: v1
+directories:
+  - databaseapi
+  - errorapi
+  - raftapi
