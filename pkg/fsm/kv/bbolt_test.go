@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sienna Lloyd
+ * Copyright (c) 2022-2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Strict License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -546,13 +546,13 @@ func (t *BBoltTestSuite) TestDeleteKey() {
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
 	expectedKvp := &kvstorev1.KeyValue{
-		Key:            []byte("test-key"),
-		Value:          []byte("test-value"),
+		Key:   []byte("test-key"),
+		Value: []byte("test-value"),
 	}
 
 	expectedRequest := &kvstorev1.PutKeyRequest{
-		AccountId: testAccountId,
-		BucketName: testBucketName,
+		AccountId:    testAccountId,
+		BucketName:   testBucketName,
 		KeyValuePair: expectedKvp,
 	}
 
@@ -700,7 +700,7 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
 		AccountId: accountId,
 		Owner:     "test@test.com",
-		Name: testBucketName,
+		Name:      testBucketName,
 	})
 	require.NoError(f, err, "there must not be an error when creating the account key")
 
@@ -718,11 +718,11 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		}
 
 		putReq := &kvstorev1.PutKeyRequest{
-			AccountId: accountId,
+			AccountId:  accountId,
 			BucketName: testBucketName,
 			KeyValuePair: &kvstorev1.KeyValue{
-				Key:            []byte(keyName),
-				Value:          bytes,
+				Key:   []byte(keyName),
+				Value: bytes,
 			},
 		}
 
@@ -733,9 +733,9 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		}
 
 		getReq := &kvstorev1.GetKeyRequest{
-			AccountId: accountId,
+			AccountId:  accountId,
 			BucketName: testBucketName,
-			Key: []byte(keyName),
+			Key:        []byte(keyName),
 		}
 
 		resp, err := b.GetKey(getReq)
@@ -754,9 +754,9 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		require.Equal(t, bytes, kvp.GetValue(), "the value must be equal")
 
 		delResp, err := b.DeleteKey(&kvstorev1.DeleteKeyRequest{
-			AccountId: accountId,
+			AccountId:  accountId,
 			BucketName: testBucketName,
-			Key: []byte(keyName),
+			Key:        []byte(keyName),
 		})
 		if errors.Is(err, errors.New("empty key identifier")) {
 			return // can't compare empty keys

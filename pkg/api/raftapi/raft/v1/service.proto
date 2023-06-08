@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package raft.v1;
+
+import "raft/v1/raft_host.proto";
+import "raft/v1/raft_shard.proto";
+
+service ShardService {
+  rpc AddReplica(AddReplicaRequest) returns (AddReplicaResponse);
+  rpc AddReplicaObserver(AddReplicaObserverRequest) returns (AddReplicaObserverResponse);
+  rpc AddReplicaWitness(AddReplicaWitnessRequest) returns (AddReplicaWitnessResponse);
+  rpc GetLeaderId(GetLeaderIdRequest) returns (GetLeaderIdResponse);
+  rpc GetShardMembers(GetShardMembersRequest) returns (GetShardMembersResponse);
+  rpc NewShard(NewShardRequest) returns (NewShardResponse);
+  rpc RemoveData(RemoveDataRequest) returns (RemoveDataResponse);
+  rpc RemoveReplica(RemoveReplicaRequest) returns (RemoveReplicaResponse);
+  rpc StartReplica(StartReplicaRequest) returns (StartReplicaResponse);
+  rpc StartReplicaObserver(StartReplicaObserverRequest) returns (StartReplicaObserverResponse);
+  rpc StopReplica(StopReplicaRequest) returns (StopReplicaResponse);
+}
+
+service HostService {
+  rpc Compact(CompactRequest) returns (CompactResponse);
+  rpc GetHostConfig(GetHostConfigRequest) returns (GetHostConfigResponse);
+  //  rpc LeaderTransfer(LeaderTransferRequest) returns (LeaderTransferResponse);
+  rpc Snapshot(SnapshotRequest) returns (SnapshotResponse);
+  rpc Stop(StopRequest) returns (StopResponse);
+}

@@ -1,0 +1,39 @@
+version: v1
+managed:
+  enabled: true
+  cc_enable_arenas: true
+  java_multiple_files: true
+  java_package_prefix:
+    default: com.github.mxplusb.pleiades.api
+  go_package_prefix:
+    default: github.com/mxplusb/pleiades/pkg/api
+    except:
+      - buf.build/googleapis/googleapis
+plugins:
+  - name: cpp
+    out: cpp
+  - name: java
+    out: java
+  - name: go
+    out: .
+    opt: paths=source_relative
+  - name: go-vtproto
+    out: .
+    opt:
+      - features=marshal+unmarshal+size+equal+pool
+      - paths=source_relative
+  - name: es
+    out: .
+    opt:
+      - target=js+dts
+  - name: go-grpc
+    out: .
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false
+  - name: connect-go
+    out: .
+    opt: paths=source_relative
+  - name: connect-web
+    out: .
+    opt: target=js+dts
