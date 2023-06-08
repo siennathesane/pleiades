@@ -1,0 +1,9 @@
+version: v1
+name: buf.build/mxplusb/pleiades-errors
+breaking:
+  use:
+    - WIRE
+    - WIRE_JSON
+lint:
+  use:
+    - DEFAULT

@@ -3,7 +3,6 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
-	github.com/mxplusb/pleiades/pkg/api v0.0.0-20221202042317-9659f2b0e5c9
 	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/allegro/bigcache v1.2.1
 	github.com/bufbuild/connect-go v1.0.0

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package kvstore.v1;
+
+import "kvstore/v1/kv.proto";
+import "kvstore/v1/transactions.proto";
+
+service KvStoreService {
+  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {}
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse) {}
+  rpc CreateBucket(CreateBucketRequest) returns (CreateBucketResponse) {}
+  rpc DeleteBucket(DeleteBucketRequest) returns (DeleteBucketResponse) {}
+  rpc GetKey(GetKeyRequest) returns (GetKeyResponse) {}
+  rpc PutKey(PutKeyRequest) returns (PutKeyResponse) {}
+  rpc DeleteKey(DeleteKeyRequest) returns (DeleteKeyResponse) {}
+}
+
+service TransactionsService {
+  rpc NewTransaction(NewTransactionRequest) returns (NewTransactionResponse);
+  rpc CloseTransaction(CloseTransactionRequest) returns (CloseTransactionResponse);
+  rpc Commit(CommitRequest) returns (CommitResponse);
+}
