@@ -402,7 +402,7 @@ func (i *int32Value) ValueType() string {
 }
 
 func (i *int32Value) Set(s string) error {
-	v, err := strconv.ParseInt(s, 0, 64)
+	v, err := strconv.ParseInt(s, 10, 32)
 	if err != nil {
 		return err
 	}
@@ -499,7 +499,7 @@ type UintVar struct {
 func (f *FlagSet) UintVar(i *UintVar) {
 	initial := i.Default
 	if v, exist := os.LookupEnv(i.EnvVar); exist {
-		if i, err := strconv.ParseUint(v, 0, 64); err == nil {
+		if i, err := strconv.ParseUint(v, 10, 32); err == nil {
 			initial = uint(i)
 		}
 	}
