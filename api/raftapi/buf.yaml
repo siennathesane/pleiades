@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/anthropos-labs/raft
+name: buf.build/mxplusb/pleiades-raft
 breaking:
   use:
     - FILE

@@ -1,7 +1,7 @@
 version: v1
-name: buf.build/anthropos-labs/kvstore
+name: buf.build/mxplusb/pleiades-kvstore
 deps:
-  - buf.build/anthropos-labs/errors
+  - buf.build/mxplusb/pleiades-errors
 breaking:
   use:
     - FILE

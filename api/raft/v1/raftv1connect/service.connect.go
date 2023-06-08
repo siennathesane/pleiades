@@ -5,10 +5,10 @@
 package raftv1connect
 
 import (
-	v1 "a13s.io/api/raft/v1"
 	context "context"
 	errors "errors"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	http "net/http"
 	strings "strings"
 )

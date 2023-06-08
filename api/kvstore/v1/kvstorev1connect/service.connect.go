@@ -5,10 +5,10 @@
 package kvstorev1connect
 
 import (
-	v1 "a13s.io/api/kvstore/v1"
 	context "context"
 	errors "errors"
 	connect_go "github.com/bufbuild/connect-go"
+	v1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	http "net/http"
 	strings "strings"
 )

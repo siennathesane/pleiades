@@ -4,9 +4,9 @@ managed:
   cc_enable_arenas: true
   java_multiple_files: true
   java_package_prefix:
-    default: io.a13s.api
+    default: com.github.mxplusb.pleiades.api
   go_package_prefix:
-    default: a13s.io/api
+    default: github.com/mxplusb/pleiades/pkg/api
     except:
       - buf.build/googleapis/googleapis
 plugins:

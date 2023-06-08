@@ -1,5 +1,5 @@
 {
-    "name": "@anthropos-labs/api",
+    "name": "pleiades-api",
     "version": "22.9.17-ea824cb",
     "description": "API interfaces for Pleiades",
     "scripts": {
@@ -8,9 +8,9 @@
     "author": "Anthrophos Labs",
     "license": "PolyForm Strict License 1.0.0",
     "bugs": {
-        "url": "https://gitlab.com/anthropos-labs/pleiades/issues"
+        "url": "https://github.com/mxplusb/pleiades/issues"
     },
-    "homepage": "https://anthroposlabs.com",
+    "homepage": "https://github.com/mxplusb/pleiades",
     "files": [
         "**/*.js",
         "**/*.ts"
