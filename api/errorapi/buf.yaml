@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/anthropos-labs/errors
+name: buf.build/mxplusb/pleiades-errors
 breaking:
   use:
     - WIRE

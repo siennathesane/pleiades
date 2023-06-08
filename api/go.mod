@@ -1,4 +1,4 @@
-module a13s.io/api
+module github.com/mxplusb/pleiades/pkg/api
 
 go 1.19
 

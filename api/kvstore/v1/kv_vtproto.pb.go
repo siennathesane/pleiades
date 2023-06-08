@@ -5,8 +5,8 @@
 package kvstorev1
 
 import (
-	v1 "a13s.io/api/errors/v1"
 	fmt "fmt"
+	v1 "github.com/mxplusb/pleiades/pkg/api/errors/v1"
 	proto "google.golang.org/protobuf/proto"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
