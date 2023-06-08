@@ -4,7 +4,7 @@
 /* @ts-nocheck */
 
 import {AddReplicaObserverRequest, AddReplicaObserverResponse, AddReplicaRequest, AddReplicaResponse, AddReplicaWitnessRequest, AddReplicaWitnessResponse, GetLeaderIdRequest, GetLeaderIdResponse, GetShardMembersRequest, GetShardMembersResponse, NewShardRequest, NewShardResponse, RemoveDataRequest, RemoveDataResponse, RemoveReplicaRequest, RemoveReplicaResponse, StartReplicaObserverRequest, StartReplicaObserverResponse, StartReplicaRequest, StartReplicaResponse, StopReplicaRequest, StopReplicaResponse} from "./raft_shard_pb.js";
-import {MethodKind} from "@bufbuild/protobuf";
+import {MethodIdempotency, MethodKind} from "@bufbuild/protobuf";
 import {CompactRequest, CompactResponse, GetHostConfigRequest, GetHostConfigResponse, SnapshotRequest, SnapshotResponse, StopRequest, StopResponse} from "./raft_host_pb.js";
 
 /**
@@ -48,6 +48,7 @@ export declare const ShardService: {
       readonly I: typeof GetLeaderIdRequest,
       readonly O: typeof GetLeaderIdResponse,
       readonly kind: MethodKind.Unary,
+      readonly idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      * @generated from rpc raft.v1.ShardService.GetShardMembers
@@ -57,6 +58,7 @@ export declare const ShardService: {
       readonly I: typeof GetShardMembersRequest,
       readonly O: typeof GetShardMembersResponse,
       readonly kind: MethodKind.Unary,
+      readonly idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      * @generated from rpc raft.v1.ShardService.NewShard
@@ -138,6 +140,7 @@ export declare const HostService: {
       readonly I: typeof GetHostConfigRequest,
       readonly O: typeof GetHostConfigResponse,
       readonly kind: MethodKind.Unary,
+      readonly idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      *  rpc LeaderTransfer(LeaderTransferRequest) returns (LeaderTransferResponse);

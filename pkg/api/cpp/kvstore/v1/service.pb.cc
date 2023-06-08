@@ -32,7 +32,7 @@ static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 const char descriptor_table_protodef_kvstore_2fv1_2fservice_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\030kvstore/v1/service.proto\022\nkvstore.v1\032\023"
     "kvstore/v1/kv.proto\032\035kvstore/v1/transact"
-    "ions.proto2\274\004\n\016KvStoreService\022V\n\rCreateA"
+    "ions.proto2\277\004\n\016KvStoreService\022V\n\rCreateA"
     "ccount\022 .kvstore.v1.CreateAccountRequest"
     "\032!.kvstore.v1.CreateAccountResponse\"\000\022V\n"
     "\rDeleteAccount\022 .kvstore.v1.DeleteAccoun"
@@ -41,24 +41,24 @@ const char descriptor_table_protodef_kvstore_2fv1_2fservice_2eproto[] PROTOBUF_S
     "eBucketRequest\032 .kvstore.v1.CreateBucket"
     "Response\"\000\022S\n\014DeleteBucket\022\037.kvstore.v1."
     "DeleteBucketRequest\032 .kvstore.v1.DeleteB"
-    "ucketResponse\"\000\022A\n\006GetKey\022\031.kvstore.v1.G"
+    "ucketResponse\"\000\022D\n\006GetKey\022\031.kvstore.v1.G"
     "etKeyRequest\032\032.kvstore.v1.GetKeyResponse"
-    "\"\000\022A\n\006PutKey\022\031.kvstore.v1.PutKeyRequest\032"
-    "\032.kvstore.v1.PutKeyResponse\"\000\022J\n\tDeleteK"
-    "ey\022\034.kvstore.v1.DeleteKeyRequest\032\035.kvsto"
-    "re.v1.DeleteKeyResponse\"\0002\216\002\n\023Transactio"
-    "nsService\022W\n\016NewTransaction\022!.kvstore.v1"
-    ".NewTransactionRequest\032\".kvstore.v1.NewT"
-    "ransactionResponse\022]\n\020CloseTransaction\022#"
-    ".kvstore.v1.CloseTransactionRequest\032$.kv"
-    "store.v1.CloseTransactionResponse\022\?\n\006Com"
-    "mit\022\031.kvstore.v1.CommitRequest\032\032.kvstore"
-    ".v1.CommitResponseB\275\001\n*com.github.mxplus"
-    "b.pleiades.api.kvstore.v1B\014ServiceProtoP"
-    "\001Z8github.com/mxplusb/pleiades/pkg/api/k"
-    "vstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V1\312\002"
-    "\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352\002\013K"
-    "vstore::V1b\006proto3"
+    "\"\003\220\002\001\022A\n\006PutKey\022\031.kvstore.v1.PutKeyReque"
+    "st\032\032.kvstore.v1.PutKeyResponse\"\000\022J\n\tDele"
+    "teKey\022\034.kvstore.v1.DeleteKeyRequest\032\035.kv"
+    "store.v1.DeleteKeyResponse\"\0002\216\002\n\023Transac"
+    "tionsService\022W\n\016NewTransaction\022!.kvstore"
+    ".v1.NewTransactionRequest\032\".kvstore.v1.N"
+    "ewTransactionResponse\022]\n\020CloseTransactio"
+    "n\022#.kvstore.v1.CloseTransactionRequest\032$"
+    ".kvstore.v1.CloseTransactionResponse\022\?\n\006"
+    "Commit\022\031.kvstore.v1.CommitRequest\032\032.kvst"
+    "ore.v1.CommitResponseB\275\001\n*com.github.mxp"
+    "lusb.pleiades.api.kvstore.v1B\014ServicePro"
+    "toP\001Z8github.com/mxplusb/pleiades/pkg/ap"
+    "i/kvstore/v1;kvstorev1\242\002\003KXX\252\002\nKvstore.V"
+    "1\312\002\nKvstore\\V1\342\002\026Kvstore\\V1\\GPBMetadata\352"
+    "\002\013Kvstore::V1b\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_kvstore_2fv1_2fservice_2eproto_deps[2] =
     {
@@ -69,7 +69,7 @@ static ::absl::once_flag descriptor_table_kvstore_2fv1_2fservice_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_kvstore_2fv1_2fservice_2eproto = {
     false,
     false,
-    1138,
+    1141,
     descriptor_table_protodef_kvstore_2fv1_2fservice_2eproto,
     "kvstore/v1/service.proto",
     &descriptor_table_kvstore_2fv1_2fservice_2eproto_once,

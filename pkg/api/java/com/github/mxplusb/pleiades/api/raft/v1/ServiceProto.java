@@ -25,41 +25,41 @@ public final class ServiceProto {
     java.lang.String[] descriptorData = {
       "\n\025raft/v1/service.proto\022\007raft.v1\032\027raft/v" +
       "1/raft_host.proto\032\030raft/v1/raft_shard.pr" +
-      "oto2\204\007\n\014ShardService\022E\n\nAddReplica\022\032.raf" +
+      "oto2\216\007\n\014ShardService\022E\n\nAddReplica\022\032.raf" +
       "t.v1.AddReplicaRequest\032\033.raft.v1.AddRepl" +
       "icaResponse\022]\n\022AddReplicaObserver\022\".raft" +
       ".v1.AddReplicaObserverRequest\032#.raft.v1." +
       "AddReplicaObserverResponse\022Z\n\021AddReplica" +
       "Witness\022!.raft.v1.AddReplicaWitnessReque" +
-      "st\032\".raft.v1.AddReplicaWitnessResponse\022H" +
+      "st\032\".raft.v1.AddReplicaWitnessResponse\022M" +
       "\n\013GetLeaderId\022\033.raft.v1.GetLeaderIdReque" +
-      "st\032\034.raft.v1.GetLeaderIdResponse\022T\n\017GetS" +
-      "hardMembers\022\037.raft.v1.GetShardMembersReq" +
-      "uest\032 .raft.v1.GetShardMembersResponse\022?" +
-      "\n\010NewShard\022\030.raft.v1.NewShardRequest\032\031.r" +
-      "aft.v1.NewShardResponse\022E\n\nRemoveData\022\032." +
-      "raft.v1.RemoveDataRequest\032\033.raft.v1.Remo" +
-      "veDataResponse\022N\n\rRemoveReplica\022\035.raft.v" +
-      "1.RemoveReplicaRequest\032\036.raft.v1.RemoveR" +
-      "eplicaResponse\022K\n\014StartReplica\022\034.raft.v1" +
-      ".StartReplicaRequest\032\035.raft.v1.StartRepl" +
-      "icaResponse\022c\n\024StartReplicaObserver\022$.ra" +
-      "ft.v1.StartReplicaObserverRequest\032%.raft" +
-      ".v1.StartReplicaObserverResponse\022H\n\013Stop" +
-      "Replica\022\033.raft.v1.StopReplicaRequest\032\034.r" +
-      "aft.v1.StopReplicaResponse2\221\002\n\013HostServi" +
-      "ce\022<\n\007Compact\022\027.raft.v1.CompactRequest\032\030" +
-      ".raft.v1.CompactResponse\022N\n\rGetHostConfi" +
-      "g\022\035.raft.v1.GetHostConfigRequest\032\036.raft." +
-      "v1.GetHostConfigResponse\022?\n\010Snapshot\022\030.r" +
-      "aft.v1.SnapshotRequest\032\031.raft.v1.Snapsho" +
-      "tResponse\0223\n\004Stop\022\024.raft.v1.StopRequest\032" +
-      "\025.raft.v1.StopResponseB\250\001\n\'com.github.mx" +
-      "plusb.pleiades.api.raft.v1B\014ServiceProto" +
-      "P\001Z2github.com/mxplusb/pleiades/pkg/api/" +
-      "raft/v1;raftv1\242\002\003RXX\252\002\007Raft.V1\312\002\007Raft\\V1" +
-      "\342\002\023Raft\\V1\\GPBMetadata\352\002\010Raft::V1b\006proto" +
-      "3"
+      "st\032\034.raft.v1.GetLeaderIdResponse\"\003\220\002\001\022Y\n" +
+      "\017GetShardMembers\022\037.raft.v1.GetShardMembe" +
+      "rsRequest\032 .raft.v1.GetShardMembersRespo" +
+      "nse\"\003\220\002\001\022?\n\010NewShard\022\030.raft.v1.NewShardR" +
+      "equest\032\031.raft.v1.NewShardResponse\022E\n\nRem" +
+      "oveData\022\032.raft.v1.RemoveDataRequest\032\033.ra" +
+      "ft.v1.RemoveDataResponse\022N\n\rRemoveReplic" +
+      "a\022\035.raft.v1.RemoveReplicaRequest\032\036.raft." +
+      "v1.RemoveReplicaResponse\022K\n\014StartReplica" +
+      "\022\034.raft.v1.StartReplicaRequest\032\035.raft.v1" +
+      ".StartReplicaResponse\022c\n\024StartReplicaObs" +
+      "erver\022$.raft.v1.StartReplicaObserverRequ" +
+      "est\032%.raft.v1.StartReplicaObserverRespon" +
+      "se\022H\n\013StopReplica\022\033.raft.v1.StopReplicaR" +
+      "equest\032\034.raft.v1.StopReplicaResponse2\226\002\n" +
+      "\013HostService\022<\n\007Compact\022\027.raft.v1.Compac" +
+      "tRequest\032\030.raft.v1.CompactResponse\022S\n\rGe" +
+      "tHostConfig\022\035.raft.v1.GetHostConfigReque" +
+      "st\032\036.raft.v1.GetHostConfigResponse\"\003\220\002\001\022" +
+      "?\n\010Snapshot\022\030.raft.v1.SnapshotRequest\032\031." +
+      "raft.v1.SnapshotResponse\0223\n\004Stop\022\024.raft." +
+      "v1.StopRequest\032\025.raft.v1.StopResponseB\250\001" +
+      "\n\'com.github.mxplusb.pleiades.api.raft.v" +
+      "1B\014ServiceProtoP\001Z2github.com/mxplusb/pl" +
+      "eiades/pkg/api/raft/v1;raftv1\242\002\003RXX\252\002\007Ra" +
+      "ft.V1\312\002\007Raft\\V1\342\002\023Raft\\V1\\GPBMetadata\352\002\010" +
+      "Raft::V1b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -4,7 +4,7 @@
 /* @ts-nocheck */
 
 import {CreateAccountRequest, CreateAccountResponse, CreateBucketRequest, CreateBucketResponse, DeleteAccountRequest, DeleteAccountResponse, DeleteBucketRequest, DeleteBucketResponse, DeleteKeyRequest, DeleteKeyResponse, GetKeyRequest, GetKeyResponse, PutKeyRequest, PutKeyResponse} from "./kv_pb.js";
-import {MethodKind} from "@bufbuild/protobuf";
+import {MethodIdempotency, MethodKind} from "@bufbuild/protobuf";
 import {CloseTransactionRequest, CloseTransactionResponse, CommitRequest, CommitResponse, NewTransactionRequest, NewTransactionResponse} from "./transactions_pb.js";
 
 /**
@@ -57,6 +57,7 @@ export const KvStoreService = {
       I: GetKeyRequest,
       O: GetKeyResponse,
       kind: MethodKind.Unary,
+      idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      * @generated from rpc kvstore.v1.KvStoreService.PutKey

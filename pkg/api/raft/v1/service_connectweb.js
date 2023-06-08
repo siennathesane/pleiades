@@ -4,7 +4,7 @@
 /* @ts-nocheck */
 
 import {AddReplicaObserverRequest, AddReplicaObserverResponse, AddReplicaRequest, AddReplicaResponse, AddReplicaWitnessRequest, AddReplicaWitnessResponse, GetLeaderIdRequest, GetLeaderIdResponse, GetShardMembersRequest, GetShardMembersResponse, NewShardRequest, NewShardResponse, RemoveDataRequest, RemoveDataResponse, RemoveReplicaRequest, RemoveReplicaResponse, StartReplicaObserverRequest, StartReplicaObserverResponse, StartReplicaRequest, StartReplicaResponse, StopReplicaRequest, StopReplicaResponse} from "./raft_shard_pb.js";
-import {MethodKind} from "@bufbuild/protobuf";
+import {MethodIdempotency, MethodKind} from "@bufbuild/protobuf";
 import {CompactRequest, CompactResponse, GetHostConfigRequest, GetHostConfigResponse, SnapshotRequest, SnapshotResponse, StopRequest, StopResponse} from "./raft_host_pb.js";
 
 /**
@@ -48,6 +48,7 @@ export const ShardService = {
       I: GetLeaderIdRequest,
       O: GetLeaderIdResponse,
       kind: MethodKind.Unary,
+      idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      * @generated from rpc raft.v1.ShardService.GetShardMembers
@@ -57,6 +58,7 @@ export const ShardService = {
       I: GetShardMembersRequest,
       O: GetShardMembersResponse,
       kind: MethodKind.Unary,
+      idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      * @generated from rpc raft.v1.ShardService.NewShard
@@ -138,6 +140,7 @@ export const HostService = {
       I: GetHostConfigRequest,
       O: GetHostConfigResponse,
       kind: MethodKind.Unary,
+      idempotency: MethodIdempotency.NoSideEffects,
     },
     /**
      *  rpc LeaderTransfer(LeaderTransferRequest) returns (LeaderTransferResponse);
