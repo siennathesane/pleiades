@@ -25,7 +25,7 @@ require (
 	github.com/posener/complete v1.2.3
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/viper v1.13.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	go.etcd.io/bbolt v1.3.6
 	go.opentelemetry.io/otel v1.16.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.11.2
