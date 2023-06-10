@@ -2,7 +2,7 @@
 - Status: draft
 - Start Date: 2023-06-09
 - Authors: @mxplusb
-- RFC PR: (PR # after acceptance of initial draft)
+- RFC PR: #19
 - Issue: #18
 
 # Summary
