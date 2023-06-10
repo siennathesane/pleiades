@@ -34,7 +34,7 @@ signal an RFC is warranted. (Similarly, a project worthy of an RFC
 often requires multiple engineers worth of effort). Note that this
 guidance is intentionally vague. Many complex projects spread over
 multiple PRs do not require an RFC, though they do require adequate
-communication and discussion.<sup>[1](#sql-syntax)</sup>
+communication and discussion.
 
 An RFC can help you get buy-in and alignment from necessary stakeholders
 on how to best approach your project. Such alignment helps ensure that
@@ -54,7 +54,7 @@ write an RFC is a nuanced topic. When appropriate, an RFC can be a very
 effective tool. However, the process can sometimes be slow & come with a
 good amount of toil. People need time to respond, edits need to be made,
 prototypes need to be modified, and this cycle may repeat multiple times.
-Therefore, it's worth giving this question of whether or not to write an
+Therefore, it's worth giving this question of whether to write an
 RFC the proper consideration. If it is indeed appropriate, then the RFC
 process will be a great tool for strengthening the design and concepts
 behind your project.

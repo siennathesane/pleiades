@@ -33,7 +33,7 @@ you can spell out “this change does not affect ...” or answer “N/A”
 
 - Questions about the change:
 
-    - What components in CockroachDB need to change? How do they change?
+    - What components in Pleiades need to change? How do they change?
 
       This section outlines the implementation strategy: for each
       component affected, outline how it is changed.
@@ -46,11 +46,11 @@ you can spell out “this change does not affect ...” or answer “N/A”
     - How does the change behave in mixed-version deployments? During a
       version upgrade? Which migrations are needed?
 
-    - Is the result/usage of this change different for CC end-users than
+    - Is the result/usage of this change different for Pleiades end-users than
       for on-prem deployments? How?
 
     - What are the possible interactions with other features or
-      sub-systems inside CockroachDB? How does the behavior of other code
+      sub-systems inside Pleiades? How does the behavior of other code
       change implicitly as a result of the changes outlined in the RFC?
 
       (Provide examples if relevant.)
@@ -62,7 +62,7 @@ you can spell out “this change does not affect ...” or answer “N/A”
       think are uncommon but are still possible and thus need to be
       handled? How are these edge cases handled? Provide examples.
 
-    - What are the effect of possible mistakes by other CockroachDB team
+    - What are the effect of possible mistakes by other Pleiades team
       members trying to use the feature in their own code? How does the
       change impact how they will troubleshoot things?
 
@@ -91,7 +91,7 @@ you can spell out “this change does not affect ...” or answer “N/A”
     - Can the new functionality affect clusters which are not explicitly
       using it?
 
-    - What testing and safe guards are being put in place to
+    - What testing and safeguards are being put in place to
       protect against unexpected problems?
 
 - Security questions:
@@ -131,7 +131,7 @@ you can spell out “this change does not affect ...” or answer “N/A”
           with other related features / APIs? (Cross-reference other APIs
           that are similar or related, for comparison.)
 
-    - Is the change visible to users of CockroachDB or operators who run CockroachDB clusters?
+    - Is the change visible to users of Pleiades or operators who run Pleiades clusters?
 
         - Are there any user experience (UX) changes needed as a result of this RFC?
 
@@ -161,7 +161,7 @@ Why should we *not* do this?
 If applicable, list mitigating factors that may make each drawback acceptable.
 
 Investigate the consequences of the proposed change onto other areas
-of CockroachDB. If other features are impacted, especially UX, list
+of Pleiades. If other features are impacted, especially UX, list
 this impact as a reason not to do the change. If possible, also
 investigate and suggest mitigating actions that would reduce the
 impact. You can for example consider additional validation testing,
@@ -189,7 +189,7 @@ This section is extremely important. See the
 How do we teach this?
 
 Explain the proposal as if it was already included in the project and
-you were teaching it to an end-user, or a CockroachDB team member in a different project area.
+you were teaching it to an end-user, or a Pleiades team member in a different project area.
 
 Consider the following writing prompts:
 
