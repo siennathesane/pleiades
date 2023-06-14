@@ -7,7 +7,7 @@ require (
 	github.com/allegro/bigcache v1.2.1
 	github.com/bufbuild/connect-go v1.8.0
 	github.com/bufbuild/connect-grpchealth-go v1.0.0
-	github.com/bufbuild/connect-grpcreflect-go v1.0.0
+	github.com/bufbuild/connect-grpcreflect-go v1.1.0
 	github.com/cockroachdb/errors v1.7.5
 	github.com/go-git/go-git/v5 v5.5.1
 	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7

@@ -91,8 +91,8 @@ github.com/bufbuild/connect-go v1.8.0 h1:srluNkFkZBfSfg9Qb6DrO+5nMaxix//h2ctrHZh
 github.com/bufbuild/connect-go v1.8.0/go.mod h1:GmMJYR6orFqD0Y6ZgX8pwQ8j9baizDrIQMm1/a6LnHk=
 github.com/bufbuild/connect-grpchealth-go v1.0.0 h1:33v883tL86jLomQT6R2ZYVYaI2cRkuUXvU30WfbQ/ko=
 github.com/bufbuild/connect-grpchealth-go v1.0.0/go.mod h1:6OEb4J3rh5+Wdvt4/muOIfZo1lt9cPU8ggwpsjBaZ3Y=
-github.com/bufbuild/connect-grpcreflect-go v1.0.0 h1:zWsLFYqrT1O2sNJFYfTXI5WxbAyiY2dvevvnJHPtV5A=
-github.com/bufbuild/connect-grpcreflect-go v1.0.0/go.mod h1:825I20H8bfE9rLnBH/046JSpmm3uwpNYdG4duCARetc=
+github.com/bufbuild/connect-grpcreflect-go v1.1.0 h1:T0FKu1y9zZW4cjHuF+Q7jIN6ek8HTpCxOP8ZsORZICg=
+github.com/bufbuild/connect-grpcreflect-go v1.1.0/go.mod h1:AxcY2fSAr+oQQuu+K35qy2VDtX+LWr7SrS2SvfjY898=
 github.com/bwesterb/go-ristretto v1.2.0/go.mod h1:fUIoIZaG73pV5biE2Blr2xEzDoMj7NFEuV9ekS419A0=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/certifi/gocertifi v0.0.0-20200211180108-c7c1fbc02894/go.mod h1:sGbDF6GwGcLpkNXPUTkMRoywsNa/ol15pxFe6ERfguA=
