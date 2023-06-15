@@ -23,7 +23,7 @@ require (
 	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
 	github.com/planetscale/vtprotobuf v0.3.0
 	github.com/posener/complete v1.2.3
-	github.com/rs/zerolog v1.28.0
+	github.com/rs/zerolog v1.29.1
 	github.com/spf13/viper v1.16.0
 	github.com/stretchr/testify v1.8.4
 	go.etcd.io/bbolt v1.3.6
