@@ -3,7 +3,7 @@ module github.com/mxplusb/pleiades
 go 1.18
 
 require (
-	github.com/Masterminds/semver/v3 v3.2.0
+	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/allegro/bigcache v1.2.1
 	github.com/bufbuild/connect-go v1.8.0
 	github.com/bufbuild/connect-grpchealth-go v1.1.1
