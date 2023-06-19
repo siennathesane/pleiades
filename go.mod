@@ -15,7 +15,7 @@ require (
 	github.com/kr/text v0.2.0
 	github.com/lni/dragonboat/v3 v3.3.6
 	github.com/lni/goutils v1.3.0
-	github.com/magefile/mage v1.14.0
+	github.com/magefile/mage v1.15.0
 	github.com/mitchellh/cli v1.1.5
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-wordwrap v1.0.1
