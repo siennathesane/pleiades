@@ -21,7 +21,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/nats-io/nats-server/v2 v2.9.0
 	github.com/nats-io/nats.go v1.16.1-0.20220906180156-a1017eec10b0
-	github.com/planetscale/vtprotobuf v0.3.0
+	github.com/planetscale/vtprotobuf v0.4.0
 	github.com/posener/complete v1.2.3
 	github.com/rs/zerolog v1.29.1
 	github.com/spf13/viper v1.16.0
