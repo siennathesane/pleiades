@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7
 	github.com/hashicorp/serf v0.10.1
 	github.com/kr/text v0.2.0
-	github.com/lni/dragonboat/v3 v3.3.6
+	github.com/lni/dragonboat/v3 v3.3.7
 	github.com/lni/goutils v1.3.0
 	github.com/magefile/mage v1.15.0
 	github.com/mitchellh/cli v1.1.5
