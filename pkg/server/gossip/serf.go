@@ -58,5 +58,5 @@ type Server struct {
 }
 
 func (s *Server) StartHook(ctx context.Context) error {
- return nil
+	return nil
 }

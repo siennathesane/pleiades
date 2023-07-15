@@ -13,13 +13,13 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/bufbuild/connect-go"
+	"github.com/cockroachdb/errors"
+	dclient "github.com/lni/dragonboat/v3/client"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
-	"github.com/bufbuild/connect-go"
-	"github.com/cockroachdb/errors"
-	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )

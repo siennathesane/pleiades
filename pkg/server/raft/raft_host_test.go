@@ -15,10 +15,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lni/dragonboat/v3"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"

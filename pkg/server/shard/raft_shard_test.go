@@ -16,13 +16,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lni/dragonboat/v3"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/lni/dragonboat/v3"
-	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 )
@@ -479,10 +479,10 @@ func (t *shardManagerTestSuite) TestNewShard() {
 
 	// testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout)
 	err := shardManager.NewShard(&raftv1.NewShardRequest{
-		ShardId: testShardId,
+		ShardId:   testShardId,
 		ReplicaId: firstNodeClusterConfig.NodeID,
-		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
-		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
 	utils.Wait(t.extendedDefaultTimeout)
@@ -673,10 +673,10 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 
 	// testShardId, firstTestReplicaId, testStateMachineType, utils.Timeout(t.defaultTimeout)
 	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
-		ShardId: testShardId,
+		ShardId:   testShardId,
 		ReplicaId: firstTestReplicaId,
-		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
-		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
 	utils.Wait(t.defaultTimeout)
@@ -750,10 +750,10 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 	firstTestReplicaId := rand.Uint64()
 
 	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
-		ShardId: testShardId,
+		ShardId:   testShardId,
 		ReplicaId: firstTestReplicaId,
-		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
-		Timeout: utils.Timeout(t.defaultTimeout).Milliseconds(),
+		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
 	utils.Wait(t.defaultTimeout)

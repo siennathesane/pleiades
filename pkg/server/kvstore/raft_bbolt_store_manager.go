@@ -13,15 +13,15 @@ import (
 	"context"
 	"time"
 
+	"github.com/cockroachdb/errors"
+	"github.com/lni/dragonboat/v3"
+	dclient "github.com/lni/dragonboat/v3/client"
 	aerrs "github.com/mxplusb/pleiades/pkg/api/errors/v1"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/routing"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/cockroachdb/errors"
-	"github.com/lni/dragonboat/v3"
-	dclient "github.com/lni/dragonboat/v3/client"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )

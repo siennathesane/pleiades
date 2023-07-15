@@ -23,7 +23,7 @@ type Test mg.Namespace
 func (Test) Cleanroom() error {
 	fmt.Println("running all tests in cleanroom environment")
 	mg.SerialDeps(Clean.Build, Clean.Cache, Install.Godeps)
-	return sh.RunWithV(nil, "go", "test", "-v", "./...")
+	return sh.RunWithV(nil, "go", "test", "-v", "-covermode=atomic", "-coverprofile=covprofile", "./...")
 }
 
 // run all tests

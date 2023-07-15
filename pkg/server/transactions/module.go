@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Sienna Lloyd
+ * Copyright (c) 2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Internal Use License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -7,6 +7,12 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package fsm
+package transactions
 
-// https://github.com/hashicorp/go-memdb
+import (
+	"go.uber.org/fx"
+)
+
+var TransactionsModule = fx.Module("transactions",
+	fx.Provide(NewManager),
+)

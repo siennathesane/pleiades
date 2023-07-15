@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	rootLogger zlog.Logger
+	rootLogger    zlog.Logger
 	rootLoggerSet = false
 )
 
@@ -79,4 +79,3 @@ func (l DragonboatLoggerAdapter) Errorf(format string, args ...interface{}) {
 func (l DragonboatLoggerAdapter) Panicf(format string, args ...interface{}) {
 	l.logger.Panic().Msgf(format, args...)
 }
-

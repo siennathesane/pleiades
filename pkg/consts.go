@@ -10,7 +10,7 @@
 package pkg
 
 var (
-	Version string = ""
-	GoVersion string = ""
-	BuildTime string = ""
+	Version   = ""
+	GoVersion = ""
+	BuildTime        = ""
 )

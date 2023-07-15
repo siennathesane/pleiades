@@ -14,16 +14,19 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/bufbuild/connect-go"
+	"github.com/cockroachdb/errors"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/bufbuild/connect-go"
-	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
 
 var (
+	RaftConnectHostModule = fx.Module("raft-host-connect-adapter",
+		fx.Provide(runtime.AsRoute(NewRaftHostConnectAdapter)),
+	)
 	_ raftv1connect.HostServiceHandler = (*RaftHostConnectAdapter)(nil)
 	_ runtime.ServiceHandler           = (*RaftHostConnectAdapter)(nil)
 )

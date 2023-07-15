@@ -16,6 +16,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lni/dragonboat/v3"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
@@ -25,7 +26,6 @@ import (
 	"github.com/mxplusb/pleiades/pkg/server/shard"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/lni/dragonboat/v3"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 )

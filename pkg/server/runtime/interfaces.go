@@ -14,9 +14,10 @@ import (
 	"net/http"
 	"time"
 
+	dclient "github.com/lni/dragonboat/v3/client"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	dclient "github.com/lni/dragonboat/v3/client"
+	"go.uber.org/fx"
 )
 
 type IRaft interface {
@@ -73,4 +74,14 @@ type IKVStore interface {
 	GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error)
 	PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error)
 	DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error)
+}
+
+// AsRoute annotates the given constructor to state that
+// it provides a route to the "routes" group.
+func AsRoute(f any) any {
+	return fx.Annotate(
+		f,
+		fx.As(new(ServiceHandler)),
+		fx.ResultTags(`group:"routes"`),
+	)
 }

@@ -15,10 +15,10 @@ import (
 	"path/filepath"
 	"sort"
 
+	"github.com/cockroachdb/errors"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
-	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
 )

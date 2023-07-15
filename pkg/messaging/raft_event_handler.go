@@ -20,7 +20,7 @@ type RaftEventHandler struct {
 	pubSubClient *EmbeddedMessagingPubSubClient
 	queueClient  *EmbeddedMessagingStreamClient
 	cbTable      map[raftv1.Event]map[string]EventCallback
-	sub *nats.Subscription
+	sub          *nats.Subscription
 	done         chan struct{}
 }
 

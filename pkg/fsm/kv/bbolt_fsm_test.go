@@ -17,10 +17,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/lni/dragonboat/v3/statemachine"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"go.etcd.io/bbolt"
@@ -386,8 +386,8 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
 					Payload: &kvstorev1.KVStoreWrapper_PutKeyRequest{
 						PutKeyRequest: &kvstorev1.PutKeyRequest{
-							AccountId:  testAccountId,
-							BucketName: testBucketId,
+							AccountId:    testAccountId,
+							BucketName:   testBucketId,
 							KeyValuePair: testKvp,
 						},
 					},
@@ -436,8 +436,8 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		target := &kvstorev1.KeyValue{}
 		err := target.UnmarshalVT(val)
 		t.Require().NoError(err, "there must not be an error unmarshalling the kvp")
-		t.Require().Equal(testKvp.GetKey(),target.GetKey())
-		t.Require().Equal(testKvp.GetValue(),target.GetValue())
+		t.Require().Equal(testKvp.GetKey(), target.GetKey())
+		t.Require().Equal(testKvp.GetValue(), target.GetValue())
 
 		return nil
 	})
@@ -516,8 +516,8 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
 					Payload: &kvstorev1.KVStoreWrapper_PutKeyRequest{
 						PutKeyRequest: &kvstorev1.PutKeyRequest{
-							AccountId:  testAccountId,
-							BucketName: testBucketId,
+							AccountId:    testAccountId,
+							BucketName:   testBucketId,
 							KeyValuePair: testKvp,
 						},
 					},
@@ -540,7 +540,7 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 			GetKeyRequest: &kvstorev1.GetKeyRequest{
 				AccountId:  testAccountId,
 				BucketName: testBucketId,
-				Key: testKvp.GetKey(),
+				Key:        testKvp.GetKey(),
 			},
 		},
 	}

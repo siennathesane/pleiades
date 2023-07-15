@@ -27,7 +27,7 @@ type TestStateMachine struct {
 	ClusterID uint64
 	NodeID    uint64
 	Count     uint64
-	logger  zerolog.Logger
+	logger    zerolog.Logger
 }
 
 // NewExampleStateMachine creates and return a new TestStateMachine object.
@@ -37,7 +37,7 @@ func NewTestStateMachine(clusterID uint64,
 		ClusterID: clusterID,
 		NodeID:    nodeID,
 		Count:     0,
-		logger: zerolog.New(os.Stdout).With().Uint64("shard", clusterID).Uint64("replica", nodeID).Logger(),
+		logger:    zerolog.New(os.Stdout).With().Uint64("shard", clusterID).Uint64("replica", nodeID).Logger(),
 	}
 }
 

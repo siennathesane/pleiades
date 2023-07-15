@@ -10,60 +10,44 @@
 package eventing
 
 import (
-	"context"
-
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
 
 var (
-	serverSingleton *Server
+	serverSingleton *EventServer
 )
 
 type EventServerBuilderParams struct {
 	fx.In
-	Logger zerolog.Logger
+
+	Logger            zerolog.Logger
+	EmbeddedMessaging *messaging.EmbeddedMessaging
 }
 
 type EventServerBuilderResults struct {
 	fx.Out
-	Server *Server
+	Server *EventServer
 }
 
-func NewServer(lc fx.Lifecycle, params EventServerBuilderParams) EventServerBuilderResults {
-	srv, err := messaging.NewEmbeddedMessagingWithDefaults(params.Logger)
-	if err != nil {
-		params.Logger.Fatal().Err(err).Msg("can't create embedded message bus")
+func NewEventServer(params EventServerBuilderParams) EventServerBuilderResults {
+	serverSingleton = &EventServer{
+		params.EmbeddedMessaging,
+		params.Logger.With().Str("component", "eventing").Logger(),
 	}
-
-	serverSingleton = &Server{srv, params.Logger.With().Str("component", "eventing").Logger()}
-
-	// this is started so the other constructors register properly
-	serverSingleton.Start()
-
-	// lifecycle hooks
-	lc.Append(fx.Hook{
-		// empty hook for fx
-		OnStart: func(_ context.Context) error {
-			return nil
-		},
-		OnStop: func(ctx context.Context) error {
-			serverSingleton.Stop()
-			return nil
-		}})
 
 	return EventServerBuilderResults{
 		Server: serverSingleton,
 	}
 }
 
-type Server struct {
+type EventServer struct {
 	*messaging.EmbeddedMessaging
 	logger zerolog.Logger
 }
 
-func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
+func (s *EventServer) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
 	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't create pubsub client")
@@ -79,7 +63,7 @@ func (s *Server) GetRaftEventHandler() (*messaging.RaftEventHandler, error) {
 	return messaging.NewRaftEventHandler(pubSubClient, queueClient, s.logger), nil
 }
 
-func (s *Server) GetRaftSystemEventListener() (*messaging.RaftSystemListener, error) {
+func (s *EventServer) GetRaftSystemEventListener() (*messaging.RaftSystemListener, error) {
 	pubSubClient, err := s.EmbeddedMessaging.GetPubSubClient()
 	if err != nil {
 		s.logger.Error().Err(err).Msg("can't create pubsub client")
@@ -98,7 +82,7 @@ func (s *Server) GetRaftSystemEventListener() (*messaging.RaftSystemListener, er
 type NewPubSubClientBuilderParams struct {
 	fx.In
 
-	Server *Server
+	Server *EventServer
 }
 
 func NewPubSubClient(params NewPubSubClientBuilderParams) (*messaging.EmbeddedMessagingPubSubClient, error) {
@@ -108,7 +92,7 @@ func NewPubSubClient(params NewPubSubClientBuilderParams) (*messaging.EmbeddedMe
 type NewStreamClientBuilderParams struct {
 	fx.In
 
-	Server *Server
+	Server *EventServer
 }
 
 func NewStreamClient(params NewStreamClientBuilderParams) (*messaging.EmbeddedMessagingStreamClient, error) {

@@ -123,6 +123,5 @@ func (t *RaftEventHandlerTestSuite) TestCallback() {
 	utils.Wait(100 * time.Millisecond)
 	t.Require().Equal(1, called, "the callback must have been triggered at most once")
 
-
 	ev.Stop()
 }

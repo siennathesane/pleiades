@@ -10,8 +10,8 @@
 package messaging
 
 import (
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/lni/dragonboat/v3/raftio"
+	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/rs/zerolog"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
