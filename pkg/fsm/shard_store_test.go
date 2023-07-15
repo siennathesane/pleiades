@@ -43,10 +43,10 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 	count := uint64(10)
 	for i := uint64(0); i < count; i++ {
 		testPayload := &raftv1.ShardState{
-			ShardId:   i,
-			Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+			ShardId: i,
+			Type:    raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
 			Replicas: map[uint64]string{
-				i+4: fmt.Sprintf("test.local.%d", i),
+				i + 4: fmt.Sprintf("test.local.%d", i),
 			},
 		}
 		err = store.Put(testPayload)
@@ -54,8 +54,8 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 	}
 
 	testPayload := &raftv1.ShardState{
-		ShardId:   1,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		ShardId: 1,
+		Type:    raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
 	}
 
 	resp, err := store.Get(testPayload.GetShardId())

@@ -10,20 +10,23 @@
 package messaging
 
 import (
+	"context"
 	"fmt"
-	"runtime"
 	"time"
 
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
+	"go.uber.org/fx"
 )
+
+var EmbeddedMessagingModule = fx.Module("embedded_messaging", fx.Invoke(NewEmbeddedMessagingWithDefaults))
 
 var (
 	singleton *EmbeddedMessaging
 )
 
-type EmbeddedMessagingStreamOpts struct {
+type embeddedMessagingStreamOpts struct {
 	*server.Options
 	timeout time.Duration
 }
@@ -36,9 +39,24 @@ type EmbeddedMessagingPubSubClient struct {
 	*nats.Conn
 }
 
-func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging, error) {
+type EmbeddedMessagingWithDefaultsParams struct {
+	fx.In
+
+	Logger    zerolog.Logger
+	Lifecycle fx.Lifecycle
+}
+
+type EmbeddedMessagingWithDefaultsResults struct {
+	fx.Out
+
+	EmbeddedMessaging *EmbeddedMessaging
+}
+
+func NewEmbeddedMessagingWithDefaults(params EmbeddedMessagingWithDefaultsParams) (EmbeddedMessagingWithDefaultsResults, error) {
 	if singleton != nil {
-		return singleton, nil
+		return EmbeddedMessagingWithDefaultsResults{
+			EmbeddedMessaging: singleton,
+		}, nil
 	}
 
 	opts := &server.Options{
@@ -46,15 +64,14 @@ func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging
 		JetStream:     true,
 		DontListen:    true,
 		WriteDeadline: 1_000 * time.Millisecond,
-
 	}
 	srv, err := server.NewServer(opts)
 	if err != nil {
-		return nil, err
+		return EmbeddedMessagingWithDefaultsResults{}, err
 	}
 
 	singleton = &EmbeddedMessaging{
-		opts: &EmbeddedMessagingStreamOpts{timeout: 4000 * time.Millisecond, Options: opts},
+		opts: &embeddedMessagingStreamOpts{timeout: 4000 * time.Millisecond, Options: opts},
 		srv:  srv,
 	}
 
@@ -63,30 +80,38 @@ func NewEmbeddedMessagingWithDefaults(logger zerolog.Logger) (*EmbeddedMessaging
 	switch level {
 	case zerolog.TraceLevel:
 		srv.SetLoggerV2(&messagingLogger{
-			logger: logger.With().Str("component", "messaging").Logger(),
+			logger: params.Logger.With().Str("component", "messaging").Logger(),
 		}, true, true, true)
 		break
 	case zerolog.DebugLevel:
 		srv.SetLoggerV2(&messagingLogger{
-			logger: logger.With().Str("component", "messaging").Logger(),
+			logger: params.Logger.With().Str("component", "messaging").Logger(),
 		}, true, false, false)
 		break
 	default:
 		srv.SetLoggerV2(&messagingLogger{
-			logger: logger.With().Str("component", "messaging").Logger(),
+			logger: params.Logger.With().Str("component", "messaging").Logger(),
 		}, false, false, false)
 	}
 
-	// ensure it's properly stopped when all references to this are deleted.
-	runtime.SetFinalizer(singleton, func(e *EmbeddedMessaging) {
-		e.Stop()
+	singleton.Start()
+
+	// register the stop function
+	params.Lifecycle.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			// todo (sienna): figure out why this is panicking
+			singleton.Stop()
+			return nil
+		},
 	})
 
-	return singleton, err
+	return EmbeddedMessagingWithDefaultsResults{
+		EmbeddedMessaging: singleton,
+	}, err
 }
 
 type EmbeddedMessaging struct {
-	opts *EmbeddedMessagingStreamOpts
+	opts *embeddedMessagingStreamOpts
 	srv  *server.Server
 }
 

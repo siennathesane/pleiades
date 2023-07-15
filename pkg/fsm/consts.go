@@ -12,7 +12,7 @@ package fsm
 const (
 
 	// ref: https://go.dev/play/p/hvhaWYwufx1
-	dbDirModeVal  int = 484
+	dbDirModeVal int = 484
 
 	ShardConfigBucket string = "shards"
 )

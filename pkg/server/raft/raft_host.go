@@ -13,8 +13,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/lni/dragonboat/v3"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )

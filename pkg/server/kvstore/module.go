@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Sienna Lloyd
+ * Copyright (c) 2023 Sienna Lloyd
  *
  * Licensed under the PolyForm Internal Use License 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -7,18 +7,15 @@
  *  https://github.com/mxplusb/pleiades/blob/mainline/LICENSE
  */
 
-package shard
+package kvstore
 
 import (
-	"github.com/cockroachdb/errors"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"go.uber.org/fx"
 )
 
-const (
-	testStateMachineType  runtime.StateMachineType = 0
-	BBoltStateMachineType runtime.StateMachineType = 1
-)
-
-var (
-	ErrUnsupportedStateMachine = errors.New("state machine type is unsupported")
+var KvStoreModule = fx.Module("kvstore",
+	fx.Provide(runtime.AsRoute(NewKvStoreBboltConnectAdapter)),
+	fx.Provide(runtime.AsRoute(NewKvstoreTransactionConnectAdapter)),
+	fx.Provide(NewBboltStoreManager),
 )

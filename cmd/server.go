@@ -18,17 +18,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/mxplusb/pleiades/pkg/server"
-	"github.com/mxplusb/pleiades/pkg/server/eventing"
-	"github.com/mxplusb/pleiades/pkg/server/kvstore"
-	"github.com/mxplusb/pleiades/pkg/server/raft"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
-	"github.com/mxplusb/pleiades/pkg/server/shard"
-	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-homedir"
+	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/server"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/posener/complete"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -293,23 +288,7 @@ func (s *ServerCommand) Run(args []string) int {
 		fx.WithLogger(func() fxevent.Logger { // this provides the fx logger, not the general logger
 			return zerologAdapter{logger}
 		}),
-		fx.Provide(eventing.NewServer),
-		fx.Provide(server.NewHttpServeMux),
-		fx.Provide(server.NewNodeHost),
-		fx.Provide(server.NewHttpServer),
-		fx.Provide(eventing.NewPubSubClient),
-		fx.Provide(eventing.NewStreamClient),
-		fx.Provide(eventing.NewLifecycleManager),
-		fx.Provide(kvstore.NewBboltStoreManager),
-		fx.Provide(server.AsRoute(kvstore.NewKvstoreBboltConnectAdapter)),
-		fx.Provide(server.AsRoute(kvstore.NewKvstoreTransactionConnectAdapter)),
-		fx.Provide(raft.NewHost),
-		fx.Provide(server.AsRoute(raft.NewRaftHostConnectAdapter)),
-		fx.Provide(server.AsRoute(shard.NewRaftShardConnectAdapter)),
-		fx.Provide(shard.NewManager),
-		fx.Provide(transactions.NewManager),
-		fx.Invoke(eventing.NewLifecycleManager),
-		fx.Invoke(server.NewHttpServer),
+		server.ServerModule,
 	)
 
 	if err := app.Start(ctx); err != nil {

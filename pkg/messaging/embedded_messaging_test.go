@@ -23,7 +23,7 @@ func TestEmbeddedEventStream(t *testing.T) {
 
 type EmbeddedEventStreamTestSuite struct {
 	suite.Suite
-	opts   *EmbeddedMessagingStreamOpts
+	opts   *embeddedMessagingStreamOpts
 	logger zerolog.Logger
 }
 

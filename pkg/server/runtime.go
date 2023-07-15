@@ -14,16 +14,20 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
-	"github.com/mxplusb/pleiades/pkg/server/eventing"
-	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	grpchealth "github.com/bufbuild/connect-grpchealth-go"
 	grpcreflect "github.com/bufbuild/connect-grpcreflect-go"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	dlog "github.com/lni/dragonboat/v3/logger"
+	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
+	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
+	"github.com/mxplusb/pleiades/pkg/server/eventing"
+	"github.com/mxplusb/pleiades/pkg/server/kvstore"
+	"github.com/mxplusb/pleiades/pkg/server/raft"
+	"github.com/mxplusb/pleiades/pkg/server/runtime"
+	"github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/server/shard"
+	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
@@ -37,8 +41,19 @@ func init() {
 
 // singletons
 var (
+	ServerModule = fx.Module("server",
+		kvstore.KvStoreModule,
+		raft.RaftModule,
+		shard.ShardModule,
+		transactions.TransactionsModule,
+		eventing.EventingModule,
+		fx.Provide(NewNodeHost),
+		fx.Provide(NewHttpServeMux),
+		fx.Invoke(NewHttpServer),
+	)
+
 	httpServer *http.Server
-	nodeHost *dragonboat.NodeHost
+	nodeHost   *dragonboat.NodeHost
 )
 
 type HttpServeMuxBuilderParams struct {
@@ -123,12 +138,13 @@ func NewHttpServer(lc fx.Lifecycle, params HttpServerBuilderParams) HttpServerBu
 type NodeHostBuilderParams struct {
 	fx.In
 
+	Lifecycle      fx.Lifecycle
 	Logger         zerolog.Logger
 	NodeHostConfig dconfig.NodeHostConfig
-	Server         *eventing.Server
+	Server         *eventing.EventServer
 }
 
-func NewNodeHost(lc fx.Lifecycle, params NodeHostBuilderParams) (*dragonboat.NodeHost, error) {
+func NewNodeHost(params NodeHostBuilderParams) (*dragonboat.NodeHost, error) {
 	handler, err := params.Server.GetRaftSystemEventListener()
 	if err != nil {
 		params.Logger.Error().Err(err).Msg("can't build raft system listeners")
@@ -144,19 +160,12 @@ func NewNodeHost(lc fx.Lifecycle, params NodeHostBuilderParams) (*dragonboat.Nod
 	}
 
 	// dragonboat starts itself when New() is created, this is purely for the startup sequence
-	lc.Append(fx.Hook{OnStart: func(ctx context.Context) error {
-		return nil
-	}})
+	params.Lifecycle.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			nodeHost.Stop()
+			return nil
+		},
+	})
 
 	return nodeHost, err
-}
-
-// AsRoute annotates the given constructor to state that
-// it provides a route to the "routes" group.
-func AsRoute(f any) any {
-	return fx.Annotate(
-		f,
-		fx.As(new(runtime.ServiceHandler)),
-		fx.ResultTags(`group:"routes"`),
-	)
 }

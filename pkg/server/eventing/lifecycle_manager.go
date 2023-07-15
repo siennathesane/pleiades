@@ -12,11 +12,11 @@ package eventing
 import (
 	"context"
 
+	"github.com/cockroachdb/errors"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/messaging"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
@@ -52,17 +52,20 @@ func NewLifecycleManager(lc fx.Lifecycle, params LifecycleManagerBuilderParams) 
 	evSingleton = messaging.NewRaftEventHandler(params.PubSubClient, params.StreamClient, l)
 
 	runner := &LifecycleManager{
-		logger: l,
-		store: store,
+		logger:       l,
+		store:        store,
 		shardManager: params.ShardManager,
 		pubSubClient: params.PubSubClient,
 		eventHandler: evSingleton,
-		raftHost: params.RaftHost,
+		raftHost:     params.RaftHost,
 	}
 	runner.registerCallbacks()
 
+	if err := runner.startHook(context.Background()); err != nil {
+		l.Fatal().Err(err).Msg("can't start shards")
+	}
+
 	lc.Append(fx.Hook{
-		OnStart: runner.StartHook,
 		OnStop: runner.StopHook,
 	})
 
@@ -78,7 +81,7 @@ type LifecycleManager struct {
 	pubSubClient *messaging.EmbeddedMessagingPubSubClient
 }
 
-func (l *LifecycleManager) StartHook(ctx context.Context) error {
+func (l *LifecycleManager) startHook(ctx context.Context) error {
 	// we start the shards before we start the listener to prevent random startup issues
 	err := l.StartShards()
 	if err != nil {

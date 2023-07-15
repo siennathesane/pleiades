@@ -15,11 +15,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cockroachdb/errors"
+	"github.com/lni/dragonboat/v3/statemachine"
 	aerrs "github.com/mxplusb/pleiades/pkg/api/errors/v1"
 	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
-	"github.com/cockroachdb/errors"
-	"github.com/lni/dragonboat/v3/statemachine"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"go.etcd.io/bbolt"

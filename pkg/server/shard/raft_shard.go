@@ -13,13 +13,13 @@ import (
 	"context"
 	"time"
 
+	"github.com/cockroachdb/errors"
+	"github.com/lni/dragonboat/v3"
+	dconfig "github.com/lni/dragonboat/v3/config"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/serverutils"
-	"github.com/cockroachdb/errors"
-	"github.com/lni/dragonboat/v3"
-	dconfig "github.com/lni/dragonboat/v3/config"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
 )
@@ -65,7 +65,7 @@ func (c *RaftShardManager) AddReplica(req *raftv1.AddReplicaRequest) error {
 		l.Debug().Msg("using default timeout")
 		req.Timeout = int64(defaultTimeout)
 	}
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout()) * time.Millisecond))
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(time.Duration(req.GetTimeout())*time.Millisecond))
 	defer cancel()
 
 	err := c.nh.SyncRequestAddNode(ctx, req.GetShardId(), req.GetReplicaId(), req.GetHostname(), 0)

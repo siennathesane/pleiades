@@ -30,7 +30,7 @@ var src = mr.NewSource(time.Now().UnixNano())
 func RandomPort() int {
 	max := 65535
 	min := 1025
-	return rand.Intn(max - min) + min
+	return rand.Intn(max-min) + min
 }
 
 // Generates a random string of N characters long.

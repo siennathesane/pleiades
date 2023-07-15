@@ -14,9 +14,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lni/dragonboat/v3/raftio"
 	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/utils"
-	"github.com/lni/dragonboat/v3/raftio"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"

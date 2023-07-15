@@ -16,12 +16,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mxplusb/pleiades/pkg/messaging"
-	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	dlog "github.com/lni/dragonboat/v3/logger"
 	"github.com/lni/goutils/vfs"
+	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/utils"
+	"go.uber.org/fx/fxtest"
 )
 
 var (
@@ -59,10 +60,14 @@ func BuildTestNodeHostConfig(t *testing.T) dconfig.NodeHostConfig {
 		FS: vfs.NewMem(),
 	}
 
-	msg, err := messaging.NewEmbeddedMessagingWithDefaults(utils.NewTestLogger(t))
+	results, err := messaging.NewEmbeddedMessagingWithDefaults(messaging.EmbeddedMessagingWithDefaultsParams{
+		Logger:    utils.NewTestLogger(t),
+		Lifecycle: fxtest.NewLifecycle(t),
+	})
 	if err != nil {
 		t.Fatalf("error starting nats: %s", err)
 	}
+	msg := results.EmbeddedMessaging
 	msg.Start()
 
 	pubSubClient, err := msg.GetPubSubClient()

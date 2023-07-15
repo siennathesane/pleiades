@@ -17,7 +17,6 @@ var (
 	viper *vip.Viper
 )
 
-
 func init() {
 	viper = vip.New()
 }

@@ -19,6 +19,12 @@
         <ImportPathEntry>
           <option name="location" value="file://$USER_HOME$/AppData/Local/JetBrains/GoLand2022.3/protoeditor" />
         </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/pkg/api/raftapi" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/api/databaseapi" />
+        </ImportPathEntry>
       </list>
     </option>
     <option name="descriptorPath" value="google/protobuf/descriptor.proto" />
