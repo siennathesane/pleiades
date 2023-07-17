@@ -9,6 +9,7 @@ bin/
 build/
 ci/vars/**.sh
 ci/vars/**.yaml
+covprofile*
 google/
 node_modules/
 package-lock.json
