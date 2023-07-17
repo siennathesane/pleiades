@@ -1,9 +1,11 @@
 - Feature Name: service_graph
-- Status: draft
+- Status: declined
 - Start Date: 2023-06-09
 - Authors: @mxplusb
-- RFC PR: #19
+- RFC PR: #19 #20
 - Issue: #18
+
+_[This RFC was declined due to too much added complexity]_
 
 # Summary
 
