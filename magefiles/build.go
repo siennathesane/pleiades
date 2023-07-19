@@ -26,7 +26,7 @@ import (
 type Build mg.Namespace
 
 var (
-	platforms  = []string{"linux", "darwin"}
+	platforms  = []string{"linux", "darwin", "windows"}
 	invariants = []string{"amd64", "arm64"}
 )
 
@@ -68,6 +68,8 @@ func ldflags() string {
 	}
 
 	sb := strings.Builder{}
+
+	sb.WriteString("-s -w ")
 
 	sb.WriteString("-X '")
 	sb.WriteString("github.com/mxplusb/pleiades/pkg.GoVersion=")

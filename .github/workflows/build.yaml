@@ -10,9 +10,9 @@ jobs:
     runs-on: "${{ matrix.os }}"
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache bazel build results
-        uses: actions/cache@v2
+      - uses: actions/checkout@v3
+      - name: Cache Build Results
+        uses: actions/cache@v3
         env:
           cache-name: bazel-cache
         with:
@@ -20,8 +20,8 @@ jobs:
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-master
-      - name: Build the code
+      - name: Build Pleiades
         run: bazel build //...
 
-      - name: Test the code
-        run: bazel test //...
+      - name: Test Pleiades
+        run: bazel test //... --test_output=errors

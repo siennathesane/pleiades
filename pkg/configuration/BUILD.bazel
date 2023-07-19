@@ -13,8 +13,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@com_github_spf13_viper//:go_default_library",
+        "@com_github_rs_zerolog//:zerolog",
+        "@com_github_spf13_viper//:viper",
     ],
 )
 
@@ -25,5 +25,5 @@ go_test(
         "schema_test.go",
     ],
     embed = [":configuration"],
-    deps = ["@com_github_stretchr_testify//suite:go_default_library"],
+    deps = ["@com_github_stretchr_testify//suite"],
 )

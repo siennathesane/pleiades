@@ -249,10 +249,10 @@ def go_dependencies():
     )
     go_repository(
         name = "com_github_cockroachdb_errors",
+        build_file_proto_mode = "disable",  # keep
         importpath = "github.com/cockroachdb/errors",
         sum = "h1:lfxS8zZz1+OjtV4MtNWgboi/W5tyLEB6VQZBXN+0VUU=",
         version = "v1.10.0",
-        build_file_proto_mode = "disable",  # keep
     )
     go_repository(
         name = "com_github_cockroachdb_logtags",
@@ -320,6 +320,13 @@ def go_dependencies():
         sum = "h1:BSKMNlYxDvnunlTymqtgONjNnaRV1sTpcovwwjF22jk=",
         version = "v1.0.10",
     )
+    go_repository(
+        name = "com_github_cpuguy83_go_md2man_v2",
+        importpath = "github.com/cpuguy83/go-md2man/v2",
+        sum = "h1:p1EgwI/C7NhT0JmVkwCD2ZBK8j4aeHQX2pMHHBfMQ6w=",
+        version = "v2.0.2",
+    )
+
     go_repository(
         name = "com_github_creack_pty",
         importpath = "github.com/creack/pty",
@@ -622,10 +629,10 @@ def go_dependencies():
     )
     go_repository(
         name = "com_github_gogo_protobuf",
+        build_file_proto_mode = "disable",  # keep: bug in gazelle
         importpath = "github.com/gogo/protobuf",
         sum = "h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=",
         version = "v1.3.2",
-        build_file_proto_mode = "disable",  # keep: bug in gazelle
     )
     go_repository(
         name = "com_github_gogo_status",
@@ -930,8 +937,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_inconshreveable_mousetrap",
         importpath = "github.com/inconshreveable/mousetrap",
-        sum = "h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NHg9XEKhtSvM=",
-        version = "v1.0.0",
+        sum = "h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=",
+        version = "v1.1.0",
     )
     go_repository(
         name = "com_github_iris_contrib_blackfriday",
@@ -1175,10 +1182,10 @@ def go_dependencies():
     )
     go_repository(
         name = "com_github_lni_dragonboat_v3",
+        build_file_proto_mode = "disable",  # keep: the wrong version gets downloaded, which is strange
         importpath = "github.com/lni/dragonboat/v3",
         sum = "h1:rrA/p6gM/iLxFmOVFE39aY1SIcWxDBzneNay9B5JXTs=",
         version = "v3.3.7",
-        build_file_proto_mode = "disable",  # keep: the wrong version gets downloaded, which is strange
     )
     go_repository(
         name = "com_github_lni_goutils",
@@ -1415,6 +1422,25 @@ def go_dependencies():
         version = "v1.10.1",
     )
     go_repository(
+        name = "com_github_opencontainers_go_digest",
+        importpath = "github.com/opencontainers/go-digest",
+        sum = "h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8Oi/yOhh5U=",
+        version = "v1.0.0",
+    )
+    go_repository(
+        name = "com_github_opencontainers_image_spec",
+        importpath = "github.com/opencontainers/image-spec",
+        sum = "h1:2zx/Stx4Wc5pIPDvIxHXvXtQFW/7XWJGmnM7r3wg034=",
+        version = "v1.1.0-rc2",
+    )
+    go_repository(
+        name = "com_github_oras_project_oras_credentials_go",
+        importpath = "github.com/oras-project/oras-credentials-go",
+        sum = "h1:BvWAXo0e5unWR6Hfxyb0K04mHNHreQz/Zclw6IzCYJo=",
+        version = "v0.2.0",
+    )
+
+    go_repository(
         name = "com_github_pascaldekloe_goe",
         importpath = "github.com/pascaldekloe/goe",
         sum = "h1:cBOtyMzM9HTpWjXfbbunk26uA6nG3a8n06Wieeh0MwY=",
@@ -1531,8 +1557,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_russross_blackfriday",
         importpath = "github.com/russross/blackfriday",
-        sum = "h1:HyvC0ARfnZBqnXwABFeSZHpKvJHJJfPz81GNueLj0oo=",
-        version = "v1.5.2",
+        sum = "h1:KqfZb0pUVN2lYqZUYRddxF4OR8ZMURnJIG5Y3VRLtww=",
+        version = "v1.6.0",
     )
     go_repository(
         name = "com_github_russross_blackfriday_v2",
@@ -1603,8 +1629,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_sirupsen_logrus",
         importpath = "github.com/sirupsen/logrus",
-        sum = "h1:trlNQbNUG3OdDrDil03MCb1H2o9nJ1x4/5LYw7byDE0=",
-        version = "v1.9.0",
+        sum = "h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=",
+        version = "v1.9.3",
     )
     go_repository(
         name = "com_github_skeema_knownhosts",
@@ -1639,8 +1665,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_spf13_cobra",
         importpath = "github.com/spf13/cobra",
-        sum = "h1:f0B+LkLX6DtmRH1isoNA9VTtNUK9K8xYd28JNNfOv/s=",
-        version = "v0.0.5",
+        sum = "h1:hyqWnYt1ZQShIddO5kBpj3vu05/++x6tJ6dg8EC572I=",
+        version = "v1.7.0",
     )
     go_repository(
         name = "com_github_spf13_jwalterweatherman",
@@ -2057,6 +2083,19 @@ def go_dependencies():
         version = "v1.3.0",
     )
     go_repository(
+        name = "land_oras_oras",
+        importpath = "oras.land/oras",
+        sum = "h1:mAUrSk3YeeHaM6nCeFNXQaG+qNDanjVMlphbyqh0eEw=",
+        version = "v1.1.0-rc.1",
+    )
+    go_repository(
+        name = "land_oras_oras_go_v2",
+        importpath = "oras.land/oras-go/v2",
+        sum = "h1:NYynybpqtG3lLTZMWNlrvUlcyGakCke57tg4TX6w2kA=",
+        version = "v2.2.1-0.20230627113607-6b5bd4b4372b",
+    )
+
+    go_repository(
         name = "org_golang_google_api",
         importpath = "google.golang.org/api",
         sum = "h1:zDobeejm3E7pEG1mNHvdxvjs5XJoCMzyNH+CmwL94Es=",
@@ -2137,8 +2176,8 @@ def go_dependencies():
     go_repository(
         name = "org_golang_x_sync",
         importpath = "golang.org/x/sync",
-        sum = "h1:wsuoTGHzEhffawBOhz5CYhcrV4IdKZbEyZjBMuTp12o=",
-        version = "v0.1.0",
+        sum = "h1:ftCYgMx6zT/asHUrPw8BLLscYtGznsLAnjq5RH9P66E=",
+        version = "v0.3.0",
     )
     go_repository(
         name = "org_golang_x_sys",

@@ -12,7 +12,7 @@ package main
 import (
 	"os"
 
-	"github.com/mxplusb/pleiades/cmd"
+	"github.com/mxplusb/pleiades/cmd/cli"
 	"github.com/planetscale/vtprotobuf/codec/grpc"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc/encoding"
@@ -30,5 +30,5 @@ func main() {
 	viper.AddConfigPath("$HOME/.pleiades")  // call multiple times to add many search paths
 	viper.AddConfigPath(".")               // optionally look for config in the working directory
 
-	os.Exit(cmd.Run(os.Args[1:]))
+	os.Exit(cli.Run(os.Args[1:]))
 }

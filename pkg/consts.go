@@ -12,5 +12,5 @@ package pkg
 var (
 	Version   = ""
 	GoVersion = ""
-	BuildTime        = ""
+	BuildTime = ""
 )
