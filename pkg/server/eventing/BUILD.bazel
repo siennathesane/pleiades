@@ -15,9 +15,9 @@ go_library(
         "//pkg/messaging",
         "//pkg/raftpb",
         "//pkg/server/runtime",
-        "@com_github_cockroachdb_errors//:go_default_library",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@org_uber_go_fx//:go_default_library",
+        "@com_github_cockroachdb_errors//:errors",
+        "@com_github_rs_zerolog//:zerolog",
+        "@org_uber_go_fx//:fx",
     ],
 )
 
@@ -27,7 +27,7 @@ go_test(
     embed = [":eventing"],
     deps = [
         "//pkg/utils",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@com_github_stretchr_testify//suite:go_default_library",
+        "@com_github_rs_zerolog//:zerolog",
+        "@com_github_stretchr_testify//suite",
     ],
 )

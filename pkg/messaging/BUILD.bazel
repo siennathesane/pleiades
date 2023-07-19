@@ -14,12 +14,12 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/raftpb",
-        "@com_github_lni_dragonboat_v3//raftio:go_default_library",
-        "@com_github_nats_io_nats_go//:go_default_library",
-        "@com_github_nats_io_nats_server_v2//server:go_default_library",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
-        "@org_uber_go_fx//:go_default_library",
+        "@com_github_lni_dragonboat_v3//raftio",
+        "@com_github_nats_io_nats_go//:nats_go",
+        "@com_github_nats_io_nats_server_v2//server",
+        "@com_github_rs_zerolog//:zerolog",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_uber_go_fx//:fx",
     ],
 )
 
@@ -34,11 +34,11 @@ go_test(
     deps = [
         "//pkg/raftpb",
         "//pkg/utils",
-        "@com_github_lni_dragonboat_v3//raftio:go_default_library",
-        "@com_github_nats_io_nats_go//:go_default_library",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@com_github_stretchr_testify//suite:go_default_library",
-        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
-        "@org_uber_go_fx//fxtest:go_default_library",
+        "@com_github_lni_dragonboat_v3//raftio",
+        "@com_github_nats_io_nats_go//:nats_go",
+        "@com_github_rs_zerolog//:zerolog",
+        "@com_github_stretchr_testify//suite",
+        "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_uber_go_fx//fxtest",
     ],
 )

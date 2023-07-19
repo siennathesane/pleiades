@@ -1,4 +1,5 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "bazel_gazelle",
@@ -24,6 +25,12 @@ http_archive(
         "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.41.0/rules_go-v0.41.0.zip",
         "https://github.com/bazelbuild/rules_go/releases/download/v0.41.0/rules_go-v0.41.0.zip",
     ],
+)
+
+git_repository(
+    name = "com_github_ash2k_bazel_tools",
+    commit = "2add5bb84c2837a82a44b57e83c7414247aed43a",
+    remote = "https://github.com/ash2k/bazel-tools.git",
 )
 
 http_archive(
@@ -57,5 +64,9 @@ load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_
 rules_proto_dependencies()
 
 rules_proto_toolchains()
+
+load("@com_github_ash2k_bazel_tools//multirun:deps.bzl", "multirun_dependencies")
+
+multirun_dependencies()
 
 gazelle_dependencies()

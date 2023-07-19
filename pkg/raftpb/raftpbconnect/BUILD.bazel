@@ -7,6 +7,6 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//pkg/raftpb",
-        "@com_github_bufbuild_connect_go//:go_default_library",
+        "@com_github_bufbuild_connect_go//:connect-go",
     ],
 )

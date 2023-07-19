@@ -13,9 +13,9 @@ go_library(
         "//pkg/configuration",
         "//pkg/fsm/kv",
         "//pkg/raftpb",
-        "@com_github_cockroachdb_errors//:go_default_library",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@io_etcd_go_bbolt//:go_default_library",
+        "@com_github_cockroachdb_errors//:errors",
+        "@com_github_rs_zerolog//:zerolog",
+        "@io_etcd_go_bbolt//:bbolt",
     ],
 )
 
@@ -27,7 +27,7 @@ go_test(
         "//pkg/configuration",
         "//pkg/raftpb",
         "//pkg/utils",
-        "@com_github_rs_zerolog//:go_default_library",
-        "@com_github_stretchr_testify//suite:go_default_library",
+        "@com_github_rs_zerolog//:zerolog",
+        "@com_github_stretchr_testify//suite",
     ],
 )
