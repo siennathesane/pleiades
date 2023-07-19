@@ -16,9 +16,9 @@ import (
 	"sort"
 
 	"github.com/cockroachdb/errors"
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/fsm/kv"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/rs/zerolog"
 	"go.etcd.io/bbolt"
 )
@@ -52,8 +52,8 @@ func (s *SystemStore) Close() error {
 	return s.db.Close()
 }
 
-func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
-	reqs := make([]*raftv1.ShardState, 0)
+func (s *SystemStore) GetAll() ([]*raftpb.ShardState, error) {
+	reqs := make([]*raftpb.ShardState, 0)
 	err := s.db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
@@ -61,7 +61,7 @@ func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
 		}
 
 		return bucket.ForEach(func(k, v []byte) error {
-			req := &raftv1.ShardState{}
+			req := &raftpb.ShardState{}
 			err := req.UnmarshalVT(v)
 			if err != nil {
 				s.logger.Trace().Err(err).Msg("can't unmarshal shard configuration")
@@ -81,8 +81,8 @@ func (s *SystemStore) GetAll() ([]*raftv1.ShardState, error) {
 	return reqs, err
 }
 
-func (s *SystemStore) Get(shardId uint64) (*raftv1.ShardState, error) {
-	req := &raftv1.ShardState{}
+func (s *SystemStore) Get(shardId uint64) (*raftpb.ShardState, error) {
+	req := &raftpb.ShardState{}
 	err := s.db.View(func(tx *bbolt.Tx) error {
 		bucket := tx.Bucket([]byte(ShardConfigBucket))
 		if bucket == nil {
@@ -106,7 +106,7 @@ func (s *SystemStore) Get(shardId uint64) (*raftv1.ShardState, error) {
 	return req, err
 }
 
-func (s *SystemStore) Put(req *raftv1.ShardState) error {
+func (s *SystemStore) Put(req *raftpb.ShardState) error {
 	return s.db.Update(func(tx *bbolt.Tx) error {
 		bucket, err := tx.CreateBucketIfNotExists([]byte(ShardConfigBucket))
 		if err != nil {

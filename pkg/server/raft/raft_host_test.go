@@ -17,8 +17,8 @@ import (
 
 	"github.com/lni/dragonboat/v3"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/mxplusb/pleiades/pkg/utils/serverutils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx/fxtest"
@@ -153,7 +153,7 @@ func (t *RaftHostTestSuite) TestRaftAddress() {
 	host := hostRes.RaftHost.(*RaftHost)
 
 	resp := host.RaftAddress()
-	t.Require().NotEmpty(resp, "the raft address must not be empty")
+	t.Require().NotEmpty(resp, "the raftpb address must not be empty")
 }
 
 //goland:noinspection GoVetLostCancel

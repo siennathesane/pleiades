@@ -1,10 +1,16 @@
-**/test.log
 **.tgz
 **/*.db
+**/test.log
 **/tmp
+*covprofile
 .idea/shelf/
 .idea/usage.statistics.xml
 .idea/workspace.xml
+/.ijwb/
+bazel-bin
+bazel-out
+bazel-pleiades
+bazel-testlogs
 bin/
 build/
 ci/vars/**.sh
@@ -15,4 +21,3 @@ node_modules/
 package-lock.json
 report.xml
 vendor/
-*covprofile

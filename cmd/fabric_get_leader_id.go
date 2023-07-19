@@ -14,11 +14,11 @@ import (
 	"fmt"
 	"time"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-wordwrap"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
+	"github.com/mxplusb/pleiades/pkg/raftpb/raftpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -96,7 +96,7 @@ func (f *FabricGetLeaderIdCommand) Run(args []string) int {
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
-	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
+	client := raftpbconnect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
 	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.get-leader-id.fabric-hostname"), config.GetUint32("fabric.get-leader-id.fabric-port"))
 
@@ -104,7 +104,7 @@ func (f *FabricGetLeaderIdCommand) Run(args []string) int {
 		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
 	}
 
-	descriptor, err := client.GetLeaderId(ctx, connect.NewRequest(&raftv1.GetLeaderIdRequest{
+	descriptor, err := client.GetLeaderId(ctx, connect.NewRequest(&raftpb.GetLeaderIdRequest{
 		ShardId:   f.flagShardId,
 		Timeout:   int64(config.GetInt32("client.timeout")),
 	}))

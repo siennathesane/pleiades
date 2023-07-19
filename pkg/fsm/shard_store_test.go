@@ -13,8 +13,8 @@ import (
 	"fmt"
 	"testing"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -42,9 +42,9 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 
 	count := uint64(10)
 	for i := uint64(0); i < count; i++ {
-		testPayload := &raftv1.ShardState{
+		testPayload := &raftpb.ShardState{
 			ShardId: i,
-			Type:    raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+			Type:    raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 			Replicas: map[uint64]string{
 				i + 4: fmt.Sprintf("test.local.%d", i),
 			},
@@ -53,9 +53,9 @@ func (t *shardStoreTestSuite) TestLifecycle() {
 		t.Require().NoError(err, "there must not be an error when putting a configuration")
 	}
 
-	testPayload := &raftv1.ShardState{
+	testPayload := &raftpb.ShardState{
 		ShardId: 1,
-		Type:    raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:    raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 	}
 
 	resp, err := store.Get(testPayload.GetShardId())

@@ -14,11 +14,11 @@ import (
 	"fmt"
 	"time"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-wordwrap"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
+	"github.com/mxplusb/pleiades/pkg/raftpb/raftpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -58,7 +58,7 @@ func (f *FabricAddReplicaCommand) Flags() *FlagSets {
 
 	fs.StringVar(&StringVar{
 		Name:              "fabric-hostname",
-		Usage:             `The internally addressable data fabric hostname where the replica will be created. This address must be accessible by other hosts in the data fabric but not necessarily external to the constellation. For example, if the data fabric is externally accessible at kv.example.io, and the internal fabric nodes are addressable at server-[0,1,2).internal.example.io, operators must use the internal addresses.`,
+		Usage:             `The internally addressable data fabric hostname where the replica will be created. This address must be accessible by other hosts in the data fabric but not necessarily external to the constellation. For example, if the data fabric is externally accessible at kvpb.example.io, and the internal fabric nodes are addressable at server-[0,1,2).internal.example.io, operators must use the internal addresses.`,
 		Target:            &f.flagHostname,
 		Completion:        complete.PredictNothing,
 		ConfigurationPath: "fabric.add-replica.fabric-hostname",
@@ -126,7 +126,7 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
-	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
+	client := raftpbconnect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
 	fabricHost := fmt.Sprintf("%s:%d", config.GetString("fabric.add-replica.fabric-hostname"), config.GetUint32("fabric.add-replica.fabric-port"))
 
@@ -134,7 +134,7 @@ func (f *FabricAddReplicaCommand) Run(args []string) int {
 		f.UI.Info(fmt.Sprintf("setting target fabric host to %s", fabricHost))
 	}
 
-	descriptor, err := client.AddReplica(ctx, connect.NewRequest(&raftv1.AddReplicaRequest{
+	descriptor, err := client.AddReplica(ctx, connect.NewRequest(&raftpb.AddReplicaRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 		Hostname:  fabricHost,

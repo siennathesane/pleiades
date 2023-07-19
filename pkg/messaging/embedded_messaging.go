@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/nats-io/nats-server/v2/server"
+	nserv "github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
@@ -27,7 +27,7 @@ var (
 )
 
 type embeddedMessagingStreamOpts struct {
-	*server.Options
+	*nserv.Options
 	timeout time.Duration
 }
 
@@ -59,13 +59,13 @@ func NewEmbeddedMessagingWithDefaults(params EmbeddedMessagingWithDefaultsParams
 		}, nil
 	}
 
-	opts := &server.Options{
+	opts := &nserv.Options{
 		Host:          "localhost",
 		JetStream:     true,
 		DontListen:    true,
 		WriteDeadline: 1_000 * time.Millisecond,
 	}
-	srv, err := server.NewServer(opts)
+	srv, err := nserv.NewServer(opts)
 	if err != nil {
 		return EmbeddedMessagingWithDefaultsResults{}, err
 	}
@@ -99,6 +99,12 @@ func NewEmbeddedMessagingWithDefaults(params EmbeddedMessagingWithDefaultsParams
 	// register the stop function
 	params.Lifecycle.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {
+			if singleton == nil {
+				return nil
+			}
+			if singleton.srv == nil {
+				return nil
+			}
 			// todo (sienna): figure out why this is panicking
 			singleton.Stop()
 			return nil
@@ -112,7 +118,7 @@ func NewEmbeddedMessagingWithDefaults(params EmbeddedMessagingWithDefaultsParams
 
 type EmbeddedMessaging struct {
 	opts *embeddedMessagingStreamOpts
-	srv  *server.Server
+	srv  *nserv.Server
 }
 
 func (ev *EmbeddedMessaging) Start() {

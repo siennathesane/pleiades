@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package kvpb;
+option go_package = "github.com/mxplusb/pleiades/pkg/kvpb";
+
+import "kvpb/kv.proto";
+import "kvpb/transactions.proto";
+
+service KvStoreService {
+  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse) {}
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse) {}
+  rpc CreateBucket(CreateBucketRequest) returns (CreateBucketResponse) {}
+  rpc DeleteBucket(DeleteBucketRequest) returns (DeleteBucketResponse) {}
+  rpc GetKey(GetKeyRequest) returns (GetKeyResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc PutKey(PutKeyRequest) returns (PutKeyResponse) {}
+  rpc DeleteKey(DeleteKeyRequest) returns (DeleteKeyResponse) {}
+}
+
+service TransactionsService {
+  rpc NewTransaction(NewTransactionRequest) returns (NewTransactionResponse);
+  rpc CloseTransaction(CloseTransactionRequest) returns (CloseTransactionResponse);
+  rpc Commit(CommitRequest) returns (CommitResponse);
+}

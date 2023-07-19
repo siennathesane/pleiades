@@ -8,7 +8,7 @@ tls:
     kind: ClusterIssuer
 
 pleiades:
-  externalHostname: kv.dev.a13s.io
+  externalHostname: kvpb.dev.a13s.io
   storage:
     storageClass: premium-rwo
     size: 10G

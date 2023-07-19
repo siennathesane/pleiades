@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "eventing",
+    srcs = [
+        "consts.go",
+        "lifecycle_manager.go",
+        "module.go",
+        "server.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/server/eventing",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/fsm",
+        "//pkg/messaging",
+        "//pkg/raftpb",
+        "//pkg/server/runtime",
+        "@com_github_cockroachdb_errors//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_uber_go_fx//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "eventing_test",
+    srcs = ["lifecycle_manager_test.go"],
+    embed = [":eventing"],
+    deps = [
+        "//pkg/utils",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@com_github_stretchr_testify//suite:go_default_library",
+    ],
+)

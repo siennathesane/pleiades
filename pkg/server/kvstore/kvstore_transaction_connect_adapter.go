@@ -16,8 +16,8 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/cockroachdb/errors"
 	dclient "github.com/lni/dragonboat/v3/client"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
 	"github.com/rs/zerolog"
@@ -25,7 +25,7 @@ import (
 )
 
 var (
-	_ kvstorev1connect.TransactionsServiceHandler = (*KvStoreTransactionConnectAdapter)(nil)
+	_ kvpbconnect.TransactionsServiceHandler = (*KvStoreTransactionConnectAdapter)(nil)
 	_ runtime.ServiceHandler                      = (*KvStoreTransactionConnectAdapter)(nil)
 )
 
@@ -50,7 +50,7 @@ type KvStoreTransactionConnectAdapter struct {
 
 func NewKvstoreTransactionConnectAdapter(transactionManager runtime.ITransactionManager, logger zerolog.Logger) *KvStoreTransactionConnectAdapter {
 	adapter := &KvStoreTransactionConnectAdapter{logger: logger, transactionManager: transactionManager}
-	adapter.path, adapter.Handler = kvstorev1connect.NewTransactionsServiceHandler(adapter)
+	adapter.path, adapter.Handler = kvpbconnect.NewTransactionsServiceHandler(adapter)
 	return adapter
 }
 
@@ -58,44 +58,44 @@ func (k *KvStoreTransactionConnectAdapter) Path() string {
 	return k.path
 }
 
-func (k *KvStoreTransactionConnectAdapter) NewTransaction(ctx context.Context, c *connect.Request[kvstorev1.NewTransactionRequest]) (*connect.Response[kvstorev1.NewTransactionResponse], error) {
+func (k *KvStoreTransactionConnectAdapter) NewTransaction(ctx context.Context, c *connect.Request[kvpb.NewTransactionRequest]) (*connect.Response[kvpb.NewTransactionResponse], error) {
 	if c.Msg.GetShardId() == 0 {
-		return connect.NewResponse(&kvstorev1.NewTransactionResponse{}), errors.New("shard id must not be 0")
+		return connect.NewResponse(&kvpb.NewTransactionResponse{}), errors.New("shard id must not be 0")
 	}
 
 	transaction, err := k.transactionManager.GetTransaction(ctx, c.Msg.GetShardId())
 	if err != nil {
 		k.logger.Error().Err(err).Uint64("shard", c.Msg.GetShardId()).Msg("cannot create transaction")
 	}
-	return connect.NewResponse(&kvstorev1.NewTransactionResponse{Transaction: transaction}), nil
+	return connect.NewResponse(&kvpb.NewTransactionResponse{Transaction: transaction}), nil
 }
 
-func (k *KvStoreTransactionConnectAdapter) CloseTransaction(ctx context.Context, c *connect.Request[kvstorev1.CloseTransactionRequest]) (*connect.Response[kvstorev1.CloseTransactionResponse], error) {
+func (k *KvStoreTransactionConnectAdapter) CloseTransaction(ctx context.Context, c *connect.Request[kvpb.CloseTransactionRequest]) (*connect.Response[kvpb.CloseTransactionResponse], error) {
 	transaction := c.Msg.GetTransaction()
 	if err := k.checkTransaction(transaction); err != nil {
-		return connect.NewResponse(&kvstorev1.CloseTransactionResponse{}), err
+		return connect.NewResponse(&kvpb.CloseTransactionResponse{}), err
 	}
 
 	err := k.transactionManager.CloseTransaction(ctx, transaction)
 	if err != nil {
 		k.logger.Error().Err(err).Msg("can't close transaction")
 	}
-	return connect.NewResponse(&kvstorev1.CloseTransactionResponse{}), err
+	return connect.NewResponse(&kvpb.CloseTransactionResponse{}), err
 }
 
-func (k *KvStoreTransactionConnectAdapter) Commit(ctx context.Context, c *connect.Request[kvstorev1.CommitRequest]) (*connect.Response[kvstorev1.CommitResponse], error) {
+func (k *KvStoreTransactionConnectAdapter) Commit(ctx context.Context, c *connect.Request[kvpb.CommitRequest]) (*connect.Response[kvpb.CommitResponse], error) {
 	transaction := c.Msg.GetTransaction()
 	if err := k.checkTransaction(transaction); err != nil {
-		return connect.NewResponse(&kvstorev1.CommitResponse{}), err
+		return connect.NewResponse(&kvpb.CommitResponse{}), err
 	}
 
 	t := k.transactionManager.Commit(ctx, transaction)
 
-	return connect.NewResponse(&kvstorev1.CommitResponse{Transaction: t}), nil
+	return connect.NewResponse(&kvpb.CommitResponse{Transaction: t}), nil
 }
 
 // todo (sienna): replace this with dclient.Session.ValidForProposal later.
-func (k *KvStoreTransactionConnectAdapter) checkTransaction(t *kvstorev1.Transaction) error {
+func (k *KvStoreTransactionConnectAdapter) checkTransaction(t *kvpb.Transaction) error {
 	// I don't think this can happen because it's a pointer, but better to be safe than sorry
 	if t == nil {
 		k.logger.Error().Err(transactions.ErrNilTransaction).Msg("attempted close of an empty transaction")

@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
@@ -71,7 +71,7 @@ func (t *BBoltTestSuite) TestCreateAccountBucket() {
 	testAccountId := rand.Uint64()
 	testOwner := "test@test.com"
 
-	req := &kvstorev1.CreateAccountRequest{}
+	req := &kvpb.CreateAccountRequest{}
 	resp, err := b.CreateAccountBucket(req)
 	t.Require().Error(err, "there must be an error when sending an empty request")
 	t.Require().Empty(resp.GetAccountDescriptor(), "the response must be empty")
@@ -97,7 +97,7 @@ func (t *BBoltTestSuite) TestCreateAccountBucket() {
 	t.Require().Empty(expectedBucketList, desc.GetBuckets(), "the list of buckets must be empty")
 
 	// reach into the db and verify it was stored correctly
-	foundAcctDescriptor := &kvstorev1.AccountDescriptor{}
+	foundAcctDescriptor := &kvpb.AccountDescriptor{}
 	err = b.db.View(func(tx *bbolt.Tx) error {
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
@@ -136,13 +136,13 @@ func (t *BBoltTestSuite) TestDeleteAccountBucket() {
 	testOwner := "test@test.com"
 
 	// prep the test
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test account bucket")
 
-	req := &kvstorev1.DeleteAccountRequest{}
+	req := &kvpb.DeleteAccountRequest{}
 
 	req.AccountId = testAccountId
 	resp, err := b.DeleteAccountBucket(req)
@@ -164,7 +164,7 @@ func (t *BBoltTestSuite) TestDeleteAccountBucket() {
 	})
 	t.Require().NoError(err, "there must not be an error when peeking for the deleted account bucket")
 
-	resp, err = b.DeleteAccountBucket(&kvstorev1.DeleteAccountRequest{
+	resp, err = b.DeleteAccountBucket(&kvpb.DeleteAccountRequest{
 		AccountId: 1234,
 		Owner:     "empty",
 	})
@@ -186,7 +186,7 @@ func (t *BBoltTestSuite) TestCreateBucket() {
 	testOwner := "test@test.com"
 
 	// bad request
-	req := &kvstorev1.CreateBucketRequest{
+	req := &kvpb.CreateBucketRequest{
 		AccountId: 0,
 		Name:      "",
 		Owner:     "",
@@ -211,7 +211,7 @@ func (t *BBoltTestSuite) TestCreateBucket() {
 	resp, err = b.CreateBucket(req)
 	t.Require().Error(err, "there must be an error when the account bucket doesn't exist")
 
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
@@ -225,7 +225,7 @@ func (t *BBoltTestSuite) TestCreateBucket() {
 	desc := resp.GetBucketDescriptor()
 	t.Require().Equal(testOwner, desc.GetOwner(), "the owners must be equal")
 
-	acctDescriptor := &kvstorev1.AccountDescriptor{}
+	acctDescriptor := &kvpb.AccountDescriptor{}
 	err = b.db.View(func(tx *bbolt.Tx) error {
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
@@ -260,13 +260,13 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	testOwner := "test@test.com"
 
 	// prep the test
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test account bucket")
 
-	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
+	_, err = b.CreateBucket(&kvpb.CreateBucketRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 		Name:      testBucketName,
@@ -274,7 +274,7 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
 	// bad request
-	req := &kvstorev1.DeleteBucketRequest{
+	req := &kvpb.DeleteBucketRequest{
 		AccountId: 0,
 		Name:      "",
 	}
@@ -294,7 +294,7 @@ func (t *BBoltTestSuite) TestDeleteBucket() {
 	t.Require().NotEmpty(resp, "the response must be blank")
 	t.Require().True(resp.GetOk(), "the request must be ok")
 
-	acctDescriptor := &kvstorev1.AccountDescriptor{}
+	acctDescriptor := &kvpb.AccountDescriptor{}
 	err = b.db.View(func(tx *bbolt.Tx) error {
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
@@ -329,13 +329,13 @@ func (t *BBoltTestSuite) TestGetKey() {
 	testOwner := "test@test.com"
 
 	// prep the test
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test account bucket")
 
-	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
+	_, err = b.CreateBucket(&kvpb.CreateBucketRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 		Name:      testBucketName,
@@ -343,7 +343,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
 	now := time.Now().UnixMilli()
-	expectedKvp := &kvstorev1.KeyValue{
+	expectedKvp := &kvpb.KeyValue{
 		Key:            []byte("test-key"),
 		CreateRevision: now,
 		ModRevision:    now,
@@ -373,7 +373,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	t.Require().NoError(err, "there must not be an error when setting the test key")
 
 	// search for a non-existent key in a non-existent account in a non-existent bucket
-	resp, err := b.GetKey(&kvstorev1.GetKeyRequest{
+	resp, err := b.GetKey(&kvpb.GetKeyRequest{
 		AccountId:  1,
 		BucketName: "empty",
 		Key:        []byte("no"),
@@ -382,7 +382,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
 
 	// search for a non-existent key in a non-existent bucket
-	resp, err = b.GetKey(&kvstorev1.GetKeyRequest{
+	resp, err = b.GetKey(&kvpb.GetKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: "empty",
 		Key:        []byte("no"),
@@ -391,7 +391,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
 
 	// search for a non-existent key
-	resp, err = b.GetKey(&kvstorev1.GetKeyRequest{
+	resp, err = b.GetKey(&kvpb.GetKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: testBucketName,
 		Key:        []byte("no"),
@@ -400,7 +400,7 @@ func (t *BBoltTestSuite) TestGetKey() {
 	t.Require().Empty(resp.GetKeyValuePair(), "the payload must be empty")
 
 	// search for the target key
-	resp, err = b.GetKey(&kvstorev1.GetKeyRequest{
+	resp, err = b.GetKey(&kvpb.GetKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: testBucketName,
 		Key:        expectedKvp.GetKey(),
@@ -431,20 +431,20 @@ func (t *BBoltTestSuite) TestPutKey() {
 	testOwner := "test@test.com"
 
 	// prep the test
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test account bucket")
 
-	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
+	_, err = b.CreateBucket(&kvpb.CreateBucketRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 		Name:      testBucketName,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
-	expectedRequest := &kvstorev1.PutKeyRequest{}
+	expectedRequest := &kvpb.PutKeyRequest{}
 
 	_, err = b.PutKey(expectedRequest)
 	t.Require().Error(err, "there must be an error putting an empty key")
@@ -457,7 +457,7 @@ func (t *BBoltTestSuite) TestPutKey() {
 	_, err = b.PutKey(expectedRequest)
 	t.Require().Error(err, "there must be an error putting a partial payload")
 
-	expectedKvp := &kvstorev1.KeyValue{
+	expectedKvp := &kvpb.KeyValue{
 		Key:            []byte(""),
 		CreateRevision: 0,
 		ModRevision:    0,
@@ -492,7 +492,7 @@ func (t *BBoltTestSuite) TestPutKey() {
 	_, err = b.PutKey(expectedRequest)
 	t.Require().NoError(err, "there must not be an error trying to overwrite a key with a new version")
 
-	foundKvp := &kvstorev1.KeyValue{}
+	foundKvp := &kvpb.KeyValue{}
 	err = b.db.View(func(tx *bbolt.Tx) error {
 		accountBuf := make([]byte, 8)
 		binary.LittleEndian.PutUint64(accountBuf, testAccountId)
@@ -532,25 +532,25 @@ func (t *BBoltTestSuite) TestDeleteKey() {
 	testOwner := "test@test.com"
 
 	// prep the test
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test account bucket")
 
-	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
+	_, err = b.CreateBucket(&kvpb.CreateBucketRequest{
 		AccountId: testAccountId,
 		Owner:     testOwner,
 		Name:      testBucketName,
 	})
 	t.Require().NoError(err, "there must not be an error creating the test bucket")
 
-	expectedKvp := &kvstorev1.KeyValue{
+	expectedKvp := &kvpb.KeyValue{
 		Key:   []byte("test-key"),
 		Value: []byte("test-value"),
 	}
 
-	expectedRequest := &kvstorev1.PutKeyRequest{
+	expectedRequest := &kvpb.PutKeyRequest{
 		AccountId:    testAccountId,
 		BucketName:   testBucketName,
 		KeyValuePair: expectedKvp,
@@ -559,7 +559,7 @@ func (t *BBoltTestSuite) TestDeleteKey() {
 	_, err = b.PutKey(expectedRequest)
 	t.Require().NoError(err, "there must not be an error putting an empty kvp")
 
-	resp, err := b.DeleteKey(&kvstorev1.DeleteKeyRequest{
+	resp, err := b.DeleteKey(&kvpb.DeleteKeyRequest{
 		AccountId:  testAccountId,
 		BucketName: testBucketName,
 		Key:        expectedKvp.Key,
@@ -606,7 +606,7 @@ func FuzzBboltStore_CreateAccountBucket(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, accountId uint64) {
 		testOwner := "test@test.com"
-		req := &kvstorev1.CreateAccountRequest{
+		req := &kvpb.CreateAccountRequest{
 			AccountId: accountId,
 			Owner:     testOwner,
 		}
@@ -641,7 +641,7 @@ func FuzzBboltStore_CreateBucket(f *testing.F) {
 	require.NoError(f, err, "there must be an error when passing a bad directory")
 	require.NotNil(f, b, "the bbolt store must be nil")
 
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: accountId,
 		Owner:     "test@test.com",
 	})
@@ -653,7 +653,7 @@ func FuzzBboltStore_CreateBucket(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, bucketName string) {
 		testOwner := "test@test.com"
-		req := &kvstorev1.CreateBucketRequest{
+		req := &kvpb.CreateBucketRequest{
 			AccountId: accountId,
 			Owner:     testOwner,
 			Name:      bucketName,
@@ -661,7 +661,7 @@ func FuzzBboltStore_CreateBucket(f *testing.F) {
 
 		resp, err := b.CreateBucket(req)
 
-		// unrecoverable errors, very skippable
+		// unrecoverable errorspb, very skippable
 		if errors.Is(err, bbolt.ErrBucketExists) ||
 			errors.Is(err, ErrEmptyBucketName) {
 			return
@@ -691,13 +691,13 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 	require.NoError(f, err, "there must be an error when passing a bad directory")
 	require.NotNil(f, b, "the bbolt store must be nil")
 
-	_, err = b.CreateAccountBucket(&kvstorev1.CreateAccountRequest{
+	_, err = b.CreateAccountBucket(&kvpb.CreateAccountRequest{
 		AccountId: accountId,
 		Owner:     "test@test.com",
 	})
 	require.NoError(f, err, "there must not be an error when creating the account key")
 
-	_, err = b.CreateBucket(&kvstorev1.CreateBucketRequest{
+	_, err = b.CreateBucket(&kvpb.CreateBucketRequest{
 		AccountId: accountId,
 		Owner:     "test@test.com",
 		Name:      testBucketName,
@@ -717,10 +717,10 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 			return
 		}
 
-		putReq := &kvstorev1.PutKeyRequest{
+		putReq := &kvpb.PutKeyRequest{
 			AccountId:  accountId,
 			BucketName: testBucketName,
-			KeyValuePair: &kvstorev1.KeyValue{
+			KeyValuePair: &kvpb.KeyValue{
 				Key:   []byte(keyName),
 				Value: bytes,
 			},
@@ -732,7 +732,7 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 			require.NoError(t, err, "there must not be an error putting a key")
 		}
 
-		getReq := &kvstorev1.GetKeyRequest{
+		getReq := &kvpb.GetKeyRequest{
 			AccountId:  accountId,
 			BucketName: testBucketName,
 			Key:        []byte(keyName),
@@ -753,7 +753,7 @@ func FuzzBboltStore_KeyStoreOperations(f *testing.F) {
 		kvp := resp.GetKeyValuePair()
 		require.Equal(t, bytes, kvp.GetValue(), "the value must be equal")
 
-		delResp, err := b.DeleteKey(&kvstorev1.DeleteKeyRequest{
+		delResp, err := b.DeleteKey(&kvpb.DeleteKeyRequest{
 			AccountId:  accountId,
 			BucketName: testBucketName,
 			Key:        []byte(keyName),

@@ -19,15 +19,15 @@ import (
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
 	dlog "github.com/lni/dragonboat/v3/logger"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
+	"github.com/mxplusb/pleiades/pkg/raftpb/raftpbconnect"
 	"github.com/mxplusb/pleiades/pkg/server/eventing"
 	"github.com/mxplusb/pleiades/pkg/server/kvstore"
 	"github.com/mxplusb/pleiades/pkg/server/raft"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
 	"github.com/mxplusb/pleiades/pkg/server/shard"
 	"github.com/mxplusb/pleiades/pkg/server/transactions"
+	"github.com/mxplusb/pleiades/pkg/utils/serverutils"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
@@ -79,14 +79,14 @@ func NewHttpServeMux(params HttpServeMuxBuilderParams) HttpServeMuxBuilderResult
 
 	// add grpc health checking
 	checker := grpchealth.NewStaticChecker(
-		kvstorev1connect.KvStoreServiceName,
-		raftv1connect.HostServiceName)
+		kvpbconnect.KvStoreServiceName,
+		raftpbconnect.HostServiceName)
 	mux.Handle(grpchealth.NewHandler(checker))
 
 	// add grpc reflection for grpcurl and other tools
 	reflector := grpcreflect.NewStaticReflector(
-		kvstorev1connect.KvStoreServiceName,
-		raftv1connect.HostServiceName)
+		kvpbconnect.KvStoreServiceName,
+		raftpbconnect.HostServiceName)
 
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
@@ -147,7 +147,7 @@ type NodeHostBuilderParams struct {
 func NewNodeHost(params NodeHostBuilderParams) (*dragonboat.NodeHost, error) {
 	handler, err := params.Server.GetRaftSystemEventListener()
 	if err != nil {
-		params.Logger.Error().Err(err).Msg("can't build raft system listeners")
+		params.Logger.Error().Err(err).Msg("can't build raftpb system listeners")
 		return nil, err
 	}
 

@@ -12,10 +12,10 @@ package cmd
 import (
 	"context"
 
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -41,7 +41,7 @@ func (k *KvDeleteCommand) Flags() *FlagSets {
 		Usage:             "Name of the key.",
 		Target:            &k.flagKey,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.key",
+		ConfigurationPath: "client.kvpb.put.key",
 	})
 
 	f.Uint64Var(&Uint64Var{
@@ -49,7 +49,7 @@ func (k *KvDeleteCommand) Flags() *FlagSets {
 		Usage:             "Account ID for the key.",
 		Target:            &k.flagAccountId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.account-id",
+		ConfigurationPath: "client.kvpb.put.account-id",
 	})
 
 	f.StringVar(&StringVar{
@@ -57,7 +57,7 @@ func (k *KvDeleteCommand) Flags() *FlagSets {
 		Usage:             "Name of the bucket.",
 		Target:            &k.flagBucketName,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.bucket-name",
+		ConfigurationPath: "client.kvpb.put.bucket-name",
 	})
 
 	return set
@@ -113,9 +113,9 @@ func (k *KvDeleteCommand) Run(args []string) int {
 		return exitCodeGenericBad
 	}
 
-	client := kvstorev1connect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
+	client := kvpbconnect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
 
-	descriptor, err := client.DeleteKey(context.Background(), connect.NewRequest(&kvstorev1.DeleteKeyRequest{
+	descriptor, err := client.DeleteKey(context.Background(), connect.NewRequest(&kvpb.DeleteKeyRequest{
 		AccountId:  k.flagAccountId,
 		BucketName: k.flagBucketName,
 		Key: []byte(k.flagKey),

@@ -294,7 +294,7 @@ func (f *FlagSets) Completions() complete.Flags {
 	return f.completions
 }
 
-// Parse parses the given flags, returning any errors.
+// Parse parses the given flags, returning any errorspb.
 // Warnings, if any, regarding the arguments format are sent to stdout
 func (f *FlagSets) Parse(args []string, opts ...ParseOptions) error {
 	err := f.mainSet.Parse(args)
@@ -308,7 +308,7 @@ func (f *FlagSets) Parse(args []string, opts ...ParseOptions) error {
 		return err
 	}
 
-	// Now surface any other errors.
+	// Now surface any other errorspb.
 	return generateFlagErrors(f, opts...)
 }
 

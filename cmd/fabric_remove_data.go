@@ -13,11 +13,11 @@ import (
 	"context"
 	"time"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-wordwrap"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
+	"github.com/mxplusb/pleiades/pkg/raftpb/raftpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -99,9 +99,9 @@ func (f *FabricRemoveDataCommand) Run(args []string) int {
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
-	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
+	client := raftpbconnect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	descriptor, err := client.RemoveData(ctx, connect.NewRequest(&raftv1.RemoveDataRequest{
+	descriptor, err := client.RemoveData(ctx, connect.NewRequest(&raftpb.RemoveDataRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 	}))

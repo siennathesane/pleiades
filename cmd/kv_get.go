@@ -12,10 +12,10 @@ package cmd
 import (
 	"context"
 
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -58,7 +58,7 @@ func (k *KvGetCommand) Flags() *FlagSets {
 		Target:            &k.flagAccountId,
 		Default:           0,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.get.account-id",
+		ConfigurationPath: "client.kvpb.get.account-id",
 	})
 
 	f.StringVar(&StringVar{
@@ -67,7 +67,7 @@ func (k *KvGetCommand) Flags() *FlagSets {
 		Default:           "",
 		Target:            &k.flagBucket,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.get.bucket",
+		ConfigurationPath: "client.kvpb.get.bucket",
 	})
 
 	f.StringVar(&StringVar{
@@ -76,7 +76,7 @@ func (k *KvGetCommand) Flags() *FlagSets {
 		Default:           "",
 		Target:            &k.flagKey,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.get.key",
+		ConfigurationPath: "client.kvpb.get.key",
 	})
 
 	f.Uint32Var(&Uint32Var{
@@ -86,7 +86,7 @@ if omitted.`,
 		Default:           0,
 		Target:            &k.flagKeyVersion,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.get.key-version",
+		ConfigurationPath: "client.kvpb.get.key-version",
 	})
 
 	return set
@@ -126,9 +126,9 @@ func (k *KvGetCommand) Run(args []string) int {
 		return exitCodeFailureToParseArgs
 	}
 
-	client := kvstorev1connect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
+	client := kvpbconnect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
 
-	descriptor, err := client.GetKey(context.Background(), connect.NewRequest(&kvstorev1.GetKeyRequest{
+	descriptor, err := client.GetKey(context.Background(), connect.NewRequest(&kvpb.GetKeyRequest{
 		AccountId:  k.flagAccountId,
 		BucketName: k.flagBucket,
 		Key:        []byte(k.flagKey),

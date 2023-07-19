@@ -1,0 +1,37 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "raft",
+    srcs = [
+        "module.go",
+        "raft_host.go",
+        "raft_host_connect_adapter.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/server/raft",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/raftpb",
+        "//pkg/raftpb/raftpbconnect",
+        "//pkg/server/runtime",
+        "@com_github_bufbuild_connect_go//:go_default_library",
+        "@com_github_cockroachdb_errors//:go_default_library",
+        "@com_github_lni_dragonboat_v3//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_uber_go_fx//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "raft_test",
+    srcs = ["raft_host_test.go"],
+    embed = [":raft"],
+    deps = [
+        "//pkg/server/runtime",
+        "//pkg/utils",
+        "//pkg/utils/serverutils",
+        "@com_github_lni_dragonboat_v3//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@com_github_stretchr_testify//suite:go_default_library",
+        "@org_uber_go_fx//fxtest:go_default_library",
+    ],
+)

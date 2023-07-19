@@ -18,13 +18,14 @@ import (
 
 	"github.com/lni/dragonboat/v3"
 	dconfig "github.com/lni/dragonboat/v3/config"
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/messaging"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
+	"github.com/mxplusb/pleiades/pkg/utils/serverutils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 )
 
 func TestShardManager(t *testing.T) {
@@ -48,9 +49,13 @@ func (t *shardManagerTestSuite) SetupSuite() {
 	configuration.Get().SetDefault("server.datastore.basePath", t.T().TempDir())
 	t.logger = utils.NewTestLogger(t.T())
 
-	m, err := messaging.NewEmbeddedMessagingWithDefaults(t.logger)
+	m, err := messaging.NewEmbeddedMessagingWithDefaults(messaging.EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
 	t.Require().NoError(err, "there must not be an error when creating the embedded nats")
-	t.nats = m
+	t.Require().NotNil(m.EmbeddedMessaging, "the embedded nats must not be nil")
+	t.nats = m.EmbeddedMessaging
 	t.nats.Start()
 
 	t.defaultTimeout = 200 * time.Millisecond
@@ -101,7 +106,7 @@ func (t *shardManagerTestSuite) TestAddReplica() {
 	}
 
 	// testShardId, secondNodeClusterConfig.NodeID, secondNode.RaftAddress(), utils.Timeout(t.extendedDefaultTimeout)
-	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+	err = shardManager.AddReplica(&raftpb.AddReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondNodeClusterConfig.NodeID,
 		Hostname:  secondNode.RaftAddress(),
@@ -296,7 +301,7 @@ func (t *shardManagerTestSuite) TestDeleteReplica() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+	err = shardManager.AddReplica(&raftpb.AddReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondNodeClusterConfig.NodeID,
 		Hostname:  secondNode.RaftAddress(),
@@ -371,7 +376,7 @@ func (t *shardManagerTestSuite) TestGetLeaderId() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+	err = shardManager.AddReplica(&raftpb.AddReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondNodeClusterConfig.NodeID,
 		Hostname:  secondNode.RaftAddress(),
@@ -442,7 +447,7 @@ func (t *shardManagerTestSuite) TestGetShardMembers() {
 		ElectionRTT:  100,
 	}
 
-	err = shardManager.AddReplica(&raftv1.AddReplicaRequest{
+	err = shardManager.AddReplica(&raftpb.AddReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondNodeClusterConfig.NodeID,
 		Hostname:  secondNode.RaftAddress(),
@@ -478,10 +483,10 @@ func (t *shardManagerTestSuite) TestNewShard() {
 	testShardId := firstNodeClusterConfig.ClusterID
 
 	// testShardId, firstNodeClusterConfig.NodeID, testStateMachineType, utils.Timeout(t.defaultTimeout)
-	err := shardManager.NewShard(&raftv1.NewShardRequest{
+	err := shardManager.NewShard(&raftpb.NewShardRequest{
 		ShardId:   testShardId,
 		ReplicaId: firstNodeClusterConfig.NodeID,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:      raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when starting the test state machine")
@@ -672,10 +677,10 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 	firstTestReplicaId := rand.Uint64()
 
 	// testShardId, firstTestReplicaId, testStateMachineType, utils.Timeout(t.defaultTimeout)
-	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
+	err := firstShardManager.NewShard(&raftpb.NewShardRequest{
 		ShardId:   testShardId,
 		ReplicaId: firstTestReplicaId,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:      raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
@@ -707,7 +712,7 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 	secondTestReplicaId := rand.Uint64()
 
 	// testShardId, secondTestReplicaId, secondShardManager.nh.RaftAddress(), utils.Timeout(t.defaultTimeout)
-	err = firstShardManager.AddReplica(&raftv1.AddReplicaRequest{
+	err = firstShardManager.AddReplica(&raftpb.AddReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondTestReplicaId,
 		Hostname:  secondShardManager.nh.RaftAddress(),
@@ -717,10 +722,10 @@ func (t *shardManagerTestSuite) TestStartReplica() {
 	utils.Wait(t.defaultTimeout)
 
 	// testShardId, secondTestReplicaId, testStateMachineType
-	err = secondShardManager.StartReplica(&raftv1.StartReplicaRequest{
+	err = secondShardManager.StartReplica(&raftpb.StartReplicaRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondTestReplicaId,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:      raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 		Restart:   false,
 	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
@@ -749,10 +754,10 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 	testShardId := rand.Uint64()
 	firstTestReplicaId := rand.Uint64()
 
-	err := firstShardManager.NewShard(&raftv1.NewShardRequest{
+	err := firstShardManager.NewShard(&raftpb.NewShardRequest{
 		ShardId:   testShardId,
 		ReplicaId: firstTestReplicaId,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:      raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 		Timeout:   utils.Timeout(t.defaultTimeout).Milliseconds(),
 	})
 	t.Require().NoError(err, "there must not be an error when creating a new shard")
@@ -787,10 +792,10 @@ func (t *shardManagerTestSuite) TestStartObserverReplica() {
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")
 	utils.Wait(t.defaultTimeout)
 
-	err = secondShardManager.StartReplicaObserver(&raftv1.StartReplicaObserverRequest{
+	err = secondShardManager.StartReplicaObserver(&raftpb.StartReplicaObserverRequest{
 		ShardId:   testShardId,
 		ReplicaId: secondTestReplicaId,
-		Type:      raftv1.StateMachineType_STATE_MACHINE_TYPE_TEST,
+		Type:      raftpb.StateMachineType_STATE_MACHINE_TYPE_TEST,
 		Restart:   false,
 	})
 	t.Require().NoError(err, "there must not be an error when requesting to add a node")

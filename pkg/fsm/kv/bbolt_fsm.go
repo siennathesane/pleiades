@@ -17,9 +17,9 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3/statemachine"
-	aerrs "github.com/mxplusb/pleiades/pkg/api/errors/v1"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	aerrs "github.com/mxplusb/pleiades/pkg/errorspb"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 	"go.etcd.io/bbolt"
@@ -90,16 +90,16 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	}
 
 	for _, entry := range entries {
-		wrapper := &kvstorev1.KVStoreWrapper{}
+		wrapper := &kvpb.KVStoreWrapper{}
 
 		if err := wrapper.UnmarshalVT(entry.Cmd); err != nil {
-			b.logger.Error().Err(err).Msg("can't unmarshal kv store wrapper")
+			b.logger.Error().Err(err).Msg("can't unmarshal kvpb store wrapper")
 			b.buildError(errors.Wrap(err, "can't unmarshal wrapper").Error(), wrapper, entry.Index, &applied)
 			continue
 		}
 
 		switch wrapper.Typ {
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST:
 			req := wrapper.GetCreateAccountRequest()
 
 			resp, err := b.store.CreateAccountBucket(req)
@@ -108,8 +108,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't create account bucket").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_CreateAccountReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_CreateAccountReply{
 				CreateAccountReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -129,7 +129,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			break
 
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REQUEST:
 			req := wrapper.GetDeleteAccountRequest()
 
 			resp, err := b.store.DeleteAccountBucket(req)
@@ -138,8 +138,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't delete account").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_DeleteAccountReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_DeleteAccountReply{
 				DeleteAccountReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -159,7 +159,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			break
 
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST:
 			req := wrapper.GetCreateBucketRequest()
 
 			resp, err := b.store.CreateBucket(req)
@@ -168,8 +168,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't create bucket").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_CreateBucketReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_CreateBucketReply{
 				CreateBucketReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -189,7 +189,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			break
 
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REQUEST:
 			req := wrapper.GetDeleteBucketRequest()
 
 			resp, err := b.store.DeleteBucket(req)
@@ -198,8 +198,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't delete bucket").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_DeleteBucketReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_DeleteBucketReply{
 				DeleteBucketReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -219,7 +219,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			break
 
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST:
 			req := wrapper.GetPutKeyRequest()
 
 			resp, err := b.store.PutKey(req)
@@ -228,8 +228,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't put key").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_PutKeyReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_PutKeyReply{
 				PutKeyReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -249,7 +249,7 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 
 			break
 
-		case kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REQUEST:
+		case kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REQUEST:
 			req := wrapper.GetDeleteKeyRequest()
 
 			resp, err := b.store.DeleteKey(req)
@@ -258,8 +258,8 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 				b.buildError(errors.Wrap(err, "can't delete key").Error(), wrapper, entry.Index, &applied)
 				continue
 			}
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_DeleteKeyReply{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_DeleteKeyReply{
 				DeleteKeyReply: resp,
 			}
 			serialized, err := wrapper.MarshalVT()
@@ -286,9 +286,9 @@ func (b *BBoltStateMachine) Update(entries []statemachine.Entry) ([]statemachine
 	return applied, nil
 }
 
-func (b *BBoltStateMachine) buildError(errMsg string, wrapper *kvstorev1.KVStoreWrapper, idx uint64, entries *[]statemachine.Entry) {
-	wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR
-	wrapper.Payload = &kvstorev1.KVStoreWrapper_Error{
+func (b *BBoltStateMachine) buildError(errMsg string, wrapper *kvpb.KVStoreWrapper, idx uint64, entries *[]statemachine.Entry) {
+	wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR
+	wrapper.Payload = &kvpb.KVStoreWrapper_Error{
 		Error: &aerrs.Error{
 			Code:    aerrs.Code_CODE_ABORTED,
 			Message: errMsg,
@@ -310,13 +310,13 @@ func (b *BBoltStateMachine) buildError(errMsg string, wrapper *kvstorev1.KVStore
 }
 
 func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
-	wrapper := &kvstorev1.KVStoreWrapper{}
+	wrapper := &kvpb.KVStoreWrapper{}
 
 	err := wrapper.UnmarshalVT(i.([]byte))
 	if err != nil {
 		b.logger.Error().Err(err).Msg("can't unmarshal payload")
-		wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR
-		wrapper.Payload = &kvstorev1.KVStoreWrapper_Error{
+		wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_RECOVERABLE_ERROR
+		wrapper.Payload = &kvpb.KVStoreWrapper_Error{
 			Error: &aerrs.Error{
 				Code:    aerrs.Code_CODE_ABORTED,
 				Message: errors.Wrap(err, "can't unmarshal payload").Error(),
@@ -331,14 +331,14 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 	}
 
 	switch wrapper.Typ {
-	case kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REQUEST:
+	case kvpb.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REQUEST:
 		req := wrapper.GetGetKeyRequest()
-		var resp *kvstorev1.GetKeyResponse
+		var resp *kvpb.GetKeyResponse
 
 		resp, err = b.store.GetKey(req)
 		if err != nil {
-			wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY
-			wrapper.Payload = &kvstorev1.KVStoreWrapper_Error{
+			wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY
+			wrapper.Payload = &kvpb.KVStoreWrapper_Error{
 				Error: &aerrs.Error{
 					Code:    aerrs.Code_CODE_ABORTED,
 					Message: errors.Wrap(err, "can't get key").Error(),
@@ -353,8 +353,8 @@ func (b *BBoltStateMachine) Lookup(i interface{}) (interface{}, error) {
 			return serialized, nil
 		}
 
-		wrapper.Typ = kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY
-		wrapper.Payload = &kvstorev1.KVStoreWrapper_GetKeyReply{GetKeyReply: resp}
+		wrapper.Typ = kvpb.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY
+		wrapper.Payload = &kvpb.KVStoreWrapper_GetKeyReply{GetKeyReply: resp}
 	}
 
 	buf, err := wrapper.MarshalVT()

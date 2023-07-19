@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"github.com/lni/dragonboat/v3/statemachine"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
 	"github.com/mxplusb/pleiades/pkg/configuration"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
@@ -119,17 +119,17 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	testBucketId := utils.RandomString(10)
 	testOwner := "test@test.com"
 
-	createAccountRequest := &kvstorev1.KVStoreWrapper_CreateAccountRequest{
-		CreateAccountRequest: &kvstorev1.CreateAccountRequest{
+	createAccountRequest := &kvpb.KVStoreWrapper_CreateAccountRequest{
+		CreateAccountRequest: &kvpb.CreateAccountRequest{
 			AccountId: testAccountId,
 			Owner:     testOwner,
 		},
 	}
 
-	createAccountEntry := &kvstorev1.KVStoreWrapper{
+	createAccountEntry := &kvpb.KVStoreWrapper{
 		Account: testAccountId,
 		Bucket:  testBucketId,
-		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
+		Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
 		Payload: createAccountRequest,
 	}
 	smCreateAccountRequestPayload, err := createAccountEntry.MarshalVT()
@@ -144,10 +144,10 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	t.Require().NoError(err, "there must not be an error creating an account through the state machine")
 
 	smCmdResponse := appliedEntries[0]
-	resp := &kvstorev1.KVStoreWrapper{}
+	resp := &kvpb.KVStoreWrapper{}
 	err = resp.UnmarshalVT(smCmdResponse.Result.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshaling the cmd response")
-	t.Require().Equal(kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REPLY, resp.Typ, "the response type must be create account reply")
+	t.Require().Equal(kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REPLY, resp.Typ, "the response type must be create account reply")
 
 	createAccountResp := resp.GetCreateAccountReply()
 	t.Require().NotNil(createAccountResp, "the account response must not be nil")
@@ -156,18 +156,18 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 
 	entries = []statemachine.Entry{}
 
-	createBucketRequest := &kvstorev1.KVStoreWrapper_CreateBucketRequest{
-		CreateBucketRequest: &kvstorev1.CreateBucketRequest{
+	createBucketRequest := &kvpb.KVStoreWrapper_CreateBucketRequest{
+		CreateBucketRequest: &kvpb.CreateBucketRequest{
 			AccountId: testAccountId,
 			Name:      testBucketId,
 			Owner:     testOwner,
 		},
 	}
 
-	createBucketEntry := &kvstorev1.KVStoreWrapper{
+	createBucketEntry := &kvpb.KVStoreWrapper{
 		Account: testAccountId,
 		Bucket:  testBucketId,
-		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
+		Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
 		Payload: createBucketRequest,
 	}
 	smCreateBucketRequestPayload, err := createBucketEntry.MarshalVT()
@@ -183,10 +183,10 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	t.Require().NotEmpty(appliedEntries, "the applied entries must not be empty")
 
 	smCmdResponse = appliedEntries[0]
-	resp = &kvstorev1.KVStoreWrapper{}
+	resp = &kvpb.KVStoreWrapper{}
 	err = resp.UnmarshalVT(smCmdResponse.Result.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshaling the cmd response")
-	t.Require().Equal(kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REPLY, resp.Typ, "the response type must be create account reply")
+	t.Require().Equal(kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REPLY, resp.Typ, "the response type must be create account reply")
 
 	createBucketResp := resp.GetCreateBucketReply()
 	t.Require().NotNil(createBucketResp, "the bucket response must not be nil")
@@ -196,11 +196,11 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	entries = []statemachine.Entry{}
 
 	testPutKeyValue, _ := utils.RandomBytes(128)
-	putKeyRequest := &kvstorev1.KVStoreWrapper_PutKeyRequest{
-		PutKeyRequest: &kvstorev1.PutKeyRequest{
+	putKeyRequest := &kvpb.KVStoreWrapper_PutKeyRequest{
+		PutKeyRequest: &kvpb.PutKeyRequest{
 			AccountId:  testAccountId,
 			BucketName: testBucketId,
-			KeyValuePair: &kvstorev1.KeyValue{
+			KeyValuePair: &kvpb.KeyValue{
 				Key:            []byte("test-key"),
 				CreateRevision: 0,
 				ModRevision:    0,
@@ -211,10 +211,10 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 		},
 	}
 
-	putKeyEntry := &kvstorev1.KVStoreWrapper{
+	putKeyEntry := &kvpb.KVStoreWrapper{
 		Account: testAccountId,
 		Bucket:  testBucketId,
-		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
+		Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
 		Payload: putKeyRequest,
 	}
 	smCreateBucketRequestPayload, err = putKeyEntry.MarshalVT()
@@ -230,10 +230,10 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	t.Require().NotEmpty(appliedEntries, "the applied entries must not be empty")
 
 	smCmdResponse = appliedEntries[0]
-	resp = &kvstorev1.KVStoreWrapper{}
+	resp = &kvpb.KVStoreWrapper{}
 	err = resp.UnmarshalVT(smCmdResponse.Result.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshaling the cmd response")
-	t.Require().Equal(kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REPLY, resp.Typ, "the response type must be create account reply")
+	t.Require().Equal(kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REPLY, resp.Typ, "the response type must be create account reply")
 
 	putKeyReply := resp.GetPutKeyReply()
 	t.Require().NotNil(putKeyReply, "the put key response must not be nil")
@@ -247,12 +247,12 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	entries[0] = statemachine.Entry{
 		Index: 0,
 		Cmd: func() []byte {
-			req := &kvstorev1.KVStoreWrapper{
+			req := &kvpb.KVStoreWrapper{
 				Account: testAccountId,
 				Bucket:  testBucketId,
-				Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REQUEST,
-				Payload: &kvstorev1.KVStoreWrapper_DeleteKeyRequest{
-					DeleteKeyRequest: &kvstorev1.DeleteKeyRequest{
+				Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_KEY_REQUEST,
+				Payload: &kvpb.KVStoreWrapper_DeleteKeyRequest{
+					DeleteKeyRequest: &kvpb.DeleteKeyRequest{
 						AccountId:  testAccountId,
 						BucketName: testBucketId,
 						Key:        putKeyRequest.PutKeyRequest.GetKeyValuePair().GetKey(),
@@ -269,12 +269,12 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	entries[1] = statemachine.Entry{
 		Index: 0,
 		Cmd: func() []byte {
-			req := &kvstorev1.KVStoreWrapper{
+			req := &kvpb.KVStoreWrapper{
 				Account: testAccountId,
 				Bucket:  testBucketId,
-				Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REQUEST,
-				Payload: &kvstorev1.KVStoreWrapper_DeleteBucketRequest{
-					DeleteBucketRequest: &kvstorev1.DeleteBucketRequest{
+				Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_BUCKET_REQUEST,
+				Payload: &kvpb.KVStoreWrapper_DeleteBucketRequest{
+					DeleteBucketRequest: &kvpb.DeleteBucketRequest{
 						AccountId: testAccountId,
 						Name:      testBucketId,
 					},
@@ -290,12 +290,12 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	entries[2] = statemachine.Entry{
 		Index: 0,
 		Cmd: func() []byte {
-			req := &kvstorev1.KVStoreWrapper{
+			req := &kvpb.KVStoreWrapper{
 				Account: testAccountId,
 				Bucket:  testBucketId,
-				Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REQUEST,
-				Payload: &kvstorev1.KVStoreWrapper_DeleteAccountRequest{
-					DeleteAccountRequest: &kvstorev1.DeleteAccountRequest{
+				Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_DELETE_ACCOUNT_REQUEST,
+				Payload: &kvpb.KVStoreWrapper_DeleteAccountRequest{
+					DeleteAccountRequest: &kvpb.DeleteAccountRequest{
 						AccountId: testAccountId,
 						Owner:     testOwner,
 					},
@@ -308,7 +308,7 @@ func (t *BBoltFsmTestSuite) TestBBoltStateMachineUpdate() {
 	}
 
 	appliedEntries, err = fsm.Update(entries)
-	t.Require().NoError(err, "there must not be an error when applying kv store updates")
+	t.Require().NoError(err, "there must not be an error when applying kvpb store updates")
 	t.Require().NotEmpty(appliedEntries, "there must be response entries")
 	t.Require().Equal(3, len(appliedEntries), "there must be 4 response entries")
 }
@@ -328,7 +328,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 	testOwner := "test@test.com"
 
 	testPutKeyValue, _ := utils.RandomBytes(128)
-	testKvp := &kvstorev1.KeyValue{
+	testKvp := &kvpb.KeyValue{
 		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
@@ -341,12 +341,12 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		{
 			Index: 0,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_CreateAccountRequest{
-						CreateAccountRequest: &kvstorev1.CreateAccountRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_CreateAccountRequest{
+						CreateAccountRequest: &kvpb.CreateAccountRequest{
 							AccountId: testAccountId,
 							Owner:     testOwner,
 						},
@@ -360,12 +360,12 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		{
 			Index: 1,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_CreateBucketRequest{
-						CreateBucketRequest: &kvstorev1.CreateBucketRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_CreateBucketRequest{
+						CreateBucketRequest: &kvpb.CreateBucketRequest{
 							AccountId: testAccountId,
 							Name:      testBucketId,
 							Owner:     testOwner,
@@ -380,12 +380,12 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		{
 			Index: 2,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_PutKeyRequest{
-						PutKeyRequest: &kvstorev1.PutKeyRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_PutKeyRequest{
+						PutKeyRequest: &kvpb.PutKeyRequest{
 							AccountId:    testAccountId,
 							BucketName:   testBucketId,
 							KeyValuePair: testKvp,
@@ -433,7 +433,7 @@ func (t *BBoltFsmTestSuite) TestSnapshotLifecycle() {
 		t.Require().NotNil(val)
 		t.Require().NotEmpty(val)
 
-		target := &kvstorev1.KeyValue{}
+		target := &kvpb.KeyValue{}
 		err := target.UnmarshalVT(val)
 		t.Require().NoError(err, "there must not be an error unmarshalling the kvp")
 		t.Require().Equal(testKvp.GetKey(), target.GetKey())
@@ -458,7 +458,7 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 	testOwner := "test@test.com"
 
 	testPutKeyValue, _ := utils.RandomBytes(128)
-	testKvp := &kvstorev1.KeyValue{
+	testKvp := &kvpb.KeyValue{
 		Key:            []byte("test-key"),
 		CreateRevision: 0,
 		ModRevision:    0,
@@ -471,12 +471,12 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 		{
 			Index: 0,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_CreateAccountRequest{
-						CreateAccountRequest: &kvstorev1.CreateAccountRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_ACCOUNT_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_CreateAccountRequest{
+						CreateAccountRequest: &kvpb.CreateAccountRequest{
 							AccountId: testAccountId,
 							Owner:     testOwner,
 						},
@@ -490,12 +490,12 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 		{
 			Index: 1,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_CreateBucketRequest{
-						CreateBucketRequest: &kvstorev1.CreateBucketRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_CREATE_BUCKET_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_CreateBucketRequest{
+						CreateBucketRequest: &kvpb.CreateBucketRequest{
 							AccountId: testAccountId,
 							Name:      testBucketId,
 							Owner:     testOwner,
@@ -510,12 +510,12 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 		{
 			Index: 2,
 			Cmd: func() []byte {
-				resp := &kvstorev1.KVStoreWrapper{
+				resp := &kvpb.KVStoreWrapper{
 					Account: testAccountId,
 					Bucket:  testBucketId,
-					Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
-					Payload: &kvstorev1.KVStoreWrapper_PutKeyRequest{
-						PutKeyRequest: &kvstorev1.PutKeyRequest{
+					Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_PUT_KEY_REQUEST,
+					Payload: &kvpb.KVStoreWrapper_PutKeyRequest{
+						PutKeyRequest: &kvpb.PutKeyRequest{
 							AccountId:    testAccountId,
 							BucketName:   testBucketId,
 							KeyValuePair: testKvp,
@@ -532,12 +532,12 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 	_, err = fsm.Update(entries)
 	t.Require().NoError(err, "there must not be an error creating the baseline db")
 
-	req := &kvstorev1.KVStoreWrapper{
+	req := &kvpb.KVStoreWrapper{
 		Account: testAccountId,
 		Bucket:  testBucketId,
-		Typ:     kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REQUEST,
-		Payload: &kvstorev1.KVStoreWrapper_GetKeyRequest{
-			GetKeyRequest: &kvstorev1.GetKeyRequest{
+		Typ:     kvpb.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REQUEST,
+		Payload: &kvpb.KVStoreWrapper_GetKeyRequest{
+			GetKeyRequest: &kvpb.GetKeyRequest{
 				AccountId:  testAccountId,
 				BucketName: testBucketId,
 				Key:        testKvp.GetKey(),
@@ -549,11 +549,11 @@ func (t *BBoltFsmTestSuite) TestLookup() {
 	response, err := fsm.Lookup(reqPayload)
 	t.Require().NoError(err, "there must not be an error when looking up the key")
 
-	resp := &kvstorev1.KVStoreWrapper{}
+	resp := &kvpb.KVStoreWrapper{}
 	err = resp.UnmarshalVT(response.([]byte))
 	t.Require().NoError(err, "there must not be an error when unmarshalling the lookup value")
 	t.Require().NotEmpty(resp)
-	t.Require().Equal(kvstorev1.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY, resp.Typ)
+	t.Require().Equal(kvpb.KVStoreWrapper_REQUEST_TYPE_GET_KEY_REPLY, resp.Typ)
 	t.Require().NotNil(resp.GetGetKeyReply())
 	t.Require().NotNil(resp.GetGetKeyReply().GetKeyValuePair())
 	t.Require().Equal(testPutKeyValue, resp.GetGetKeyReply().GetKeyValuePair().GetValue())

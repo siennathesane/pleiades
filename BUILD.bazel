@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
+
+go_library(
+    name = "pleiades_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/mxplusb/pleiades",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//cmd",
+        "@com_github_planetscale_vtprotobuf//codec/grpc:go_default_library",
+        "@com_github_spf13_viper//:go_default_library",
+        "@org_golang_google_grpc//encoding:go_default_library",
+        "@org_golang_google_grpc//encoding/proto:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "pleiades",
+    out = "pleiades",  # keep
+    embed = [":pleiades_lib"],
+    pure = "on",  # keep
+    visibility = ["//visibility:public"],
+)

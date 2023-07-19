@@ -15,7 +15,7 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/lni/dragonboat/v3"
 	dclient "github.com/lni/dragonboat/v3/client"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
@@ -59,7 +59,7 @@ type TransactionManager struct {
 	sessionCache map[uint64]*dclient.Session
 }
 
-func (t *TransactionManager) CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error {
+func (t *TransactionManager) CloseTransaction(ctx context.Context, transaction *kvpb.Transaction) error {
 	t.logger.Debug().Uint64("shard", transaction.ShardId).Msg("closing transaction")
 
 	cs, ok := t.sessionCache[transaction.GetClientId()]
@@ -76,7 +76,7 @@ func (t *TransactionManager) CloseTransaction(ctx context.Context, transaction *
 	return err
 }
 
-func (t *TransactionManager) Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction {
+func (t *TransactionManager) Commit(ctx context.Context, transaction *kvpb.Transaction) *kvpb.Transaction {
 	// nb (sienna): I know, I know. stop judging me.
 	// is this hacky? yes.
 	// does it work? yes.
@@ -87,7 +87,7 @@ func (t *TransactionManager) Commit(ctx context.Context, transaction *kvstorev1.
 
 	cs, ok := t.sessionCache[transaction.GetClientId()]
 	if !ok {
-		return &kvstorev1.Transaction{}
+		return &kvpb.Transaction{}
 	}
 
 	cs.ProposalCompleted()
@@ -96,14 +96,14 @@ func (t *TransactionManager) Commit(ctx context.Context, transaction *kvstorev1.
 	return ta
 }
 
-func (t *TransactionManager) GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction {
+func (t *TransactionManager) GetNoOpTransaction(shardId uint64) *kvpb.Transaction {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting noop transaction")
 	cs := t.nh.GetNoOPSession(shardId)
 	t.sessionCache[cs.ClientID] = cs
 	return csToTransaction(*cs)
 }
 
-func (t *TransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error) {
+func (t *TransactionManager) GetTransaction(ctx context.Context, shardId uint64) (*kvpb.Transaction, error) {
 	t.logger.Debug().Uint64("shard", shardId).Msg("getting transaction")
 	cs, err := t.nh.SyncGetSession(ctx, shardId)
 	if err != nil {
@@ -121,8 +121,8 @@ func (t *TransactionManager) SessionFromClientId(clientId uint64) (*dclient.Sess
 	return sess, ok
 }
 
-func csToTransaction(cs dclient.Session) *kvstorev1.Transaction {
-	return &kvstorev1.Transaction{
+func csToTransaction(cs dclient.Session) *kvpb.Transaction {
+	return &kvpb.Transaction{
 		ShardId:       cs.ClusterID,
 		ClientId:      cs.ClientID,
 		TransactionId: cs.SeriesID,

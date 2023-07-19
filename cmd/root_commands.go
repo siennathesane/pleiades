@@ -21,10 +21,10 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/mxplusb/pleiades/pkg"
-	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-homedir"
+	"github.com/mxplusb/pleiades/pkg"
+	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 )
@@ -220,22 +220,22 @@ func initCommands(ui cli.Ui) {
 	}
 
 	Commands = map[string]cli.CommandFactory{
-		"kv": func() (cli.Command, error) {
+		"kvpb": func() (cli.Command, error) {
 			return &KvCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},
-		"kv get": func() (cli.Command, error) {
+		"kvpb get": func() (cli.Command, error) {
 			return &KvGetCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},
-		"kv put": func() (cli.Command, error) {
+		"kvpb put": func() (cli.Command, error) {
 			return &KvPutCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
 		},
-		"kv delete": func() (cli.Command, error) {
+		"kvpb delete": func() (cli.Command, error) {
 			return &KvDeleteCommand{
 				BaseCommand: getBaseCmd(),
 			}, nil
