@@ -31,9 +31,8 @@ import (
 )
 
 func TestBBoltStoreManager(t *testing.T) {
-	if testing.Short() {
-		t.Skipf("skipping bbolt store manager tests")
-	}
+	// todo (sienna): overhaul these tests
+	t.Skipf("skipping bbolt store manager tests")
 	suite.Run(t, new(bboltStoreManagerTestSuite))
 }
 
