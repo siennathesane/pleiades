@@ -14,7 +14,7 @@ import (
 	"go.uber.org/fx"
 )
 
-var KvStoreModule = fx.Module("kvstore",
+var KvStoreModule = fx.Module("kv",
 	fx.Provide(runtime.AsRoute(NewKvStoreBboltConnectAdapter)),
 	fx.Provide(runtime.AsRoute(NewKvstoreTransactionConnectAdapter)),
 	fx.Provide(NewBboltStoreManager),

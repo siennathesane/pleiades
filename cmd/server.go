@@ -23,7 +23,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/mxplusb/pleiades/pkg/configuration"
 	"github.com/mxplusb/pleiades/pkg/server"
-	"github.com/mxplusb/pleiades/pkg/server/serverutils"
+	"github.com/mxplusb/pleiades/pkg/utils/serverutils"
 	"github.com/posener/complete"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

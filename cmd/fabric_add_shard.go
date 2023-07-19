@@ -13,11 +13,11 @@ import (
 	"context"
 	"time"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
-	"github.com/mxplusb/pleiades/pkg/api/raft/v1/raftv1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
 	"github.com/mitchellh/go-wordwrap"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
+	"github.com/mxplusb/pleiades/pkg/raftpb/raftpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -62,7 +62,7 @@ data fabric size.`,
 		Usage: `The type of shard to create. See the greater help message for more information on the 
 specific values.`,
 		Target:            &f.flagType,
-		Completion:        complete.PredictSet("kv"),
+		Completion:        complete.PredictSet("kvpb"),
 		ConfigurationPath: "fabric.add-shard.shard-type",
 	})
 
@@ -117,18 +117,18 @@ func (f *FabricAddShardCommand) Run(args []string) int {
 	ctx, cancel := context.WithDeadline(context.Background(), expiry)
 	defer cancel()
 
-	var smType raftv1.StateMachineType
+	var smType raftpb.StateMachineType
 	switch f.flagType {
-	case "kv":
-		smType = raftv1.StateMachineType_STATE_MACHINE_TYPE_KV
+	case "kvpb":
+		smType = raftpb.StateMachineType_STATE_MACHINE_TYPE_KV
 	default:
 		f.UI.Error("unsupported state machine type")
 		return exitCodeGenericBad
 	}
 
-	client := raftv1connect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
+	client := raftpbconnect.NewShardServiceClient(httpClient, f.BaseCommand.flagHost)
 
-	descriptor, err := client.NewShard(ctx, connect.NewRequest(&raftv1.NewShardRequest{
+	descriptor, err := client.NewShard(ctx, connect.NewRequest(&raftpb.NewShardRequest{
 		ShardId:   f.flagShardId,
 		ReplicaId: f.flagReplicaId,
 		Type:      smType,

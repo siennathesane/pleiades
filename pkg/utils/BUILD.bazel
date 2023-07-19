@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "utils",
+    srcs = [
+        "copy.go",
+        "math.go",
+        "random.go",
+        "test_logger.go",
+        "waiter.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/utils",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_cockroachdb_errors//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_golang_x_exp//rand:go_default_library",
+    ],
+)

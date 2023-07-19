@@ -14,10 +14,10 @@ import (
 	"os"
 	"time"
 
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -45,7 +45,7 @@ func (k *KvPutCommand) Flags() *FlagSets {
 		Usage:             "Name of the key.",
 		Target:            &k.flagKey,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.key",
+		ConfigurationPath: "client.kvpb.put.key",
 	})
 
 	f.StringVar(&StringVar{
@@ -53,7 +53,7 @@ func (k *KvPutCommand) Flags() *FlagSets {
 		Usage:             "Local filepath of the key data.",
 		Target:            &k.flagKeyFile,
 		Completion:        complete.PredictFiles("*"),
-		ConfigurationPath: "client.kv.put.key-file-path",
+		ConfigurationPath: "client.kvpb.put.key-file-path",
 	})
 
 	f.Uint32Var(&Uint32Var{
@@ -62,7 +62,7 @@ func (k *KvPutCommand) Flags() *FlagSets {
 higher than the exising key version value.`,
 		Target:            &k.flagKeyVersion,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.key-version",
+		ConfigurationPath: "client.kvpb.put.key-version",
 	})
 
 	f.Uint64Var(&Uint64Var{
@@ -70,7 +70,7 @@ higher than the exising key version value.`,
 		Usage:             "Account ID for the key.",
 		Target:            &k.flagAccountId,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.account-id",
+		ConfigurationPath: "client.kvpb.put.account-id",
 	})
 
 	f.StringVar(&StringVar{
@@ -78,7 +78,7 @@ higher than the exising key version value.`,
 		Usage:             "Name of the bucket.",
 		Target:            &k.flagBucketName,
 		Completion:        complete.PredictNothing,
-		ConfigurationPath: "client.kv.put.bucket-name",
+		ConfigurationPath: "client.kvpb.put.bucket-name",
 	})
 
 	return set
@@ -145,14 +145,14 @@ func (k *KvPutCommand) Run(args []string) int {
 		return exitCodeGenericBad
 	}
 
-	client := kvstorev1connect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
+	client := kvpbconnect.NewKvStoreServiceClient(httpClient, k.BaseCommand.flagHost)
 
 	now := time.Now().UnixMilli()
 
-	descriptor, err := client.PutKey(context.Background(), connect.NewRequest(&kvstorev1.PutKeyRequest{
+	descriptor, err := client.PutKey(context.Background(), connect.NewRequest(&kvpb.PutKeyRequest{
 		AccountId:  k.flagAccountId,
 		BucketName: k.flagBucketName,
-		KeyValuePair: &kvstorev1.KeyValue{
+		KeyValuePair: &kvpb.KeyValue{
 			Key:            []byte(k.flagKey),
 			CreateRevision: now,
 			ModRevision:    now,

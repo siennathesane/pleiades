@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "serverutils",
+    srcs = [
+        "logger.go",
+        "test_nodehost.go",
+        "test_statemachine.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/utils/serverutils",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/messaging",
+        "//pkg/utils",
+        "@com_github_lni_dragonboat_v3//:go_default_library",
+        "@com_github_lni_dragonboat_v3//config:go_default_library",
+        "@com_github_lni_dragonboat_v3//logger:go_default_library",
+        "@com_github_lni_dragonboat_v3//statemachine:go_default_library",
+        "@com_github_lni_goutils//vfs:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_uber_go_fx//fxtest:go_default_library",
+    ],
+)

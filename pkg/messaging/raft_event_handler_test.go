@@ -13,10 +13,11 @@ import (
 	"testing"
 	"time"
 
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -37,9 +38,13 @@ func (t *RaftEventHandlerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 500 * time.Millisecond
 
-	var err error
-	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
 	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
+	t.e = e.EmbeddedMessaging
 
 	t.e.Start()
 }
@@ -59,34 +64,34 @@ func (t *RaftEventHandlerTestSuite) TestRegisterCallback() {
 	ev := NewRaftEventHandler(t.pubSubClient, t.queueClient, t.logger)
 
 	t.Require().NotPanics(func() {
-		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+		ev.RegisterCallback("test", raftpb.Event_EVENT_NODE_READY, func(event *raftpb.RaftEvent) {
 			t.Require().NotNil(event, "the event payload must not be nil")
-			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
+			t.Require().Equal(raftpb.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
 		})
 	})
 
 	t.Require().NotNil(ev.cbTable, "the callback table must not be nil")
-	t.Require().NotEmpty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
+	t.Require().NotEmpty(ev.cbTable[raftpb.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
 }
 
 func (t *RaftEventHandlerTestSuite) TestUnregisterCallback() {
 	ev := NewRaftEventHandler(t.pubSubClient, t.queueClient, t.logger)
 
 	t.Require().NotPanics(func() {
-		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+		ev.RegisterCallback("test", raftpb.Event_EVENT_NODE_READY, func(event *raftpb.RaftEvent) {
 			t.Require().NotNil(event, "the event payload must not be nil")
-			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
+			t.Require().Equal(raftpb.Event_EVENT_NODE_READY, event.Event, "the event must match the expected type")
 		})
 	}, "registering a call back must not panic")
 
 	t.Require().NotNil(ev.cbTable, "the callback table must not be nil")
-	t.Require().NotEmpty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
+	t.Require().NotEmpty(ev.cbTable[raftpb.Event_EVENT_NODE_READY]["test"], "there must be a function named 'test'")
 
 	t.Require().NotPanics(func() {
-		ev.UnregisterCallback("test", raftv1.Event_EVENT_NODE_READY)
+		ev.UnregisterCallback("test", raftpb.Event_EVENT_NODE_READY)
 	}, "unregistering a callback must not panic")
 
-	t.Require().Empty(ev.cbTable[raftv1.Event_EVENT_NODE_READY]["test"], "there must not be a function under 'test")
+	t.Require().Empty(ev.cbTable[raftpb.Event_EVENT_NODE_READY]["test"], "there must not be a function under 'test")
 }
 
 func (t *RaftEventHandlerTestSuite) TestCallback() {
@@ -94,19 +99,19 @@ func (t *RaftEventHandlerTestSuite) TestCallback() {
 
 	called := 0
 	t.Require().NotPanics(func() {
-		ev.RegisterCallback("test", raftv1.Event_EVENT_NODE_READY, func(event *raftv1.RaftEvent) {
+		ev.RegisterCallback("test", raftpb.Event_EVENT_NODE_READY, func(event *raftpb.RaftEvent) {
 			t.Require().NotNil(event, "the event payload must not be nil")
-			t.Require().Equal(raftv1.Event_EVENT_NODE_READY, event.Action, "the event must match the expected type")
+			t.Require().Equal(raftpb.Event_EVENT_NODE_READY, event.Action, "the event must match the expected type")
 			called += 1
 		})
 	}, "registering a call back must not panic")
 
-	payload := &raftv1.RaftEvent{
-		Typ:       raftv1.EventType_EVENT_TYPE_NODE,
-		Action:    raftv1.Event_EVENT_NODE_READY,
+	payload := &raftpb.RaftEvent{
+		Typ:       raftpb.EventType_EVENT_TYPE_NODE,
+		Action:    raftpb.Event_EVENT_NODE_READY,
 		Timestamp: timestamppb.Now(),
-		Event: &raftv1.RaftEvent_Node{
-			Node: &raftv1.RaftNodeEvent{
+		Event: &raftpb.RaftEvent_Node{
+			Node: &raftpb.RaftNodeEvent{
 				ShardId:   10,
 				ReplicaId: 10,
 			},

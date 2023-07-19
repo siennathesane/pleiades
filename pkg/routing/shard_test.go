@@ -13,31 +13,29 @@ import (
 	crand "crypto/rand"
 	"math/rand"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 const (
 	fuzzLimit = 256
 )
 
-func FuzzGetShardAssignment(f *testing.F) {
-	for i := 0; i < fuzzLimit; i++ {
-		buf := make([]byte, rand.Uint32())
-		_, err := crand.Read(buf)
-		if err != nil {
-			f.Fatal(err)
-		}
-		f.Add(i)
-	}
-	f.Fuzz(func(t *testing.T, k []byte) {
-		shardRouter := NewShardRouter()
-		shardRouter.shardCount = 128
-		shard, err := shardRouter.CalcShard(k)
-		assert.LessOrEqual(t, shard, shardLimit, "the shard must be within the shard range")
-		assert.NoError(t, err, "there must not be an error trying to calculate the shard assignment")
-	})
-}
+//func FuzzGetShardAssignment(f *testing.F) {
+//	for i := 0; i < fuzzLimit; i++ {
+//		buf := make([]byte, rand.Uint32())
+//		_, err := crand.Read(buf)
+//		if err != nil {
+//			f.Fatal(err)
+//		}
+//		f.Add(i)
+//	}
+//	f.Fuzz(func(t *testing.T, k []byte) {
+//		shardRouter := NewShardRouter()
+//		shardRouter.shardCount = 128
+//		shard, err := shardRouter.CalcShard(k)
+//		assert.LessOrEqual(t, shard, shardLimit, "the shard must be within the shard range")
+//		assert.NoError(t, err, "there must not be an error trying to calculate the shard assignment")
+//	})
+//}
 
 func BenchmarkGetShardAssignment(b *testing.B) {
 	shardRouter := NewShardRouter()

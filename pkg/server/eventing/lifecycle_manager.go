@@ -13,9 +13,9 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
 	"github.com/mxplusb/pleiades/pkg/fsm"
 	"github.com/mxplusb/pleiades/pkg/messaging"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/mxplusb/pleiades/pkg/server/runtime"
 	"github.com/rs/zerolog"
 	"go.uber.org/fx"
@@ -125,7 +125,7 @@ func (l *LifecycleManager) StartShards() error {
 			}
 
 			l.logger.Trace().Interface("shard", shard).Msgf("attempting to start shard %d", shard.GetShardId())
-			err = l.shardManager.StartReplica(&raftv1.StartReplicaRequest{
+			err = l.shardManager.StartReplica(&raftpb.StartReplicaRequest{
 				ShardId:   shard.GetShardId(),
 				ReplicaId: replicaId,
 				Type:      shard.GetType(),
@@ -147,7 +147,7 @@ func (l *LifecycleManager) StartShards() error {
 			}
 
 			l.logger.Trace().Interface("shard", shard).Msgf("attempting to start shard %d observer", shard.GetShardId())
-			err = l.shardManager.StartReplicaObserver(&raftv1.StartReplicaObserverRequest{
+			err = l.shardManager.StartReplicaObserver(&raftpb.StartReplicaObserverRequest{
 				ShardId:   shard.GetShardId(),
 				ReplicaId: replicaId,
 				Type:      shard.GetType(),
@@ -203,14 +203,14 @@ func (l *LifecycleManager) StopShards() error {
 }
 
 func (l *LifecycleManager) registerCallbacks() {
-	l.eventHandler.RegisterCallback("leader-update", raftv1.Event_EVENT_LEADER_UPDATED, l.handleLeaderUpdate)
+	l.eventHandler.RegisterCallback("leader-update", raftpb.Event_EVENT_LEADER_UPDATED, l.handleLeaderUpdate)
 }
 
-func (l *LifecycleManager) handleLeaderUpdate(event *raftv1.RaftEvent) {
+func (l *LifecycleManager) handleLeaderUpdate(event *raftpb.RaftEvent) {
 	l.logger.Debug().Interface("payload", event).Msg("leader update recieved")
 
 	// safety check
-	if event.Typ != raftv1.EventType_EVENT_TYPE_RAFT {
+	if event.Typ != raftpb.EventType_EVENT_TYPE_RAFT {
 		l.logger.Error().Msg("event type mismatched")
 		return
 	}
@@ -227,7 +227,7 @@ func (l *LifecycleManager) handleLeaderUpdate(event *raftv1.RaftEvent) {
 		return
 	}
 
-	update := &raftv1.ShardState{
+	update := &raftpb.ShardState{
 		LastUpdated:    event.GetTimestamp(),
 		ShardId:        lu.GetShardId(),
 		ConfigChangeId: members.ConfigChangeId,
@@ -241,7 +241,7 @@ func (l *LifecycleManager) handleLeaderUpdate(event *raftv1.RaftEvent) {
 			}
 			return m
 		}(),
-		Type: raftv1.StateMachineType_STATE_MACHINE_TYPE_KV,
+		Type: raftpb.StateMachineType_STATE_MACHINE_TYPE_KV,
 	}
 
 	err = l.store.Put(update)

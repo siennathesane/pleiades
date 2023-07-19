@@ -15,8 +15,8 @@ import (
 	"time"
 
 	dclient "github.com/lni/dragonboat/v3/client"
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"go.uber.org/fx"
 )
 
@@ -33,17 +33,17 @@ type ServiceHandler interface {
 }
 
 type IShardManager interface {
-	AddReplica(req *raftv1.AddReplicaRequest) error
+	AddReplica(req *raftpb.AddReplicaRequest) error
 	AddReplicaObserver(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	AddReplicaWitness(shardId uint64, replicaId uint64, newHost string, timeout time.Duration) error
 	GetLeaderId(shardId uint64) (leader uint64, ok bool, err error)
 	GetShardMembers(shardId uint64) (*MembershipEntry, error)
 	// LeaderTransfer(shardId uint64, targetReplicaId uint64) error
-	NewShard(req *raftv1.NewShardRequest) error
+	NewShard(req *raftpb.NewShardRequest) error
 	RemoveData(shardId, replicaId uint64) error
 	RemoveReplica(shardId uint64, replicaId uint64, timeout time.Duration) error
-	StartReplica(req *raftv1.StartReplicaRequest) error
-	StartReplicaObserver(req *raftv1.StartReplicaObserverRequest) error
+	StartReplica(req *raftpb.StartReplicaRequest) error
+	StartReplicaObserver(req *raftpb.StartReplicaObserverRequest) error
 	StopReplica(shardId uint64, replicaId uint64) (*OperationResult, error)
 }
 
@@ -59,21 +59,21 @@ type IHost interface {
 }
 
 type ITransactionManager interface {
-	CloseTransaction(ctx context.Context, transaction *kvstorev1.Transaction) error
-	Commit(ctx context.Context, transaction *kvstorev1.Transaction) *kvstorev1.Transaction
-	GetNoOpTransaction(shardId uint64) *kvstorev1.Transaction
-	GetTransaction(ctx context.Context, shardId uint64) (*kvstorev1.Transaction, error)
+	CloseTransaction(ctx context.Context, transaction *kvpb.Transaction) error
+	Commit(ctx context.Context, transaction *kvpb.Transaction) *kvpb.Transaction
+	GetNoOpTransaction(shardId uint64) *kvpb.Transaction
+	GetTransaction(ctx context.Context, shardId uint64) (*kvpb.Transaction, error)
 	SessionFromClientId(clientId uint64) (*dclient.Session, bool)
 }
 
 type IKVStore interface {
-	CreateAccount(request *kvstorev1.CreateAccountRequest) (*kvstorev1.CreateAccountResponse, error)
-	DeleteAccount(request *kvstorev1.DeleteAccountRequest) (*kvstorev1.DeleteAccountResponse, error)
-	CreateBucket(request *kvstorev1.CreateBucketRequest) (*kvstorev1.CreateBucketResponse, error)
-	DeleteBucket(request *kvstorev1.DeleteBucketRequest) (*kvstorev1.DeleteBucketResponse, error)
-	GetKey(request *kvstorev1.GetKeyRequest) (*kvstorev1.GetKeyResponse, error)
-	PutKey(request *kvstorev1.PutKeyRequest) (*kvstorev1.PutKeyResponse, error)
-	DeleteKey(request *kvstorev1.DeleteKeyRequest) (*kvstorev1.DeleteKeyResponse, error)
+	CreateAccount(request *kvpb.CreateAccountRequest) (*kvpb.CreateAccountResponse, error)
+	DeleteAccount(request *kvpb.DeleteAccountRequest) (*kvpb.DeleteAccountResponse, error)
+	CreateBucket(request *kvpb.CreateBucketRequest) (*kvpb.CreateBucketResponse, error)
+	DeleteBucket(request *kvpb.DeleteBucketRequest) (*kvpb.DeleteBucketResponse, error)
+	GetKey(request *kvpb.GetKeyRequest) (*kvpb.GetKeyResponse, error)
+	PutKey(request *kvpb.PutKeyRequest) (*kvpb.PutKeyResponse, error)
+	DeleteKey(request *kvpb.DeleteKeyRequest) (*kvpb.DeleteKeyResponse, error)
 }
 
 // AsRoute annotates the given constructor to state that

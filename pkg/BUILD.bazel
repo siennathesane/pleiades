@@ -1,0 +1,10 @@
+# gazelle:proto_strip_import_prefix /pkg
+
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "pkg",
+    srcs = ["consts.go"],
+    importpath = "github.com/mxplusb/pleiades/pkg",
+    visibility = ["//visibility:public"],
+)

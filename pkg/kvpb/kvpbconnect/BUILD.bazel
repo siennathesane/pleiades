@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "kvpbconnect",
+    srcs = ["service.connect.go"],
+    importpath = "github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/kvpb",
+        "@com_github_bufbuild_connect_go//:go_default_library",
+    ],
+)

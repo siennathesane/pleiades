@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "fsm",
+    srcs = [
+        "consts.go",
+        "quantum_fsm.go",
+        "shard_store.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/fsm",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/configuration",
+        "//pkg/fsm/kv",
+        "//pkg/raftpb",
+        "@com_github_cockroachdb_errors//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@io_etcd_go_bbolt//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "fsm_test",
+    srcs = ["shard_store_test.go"],
+    embed = [":fsm"],
+    deps = [
+        "//pkg/configuration",
+        "//pkg/raftpb",
+        "//pkg/utils",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@com_github_stretchr_testify//suite:go_default_library",
+    ],
+)

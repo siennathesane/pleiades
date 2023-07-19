@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "configuration",
+    srcs = [
+        "gossip.go",
+        "helpers.go",
+        "logger.go",
+        "schema.go",
+        "viper.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/configuration",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@com_github_spf13_viper//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "configuration_test",
+    srcs = [
+        "logger_test.go",
+        "schema_test.go",
+    ],
+    embed = [":configuration"],
+    deps = ["@com_github_stretchr_testify//suite:go_default_library"],
+)

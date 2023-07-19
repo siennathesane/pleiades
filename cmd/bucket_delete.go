@@ -13,10 +13,10 @@ import (
 	"context"
 	"fmt"
 
-	kvstorev1 "github.com/mxplusb/pleiades/pkg/api/kvstore/v1"
-	"github.com/mxplusb/pleiades/pkg/api/kvstore/v1/kvstorev1connect"
 	"github.com/bufbuild/connect-go"
 	"github.com/mitchellh/cli"
+	"github.com/mxplusb/pleiades/pkg/kvpb"
+	"github.com/mxplusb/pleiades/pkg/kvpb/kvpbconnect"
 	"github.com/posener/complete"
 )
 
@@ -95,9 +95,9 @@ func (a *BucketDeleteCommand) Run(args []string) int {
 		return exitCodeGenericBad
 	}
 
-	client := kvstorev1connect.NewKvStoreServiceClient(httpClient, a.BaseCommand.flagHost)
+	client := kvpbconnect.NewKvStoreServiceClient(httpClient, a.BaseCommand.flagHost)
 
-	descriptor, err := client.DeleteBucket(context.Background(), connect.NewRequest(&kvstorev1.DeleteBucketRequest{
+	descriptor, err := client.DeleteBucket(context.Background(), connect.NewRequest(&kvpb.DeleteBucketRequest{
 		AccountId:   a.flagAccountId,
 		Name:        a.flagBucketName,
 		Transaction: nil,

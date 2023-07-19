@@ -36,7 +36,7 @@ type RaftHostBuilderResults struct {
 
 func NewHost(lc fx.Lifecycle, params RaftHostBuilderParams) RaftHostBuilderResults {
 	host := &RaftHost{
-		logger: params.Logger.With().Str("component", "raft-host").Logger(),
+		logger: params.Logger.With().Str("component", "raftpb-host").Logger(),
 		nh:     params.NodeHost,
 	}
 
@@ -49,7 +49,7 @@ func NewHost(lc fx.Lifecycle, params RaftHostBuilderParams) RaftHostBuilderResul
 
 	return RaftHostBuilderResults{
 		RaftHost: &RaftHost{
-			logger: params.Logger.With().Str("component", "raft-host").Logger(),
+			logger: params.Logger.With().Str("component", "raftpb-host").Logger(),
 			nh:     params.NodeHost,
 		},
 	}
@@ -170,6 +170,6 @@ func (r *RaftHost) Snapshot(shardId uint64, opt runtime.SnapshotOption, timeout 
 }
 
 func (r *RaftHost) Stop() {
-	r.logger.Info().Msg("stopping raft host")
+	r.logger.Info().Msg("stopping raftpb host")
 	r.nh.Stop()
 }

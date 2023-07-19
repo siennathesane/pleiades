@@ -15,16 +15,17 @@ import (
 	"time"
 
 	"github.com/lni/dragonboat/v3/raftio"
-	raftv1 "github.com/mxplusb/pleiades/pkg/api/raft/v1"
+	"github.com/mxplusb/pleiades/pkg/raftpb"
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 )
 
 func TestRaftSystemListener(t *testing.T) {
 	if testing.Short() {
-		t.Skipf("skipping raft system listener tests")
+		t.Skipf("skipping raftpb system listener tests")
 	}
 	suite.Run(t, new(RaftSystemListenerTestSuite))
 }
@@ -42,9 +43,13 @@ func (t *RaftSystemListenerTestSuite) SetupSuite() {
 	t.logger = utils.NewTestLogger(t.T())
 	t.defaultTimeout = 500 * time.Millisecond
 
-	var err error
-	t.e, err = NewEmbeddedMessagingWithDefaults(t.logger)
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
 	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
+	t.e = e.EmbeddedMessaging
 
 	t.e.Start()
 	t.Require().NoError(err, "there must not be an error when creating the system stream")
@@ -89,10 +94,10 @@ func (t *RaftSystemListenerTestSuite) TestLeaderUpdated() {
 	msgs, err := sub.NextMsg(utils.Timeout(1000 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_LEADER_UPDATED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_LEADER_UPDATED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
@@ -111,10 +116,10 @@ func (t *RaftSystemListenerTestSuite) TestNodeHostShuttingDown() {
 	msgs, err := sub.NextMsg(utils.Timeout(1000 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_NODE_HOST_SHUTTING_DOWN, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_NODE_HOST_SHUTTING_DOWN, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
@@ -137,10 +142,10 @@ func (t *RaftSystemListenerTestSuite) TestNodeUnloaded() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_NODE_UNLOADED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_NODE_UNLOADED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestNodeReady() {
@@ -163,10 +168,10 @@ func (t *RaftSystemListenerTestSuite) TestNodeReady() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_NODE_READY, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_NODE_READY, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
@@ -189,10 +194,10 @@ func (t *RaftSystemListenerTestSuite) TestMembershipChanged() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_MEMBERSHIP_CHANGED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_MEMBERSHIP_CHANGED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
@@ -215,10 +220,10 @@ func (t *RaftSystemListenerTestSuite) TestConnectionEstablished() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_CONNECTION_ESTABLISHED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_CONNECTION_ESTABLISHED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
@@ -241,10 +246,10 @@ func (t *RaftSystemListenerTestSuite) TestConnectionFailed() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_CONNECTION_FAILED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_CONNECTION_FAILED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
@@ -269,10 +274,10 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotStarted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SEND_SNAPSHOT_STARTED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SEND_SNAPSHOT_STARTED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
@@ -297,10 +302,10 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotCompleted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SEND_SNAPSHOT_COMPLETED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SEND_SNAPSHOT_COMPLETED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
@@ -325,10 +330,10 @@ func (t *RaftSystemListenerTestSuite) TestSendSnapshotAborted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SEND_SNAPSHOT_ABORTED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SEND_SNAPSHOT_ABORTED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
@@ -353,10 +358,10 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotReceived() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SNAPSHOT_RECEIVED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SNAPSHOT_RECEIVED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
@@ -381,10 +386,10 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotRecovered() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SNAPSHOT_RECOVERED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SNAPSHOT_RECOVERED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
@@ -409,10 +414,10 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCreated() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SNAPSHOT_CREATED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SNAPSHOT_CREATED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
@@ -437,10 +442,10 @@ func (t *RaftSystemListenerTestSuite) TestSnapshotCompacted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_SNAPSHOT_COMPACTED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_SNAPSHOT_COMPACTED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
@@ -464,10 +469,10 @@ func (t *RaftSystemListenerTestSuite) TestLogCompacted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_LOG_COMPACTED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_LOG_COMPACTED, payload.GetAction(), "the actions must match")
 }
 
 func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
@@ -491,8 +496,8 @@ func (t *RaftSystemListenerTestSuite) TestLogDBCompacted() {
 	msgs, err := sub.NextMsg(utils.Timeout(100 * time.Millisecond))
 	t.Require().NoError(err, "there must not be an error when fetching the messages")
 
-	payload := &raftv1.RaftEvent{}
+	payload := &raftpb.RaftEvent{}
 	err = payload.UnmarshalVT(msgs.Data)
 	t.Require().NoError(err, "there must not be an error when unmarshalling the payload")
-	t.Require().Equal(raftv1.Event_EVENT_LOGDB_COMPACTED, payload.GetAction(), "the actions must match")
+	t.Require().Equal(raftpb.Event_EVENT_LOGDB_COMPACTED, payload.GetAction(), "the actions must match")
 }

@@ -15,6 +15,7 @@ import (
 	"github.com/mxplusb/pleiades/pkg/utils"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx/fxtest"
 )
 
 func TestEmbeddedEventStream(t *testing.T) {
@@ -37,45 +38,56 @@ func (t *EmbeddedEventStreamTestSuite) TearDownTest() {
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestNew() {
-	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
-	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
-	t.Require().NotNil(e, "the event stream must not be nil")
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
+	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestStartAndStop() {
-	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
-	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
-	t.Require().NotNil(e, "the event stream must not be nil")
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
+	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
 
-	t.Require().NotPanics(e.Start, "the embedded server must not panic on start")
-
-	t.Require().NotPanics(e.Stop, "the embedded server must not panic on stop")
+	t.Require().NotPanics(e.EmbeddedMessaging.Start, "the embedded server must not panic on start")
+	t.Require().NotPanics(e.EmbeddedMessaging.Stop, "the embedded server must not panic on stop")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetPubSubClient() {
-	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
-	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
-	t.Require().NotNil(e, "the event stream must not be nil")
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
+	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
 
 	t.Require().NotPanics(func() {
-		e.Start()
+		e.EmbeddedMessaging.Start()
 	}, "the embedded server must not panic on start")
 
-	embeddedClient, err := e.GetPubSubClient()
+	embeddedClient, err := e.EmbeddedMessaging.GetPubSubClient()
 	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
 	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }
 
 func (t *EmbeddedEventStreamTestSuite) TestGetStreamClient() {
-	e, err := NewEmbeddedMessagingWithDefaults(t.logger)
-	t.Require().NoError(err, "there must not be an error creating a new embedded event stream")
-	t.Require().NotNil(e, "the event stream must not be nil")
+	e, err := NewEmbeddedMessagingWithDefaults(EmbeddedMessagingWithDefaultsParams{
+		Logger: t.logger,
+		Lifecycle: fxtest.NewLifecycle(t.T()),
+	})
+	t.Require().NoError(err, "there must not be an error creating the event stream")
+	t.Require().NotNil(e.EmbeddedMessaging, "the event stream must not be nil")
 
 	t.Require().NotPanics(func() {
-		e.Start()
+		e.EmbeddedMessaging.Start()
 	}, "the embedded server must not panic on start")
 
-	embeddedClient, err := e.GetStreamClient()
+	embeddedClient, err := e.EmbeddedMessaging.GetStreamClient()
 	t.Require().NoError(err, "there must not be an error when creating an embedded pubSubClient")
 	t.Require().NotNil(embeddedClient, "the pubSubClient must not be nil")
 }

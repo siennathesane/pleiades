@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "runtime",
+    srcs = [
+        "cache.go",
+        "interfaces.go",
+        "types.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/server/runtime",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/kvpb",
+        "//pkg/raftpb",
+        "@com_github_allegro_bigcache//:go_default_library",
+        "@com_github_lni_dragonboat_v3//client:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_uber_go_fx//:go_default_library",
+    ],
+)

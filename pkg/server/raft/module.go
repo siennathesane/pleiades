@@ -14,7 +14,7 @@ import (
 	"go.uber.org/fx"
 )
 
-var RaftModule = fx.Module("raft",
+var RaftModule = fx.Module("raftpb",
 	fx.Provide(NewHost),
 	fx.Provide(runtime.AsRoute(NewRaftHostConnectAdapter)),
 )

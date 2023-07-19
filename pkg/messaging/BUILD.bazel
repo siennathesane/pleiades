@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+# gazelle:resolve proto go github.com/mxplusb/pleiades/pkg/raftpb //pkg/raftpb:raft_go_proto
+
+go_library(
+    name = "messaging",
+    srcs = [
+        "embedded_messaging.go",
+        "logger.go",
+        "raft_event_handler.go",
+        "raft_system_listener.go",
+    ],
+    importpath = "github.com/mxplusb/pleiades/pkg/messaging",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/raftpb",
+        "@com_github_lni_dragonboat_v3//raftio:go_default_library",
+        "@com_github_nats_io_nats_go//:go_default_library",
+        "@com_github_nats_io_nats_server_v2//server:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
+        "@org_uber_go_fx//:go_default_library",
+    ],
+)
+
+go_test(
+    name = "messaging_test",
+    srcs = [
+        "embedded_messaging_test.go",
+        "raft_event_handler_test.go",
+        "raft_system_listener_test.go",
+    ],
+    embed = [":messaging"],
+    deps = [
+        "//pkg/raftpb",
+        "//pkg/utils",
+        "@com_github_lni_dragonboat_v3//raftio:go_default_library",
+        "@com_github_nats_io_nats_go//:go_default_library",
+        "@com_github_rs_zerolog//:go_default_library",
+        "@com_github_stretchr_testify//suite:go_default_library",
+        "@org_golang_google_protobuf//types/known/timestamppb:go_default_library",
+        "@org_uber_go_fx//fxtest:go_default_library",
+    ],
+)
