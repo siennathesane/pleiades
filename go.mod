@@ -20,7 +20,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/nats-io/nats-server/v2 v2.9.20
-	github.com/nats-io/nats.go v1.27.1
+	github.com/nats-io/nats.go v1.28.0
 	github.com/planetscale/vtprotobuf v0.4.0
 	github.com/posener/complete v1.2.3
 	github.com/rs/zerolog v1.29.1
