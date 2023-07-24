@@ -9,7 +9,7 @@ require (
 	github.com/bufbuild/connect-grpchealth-go v1.1.1
 	github.com/bufbuild/connect-grpcreflect-go v1.1.0
 	github.com/cockroachdb/errors v1.10.0
-	github.com/go-git/go-git/v5 v5.7.0
+	github.com/go-git/go-git/v5 v5.8.0
 	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7
 	github.com/hashicorp/serf v0.10.1
 	github.com/kr/text v0.2.0
