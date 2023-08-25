@@ -1,11 +1,11 @@
+.idea/shelf/
+.idea/usage.statistics.xml
+.idea/workspace.xml
 **.tgz
 **/*.db
 **/test.log
 **/tmp
 *covprofile
-.idea/shelf/
-.idea/usage.statistics.xml
-.idea/workspace.xml
 /.ijwb/
 bazel-bin
 bazel-out
@@ -16,6 +16,8 @@ build/
 ci/vars/**.sh
 ci/vars/**.yaml
 covprofile*
+docs/.obsidian/workspace.json
+docs/.obsidian/hotkeys.json
 google/
 node_modules/
 package-lock.json

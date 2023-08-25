@@ -1,9 +1,18 @@
-- Feature Name:
-- Status: draft/in-progress/completed/rejected/obsolete/postponed
-- Start Date: YYYY-MM-DD
-- Authors:
-- RFC PR: (PR # after acceptance of initial draft)
-- Issue: (one or more # from the issue tracker)
+---
+title: RFC Template
+authors:
+  - Sienna Lloyd <sienna@linux.com>
+tags:
+  - rfc
+  - template
+---
+
+- **Feature Name:**
+- **Status:** draft/in-progress/completed/rejected/obsolete/postponed
+- **Start Date:** YYYY-MM-DD
+- **Authors:**
+- **RFC PR:** (PR # after acceptance of initial draft)
+- **Issue:** (one or more # from the issue tracker)
 
 **Remember, you can submit a PR with your RFC before the text is
 complete. Refer to the [README](README.md#rfc-process) for details.**

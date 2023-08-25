@@ -1,3 +1,13 @@
+---
+title: Design Guide
+authors:
+  - Sienna Lloyd <sienna@linux.com>
+tags:
+  - rfc
+  - template
+  - design
+  - guide
+---
 **Note: Be sure to also look at the [README](README.md) for more general guidance on writing RFCs.**
 
 # Summary
@@ -14,22 +24,15 @@ Suggested contents:
 
 Why are we doing this? What use cases does it support? What is the expected outcome?
 
-Is there a PM in this product area already? Does the PM know of user
-stories that relate to the proposed work? Can we list these user
-stories here? (Specific customer names need not be included, for
-confidentiality, but it is still useful to describe their use cases.)
+Is there a PM in this product area already? Does the PM know of user stories that relate to the proposed work? Can we list these user stories here? (Specific customer names need not be included, for confidentiality, but it is still useful to describe their use cases.)
 
 # Technical design
 
 This is the technical portion of the RFC. Explain the design in sufficient detail.
 
-Important writing prompts follow. You do not need to answer them in
-this particular order, but we wish to find answers to them throughout
-your prose.
+Important writing prompts follow. You do not need to answer them in this particular order, but we wish to find answers to them throughout your prose.
 
-Some of these prompts may not be relevant to your RFC; in which case
-you can spell out “this change does not affect ...” or answer “N/A”
-(not applicable) next to the question.
+Some of these prompts may not be relevant to your RFC; in which case you can spell out “this change does not affect ...” or answer “N/A” (not applicable) next to the question.
 
 - Questions about the change:
 
@@ -150,9 +153,7 @@ you can spell out “this change does not affect ...” or answer “N/A”
       mention where in the code telemetry counters or metrics would be
       added.
 
-The section should return to the user stories in the motivations
-ection, and explain more fully how the detailed proposal makes those
-stories work.
+The section should return to the user stories in the motivations section, and explain more fully how the detailed proposal makes those stories work.
 
 ## Drawbacks
 
@@ -160,25 +161,13 @@ Why should we *not* do this?
 
 If applicable, list mitigating factors that may make each drawback acceptable.
 
-Investigate the consequences of the proposed change onto other areas
-of Pleiades. If other features are impacted, especially UX, list
-this impact as a reason not to do the change. If possible, also
-investigate and suggest mitigating actions that would reduce the
-impact. You can for example consider additional validation testing,
-additional documentation or doc changes, new user research, etc.
+Investigate the consequences of the proposed change onto other areas of Pleiades. If other features are impacted, especially UX, list this impact as a reason not to do the change. If possible, also investigate and suggest mitigating actions that would reduce the impact. You can for example consider additional validation testing, additional documentation or doc changes, new user research, etc.
 
-Also investigate the consequences of the proposed change on
-performance. Pay especially attention to the risk that introducing a
-possible performance improvement in one area can slow down another
-area in an unexpected way. Examine all the current "consumers" of the
-code path you are proposing to change and consider whether the
-performance of any of them may be negatively impacted by the proposed
-change. List all these consequences as possible drawbacks.
+Also investigate the consequences of the proposed change on performance. Pay especially attention to the risk that introducing a possible performance improvement in one area can slow down another area in an unexpected way. Examine all the current "consumers" of the code path you are proposing to change and consider whether the performance of any of them may be negatively impacted by the proposed change. List all these consequences as possible drawbacks.
 
 ## Rationale and Alternatives
 
-This section is extremely important. See the
-[README](README.md#rfc-process) file for details.
+This section is extremely important. See the [README](README.md#rfc-process) file for details.
 
 - Why is this design the best in the space of possible designs?
 - What other designs have been considered and what is the rationale for not choosing them?
@@ -188,8 +177,7 @@ This section is extremely important. See the
 
 How do we teach this?
 
-Explain the proposal as if it was already included in the project and
-you were teaching it to an end-user, or a Pleiades team member in a different project area.
+Explain the proposal as if it was already included in the project and you were teaching it to an end-user, or a Pleiades team member in a different project area.
 
 Consider the following writing prompts:
 
