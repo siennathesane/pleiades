@@ -1,0 +1,23 @@
+#cloud-config
+
+package_update: true
+packages:
+  - apt-transport-https
+  - build-essential
+  - git
+  - gpg
+  - curl
+  - wget
+
+runcmd:
+  - wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
+  - wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+  - dpkg -i packages-microsoft-prod.deb
+  - rm packages-microsoft-prod.deb
+  - add-apt-repository "deb [arch=amd64,arm64,armhf] https://packages.microsoft.com/repos/code stable main"
+  - apt-get update
+  - apt-get install -y code git-lfs
+  - curl -sSf https://sh.rustup.rs | sh -s -- -y
+
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEKXAIJ0e0je6yW7MgGjEVXNwKBj2ckwAih89Y/sJh1K2Ptva92HKY7chEEVfm6Uhl88pFyRxo19iVpSGdmzRIZfYfHexQTflXLfvR8kzTRCLlbB/KlZCyR4SZ8mDqBJvO3t2orxyDGZRB+G5gH5uA1XTj3fUw66k4ncOP9N+q99spxCAdN+pYAaHnIaxeETaCthqSvUfHXDbJjphhs4A8FaWtOwa288ashV9nyseViajOtQ/8ZGGcwcgv1lLFCaicRov9XhGRDiYcFqD0ufPAhkC5U4BWvZZ+zF0ji8Lq8K5PuxSPDl/fyYzdAs4wkynRXBs3vf3f85b0vKW1CIPUmHPxqkap+Ti901qrPd7Yx3MuWON4sTA+Nxmsbpogmwe2eFQUw58IzXO4SiVLETMYPUiTv3aBocMm4rdrKV2Sc90JhhHUqqU19peOsgBVfInkAXvkKU1NSTdRekwrJcHfK99jiYHfy/AsdY/Ly4+qHX4uLhRuPcjfw32IdBrQqyRUKhFQ3Ko/+v512jalqbl0qFD14MxKgLn5gwQFb0HgB0GGZ2B94i4nCO6uWQc8Ooq6GuW2+S4PAQwepNQGD3dMxrXyVrypWiPKicAVc+3f5KnI+llrHI+NmZppkLqoH5HwRncMBXUUpSR4RFUZ9yJzrZpdsxX0SbQDO/vpfvX+mw== Sienna Lloyd <sienna.lloyd@hey.com>
