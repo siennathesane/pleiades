@@ -10,3 +10,7 @@ repository = "https://github.com/mxplusb/pleiades"
 readme = "README.md"
 edition = "2021"
 publish = false
+
+[dependencies]
+mimalloc = "0.1.38"
+rand = "0.8.5"
