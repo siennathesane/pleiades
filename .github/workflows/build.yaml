@@ -6,22 +6,11 @@ jobs:
   build:
     strategy:
         matrix:
-            os: [ubuntu-latest, ubuntu-22.04, ubuntu-20.04]
+            os: [ubuntu-latest, ubuntu-22.04]
     runs-on: "${{ matrix.os }}"
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v3
-      - name: Cache Build Results
-        uses: actions/cache@v3
-        env:
-          cache-name: bazel-cache
-        with:
-          path: ~/.cache/bazel
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ github.ref }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-master
-      - name: Build Pleiades
-        run: bazel build //...
-
-      - name: Test Pleiades
-        run: bazel test //... --test_output=errors
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --all-targets --all-features
+      - run: cargo test --all-targets --all-features
